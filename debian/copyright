@@ -1,3 +1,13 @@
+This is the debian package of trustedqsl. The sources were downloaded
+from http://www.arrl.org/lotw/#download .
+The package was created by Hamish Moffatt on October 19, 2003.
+The upstream authors can be reached at TrustedQSL@yahoogroups.com.
+
+This software is released under a revised BSD-like license. 
+The full text of the license is contained below.
+
+
+
 License Terms and Conditions
 
 Copyright (C) 2001-2003 American Radio Relay League, Inc. All rights

@@ -1092,7 +1092,7 @@ test "$ac_cv_mingw32" = yes && MINGW32=yes
 
 checktqsllib(){
   if test -z "$TQSLLIB"; then
-    if test -e "$1/libtqsllib.a"; then
+    if test -e "$1/libtqsllib.so"; then
       TQSLLIB="$1"
     fi
   fi
