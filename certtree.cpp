@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: certtree.cpp,v 1.10 2003/08/09 13:40:18 jbloom Exp $
+    revision             : $Id: certtree.cpp,v 1.5 2005/02/18 16:38:58 ke3z Exp $
  ***************************************************************************/
 
 #include "certtree.h"
@@ -19,6 +19,8 @@
 #include "tqslerrno.h"
 #include <errno.h>
 #include <wx/imaglist.h>
+
+#include <iostream>
 
 using namespace std;
 
@@ -74,7 +76,8 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 	issmap issuers;
 
 	DeleteAllItems();
-	wxTreeItemId rootId = AddRoot("tQSL Certificates", 3);
+	wxTreeItemId rootId = AddRoot(wxT("tQSL Certificates"), 3);
+	tqsl_init();
 	tQSL_Cert *certs;
 	if (tqsl_selectCertificates(&certs, &_ncerts, 0, 0, 0, provider, flags)) {
 		if (tQSL_Error != TQSL_SYSTEM_ERROR || errno != ENOENT)
@@ -107,7 +110,7 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 			entityName = "<UNKNOWN ENTITY>";
 		strncat(callsign, dxcc.name(), sizeof callsign - strlen(callsign));
 		callsign[sizeof callsign-1] = 0;
-		issuers[issname].push_back(make_pair(wxString(callsign),i));
+		issuers[wxString(issname, wxConvLocal)].push_back(make_pair(wxString(callsign, wxConvLocal),i));
 	}
 	// Sort each issuer's list and add items to tree
 	issmap::iterator iss_it;

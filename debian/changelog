@@ -1,3 +1,13 @@
+trustedqsl (1.11-1) unstable; urgency=medium
+
+  * New upstream release
+  * Modified crqwiz.cpp to compile with gcc-4.0 (closes: #302544);
+    thanks to Andreas Jochens for the patch
+  * Build with new tqsllib 2.0
+    * urgency=medium because the new tqsllib fixes an RC bug
+
+ -- Hamish Moffatt <hamish@debian.org>  Wed, 27 Apr 2005 00:07:12 +1000
+
 trustedqsl (1.10-3) unstable; urgency=low
 
   * Fix section of package (libs -> hamradio) (closes: #243544)

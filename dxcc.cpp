@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: dxcc.cpp,v 1.3 2003/07/25 18:12:39 jbloom Exp $
+    revision             : $Id: dxcc.cpp,v 1.4 2005/02/18 16:38:58 ke3z Exp $
  ***************************************************************************/
 
 #include <stdlib.h>
@@ -64,6 +64,8 @@ DXCC::getNext() {
 
 bool
 DXCC::getByEntity(int e) {
+	_number = 0;
+	_name = "<NONE>";
 	if (!init())
 		return false;
 	for (int i = 0; i < num_entities; i++) {
@@ -74,8 +76,6 @@ DXCC::getByEntity(int e) {
 			return true;
 		}
 	}
-	_number = 0;
-	_name = "<NONE>";
 	return false;
 }
 

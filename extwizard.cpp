@@ -5,7 +5,7 @@
     copyright            : (C) 2003 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: extwizard.cpp,v 1.2 2003/08/14 18:32:02 jbloom Exp $
+    revision             : $Id: extwizard.cpp,v 1.3 2005/02/18 16:38:58 ke3z Exp $
  ***************************************************************************/
 
 #ifdef HAVE_CONFIG_H
@@ -49,7 +49,7 @@ BEGIN_EVENT_TABLE(ExtWizard_Page, wxWizardPageSimple)
 END_EVENT_TABLE()
 
 void
-ExtWizard_Page::check_valid(wxEvent&) {
+ExtWizard_Page::check_valid(TQ_WXTEXTEVENT&) {
 	wxWindow *but = GetParent()->FindWindow(wxID_FORWARD);
 	if (but != NULL)
 		but->Enable(validate() == NULL);
@@ -59,10 +59,10 @@ void
 ExtWizard_Page::AdjustPage(wxBoxSizer *sizer, const wxString& helpfile) {
 	_helpfile = helpfile;
 
-	if (_helpfile != "" && _parent->HaveHelp()) {
+	if (_helpfile != wxT("") && _parent->HaveHelp()) {
 		// Space filler
-		sizer->Add(new wxStaticText(this, -1, ""), 1, 0, 10);
-		sizer->Add(new wxButton(this, EW_HELP_BUT, "Help"), 0, wxALL, 10);
+		sizer->Add(new wxStaticText(this, -1, wxT("")), 1, 0, 10);
+		sizer->Add(new wxButton(this, EW_HELP_BUT, wxT("Help")), 0, wxALL, 10);
 	}
 
 	SetAutoLayout(TRUE);

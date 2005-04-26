@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: tqslexcept.h,v 1.3 2003/08/21 19:05:57 jbloom Exp $
+    revision             : $Id: tqslexcept.h,v 1.3 2005/02/18 20:28:30 ke3z Exp $
  ***************************************************************************/
 
 #ifndef __tqslexcept_h

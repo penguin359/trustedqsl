@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: certtree.h,v 1.5 2003/08/06 16:16:36 jbloom Exp $
+    revision             : $Id: certtree.h,v 1.5 2005/02/18 16:38:58 ke3z Exp $
  ***************************************************************************/
 
 #ifndef __certtree_h

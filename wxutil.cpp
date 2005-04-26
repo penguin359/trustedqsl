@@ -5,7 +5,7 @@
     copyright            : (C) 2003 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: wxutil.cpp,v 1.1 2003/08/14 18:32:02 jbloom Exp $
+    revision             : $Id: wxutil.cpp,v 1.3 2005/02/18 16:38:59 ke3z Exp $
  ***************************************************************************/
 
 #ifdef HAVE_CONFIG_H
@@ -18,7 +18,7 @@ wxSize
 getTextSize(wxWindow *win) {
 	wxClientDC dc(win);
 	wxCoord char_width, char_height;
-	dc.GetTextExtent(wxString("M"), &char_width, &char_height);
+	dc.GetTextExtent(wxString(wxT("M")), &char_width, &char_height);
 	return wxSize(char_width, char_height);
 }
 

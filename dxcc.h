@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: dxcc.h,v 1.2 2002/06/21 18:42:32 jbloom Exp $
+    revision             : $Id: dxcc.h,v 1.5 2005/02/18 16:38:58 ke3z Exp $
  ***************************************************************************/
 
 #ifndef __dxcc_h
