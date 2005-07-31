@@ -3,7 +3,7 @@ Section: hamradio
 Priority: optional
 Maintainer: Hamish Moffatt <hamish@debian.org>
 Standards-Version: 3.6.1
-Build-Depends: debhelper (>= 4), tqsllib-dev (>= 2.0), libexpat-dev, libssl-dev, libwxgtk2.4-dev (>= 2.4.2.6), zlib1g-dev
+Build-Depends: debhelper (>= 4), tqsllib-dev (>= 2.0-2), libexpat-dev, libssl-dev, libwxgtk2.4-dev (>= 2.4.2.6), zlib1g-dev
 
 Package: trustedqsl
 Architecture: any
