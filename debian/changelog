@@ -1,3 +1,11 @@
+trustedqsl (1.11-3) unstable; urgency=low
+
+  * Rebuild against tqsllib1c2a due to g++ ABI change
+  * Hack configure.in not to link directly to OpenSSL and expat and zlib,
+    since they aren't used directly (only by tqsllib)
+
+ -- Hamish Moffatt <hamish@debian.org>  Sun, 27 Nov 2005 23:17:13 +1100
+
 trustedqsl (1.11-2) unstable; urgency=low
 
   * Rebuild with g++-4.0/tqsllib 2.0-2
