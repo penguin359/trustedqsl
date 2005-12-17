@@ -25,7 +25,7 @@ datadir = @datadir@/TrustedQSL
 helpdir = $(datadir)
 
 AM_CXXFLAGS = -Wall `$(WXCONFIG) --cxxflags` -I$(TQSLINC) -I$(ZLIB)/include -I$(EXPAT)/include
-AM_LDFLAGS = -L$(TQSLLIB) -L$(ZLIB)/lib -L$(EXPAT)/lib -L$(OPENSSL)/lib
+#AM_LDFLAGS = -L$(TQSLLIB) -L$(ZLIB)/lib -L$(EXPAT)/lib -L$(OPENSSL)/lib
 
 BUILT_SOURCES = tqslbuild.h tqslcertbuild.h helpdir icondir
 
@@ -57,7 +57,7 @@ noinst_SCRIPTS =
 CLEANFILES = tqslbuild.h tqslcertbuild.h tqsl-@WINVER@.exe ChangeLog.txt \
 	quick.txt setup-is.iss LICENSE.txt
 
-nobase_help_DATA = help/tqslcert/*.* help/tqslapp/*.*
+#nobase_help_DATA = help/tqslcert/*.* help/tqslapp/*.*
 
 EXTRA_DIST = tqslbuild.h.in tqslcertbuild.h.in \
 	LICENSE TrustedQSL.spec.in TrustedQSL.spec \
@@ -65,12 +65,12 @@ EXTRA_DIST = tqslbuild.h.in tqslcertbuild.h.in \
 	touchver.pl key.ico tqsl.ico tqsl-key1.ico setup.iss.in tqslcert.rc.in \
 	icons/*.* tqslicons.icns tqsl.desktop tqslcert.desktop
 
-tqslbuild.h: tqslbuild.h.in Makefile
+tqslbuild.h: tqslbuild.h.in
 	$(PERL) $(srcdir)/touchver.pl $(srcdir)/tqslbuild.h.in BUILD $(BUILD)
 	$(CP) $(srcdir)/tqslbuild.h.in tqslbuild.h
 	$(TOUCH) $(srcdir)/tqslbuild.h.in
 
-tqslcertbuild.h: tqslcertbuild.h.in Makefile
+tqslcertbuild.h: tqslcertbuild.h.in
 	$(PERL) $(srcdir)/touchver.pl $(srcdir)/tqslcertbuild.h.in BUILD $(BUILD)
 	$(CP) $(srcdir)/tqslcertbuild.h.in tqslcertbuild.h
 	$(TOUCH) $(srcdir)/tqslcertbuild.h.in

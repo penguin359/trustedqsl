@@ -79,6 +79,7 @@ class QSLApp : public wxApp {
 public:
 	QSLApp();
 	virtual ~QSLApp();
+	class MyFrame *GUIinit();
 	bool OnInit();
 //	virtual wxLog *CreateLogTarget();
 };
@@ -320,6 +321,8 @@ public:
 
 	DECLARE_EVENT_TABLE()
 };
+
+class MyFrame;
 
 class LogList : public wxLog {
 public:
@@ -745,8 +748,12 @@ MyFrame::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 		wxSplitPath(infile, 0, &name, &ext);
 		if (ext != wxT(""))
 			name += wxT(".") + ext;
-		conv_dial->Show(TRUE);
-		this->Enable(FALSE);
+
+		// Only display windows if not in batch mode  -- KD6PAG
+		if (this) {
+			conv_dial->Show(TRUE);
+			this->Enable(FALSE);
+		}
 		bool ignore_err = false;
 		int major = 0, minor = 0, config_major = 0, config_minor = 0;
 		tqsl_getVersion(&major, &minor);
@@ -809,7 +816,9 @@ MyFrame::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 					if (bad_text)
 						msg += wxString(wxT("\n")) + wxString(bad_text, wxConvLocal);
 					wxLogError(msg);
-					if (!ignore_err) {
+
+					// Only ask if not in batch mode or ignoring errors  - KD6PAG
+					if (!ignore_err && this) {
 						if (wxMessageBox(wxString(wxT("Error: ")) + msg + wxT("\n\nIgnore errors?"), wxT("Error"), wxYES_NO, this) == wxNO)
 							throw x;
 					}
@@ -822,7 +831,8 @@ MyFrame::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
    			break;
 		} while (1);
    		cancelled = !conv_dial->running;
-   		this->Enable(TRUE);
+		if (this)
+	   		this->Enable(TRUE);
 		if (compressed)
 			gzclose(gout);
 		else
@@ -839,7 +849,8 @@ MyFrame::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 			gzclose(gout);
 		else
 			out.close();
-   		this->Enable(TRUE);
+		if (this)
+   			this->Enable(TRUE);
    		delete conv_dial;
 		string msg = x.what();
 		tqsl_getConverterLine(conv, &lineno);
@@ -1095,18 +1106,31 @@ cerr << "called" << endl;
 }
 */
 
-bool
-QSLApp::OnInit() {
+MyFrame *
+QSLApp::GUIinit() {
 	MyFrame *frame = new MyFrame(wxT("TQSL"), 50, 50, 550, 400);
 	frame->Show(true);
 	SetTopWindow(frame);
 
 	LogList *log = new LogList(frame);
 	wxLog::SetActiveTarget(log);
+	return frame;
+}
+
+bool
+QSLApp::OnInit() {
+	MyFrame *frame = 0;
 
 	tQSL_Location loc = 0;
 	bool locsw = false;
 	bool suppressdate = false;
+
+	// Send errors to 'stderr' if in batch mode.  -- KD6PAG
+	if (!strcasecmp(wxString(argv[argc-1]).mb_str(), "-x")) {
+		wxLog::SetActiveTarget(new wxLogStderr(NULL));
+	} else {
+		frame = GUIinit();
+	}
 	for (int i = 1; i < argc; i++) {
 		if (locsw) {
 			if (loc)
@@ -1122,6 +1146,8 @@ QSLApp::OnInit() {
 			suppressdate = true;
 		} else if (!strcasecmp(wxString(argv[i]).mb_str(), "-s")) {
 			// Add/Edit station location
+			if (!frame)
+				frame = GUIinit();
 			if (loc == 0) {
 				check_tqsl_error(tqsl_initStationLocationCapture(&loc));
 				AddEditStationLocation(loc);
@@ -1130,8 +1156,11 @@ QSLApp::OnInit() {
 		} else if (!strcasecmp(wxString(argv[i]).mb_str(), "-x")) {
 			return false;
 		} else {
-			if (loc == 0)
+			if (loc == 0) {
+				if (!frame)
+					frame = GUIinit();
 				loc = frame->SelectStationLocation(wxT("Select Station Location for Signing"));
+			}
 			if (loc == 0)
 				return false;
 			wxString path, name, ext;

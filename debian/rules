@@ -16,6 +16,9 @@ clean:
 
 	dh_clean
 
+reconf:
+	AUTOMAKE="automake-1.9 --foreign" ACLOCAL="aclocal-1.9" autoreconf -v
+
 # Build architecture-independent files here.
 binary-indep: build
 # We have nothing to do by default.
@@ -28,8 +31,8 @@ binary-arch: build
 	dh_clean -k
 	dh_installdirs
 	make install DESTDIR=`pwd`/debian/trustedqsl
-	#mv debian/trustedqsl/usr/share/doc/tqslapp debian/trustedqsl/usr/share/doc/trustedqsl
-	#mv debian/trustedqsl/usr/share/doc/tqslcert debian/trustedqsl/usr/share/doc/trustedqsl
+
+	cp -a help debian/trustedqsl/usr/share/TrustedQSL
 
 	dh_installdocs
 	dh_installchangelogs

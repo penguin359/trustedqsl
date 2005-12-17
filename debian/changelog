@@ -1,3 +1,14 @@
+trustedqsl (1.11-4) unstable; urgency=low
+
+  * Fix circular dependency in Makefile and autoreconf with the
+    correct tool versions (ie automake 1.9 this time) and hope that
+    the infinite loop doesn't reoccur .. :-| (closes: #341474)
+  * tqsl should only open windows if not in batch mode (closes: #339560);
+    thanks to John Mock KD6PAG for the patch
+  * Reinstall the help files properly (closes: #278856)
+
+ -- Hamish Moffatt <hamish@debian.org>  Sat, 17 Dec 2005 18:26:36 +1100
+
 trustedqsl (1.11-3) unstable; urgency=low
 
   * Rebuild against tqsllib1c2a due to g++ ABI change
