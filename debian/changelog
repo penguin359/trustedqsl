@@ -1,3 +1,13 @@
+trustedqsl (1.11-5) unstable; urgency=low
+
+  * Update config.{guess,sub} at build-time from autotools-dev
+  * Added watch file to track new versions at sourceforge
+  * Update to standards-revision 3.7.3
+  * Added menu and desktop files
+  * Changed build-depends to WxWidgets 2.6 (closes: #418713)
+
+ -- Hamish Moffatt <hamish@debian.org>  Wed, 23 Jan 2008 10:07:32 +1100
+
 trustedqsl (1.11-4) unstable; urgency=low
 
   * Fix circular dependency in Makefile and autoreconf with the

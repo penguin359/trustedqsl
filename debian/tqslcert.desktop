@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=tqslcert
+Comment=Manage certificates for LoTW
+Exec=tqslcert
+Icon=trustedqsl/key16.png
+Terminal=false
+Type=Application
+Categories=HamRadio;
