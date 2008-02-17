@@ -276,7 +276,7 @@ dnl Checks for libraries.
 dnl AC_CHECK_LIB(z, main, , [ echo -e "\nlibz not found! (Use --with-zlib to correct)"; exit 1 ], -lstdc++)
 dnl AC_CHECK_LIB(expat, main, , [ echo -e "\nlibexpat not found! (Use --with-expat to correct)"; exit 1 ], -lstdc++)
 dnl if test -n "$checkopenssl"; then
-  dnl AC_CHECK_LIB(crypto, main, , [ echo -e "\nlibcrypto not found! (Use --with-openssl to correct)"; exit 1 ], -lstdc++)
+AC_CHECK_LIB(crypto, main, , [ echo -e "\nlibcrypto not found! (Use --with-openssl to correct)"; exit 1 ], -lstdc++)
 dnl fi
 
 if test "$build_os" = "mingw32"; then

@@ -1,3 +1,10 @@
+trustedqsl (1.11-7) unstable; urgency=low
+
+  * Enable check for libcrypto in configure.in, so we link with this
+    library. Closes: #464278.
+
+ -- Joop Stakenborg <pa3aba@debian.org>  Sun, 17 Feb 2008 20:23:40 +0100
+
 trustedqsl (1.11-6) unstable; urgency=low
 
   * Tried a rebuild, the build errors starting with "undefined reference
