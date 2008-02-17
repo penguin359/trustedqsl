@@ -1,3 +1,14 @@
+trustedqsl (1.11-6) unstable; urgency=low
+
+  * Tried a rebuild, the build errors starting with "undefined reference
+    to `BIO_new_mem_buf'" seem to have gone. I have tried to figure out
+    if any of the packages needed for building have been updated recently,
+    could not find any relevant changes, sorry. Closes: #464278.
+  * Added a main category to the desktop files.
+  * Fix installation of icons, so they appear in the gnome menu.
+
+ -- Joop Stakenborg <pa3aba@debian.org>  Sun, 17 Feb 2008 16:43:11 +0100
+
 trustedqsl (1.11-5) unstable; urgency=low
 
   * Update config.{guess,sub} at build-time from autotools-dev
