@@ -1,3 +1,20 @@
+trustedqsl (1.11-8) unstable; urgency=low
+
+  * Fix a couple of lintian warnings:
+    - call dh_installdeb after calling dh_shlibdeps and dh_makeshlibs.
+    - set debhelper compatibility version to 5.
+    - update standards version.
+    - install and create xpm files for the debian menu.
+  * New icons for the desktop menu files, requires imagemagick when
+    building the package.
+  * Fix all compilation warnings, most of them fixed by changing
+    'char *' to 'const char *'.
+  * wxNotebookSizer is deprecated, we can now use wxNotebook directly.
+  * Build against libwxgtk2.8-dev. tqslcert and tqsl have been ported
+    to version 2.8 of libwxgtk.
+
+ -- Joop Stakenborg <pa3aba@debian.org>  Fri, 20 Mar 2009 23:17:57 +0100
+
 trustedqsl (1.11-7) unstable; urgency=low
 
   * Enable check for libcrypto in configure.in, so we link with this

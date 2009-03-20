@@ -591,7 +591,7 @@ static tqsl_adifFieldDefinitions fielddefs[] = {
 	{ "", "", TQSL_ADIF_RANGE_TYPE_NONE, 0, 0, 0, 0, 0 },
 };
 
-static char *defined_types[] = { "T", "D", "M", "C", "N", "6" };
+static const char *defined_types[] = { "T", "D", "M", "C", "N", "6" };
 
 static unsigned char *
 adif_alloc(size_t n) {
@@ -685,7 +685,7 @@ MyFrame::EnterQSOData(wxCommandEvent& WXUNUSED(event)) {
 bool
 MyFrame::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 	bool compressed, bool suppressdate) {
-    static char *iam = "TQSL V" VERSION;
+    static const char *iam = "TQSL V" VERSION;
    	const char *cp;
 	tQSL_Converter conv = 0;
 	char callsign[40];
@@ -927,7 +927,7 @@ void
 MyFrame::ImportQSODataFile(wxCommandEvent& event) {
 	wxString infile;
 	try {
-		bool compressed = (event.m_id == tm_f_import_compress);
+		bool compressed = (event.GetId() == tm_f_import_compress);
 		tQSL_Location loc = SelectStationLocation(wxT("Select Station Location for Signing"));
 		if (loc == 0)
 			return;

@@ -4,8 +4,8 @@ Priority: optional
 Maintainer: Debian Hamradio Maintainers <debian-hams@lists.debian.org> 
 Uploaders: Jaime Robles <jaime@debian.org>, Joop Stakenborg <pa3aba@debian.org>, 
         Patrick Ouellette <pouelle@debian.org>, Hamish Moffatt <hamish@debian.org>
-Standards-Version: 3.7.3
-Build-Depends: debhelper (>= 4), tqsllib-dev (>= 2.0-3), libexpat-dev, libssl-dev, libwxgtk2.6-dev, zlib1g-dev, autotools-dev
+Standards-Version: 3.8.1
+Build-Depends: debhelper (>= 4), tqsllib-dev (>= 2.0-3), libexpat-dev, libssl-dev, libwxgtk2.8-dev, zlib1g-dev, autotools-dev, imagemagick
 
 Package: trustedqsl
 Architecture: any

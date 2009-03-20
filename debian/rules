@@ -16,7 +16,7 @@ clean:
 	# Add here commands to clean up after the build process.
 	[ ! -f Makefile ] || $(MAKE) distclean
 	rm -f config.guess config.sub
-
+	rm -f icons/tqsl.png
 	dh_clean
 
 reconf:
@@ -37,7 +37,8 @@ binary-arch: build
 
 	cp -a help debian/trustedqsl/usr/share/TrustedQSL
 	cp debian/*.desktop debian/trustedqsl/usr/share/applications
-	cp icons/*.png debian/trustedqsl/usr/share/pixmaps
+	convert tqsl-key1.ico icons/tqsl.png
+	cp icons/*.* debian/trustedqsl/usr/share/pixmaps
 
 	dh_installdocs
 	dh_installchangelogs
@@ -46,9 +47,9 @@ binary-arch: build
 	dh_strip
 	dh_compress
 	dh_fixperms
-	dh_installdeb
 	dh_makeshlibs -V
 	dh_shlibdeps
+	dh_installdeb
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb

@@ -175,7 +175,7 @@ TQSLWizCertPage::OnComboBoxEvent(wxCommandEvent& event) {
 	switch (in_type) {
 		case TQSL_LOCATION_FIELD_DDLIST:
 		case TQSL_LOCATION_FIELD_LIST:
-			tqsl_setLocationFieldIndex(loc, control_idx, event.m_commandInt);
+			tqsl_setLocationFieldIndex(loc, control_idx, event.GetInt());
 			UpdateFields(control_idx);
 			break;
 	}

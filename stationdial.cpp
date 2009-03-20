@@ -383,7 +383,7 @@ TQSLGetStationNameDialog::SelectName(const wxString& name) {
 	namelist->GetSelections(sels);
 	for (int i = 0; i < (int)sels.GetCount(); i++)
 		namelist->Deselect(sels[i]);
-	for (int i = 0; i < namelist->GetCount(); i++) {
+	for (int i = 0; i < (int)namelist->GetCount(); i++) {
 		if (name == *(wxString *)namelist->GetClientData(i)) {
 			namelist->SetSelection(i, TRUE);
 			break;

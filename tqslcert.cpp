@@ -531,7 +531,7 @@ END_EVENT_TABLE()
 CertPropDial::CertPropDial(tQSL_Cert cert, wxWindow *parent) :
 		wxDialog(parent, -1, wxT("Certificate Properties"), wxDefaultPosition, wxSize(400, 15 * LABEL_HEIGHT))
 {
-	char *labels[] = {
+	const char *labels[] = {
 		"Begins: ", "Expires: ", "Organization: ", "", "Serial: ", "Operator: ",
 		"Call sign: ", "DXCC Entity: ", "QSO Start Date: ", "QSO End Date: ", "Key: "
 	};
