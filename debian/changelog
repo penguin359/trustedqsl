@@ -1,3 +1,9 @@
+trustedqsl (1.11-8.1) unstable; urgency=low
+
+  * Retiring - remove myself from the uploaders list.
+
+ -- Joop Stakenborg <pa3aba@debian.org>  Mon, 16 Nov 2009 18:32:26 +0000
+
 trustedqsl (1.11-8) unstable; urgency=low
 
   * Fix a couple of lintian warnings:
