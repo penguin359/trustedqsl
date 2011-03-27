@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: certtree.h,v 1.5 2005/02/18 16:38:58 ke3z Exp $
+    revision             : $Id: certtree.h,v 1.6 2010/03/09 01:26:10 k1mu Exp $
  ***************************************************************************/
 
 #ifndef __certtree_h
@@ -48,7 +48,7 @@ public:
 	void OnItemActivated(wxTreeEvent& event);
 	void OnRightDown(wxMouseEvent& event);
 	bool useContextMenu;
-	CertTreeItemData *GetItemData(wxTreeItemId id) { return (CertTreeItemData *)wxTreeCtrl::GetItemData(id);}
+	CertTreeItemData *GetItemData(wxTreeItemId id) { return (CertTreeItemData *)wxTreeCtrl::GetItemData(id); }
 	int GetNumCerts() const { return _ncerts; }
 
 private:

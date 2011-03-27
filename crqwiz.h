@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: crqwiz.h,v 1.3 2005/02/18 16:38:58 ke3z Exp $
+    revision             : $Id: crqwiz.h,v 1.5 2010/03/20 12:27:25 k1mu Exp $
  ***************************************************************************/
 
 #ifndef __crqwiz_h
@@ -96,6 +96,7 @@ private:
 	wxComboBox *tc_qsobeginy, *tc_qsobeginm, *tc_qsobegind, *tc_dxcc;
 	wxComboBox *tc_qsoendy, *tc_qsoendm, *tc_qsoendd;
 	wxStaticText *tc_status;
+	bool initialized;		// Set true when validating makes sense
 
 	DECLARE_EVENT_TABLE()
 };
@@ -109,6 +110,7 @@ private:
 	wxTextCtrl *tc_name, *tc_addr1, *tc_addr2, *tc_city, *tc_state,
 		*tc_zip, *tc_country;
 	wxStaticText *tc_status;
+	bool initialized;
 
 	DECLARE_EVENT_TABLE()
 };
@@ -121,6 +123,7 @@ public:
 private:
 	wxTextCtrl *tc_email;
 	wxStaticText *tc_status;
+	bool initialized;
 
 	DECLARE_EVENT_TABLE()
 };
@@ -133,6 +136,7 @@ public:
 private:
 	wxTextCtrl *tc_pw1, *tc_pw2;
 	wxStaticText *tc_status;
+	bool initialized;
 
 	DECLARE_EVENT_TABLE()
 };
@@ -148,6 +152,7 @@ private:
 	wxRadioBox *choice;
 	CertTree *cert_tree;
 	wxStaticText *tc_status;
+	bool initialized;
 
 	DECLARE_EVENT_TABLE()
 };

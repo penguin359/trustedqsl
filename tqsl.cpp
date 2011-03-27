@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: tqsl.cpp,v 1.10 2005/03/03 12:08:03 ke3z Exp $
+    revision             : $Id: tqsl.cpp,v 1.13 2010/03/19 21:31:02 k1mu Exp $
  ***************************************************************************/
 
 #ifdef HAVE_CONFIG_H
@@ -16,6 +16,7 @@ using namespace std;
 
 #include <wx/wxprec.h>
 #include <wx/object.h>
+#include <wx/wxchar.h>
 #include <wx/config.h>
 
 #ifdef __BORLANDC__
@@ -51,7 +52,6 @@ using namespace std;
 
 #include "tqslbuild.h"
 
-static DocPaths docpaths(wxT("tqslapp"));
 
 enum {
 	tm_f_import = 7000,
@@ -312,8 +312,8 @@ public:
 	void OnFileCompress(wxCommandEvent& event);
 #endif
 	void OnPreferences(wxCommandEvent& event);
-	bool ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile, bool compress = false, bool suppressdate = false);
-	tQSL_Location SelectStationLocation(const wxString& title = wxT(""), bool editonly = false);
+	bool ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile, bool compress = false, bool suppressdate = false, const char *password = NULL);
+	tQSL_Location SelectStationLocation(const wxString& title = wxT(""), const wxString& okLabel = wxT("Ok"), bool editonly = false);
 	void WriteQSOFile(QSORecordList& recs, const char *fname = 0, bool force = false);
 
 	wxTextCtrl *logwin;
@@ -379,6 +379,7 @@ MyFrame::DoExit(wxCommandEvent& WXUNUSED(event)) {
 MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h)
 	: wxFrame(0, -1, title, wxPoint(x, y), wxSize(w, h)) {
 
+	DocPaths docpaths(wxT("tqslapp"));
 	// File menu
 	wxMenu *file_menu = new wxMenu;
 	file_menu->Append(tm_f_import_compress, wxT("&Sign existing ADIF or Cabrillo file..."));
@@ -466,7 +467,7 @@ MyFrame::OnHelpContents(wxCommandEvent& WXUNUSED(event)) {
 
 void
 MyFrame::OnHelpAbout(wxCommandEvent& WXUNUSED(event)) {
-	wxString msg = wxT("TQSL V" VERSION "." BUILD "\n(c) 2001-2005\nAmerican Radio Relay League\n\n");
+	wxString msg = wxT("TQSL V" VERSION "." BUILD "\n(c) 2001-2010\nAmerican Radio Relay League\n\n");
 	int major, minor;
 	if (tqsl_getVersion(&major, &minor))
 		wxLogError(wxString(tqsl_getErrorString(), wxConvLocal));
@@ -505,7 +506,7 @@ MyFrame::AddStationLocation(wxCommandEvent& WXUNUSED(event)) {
 
 void
 MyFrame::EditStationLocation(wxCommandEvent& WXUNUSED(event)) {
-	SelectStationLocation(wxT("Edit Station Locations"), true);
+	SelectStationLocation(wxT("Edit Station Locations"), wxT("Close"), true);
 }
 
 void
@@ -573,7 +574,7 @@ MyFrame::WriteQSOFile(QSORecordList& recs, const char *fname, bool force) {
 		out << "<EOR>" << endl;
 	}
 	out.close();
-	wxLogMessage(wxT("Wrote %d QSO records to %s"), recs.size(), s_fname.c_str());
+	wxLogMessage(wxT("Wrote %d QSO records to %s"), (int)recs.size(), s_fname.c_str());
 }
 
 static tqsl_adifFieldDefinitions fielddefs[] = {
@@ -684,8 +685,8 @@ MyFrame::EnterQSOData(wxCommandEvent& WXUNUSED(event)) {
 
 bool
 MyFrame::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
-	bool compressed, bool suppressdate) {
-    static const char *iam = "TQSL V" VERSION;
+	bool compressed, bool suppressdate, const char *password) {
+	static const char *iam = "TQSL V" VERSION;
    	const char *cp;
 	tQSL_Converter conv = 0;
 	char callsign[40];
@@ -748,8 +749,7 @@ MyFrame::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 		wxSplitPath(infile, 0, &name, &ext);
 		if (ext != wxT(""))
 			name += wxT(".") + ext;
-
-		// Only display windows if not in batch mode  -- KD6PAG
+		// Only display windows if notin batch mode -- KD6PAG
 		if (this) {
 			conv_dial->Show(TRUE);
 			this->Enable(FALSE);
@@ -760,7 +760,7 @@ MyFrame::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 		tqsl_getConfigVersion(&config_major, &config_minor);
 		wxString ident = wxString::Format(wxT("%s Lib: V%d.%d Config: V%d.%d"), wxString(iam, wxConvLocal).c_str(),
 			major, minor, config_major, config_minor);
-		wxString gabbi_ident = wxString::Format(wxT("<TQSL_IDENT:%d>%s"), ident.length(), ident.c_str());
+		wxString gabbi_ident = wxString::Format(wxT("<TQSL_IDENT:%d>%s"), (int)ident.length(), ident.c_str());
 		gabbi_ident += wxT("\n");
 		if (compressed)
 			gzwrite(gout, (const char *)gabbi_ident.mb_str(), gabbi_ident.length());
@@ -791,10 +791,14 @@ MyFrame::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 				int rval;
    				check_tqsl_error(tqsl_getConverterCert(conv, &cert));
 				do {
-	   				if ((rval = tqsl_beginSigning(cert, 0, getPassword, cert)) == 0)
+	   				if ((rval = tqsl_beginSigning(cert, (char *)password, getPassword, cert)) == 0)
 						break;
-					if (tQSL_Error == TQSL_PASSWORD_ERROR)
+					if (tQSL_Error == TQSL_PASSWORD_ERROR) {
 						wxLogMessage(wxT("Password error"));
+						if (password)
+							free((void *)password);
+						password = NULL;
+					}
 				} while (tQSL_Error == TQSL_PASSWORD_ERROR);
    				check_tqsl_error(rval);
    				continue;
@@ -816,8 +820,7 @@ MyFrame::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 					if (bad_text)
 						msg += wxString(wxT("\n")) + wxString(bad_text, wxConvLocal);
 					wxLogError(msg);
-
-					// Only ask if not in batch mode or ignoring errors  - KD6PAG
+					// Only ask if not in batch mode or ignoring errors - KD6PAG
 					if (!ignore_err && this) {
 						if (wxMessageBox(wxString(wxT("Error: ")) + msg + wxT("\n\nIgnore errors?"), wxT("Error"), wxYES_NO, this) == wxNO)
 							throw x;
@@ -831,8 +834,8 @@ MyFrame::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
    			break;
 		} while (1);
    		cancelled = !conv_dial->running;
-		if (this)
-	   		this->Enable(TRUE);
+   		if (this)
+			this->Enable(TRUE);
 		if (compressed)
 			gzclose(gout);
 		else
@@ -850,7 +853,7 @@ MyFrame::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 		else
 			out.close();
 		if (this)
-   			this->Enable(TRUE);
+	   		this->Enable(TRUE);
    		delete conv_dial;
 		string msg = x.what();
 		tqsl_getConverterLine(conv, &lineno);
@@ -877,12 +880,12 @@ MyFrame::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 }
 
 tQSL_Location
-MyFrame::SelectStationLocation(const wxString& title, bool editonly) {
+MyFrame::SelectStationLocation(const wxString& title, const wxString& okLabel, bool editonly) {
    	int rval;
    	tQSL_Location loc;
    	wxString selname;
    	do {
-   		TQSLGetStationNameDialog station_dial(this, &help, wxDefaultPosition, false, title, editonly);
+   		TQSLGetStationNameDialog station_dial(this, &help, wxDefaultPosition, false, title, okLabel, editonly);
    		if (selname != wxT(""))
    			station_dial.SelectName(selname);
    		rval = station_dial.ShowModal();
@@ -1124,9 +1127,21 @@ QSLApp::OnInit() {
 	tQSL_Location loc = 0;
 	bool locsw = false;
 	bool suppressdate = false;
+	bool pwdsw = false;
+	bool outflsw = false;
+	bool quiet = false;
+	char *password = NULL;
+	wxString infile(wxT(""));
+	wxString outfile(wxT(""));
 
-	// Send errors to 'stderr' if in batch mode.  -- KD6PAG
-	if (!strcasecmp(wxString(argv[argc-1]).mb_str(), "-x")) {
+	// Send errors to 'stderr' if in batch mode. -- KD6PAG
+	for (int i = 1; i < argc; i++) {
+		if (!strcasecmp(wxString(argv[i]).mb_str(), "-x") ||
+		    !strcasecmp(wxString(argv[i]).mb_str(), "-q")) {
+			quiet = true;
+		}
+	}
+	if (quiet) {
 		wxLog::SetActiveTarget(new wxLogStderr(NULL));
 	} else {
 		frame = GUIinit();
@@ -1140,8 +1155,16 @@ QSLApp::OnInit() {
 				return false;
 			}
 			locsw = false;
+		} else if (pwdsw) {
+			password = strdup(wxString(argv[i]).mb_str());
+			pwdsw = false;
+		} else if (outflsw) {
+			outfile = wxString(argv[i]);
+			outflsw = false;
 		} else if (!strcasecmp(wxString(argv[i]).mb_str(), "-l")) {
 			locsw = true;
+		} else if (!strcasecmp(wxString(argv[i]).mb_str(), "-o")) {
+			outflsw = true;
 		} else if (!strcasecmp(wxString(argv[i]).mb_str(), "-d")) {
 			suppressdate = true;
 		} else if (!strcasecmp(wxString(argv[i]).mb_str(), "-s")) {
@@ -1153,34 +1176,45 @@ QSLApp::OnInit() {
 				AddEditStationLocation(loc);
 			} else
 				AddEditStationLocation(loc, wxT("Edit Station Location"));
-		} else if (!strcasecmp(wxString(argv[i]).mb_str(), "-x")) {
-			return false;
-		} else {
-			if (loc == 0) {
-				if (!frame)
-					frame = GUIinit();
-				loc = frame->SelectStationLocation(wxT("Select Station Location for Signing"));
-			}
-			if (loc == 0)
-				return false;
-			wxString path, name, ext;
-			wxSplitPath(argv[i], &path, &name, &ext);
-			if (path != wxT(""))
-				path += wxT("/");
-			path += name + wxT(".tq8");
-			wxString infile(argv[i]);
-			try {
-				if (frame->ConvertLogFile(loc, infile, path, true, suppressdate))
-					break;
-			} catch (TQSLException& x) {
-				wxString s;
-				if (infile)
-					s = infile + wxT(": ");
-				s += wxString(x.what(), wxConvLocal);
-				wxLogError(s);
-			}
+		} else if (!strcasecmp(wxString(argv[i]).mb_str(), "-x") ||
+		           !strcasecmp(wxString(argv[i]).mb_str(), "-q")) {
+			continue;	// Already handled
+		} else if (!strcasecmp(wxString(argv[i]).mb_str(), "-p")) {
+			pwdsw = true;
+		} else {		// Must be a log file to sign
+			infile = wxString(argv[i]);
 		}
 	}
-
-	return true;
+	if (wxIsEmpty(infile)) {	// Nothing to sign
+		if (argc == 1)		// No extra args, bring up GUI
+			return true;
+		wxLogError(wxT("No logfile to sign!"));
+		return false;
+	}
+	if (loc == 0) {
+		if (!frame)
+			frame = GUIinit();
+		loc = frame->SelectStationLocation(wxT("Select Station Location for Signing"));
+	}
+	if (loc == 0)
+		return false;
+	wxString path, name, ext;
+	if (!wxIsEmpty(outfile)) {
+		path = outfile;
+	} else {
+		wxSplitPath(infile, &path, &name, &ext);
+		if (!wxIsEmpty(path))
+			path += wxT("/");
+		path += name + wxT(".tq8");
+	}
+	try {
+		frame->ConvertLogFile(loc, infile, path, true, suppressdate, password);
+	} catch (TQSLException& x) {
+		wxString s;
+		if (infile)
+			s = infile + wxT(": ");
+		s += wxString(x.what(), wxConvLocal);
+		wxLogError(s);
+	}
+	return false;
 }

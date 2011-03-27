@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: tqslpaths.h,v 1.4 2005/02/18 16:38:59 ke3z Exp $
+    revision             : $Id: tqslpaths.h,v 1.6 2010/03/11 19:14:21 k1mu Exp $
  ***************************************************************************/
 
 #ifdef HAVE_CONFIG_H
@@ -56,9 +56,13 @@ public:
 
                 CFRelease(mainBundleURL);
 
-                Add(wxString(npath) + wxT("Contents/Resources/Help/"));
+                Add(wxString(npath, wxConvLocal) + wxT("Contents/Resources/Help/"));
+
+//		Add(wxString((const char *)npath, wxConvLocal) + wxT("Contents/Resources/Help/"));
+		Add(wxT("/Applications/") + subdir + wxT(".app/Contents/Resources/Help/"));
 #else
 		Add(wxT("/usr/share/TrustedQSL/help/") + subdir);
+		Add(wxT("/usr/local/share/TrustedQSL/help/") + subdir);
 		Add(subdir);
 #endif
 	}

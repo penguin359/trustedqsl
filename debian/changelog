@@ -1,3 +1,23 @@
+trustedqsl (1.13-2) unstable; urgency=low
+
+  * 00-copy-LICENSE-to-COPYING.patch: create COPYING.
+  * 01-fix-library-configure-checks.patch:
+      Clean up library configure checks: rm {openssl, expat}, fix zlib to
+      allow multi-arch libs [thanks Jonathan Marsden <jmarsden@fastmail.fm>].
+  * 10-icons-key16-xpm.patch: import icons/key16.xpm from trustedqsl-1.11.
+  * 99-update-generated-build-config.patch: autoconf, automake, libtool update.
+  * Drop build-dep on unused {libexpat-dev, libssl-dev}.
+  * debian/rules: install upstream ChangeLog.
+
+ -- Kamal Mostafa <kamal@whence.com>  Sat, 26 Mar 2011 21:19:03 -0700
+
+trustedqsl (1.13-1) unstable; urgency=low
+
+  * Updating to latest upstream release.
+  * Adding myself to the uploaders list.
+
+ -- Jerry Stueve <k4int@arrl.net>  Mon,  4 Oct 2010 18:32:26 +0000
+
 trustedqsl (1.11-8.1) unstable; urgency=low
 
   * Retiring - remove myself from the uploaders list.

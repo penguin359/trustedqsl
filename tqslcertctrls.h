@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: tqslcertctrls.h,v 1.3 2005/02/19 12:31:00 ke3z Exp $
+    revision             : $Id: tqslcertctrls.h,v 1.4 2010/03/24 22:54:34 k1mu Exp $
  ***************************************************************************/
 
 #ifndef __tqslcertctrls_h
@@ -61,6 +61,7 @@ enum {		// Window IDs
 	ID_PREF_ROOT_CB,
 	ID_PREF_CA_CB,
 	ID_PREF_USER_CB,
+	ID_PREF_ALLCERT_CB,
 	ID_OK_BUT,
 	ID_CAN_BUT,
 	ID_HELP_BUT

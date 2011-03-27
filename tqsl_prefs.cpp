@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: tqsl_prefs.cpp,v 1.4 2005/02/18 16:38:58 ke3z Exp $
+    revision             : $Id: tqsl_prefs.cpp,v 1.5 2010/03/09 01:57:20 k1mu Exp $
  ***************************************************************************/
 
 #include "tqsl_prefs.h"

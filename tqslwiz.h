@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: tqslwiz.h,v 1.4 2005/02/18 20:28:30 ke3z Exp $
+    revision             : $Id: tqslwiz.h,v 1.5 2010/03/09 16:48:47 k1mu Exp $
  ***************************************************************************/
 
 #ifndef __tqslwiz_h
@@ -81,6 +81,7 @@ public:
 	~TQSLWizCertPage();
 	virtual bool TransferDataFromWindow();
 	void OnComboBoxEvent(wxCommandEvent&);
+	void OnCheckBoxEvent(wxCommandEvent&);
 	int loc_page;
 	void UpdateFields(int noupdate_field = -1);
 	virtual TQSLWizPage *GetPrev() const;
@@ -88,6 +89,7 @@ public:
 	void OnSize(wxSizeEvent&);
 private:
 	std::vector<void *> controls;
+	wxCheckBox *okEmptyCB;
 	DECLARE_EVENT_TABLE()
 };
 

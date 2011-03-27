@@ -31,7 +31,7 @@ binary-arch: build
 #	dh_testversion
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_prep
 	dh_installdirs
 	make install DESTDIR=`pwd`/debian/trustedqsl
 
@@ -39,11 +39,12 @@ binary-arch: build
 	cp debian/*.desktop debian/trustedqsl/usr/share/applications
 	convert tqsl-key1.ico icons/tqsl.png
 	cp icons/*.* debian/trustedqsl/usr/share/pixmaps
+	cp ChangeLog \
+	    debian/trustedqsl/usr/share/doc/trustedqsl/changelog
 
 	dh_installdocs
 	dh_installchangelogs
 	dh_installmenu
-	dh_desktop
 	dh_strip
 	dh_compress
 	dh_fixperms

@@ -1,0 +1,174 @@
+Description: Clean up library configure checks: rm {openssl, expat}, fix zlib
+Author: Kamal Mostafa <kamal@whence.com>
+
+Remove configure checks for unused {openssl, expat}.
+
+Remove custom configure checks for {zlib}, and let the autoconf system find it
+with standard AC_ macros instead.  This allows building on hosts with
+multi-arch libraries or other non-standard installation paths for those
+libraries.  Thanks to Jonathan Marsden for reporting and identifying this
+issue.
+
+--- trustedqsl-1.13.orig/configure.in
++++ trustedqsl-1.13/configure.in
+@@ -69,22 +69,6 @@ checktqslinc(){
+   fi
+ }
+ 
+-checkssldir(){
+-  if test -z "$OPENSSL"; then
+-    if test -e "$1/lib/libcrypto.a" || test -e "$1/lib/libcrypto$dyn_lib_suf"; then
+-      OPENSSL="$1"
+-    fi
+-  fi
+-}
+-
+-checkexpatdir(){
+-  if test -z "$EXPAT"; then
+-    if test -e "$1/lib/libexpat.a" || test -e "$1/lib/libexpat$dyn_lib_suf"; then
+-      EXPAT="$1"
+-    fi
+-  fi
+-}
+-
+ checkwxdir(){
+   if test -z "$WXDIR"; then
+     if test -e "$1/bin/wx-config"; then
+@@ -93,14 +77,6 @@ checkwxdir(){
+   fi
+ }
+ 
+-checkzlibdir(){
+-  if test -z "$ZLIB"; then
+-    if test -e "$1/lib/libz.a" || test -e "$1/lib/libz$dyn_lib_suf"; then
+-      ZLIB="$1"
+-    fi
+-  fi
+-}
+-
+ checkinnodir(){
+   if test -z "$INNODIR"; then
+     if test -x "$1/ISCC.exe"; then
+@@ -109,38 +85,6 @@ checkinnodir(){
+   fi
+ }
+ 
+-sslcheck() {
+-      AC_MSG_CHECKING([for OpenSSL library (libcrypto.a)])
+-      checkssldir "$HOME/openssl"; checkssldir "/usr"; checkssldir "/usr/local";
+-      checkssldir "/usr/local/ssl"
+-      if test -z "$OPENSSL"; then
+-        AC_MSG_RESULT(Not found)
+-        echo
+-        echo "OpenSSL not found"
+-        echo "Use --with-openssl option to fix this problem"
+-        echo
+-        exit 1
+-      fi
+-      AC_MSG_RESULT($OPENSSL)
+-    AC_SUBST(OPENSSL)
+-}
+-
+-checkopenssl=yes
+-dnl Check for OpenSSL
+-AC_ARG_WITH(openssl,
+-  [AC_HELP_STRING( [--with-openssl=DIR], [location of OpenSSL files])],
+-  [
+-    if test "$withval" = "no"; then
+-      checkopenssl=
+-    elif test "$withval" != "yes"; then
+-      OPENSSL="$withval"
+-    else
+-      sslcheck
+-    fi
+-  ],
+-  [ sslcheck ]
+-)
+-
+ dnl Check for tqsllib
+ AC_MSG_CHECKING([for tqsllib library])
+ AC_ARG_WITH(tqsllib,
+@@ -180,42 +124,6 @@ fi
+ AC_MSG_RESULT($TQSLINC)
+ AC_SUBST(TQSLINC)
+ 
+-dnl Check for zlib
+-AC_MSG_CHECKING([for zlib library (libz.a)])
+-AC_ARG_WITH(zlib,
+-  [AC_HELP_STRING([--with-zlib=DIR], [location of zlib library files])],
+-  [ checkzlibdir "$withval" ],
+-  [ checkzlibdir "$HOME/zlib"; checkzlibdir "/usr"; checkzlibdir "/usr/local" ]
+-)
+-if test -z "$ZLIB"; then
+-  AC_MSG_RESULT(Not found)
+-  echo
+-  echo "zlib not found"
+-  echo "Use --with-zlib option to fix this problem"
+-  echo
+-  exit 1
+-fi
+-AC_MSG_RESULT($ZLIB)
+-AC_SUBST(ZLIB)
+-
+-dnl Check for expat
+-AC_MSG_CHECKING([for expat library (libexpat.a)])
+-AC_ARG_WITH(expat,
+-  [AC_HELP_STRING([--with-expat=DIR], [location of expat library files])],
+-  [ checkexpatdir "$withval" ],
+-  [ checkexpatdir "$HOME/expat"; checkexpatdir "/usr"; checkexpatdir "/usr/local" ]
+-)
+-if test -z "$EXPAT"; then
+-  AC_MSG_RESULT(Not found)
+-  echo
+-  echo "expat not found"
+-  echo "Use --with-expat option to fix this problem"
+-  echo
+-  exit 1
+-fi
+-AC_MSG_RESULT($EXPAT)
+-AC_SUBST(EXPAT)
+-
+ dnl Check for wxWindows
+ AC_MSG_CHECKING([for wxWindows])
+ AC_ARG_WITH(wxwindows,
+@@ -266,18 +174,8 @@ AC_ARG_ENABLE(wxwin-static, [AC_HELP_STR
+ 	[ if test "$enableval" = "yes"; then wxwin_libs=`$WXDIR/bin/wx-config --static --libs`; fi ])
+ AC_SUBST(wxwin_libs)
+ 
+-if test -n "$OPENSSL"; then LIBRARY_PATH="$OPENSSL/lib"; fi
+-if test -n "$LIBRARY_PATH"; then LIBRARY_PATH="$LIBRARY_PATH:"; fi
+-LIBRARY_PATH="$LIBRARY_PATH$TQSLLIB:$EXPAT/lib:$ZLIB/lib"
+-
+-export LIBRARY_PATH
+-
+ dnl Checks for libraries.
+ AC_CHECK_LIB(z, main, , [ echo -e "\nlibz not found! (Use --with-zlib to correct)"; exit 1 ], -lstdc++)
+-AC_CHECK_LIB(expat, main, , [ echo -e "\nlibexpat not found! (Use --with-expat to correct)"; exit 1 ], -lstdc++)
+-if test -n "$checkopenssl"; then
+-  AC_CHECK_LIB(crypto, main, , [ echo -e "\nlibcrypto not found! (Use --with-openssl to correct)"; exit 1 ], -lstdc++)
+-fi
+ 
+ if test "$build_os" = "mingw32"; then
+ 	AC_CHECK_LIB(tqsllibd, main, , [ echo -e "\nlibtqsllib not found! (Use --with-tqsllib to correct)"; exit 1 ], -lstdc++)
+--- trustedqsl-1.13.orig/Makefile.am
++++ trustedqsl-1.13/Makefile.am
+@@ -4,9 +4,6 @@
+ LIBS = @LIBS@ $(openssl_static)
+ TQSLINC=@TQSLINC@
+ TQSLLIB=@TQSLLIB@
+-ZLIB=@ZLIB@
+-EXPAT=@EXPAT@
+-OPENSSL=@OPENSSL@
+ WXDIR=@WXDIR@
+ WXWIN_STATIC=@wxwin_static@
+ BUILD=@BUILD@
+@@ -23,8 +20,7 @@ WXCONFIG="$(WXDIR)/bin/wx-config"
+ datadir = @datadir@/TrustedQSL
+ helpdir = $(datadir)
+ 
+-AM_CXXFLAGS = -Wall `$(WXCONFIG) --cxxflags` -I$(TQSLINC) -I$(ZLIB)/include -I$(EXPAT)/include
+-AM_LDFLAGS = -L$(TQSLLIB) -L$(ZLIB)/lib -L$(EXPAT)/lib -L$(OPENSSL)/lib
++AM_CXXFLAGS = -Wall `$(WXCONFIG) --cxxflags`
+ 
+ BUILT_SOURCES = tqslbuild.h tqslcertbuild.h helpdir icondir
+ 

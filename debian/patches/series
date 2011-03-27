@@ -1,0 +1,4 @@
+00-copy-LICENSE-to-COPYING.patch
+01-fix-library-configure-checks.patch
+10-icons-key16-xpm.patch
+99-update-generated-build-config.patch

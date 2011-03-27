@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: tqslwiz.cpp,v 1.3 2005/02/18 16:38:59 ke3z Exp $
+    revision             : $Id: tqslwiz.cpp,v 1.5 2010/03/09 16:48:47 k1mu Exp $
  ***************************************************************************/
 
 #ifdef HAVE_CONFIG_H
@@ -17,12 +17,17 @@ using namespace std;
 #include "tqslwiz.h"
 #include "wxutil.h"
 
+#define TQSL_LOCATION_FIELD_UPPER	1
+#define TQSL_LOCATION_FIELD_MUSTSEL	2
+#define TQSL_LOCATION_FIELD_SELNXT	4
+
 BEGIN_EVENT_TABLE(TQSLWizard, wxWizard)
 	EVT_WIZARD_PAGE_CHANGED(-1, TQSLWizard::OnPageChanged)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(TQSLWizCertPage, TQSLWizPage)
 	EVT_COMBOBOX(-1, TQSLWizCertPage::OnComboBoxEvent)
+	EVT_CHECKBOX(-1, TQSLWizCertPage::OnCheckBoxEvent)
 	EVT_SIZE(TQSLWizCertPage::OnSize)
 END_EVENT_TABLE()
 
@@ -61,6 +66,7 @@ TQSLWizard::GetPage(bool final) {
 		_pages[page_num] = new TQSLWizFinalPage(this, loc, GetCurrentTQSLPage());
 	else
 		_pages[page_num] = new TQSLWizCertPage(this, loc);
+	_curpage = page_num;
 	if (page_num == 0)
 		((TQSLWizFinalPage *)_pages[0])->prev = GetCurrentTQSLPage();
 	return _pages[page_num];
@@ -107,6 +113,29 @@ TQSLWizCertPage::UpdateFields(int noupdate_field) {
 
 	if (noupdate_field >= 0)
 		tqsl_updateStationLocationCapture(loc);
+	if (noupdate_field <= 0) {
+		int flags;
+		tqsl_getLocationFieldFlags(loc, 0, &flags);
+		if (flags == TQSL_LOCATION_FIELD_SELNXT) {
+			int index;
+			bool fwdok = false;
+			tqsl_getLocationFieldIndex(loc, 0, &index);
+			if (index > 0)
+				fwdok = true;
+			if (okEmptyCB && okEmptyCB->IsChecked())
+				fwdok = true;
+			wxWindow *but = GetParent()->FindWindow(wxID_FORWARD);
+		        if (but) {
+        			but->Enable(fwdok);
+			} 
+			if (okEmptyCB) {
+				if (index > 0) 
+					okEmptyCB->Enable(false);
+				else
+					okEmptyCB->Enable(true);
+			}
+		}
+	}
 	for (int i = noupdate_field+1; i < (int)controls.size(); i++) {
 		int changed;
 		tqsl_getLocationFieldChanged(loc, i, &changed);
@@ -129,6 +158,12 @@ TQSLWizCertPage::UpdateFields(int noupdate_field) {
 			for (int j = 0; j < nitems && j < 2000; j++) {
 				char item[80];
 				tqsl_getLocationFieldListItem(loc, i, j, item, sizeof(item));
+				/* For Alaska counties, it's pseudo-county name
+				 * followed by a '|' then the real county name.
+			 	 */
+				char *p = strchr(item, '|');
+				if (p)
+					*p = '\0';
 				wxString item_text(item, wxConvLocal);
 				((wxComboBox *)controls[i])->Append(item_text);
 				if (item_text == old_sel)
@@ -181,6 +216,11 @@ TQSLWizCertPage::OnComboBoxEvent(wxCommandEvent& event) {
 	}
 }
 
+void
+TQSLWizCertPage::OnCheckBoxEvent(wxCommandEvent& event) {
+	UpdateFields(-1);
+}
+
 TQSLWizCertPage::TQSLWizCertPage(TQSLWizard *parent, tQSL_Location locp)
 	: TQSLWizPage(parent, locp) {
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
@@ -202,6 +242,8 @@ TQSLWizCertPage::TQSLWizCertPage(TQSLWizard *parent, tQSL_Location locp)
 	wxCoord max_label_w, max_label_h;
 	// Measure width of longest expected label string
 	sdc.GetTextExtent(wxT("Longest label expected"), &max_label_w, &max_label_h);
+	bool addCheckbox = false;
+	wxString cbLabel;
 	for (int i = 0; i < numf; i++) {
 		wxBoxSizer *hsizer = new wxBoxSizer(wxHORIZONTAL);
 		char label[256];
@@ -211,13 +253,18 @@ TQSLWizCertPage::TQSLWizCertPage(TQSLWizard *parent, tQSL_Location locp)
 		wxWindow *control_p = 0;
 		char gabbi_name[256];
 		tqsl_getLocationFieldDataGABBI(loc, i, gabbi_name, sizeof gabbi_name);
-		int in_type;
+		int in_type, flags;
 		tqsl_getLocationFieldInputType(loc, i, &in_type);
+		tqsl_getLocationFieldFlags(loc, i, &flags);
 		switch(in_type) {
 			case TQSL_LOCATION_FIELD_DDLIST:
 			case TQSL_LOCATION_FIELD_LIST:
 				control_p = new wxComboBox(this, TQSL_ID_LOW+i, wxT(""), wxDefaultPosition, wxSize(control_width, -1),
 					0, 0, wxCB_DROPDOWN|wxCB_READONLY);
+				if (flags & TQSL_LOCATION_FIELD_SELNXT) {
+					addCheckbox = true;
+					cbLabel = wxString(label, wxConvLocal);
+				}
 				break;
 			case TQSL_LOCATION_FIELD_TEXT:
 				control_p = new wxTextCtrl(this, TQSL_ID_LOW+i, wxT(""), wxDefaultPosition, wxSize(control_width, -1));
@@ -227,6 +274,17 @@ TQSLWizCertPage::TQSLWizCertPage(TQSLWizard *parent, tQSL_Location locp)
 		hsizer->Add(control_p, 0, wxLEFT|wxTOP, 5);
 		sizer->Add(hsizer, 0, wxLEFT|wxRIGHT, 10);
 	}
+
+	if (addCheckbox) {
+		wxBoxSizer *hsizer = new wxBoxSizer(wxHORIZONTAL);
+		okEmptyCB = new wxCheckBox(this, TQSL_ID_LOW+numf, wxT("Allow 'None' for ") + cbLabel, wxDefaultPosition, wxDefaultSize);
+		
+		hsizer->Add(new wxStaticText(this, -1, wxT(""),
+			wxDefaultPosition, wxSize(label_w, -1), wxALIGN_RIGHT|wxST_NO_AUTORESIZE), 0, wxTOP, 5);
+		hsizer->Add(okEmptyCB, 0, wxLEFT|wxTOP, 5);
+		sizer->Add(hsizer, 0, wxLEFT|wxRight, 10);
+	} else
+		okEmptyCB = 0;
 
 	UpdateFields();
 	AdjustPage(sizer, wxT("stnloc1.htm"));

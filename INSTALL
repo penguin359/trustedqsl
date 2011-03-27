@@ -75,7 +75,10 @@ You'll need to have the Mac developer's tools, Xcode 1.5, installed.
 This is done in much the same manner as building under Linux/Unix, above.
 However, you ought *not* do "make install." Using Terminal, simply do:
 
-./configure
+arch_flags="-arch i386"
+./configure CFLAGS="$arch_flags" CXXFLAGS="$arch_flags" CPPFLAGS="$arch_flags" \
+LDFLAGS="$arch_flags" OBJCFLAGS="$arch_flags" OBJCXXFLAGS="$arch_flags" \
+--with-tqsllib=$HOME/tqsllib
 make
 
 This will result in the directories dist/TrustedQSL/tqsl.app and
@@ -87,7 +90,7 @@ applications:
 
 make dmg
 
-will make TrustedQSL-1.11.dmg, a Mac distributable disk image
+will make TrustedQSL-1.12.dmg, a Mac distributable disk image
 containing the TrustedQSL applications folder and document files.
 
 ===================================================================
@@ -125,10 +128,10 @@ see:
 ./configure --help
 
 cd
-tar -xzf TrustedQSL-1.11.tar.gz
-cd TrustedQSL-1.11
+tar -xzf TrustedQSL-1.12.tar.gz
+cd TrustedQSL-1.12
 ./configure --without-openssl
 make installer
 
-This should result in a file, tqsl-111.exe. This is an executable
+This should result in a file, tqsl-112.exe. This is an executable
 setup file that will install the TrustedQSL applications.
