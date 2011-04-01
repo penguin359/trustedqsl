@@ -1,0 +1,4 @@
+debian/trustedqsl/tmp/man/trustedqsl.5
+# N.B. the following two get generated from trustedqsl.5 (in debian/rules)
+debian/trustedqsl/tmp/man/tqsl.1
+debian/trustedqsl/tmp/man/tqslcert.1

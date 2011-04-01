@@ -1,2 +1,2 @@
 version=3
-http://sf.net/trustedqsl/TrustedQSL-(.*)\.tar\.gz
+http://sf.net/trustedqsl/TrustedQSL-([0-9].*)\.tar\.gz
