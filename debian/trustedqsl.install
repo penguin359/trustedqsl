@@ -1,0 +1,3 @@
+debian/trustedqsl.png	usr/share/pixmaps/
+debian/trustedqsl.xpm	usr/share/pixmaps/
+debian/*.desktop	usr/share/applications/

@@ -1,3 +1,15 @@
+trustedqsl (1.14.1-1) unstable; urgency=low
+
+  * New upstream release
+    - new application feature: direct upload to LoTW
+    - build system converted to CMake
+  * Debian packaging overhaul
+    - upstream source now bundles tqsllib (unversioned libtqsllib.so in
+        /usr/lib/trustedqsl/) so drop build-dep tqsllib-dev (>= 2.2)
+    - omit header files from application package
+
+ -- Kamal Mostafa <kamal@whence.com>  Sat, 01 Jun 2013 17:01:04 -0700
+
 trustedqsl (1.13-3) unstable; urgency=low
 
   * Create manpages: trustedqsl.5, tqsl.1, tqslcert.1 (LP: #480355).

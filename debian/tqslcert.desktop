@@ -1,9 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=tqslcert
-Comment=Manage certificates for LoTW
+Name=TQSLCert
+Comment=Manage TrustedQSL digital keys/certificates
 Exec=tqslcert
-Icon=key48.png
+Icon=trustedqsl.png
 Terminal=false
 Type=Application
-Categories=Utility;HamRadio;
+Categories=Application;HamRadio;Utility;

@@ -1,2 +1,10 @@
 version=3
-http://sf.net/trustedqsl/TrustedQSL-([0-9].*)\.tar\.gz
+
+# sane: TrustedQSL-1.13 ==> 1.13
+http://sf.net/trustedqsl/TrustedQSL-([\d\.]+)\.tar\.gz
+
+# awful: tqsl-114.tar.gz ==> 1.14
+http://sf.net/trustedqsl/tqsl-(\d)(\d+)\.tar\.gz
+
+# even more awful: tqsl-114-1.tar.gz ==> 1.14.1
+http://sf.net/trustedqsl/tqsl-(\d)(\d+)-(\d+)\.tar\.gz

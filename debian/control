@@ -3,20 +3,22 @@ Section: hamradio
 Priority: optional
 Maintainer: Debian Hamradio Maintainers <debian-hams@lists.debian.org>
 Uploaders: Kamal Mostafa <kamal@whence.com>, Jaime Robles <jaime@debian.org>, Patrick Ouellette <pouelle@debian.org>, Hamish Moffatt <hamish@debian.org>, Jerry Stueve <k4int@arrl.net>
-Standards-Version: 3.9.1
-Build-Depends: debhelper (>= 7), tqsllib-dev (>= 2.2), libwxgtk2.8-dev, zlib1g-dev, autotools-dev, imagemagick
+Standards-Version: 3.9.4
+Build-Depends: debhelper (>= 9), cmake, libwxgtk2.8-dev, zlib1g-dev, libexpat1-dev, libssl-dev, libdb-dev, libcurl4-openssl-dev
 Homepage: http://sourceforge.net/trustedqsl/
-Vcs-cvs: :pserver:anonymous@trustedqsl.cvs.sourceforge.net:/cvsroot/trustedqsl co -P tqsl
-Vcs-Browser: http://trustedqsl.cvs.sourceforge.net/trustedqsl
+Vcs-Git: git://git.code.sf.net/p/trustedqsl/tqsl
+Vcs-Browser: http://sourceforge.net/p/trustedqsl/tqsl/ci/master/tree/
 
 Package: trustedqsl
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: QSL log signing for the Logbook of the World (LoTW)
+ Open source libraries and utilities to support using digital signatures
+ for amateur radio QSL information.
+ .
  A QSL is a confirmation of contact between two amateur radio stations.
  The ARRL Logbook of the World project is a database which collects
  data about contacts between amateur stations (QSOs). This package 
- provides programs for maintaining your digital certificates for
- LOTW and for signing QSO log files in ADIF and Cabrillo format
- for upload.
+ provides programs for maintaining your digital certificates for LoTW
+ and for signing and uploading QSO log files.
 
