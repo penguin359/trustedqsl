@@ -5,7 +5,7 @@ Maintainer: Debian Hamradio Maintainers <debian-hams@lists.debian.org>
 Uploaders: Kamal Mostafa <kamal@whence.com>, Jaime Robles <jaime@debian.org>, Patrick Ouellette <pouelle@debian.org>, Hamish Moffatt <hamish@debian.org>, Jerry Stueve <k4int@arrl.net>
 Standards-Version: 3.9.4
 Build-Depends: debhelper (>= 9), cmake, libwxgtk2.8-dev, zlib1g-dev, libexpat1-dev, libssl-dev, libdb-dev, libcurl4-openssl-dev
-Homepage: http://sourceforge.net/trustedqsl/
+Homepage: http://sourceforge.net/projects/trustedqsl/
 Vcs-Git: git://git.code.sf.net/p/trustedqsl/tqsl
 Vcs-Browser: http://sourceforge.net/p/trustedqsl/tqsl/ci/master/tree/
 
