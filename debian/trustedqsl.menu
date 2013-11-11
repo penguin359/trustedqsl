@@ -3,8 +3,3 @@
         description="Sign QSO data for upload to the ARRL LoTW" \
         command="/usr/bin/tqsl" \
 	icon="/usr/share/pixmaps/trustedqsl.xpm"
-?package(trustedqsl):needs="x11" section="Applications/Amateur Radio" \
-        title="tqslcert" longtitle="TrustedQSL certificate management" \
-        description="Manage LoTW certificates" \
-        command="/usr/bin/tqslcert" \
-	icon="/usr/share/pixmaps/trustedqsl.xpm"

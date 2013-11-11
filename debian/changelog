@@ -1,3 +1,10 @@
+trustedqsl (2.0-1) unstable; urgency=low
+
+  * New upstream release
+    - tqslcert app is no longer provided
+
+ -- Kamal Mostafa <kamal@whence.com>  Mon, 11 Nov 2013 10:56:18 -0800
+
 trustedqsl (1.14.2-1) unstable; urgency=low
 
   * New upstream release

@@ -22,6 +22,7 @@
 #include "wx/statline.h"
 #include "tqsllib.h"
 #include "tqslexcept.h"
+#include "tqsltrace.h"
 
 using namespace std;
 
@@ -92,11 +93,14 @@ static void set_font(wxWindow *w, wxFont& font) {
 
 class choice {
 public:
-	choice(const wxString& _value, const wxString& _display = wxT("")) {
+	choice(const wxString& _value, const wxString& _display = wxT(""), int _low = 0, int _high = 0) {
 		value = _value;
 		display = (_display == wxT("")) ? value : _display;
+		low = _low;
+		high = _high;
 	}
 	wxString value, display;
+	int low, high;
 	bool operator ==(const choice& other) { return other.value == value; }
 };
 
@@ -130,6 +134,7 @@ static valid_list valid_satellites;
 
 static int
 init_valid_lists() {
+	tqslTrace("init_valid_lists");
 	if (valid_bands.size() > 0)
 		return 0;
 	if (tqsl_init())
@@ -147,23 +152,34 @@ init_valid_lists() {
 	if (tqsl_getNumBand(&count))
 		return 1;
 	for (int i = 0; i < count; i++) {
-		int low, high;
+		int low, high, scale;
 		if (tqsl_getBand(i, &cp, &cp1, &low, &high))
 			return 1;
 		wxString low_s = wxString::Format(wxT("%d"), low);
 		wxString high_s = wxString::Format(wxT("%d"), high);
-		const char *hz = !strcmp(cp1, "HF") ? "kHz" : "MHz";
+		const char *hz;
+		if (!strcmp(cp1, "HF")) {
+			hz = "kHz";
+			scale = 1;		// Config file freqs are in KHz
+		} else {
+			hz = "mHz";
+			scale = 1000;		// Freqs are in MHz for VHF/UHF.
+		}
 		if (low >= 1000) {
 			low_s = wxString::Format(wxT("%g"), low / 1000.0);
 			high_s = wxString::Format(wxT("%g"), high / 1000.0);
-			hz = !strcmp(cp1, "HF") ? "MHz" : "GHz";
+			if (!strcmp(cp1, "HF")) {
+				hz = "MHz";
+			} else {
+				hz = "GHz";
+			}
 			if (high == 0)
 				high_s = wxT("UP");
 		}
 		wxString display = wxString::Format(wxT("%s (%s-%s %s)"), wxString(cp, wxConvLocal).c_str(),
 			low_s.c_str(), high_s.c_str(), wxString(hz, wxConvLocal).c_str());
-		valid_bands.push_back(choice(wxString(cp, wxConvLocal), display));
-		valid_rxbands.push_back(choice(wxString(cp, wxConvLocal), display));
+		valid_bands.push_back(choice(wxString(cp, wxConvLocal), display, low*scale, high*scale));
+		valid_rxbands.push_back(choice(wxString(cp, wxConvLocal), display, low*scale, high*scale));
 	}
 	valid_propmodes.push_back(choice(wxT(""), wxT("NONE")));
 	if (tqsl_getNumPropagationMode(&count))
@@ -200,6 +216,7 @@ END_EVENT_TABLE()
 
 QSODataDialog::QSODataDialog(wxWindow *parent, wxHtmlHelpController *help, QSORecordList *reclist, wxWindowID id, const wxString& title)
 	: wxDialog(parent, id, title), _reclist(reclist), _isend(false), _help(help) {
+	tqslTrace("QSODataDialog::QSODataDialog", "parent=0x%lx, reclist=0x%lx, id=0x%lx, %s", (void *)parent, (void *)reclist, (void *) id, _S(title));
 	wxBoxSizer *topsizer = new wxBoxSizer(wxVERTICAL);
 	wxFont font = GetFont();
 //	font.SetPointSize(TEXT_POINTS);
@@ -260,14 +277,14 @@ QSODataDialog::QSODataDialog(wxWindow *parent, wxHtmlHelpController *help, QSORe
 	topsizer->Add(sizer, 0);
 	// Frequency
 	sizer = new wxBoxSizer(wxHORIZONTAL);
-	sizer->Add(new wxStaticText(this, -1, wxT("Frequency:"), wxDefaultPosition,
+	sizer->Add(new wxStaticText(this, -1, wxT("Frequency (MHz):"), wxDefaultPosition,
 		wxSize(LABEL_WIDTH,TEXT_HEIGHT), wxALIGN_RIGHT), 0, wxALL, QD_MARGIN);
 	sizer->Add(new wxTextCtrl (this, QD_FREQ, wxT(""), wxDefaultPosition, wxSize(14*TEXT_WIDTH,TEXT_HEIGHT),
 		0, wxTextValidator(wxFILTER_NONE, &rec._freq)), 0, wxALL, QD_MARGIN);
 	topsizer->Add(sizer, 0);
 	// RX Frequency
 	sizer = new wxBoxSizer(wxHORIZONTAL);
-	sizer->Add(new wxStaticText(this, -1, wxT("RX Frequency:"), wxDefaultPosition,
+	sizer->Add(new wxStaticText(this, -1, wxT("RX Frequency (MHz):"), wxDefaultPosition,
 		wxSize(LABEL_WIDTH,TEXT_HEIGHT), wxALIGN_RIGHT), 0, wxALL, QD_MARGIN);
 	sizer->Add(new wxTextCtrl (this, QD_RXFREQ, wxT(""), wxDefaultPosition, wxSize(14*TEXT_WIDTH,TEXT_HEIGHT),
 		0, wxTextValidator(wxFILTER_NONE, &rec._rxfreq)), 0, wxALL, QD_MARGIN);
@@ -343,6 +360,7 @@ QSODataDialog::~QSODataDialog(){
 
 bool
 QSODataDialog::TransferDataFromWindow() {
+	tqslTrace("QSODataDialog::TransferDataFromWindow");
 	rec._call.Trim(FALSE).Trim(TRUE);
 	if (!wxDialog::TransferDataFromWindow())
 		return false;
@@ -357,6 +375,36 @@ QSODataDialog::TransferDataFromWindow() {
 	rec._rxfreq.Trim(FALSE).Trim(TRUE);
 	rec._propmode = valid_propmodes[_propmode].value;
 	rec._satellite = valid_satellites[_satellite].value;
+
+	double freq;
+
+	if (!rec._freq.IsEmpty()) {
+		if (!rec._freq.ToDouble(&freq)) {
+			wxMessageBox(wxT("QSO Frequency is invalid"), wxT("QSO Data Error"),
+				wxOK | wxICON_EXCLAMATION, this);
+			return false;
+		}
+		freq = freq * 1000.0;		// Freq is is MHz but the limits are in KHz
+		if (freq < valid_bands[_band].low || (valid_bands[_band].high > 0 && freq > valid_bands[_band].high)) {
+			wxMessageBox(wxT("QSO Frequency is out of range for the selected band"), wxT("QSO Data Error"),
+				wxOK | wxICON_EXCLAMATION, this);
+			return false;
+		}
+	}
+
+	if (!rec._rxfreq.IsEmpty()) {
+		if (!rec._rxfreq.ToDouble(&freq)) {
+			wxMessageBox(wxT("QSO RX Frequency is invalid"), wxT("QSO Data Error"),
+				wxOK | wxICON_EXCLAMATION, this);
+			return false;
+		}
+		freq = freq * 1000.0;		// Freq is is MHz but the limits are in KHz
+		if (freq < valid_rxbands[_rxband].low || (valid_rxbands[_rxband].high > 0 && freq > valid_rxbands[_rxband].high)) {
+			wxMessageBox(wxT("QSO RX Frequency is out of range for the selected band"), wxT("QSO Data Error"),
+				wxOK | wxICON_EXCLAMATION, this);
+			return false;
+		}
+	}
 	if (!_isend && rec._call == wxT("")) {
 		wxMessageBox(wxT("Call Sign cannot be empty"), wxT("QSO Data Error"),
 			wxOK | wxICON_EXCLAMATION, this);
@@ -379,6 +427,7 @@ QSODataDialog::TransferDataFromWindow() {
 
 bool
 QSODataDialog::TransferDataToWindow() {
+	tqslTrace("QSODataDialog::TransferDataToWindow");
 	valid_list::iterator it;
 	if ((it = find(valid_modes.begin(), valid_modes.end(), rec._mode.Upper())) != valid_modes.end())
 		_mode = distance(valid_modes.begin(), it);
@@ -397,6 +446,7 @@ QSODataDialog::TransferDataToWindow() {
 
 void
 QSODataDialog::OnOk(wxCommandEvent&) {
+	tqslTrace("QSODataDialog::OnOk");
 	_isend = true;
 	TransferDataFromWindow();
 	_isend = false;
@@ -409,22 +459,25 @@ QSODataDialog::OnOk(wxCommandEvent&) {
 
 void
 QSODataDialog::OnCancel(wxCommandEvent&) {
+	tqslTrace("QSODataDialog::OnCancel");
 	EndModal(wxID_CANCEL);
 }
 
 void
 QSODataDialog::OnHelp(wxCommandEvent&) {
+	tqslTrace("QSODataDialog::OnHelp");
 	if (_help)
 		_help->Display(wxT("qsodata.htm"));
 }
 
 void
 QSODataDialog::SetRecno(int new_recno) {
+	tqslTrace("QSODataDialog::SetRecno", "new_recno=%d", new_recno);
 	if (_reclist == NULL || new_recno < 1)
 		return;
    	if (TransferDataFromWindow()) {
 //   		(*_reclist)[_recno-1] = rec;
-		if (new_recno > (int)_reclist->size()) {
+		if (_reclist && new_recno > (int)_reclist->size()) {
 			new_recno = _reclist->size() + 1;
 			QSORecord newrec;
 			// Copy QSO fields from current record
@@ -435,7 +488,7 @@ QSODataDialog::SetRecno(int new_recno) {
 			_reclist->push_back(newrec);
 		}
    		_recno = new_recno;
-   		rec = (*_reclist)[_recno-1];
+   		if (_reclist) rec = (*_reclist)[_recno-1];
    		TransferDataToWindow();
    		UpdateControls();
 		_call_ctrl->SetFocus();
@@ -444,21 +497,25 @@ QSODataDialog::SetRecno(int new_recno) {
 
 void
 QSODataDialog::OnRecDown(wxCommandEvent&) {
+	tqslTrace("QSODataDialog::OnRecDown");
 	SetRecno(_recno - 1);
 }
 
 void
 QSODataDialog::OnRecUp(wxCommandEvent&) {
+	tqslTrace("QSODataDialog::OnRecUp");
 	SetRecno(_recno + 1);
 }
 
 void
 QSODataDialog::OnRecBottom(wxCommandEvent&) {
+	tqslTrace("QSODataDialog::OnRecBottom");
 	SetRecno(1);
 }
 
 void
 QSODataDialog::OnRecTop(wxCommandEvent&) {
+	tqslTrace("QSODataDialog::OnRecTop");
 	if (_reclist == 0)
 		return;
 	SetRecno(_reclist->size());
@@ -466,6 +523,7 @@ QSODataDialog::OnRecTop(wxCommandEvent&) {
 
 void
 QSODataDialog::OnRecNew(wxCommandEvent&) {
+	tqslTrace("QSODataDialog::OnRecNew");
 	if (_reclist == 0)
 		return;
 	SetRecno(_reclist->size()+1);
@@ -473,6 +531,7 @@ QSODataDialog::OnRecNew(wxCommandEvent&) {
 
 void
 QSODataDialog::OnRecDelete(wxCommandEvent&) {
+	tqslTrace("QSODataDialog::OnRecDelete");
 	if (_reclist == 0)
 		return;
 	_reclist->erase(_reclist->begin() + _recno - 1);
@@ -487,6 +546,7 @@ QSODataDialog::OnRecDelete(wxCommandEvent&) {
 
 void
 QSODataDialog::UpdateControls() {
+	tqslTrace("QSODataDialog::UpdateControls");
 	if (_reclist == 0)
 		return;
 	_recdown_ctrl->Enable(_recno > 1);

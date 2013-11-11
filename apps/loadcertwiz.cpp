@@ -14,35 +14,37 @@
 
 #include "loadcertwiz.h"
 #include "getpassword.h"
-#include "tqslcertctrls.h"
+#include "tqslctrls.h"
 #include "tqsllib.h"
 #include "tqslerrno.h"
-#include "tqslcert.h"
+#include "tqslapp.h"
+#include "tqsltrace.h"
 
 wxString
 notifyData::Message() const {
 	
-	wxString msgs = status;
-	if (!wxIsEmpty(status))
-		msgs = status + wxT("\n");
-
-	return wxString::Format(
-		wxT("%s")
-		wxT("Root Certificates:\t\tLoaded: %d  Duplicate: %d  Error: %d\n")
-		wxT("CA Certificates:\t\tLoaded: %d  Duplicate: %d  Error: %d\n")
-		wxT("User Certificates:\t\tLoaded: %d  Duplicate: %d  Error: %d\n")
-		wxT("Private Keys:\t\t\tLoaded: %d  Duplicate: %d  Error: %d\n")
-		wxT("Configuration Data:\tLoaded: %d  Duplicate: %d  Error: %d"),
-		msgs.c_str(),
-		root.loaded, root.duplicate, root.error,
-		ca.loaded, ca.duplicate, ca.error,
-		user.loaded, user.duplicate, user.error,
-		pkey.loaded, pkey.duplicate, pkey.error,
-		config.loaded, config.duplicate, config.error);
+	if (diagFile) {
+		fprintf(diagFile, "%s\n"
+			"Root Certificates:\t\tLoaded: %d  Duplicate: %d  Error: %d\n"
+			"CA Certificates:\t\tLoaded: %d  Duplicate: %d  Error: %d\n"
+			"Callsign Certificates:\tLoaded: %d  Duplicate: %d  Error: %d\n"
+			"Private Keys:\t\t\tLoaded: %d  Duplicate: %d  Error: %d\n"
+			"Configuration Data:\tLoaded: %d  Duplicate: %d  Error: %d\n",
+			_S(status),
+			root.loaded, root.duplicate, root.error,
+			ca.loaded, ca.duplicate, ca.error,
+			user.loaded, user.duplicate, user.error,
+			pkey.loaded, pkey.duplicate, pkey.error,
+			config.loaded, config.duplicate, config.error);
+	}
+	if (status.IsEmpty())
+		return wxString(wxT("\nImport completed successfully"));
+	return status;
 }
 
 int
 notifyImport(int type, const char *message, void *data) {
+	tqslTrace("notifyImport", "type=%d, message=%s, data=0x%lx", type, message, (void *)data);
 	if (TQSL_CERT_CB_RESULT_TYPE(type) == TQSL_CERT_CB_PROMPT) {
 		const char *nametype = 0;
 		const char *configkey = 0;
@@ -51,14 +53,14 @@ notifyImport(int type, const char *message, void *data) {
 			case TQSL_CERT_CB_ROOT:
 				nametype = "Trusted root";
 				configkey = "NotifyRoot";
-				default_prompt = true;
+				//default_prompt = true;
 				break;
 			case TQSL_CERT_CB_CA:
 				nametype = "Certificate Authority";
 				configkey = "NotifyCA";
 				break;
 			case TQSL_CERT_CB_USER:
-				nametype = "User";
+				nametype = "Callsign";
 				configkey = "NotifyUser";
 				break;
 		}
@@ -97,16 +99,27 @@ notifyImport(int type, const char *message, void *data) {
 				break;
 		}
 		if (counts) {
-			if (message) nd->status = nd->status + wxString(message, wxConvLocal) + wxT("\n");
 			switch (TQSL_CERT_CB_RESULT_TYPE(type)) {
 				case TQSL_CERT_CB_DUPLICATE:
+					if (TQSL_CERT_CB_CERT_TYPE(type) == TQSL_CERT_CB_USER) {
+						if (message) {
+							nd->status = nd->status + wxString(message, wxConvLocal) + wxT("\n");
+						} else {
+							nd->status = nd->status + wxT("This callsign certificate is already installed");
+						}
+					}
 					counts->duplicate++;
 					break;
 				case TQSL_CERT_CB_ERROR:
+					if (message)
+						nd->status = nd->status + wxString(message, wxConvLocal) + wxT("\n");
 					counts->error++;
 					// wxMessageBox(wxString(message, wxConvLocal), wxT("Error"));
 					break;
 				case TQSL_CERT_CB_LOADED:
+					if (TQSL_CERT_CB_CERT_TYPE(type) == TQSL_CERT_CB_USER)
+						nd->status = nd->status + wxString("Callsign Certificate ", wxConvLocal) +
+							wxString(message, wxConvLocal) + wxT("\n");
 					counts->loaded++;
 					break;
 			}
@@ -127,18 +140,19 @@ static wxString pw_helpfile;
 
 static int
 GetNewPassword(char *buf, int bufsiz, void *) {
+	tqslTrace("GetNewPassword");
 	GetNewPasswordDialog dial(0, wxT("New Password"),
-wxT("Enter a password for this private key.\n\n")
-wxT("If you are using a computer system that is\n")
-wxT("shared with others, you should specify a\n")
-wxT("password to protect this key. However, if\n")
-wxT("you are using a computer in a private residence\n")
-wxT("no password need be specified.\n\n")
-wxT("This password will have to be entered each time\n")
-wxT("you use the key/certificate for signing or when\n")
-wxT("saving the key.\n\n")
-wxT("Leave the password blank and click 'Ok' unless you want to\n")
-wxT("use a password.\n\n"), true, pw_help, pw_helpfile);
+		wxT("Enter a password for this callsign certificate.\n\n")
+		wxT("If you are using a computer system that is\n")
+		wxT("shared with others, you should specify a\n")
+		wxT("password to protect this certificate. However, if\n")
+		wxT("you are using a computer in a private residence\n")
+		wxT("no password need be specified.\n\n")
+		wxT("This password will have to be entered each time\n")
+		wxT("you use this callsign certificate for signing or\n")
+		wxT("when saving the key.\n\n")
+		wxT("Leave the password blank and click 'Ok' unless you want\n")
+		wxT("to use a password.\n\n"), true, pw_help, pw_helpfile);
 	if (dial.ShowModal() == wxID_OK) {
 		strncpy(buf, dial.Password().mb_str(), bufsiz);
 		buf[bufsiz-1] = 0;
@@ -147,64 +161,24 @@ wxT("use a password.\n\n"), true, pw_help, pw_helpfile);
 	return 1;
 }
 
-
-LoadCertWiz::LoadCertWiz(wxWindow *parent, wxHtmlHelpController *help, const wxString& title) :
-	ExtWizard(parent, help, title), _nd(0) {
-
-	LCW_FinalPage *final = new LCW_FinalPage(this);
-	LCW_IntroPage *intro = new LCW_IntroPage(this, final);
-	LCW_P12PasswordPage *p12pw = new LCW_P12PasswordPage(this);
-	wxWizardPageSimple::Chain(intro, p12pw);
-	wxWizardPageSimple::Chain(p12pw, final);
-	_first = intro;
-	_parent = parent;
-	_final = final;
-	_p12pw = p12pw;
-	AdjustSize();
-	CenterOnParent();
-}
-
-LCW_IntroPage::LCW_IntroPage(LoadCertWiz *parent, LCW_Page *tq6next)
-	: LCW_Page(parent), _tq6next(tq6next) {
-	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
-
-	wxStaticText *st = new wxStaticText(this, -1, wxT("Select the type of certificate file to load:"));
-	sizer->Add(st, 0, wxALL, 10);
-
-	wxBoxSizer *butsizer = new wxBoxSizer(wxHORIZONTAL);
-	_p12but = new wxRadioButton(this, ID_LCW_P12, wxT(""), wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
-	_p12but->SetValue(true);
-	butsizer->Add(_p12but, 0, wxALIGN_TOP, 0);
-	butsizer->Add(new wxStaticText(this, -1,
-wxT("PKCS#12 (.p12) certificate file - A file you've saved that contains\n")
-wxT("a certificate and/or private key. This file may be password\n")
-wxT("protected and you'll need to provide a password in order to open it.")),
-		0, wxLEFT, 5);
-
-	sizer->Add(butsizer, 0, wxALL, 10);
-
-	butsizer = new wxBoxSizer(wxHORIZONTAL);
-	butsizer->Add(new wxRadioButton(this, ID_LCW_TQ6, wxT(""), wxDefaultPosition, wxDefaultSize, 0),
-		0, wxALIGN_TOP, 0);
-	butsizer->Add(new wxStaticText(this, -1,
-wxT("TQSL (.tq6) certificate file - A file you received from a certificate\n")
-wxT("issuer that contains the issued certificate and/or configuration data.")),
-		0, wxLEFT, 5);
-
-	sizer->Add(butsizer, 0, wxALL, 10);
-	AdjustPage(sizer, wxT("lcf.htm"));
-}
-
 static void
 export_new_cert(ExtWizard *_parent, const char *filename) {
+	tqslTrace("export_new_cert", "_parent=0x%lx, filename=%s", _parent, filename);
 	long newserial;
 	if (!tqsl_getSerialFromTQSLFile(filename, &newserial)) {
 
 		MyFrame *frame = (MyFrame *)(((LoadCertWiz *)_parent)->Parent());
 		TQ_WXCOOKIE cookie;
+		int nproviders = frame->cert_tree->GetNumIssuers();		// Number of certificate issuers - currently 1
 		wxTreeItemId root = frame->cert_tree->GetRootItem();
-		wxTreeItemId prov = frame->cert_tree->GetFirstChild(root, cookie); // First child is the providers
-		wxTreeItemId item = frame->cert_tree->GetFirstChild(prov, cookie);// Then it's certs
+		wxTreeItemId item, prov;
+		if (nproviders > 1) {
+			prov = frame->cert_tree->GetFirstChild(root, cookie); // First child is the providers
+			item = frame->cert_tree->GetFirstChild(prov, cookie);// Then it's certs
+		} else {
+			item = frame->cert_tree->GetFirstChild(root, cookie); // First child is the certs
+		}
+
 		while (item.IsOk()) {
 			tQSL_Cert cert;
 			CertTreeItemData *id = frame->cert_tree->GetItemData(item);
@@ -215,9 +189,9 @@ export_new_cert(ExtWizard *_parent, const char *filename) {
 						wxCommandEvent e;
 	    					if (wxMessageBox(
 wxT("You will not be able to use this tq6 file to recover your\n")
-wxT("certificate if it gets lost. For security purposes, you should\n")
+wxT("callsign certificate if it gets lost. For security purposes, you should\n")
 wxT("back up your certificate on removable media for safe-keeping.\n\n")
-wxT("Would you like to back up your certificate now?"), wxT("Warning"), wxYES_NO|wxICON_QUESTION, _parent) == wxNO) {
+wxT("Would you like to back up your callsign certificate now?"), wxT("Warning"), wxYES_NO|wxICON_QUESTION, _parent) == wxNO) {
 							return;
 						}
 						frame->cert_tree->SelectItem(item);
@@ -226,57 +200,80 @@ wxT("Would you like to back up your certificate now?"), wxT("Warning"), wxYES_NO
 					}
 				}
 			}
-			item = frame->cert_tree->GetNextChild(prov, cookie);
+			if (nproviders > 1) {
+				item = frame->cert_tree->GetNextChild(prov, cookie);
+			} else {
+				item = frame->cert_tree->GetNextChild(root, cookie);
+			}
 		}
 	}
 }
 
-bool
-LCW_IntroPage::TransferDataFromWindow() {
+LoadCertWiz::LoadCertWiz(wxWindow *parent, wxHtmlHelpController *help, const wxString& title) :
+	ExtWizard(parent, help, title), _nd(0) {
+	tqslTrace("LoadCertWiz::LoadCertWiz", "parent=0x%lx, title=%s", (void *)parent, _S(title));
+
+	LCW_FinalPage *final = new LCW_FinalPage(this);
+	LCW_P12PasswordPage *p12pw = new LCW_P12PasswordPage(this);
+	wxWizardPageSimple::Chain(p12pw, final);
+	_first = p12pw;
+	_parent = parent;
+	_final = final;
+	_p12pw = p12pw;
+
+	wxConfig *config = (wxConfig *)wxConfig::Get();
 	wxString ext(wxT("p12"));
-	wxString wild(wxT("PKCS#12 certificate files (*.p12)|*.p12"));
-	if (!_p12but->GetValue()) {
-		ext = wxT("tq6");
-		wild = wxT("TQSL certificate files (*.tq6)|*.tq6");
-	}
+	wxString wild(wxT("Callsign Certificate container files (*.p12)|*.p12|Certificate Request response files (*.tq6)|*.tq6"));
 	wild += wxT("|All files (*.*)|*.*");
 
-	wxString path = wxConfig::Get()->Read(wxT("CertFilePath"), wxT(""));
+	wxString path = config->Read(wxT("CertFilePath"), wxT(""));
 	wxString filename = wxFileSelector(wxT("Select Certificate File"), path,
 		wxT(""), ext, wild, wxOPEN|wxFILE_MUST_EXIST);
 	if (filename == wxT("")) {
 		// Cancelled!
-		SetNext(0);
+		_first = 0;
 	} else {
-		((LoadCertWiz *)_parent)->ResetNotifyData();
-		wxConfig::Get()->Write(wxT("CertFilePath"), wxPathOnly(filename));
-	 	if (!_p12but->GetValue()) {
-			SetNext(_tq6next);
-			_tq6next->SetPrev(this);
-			if (tqsl_importTQSLFile(filename.mb_str(), notifyImport,
-				((LoadCertWiz *)_parent)->GetNotifyData()))
+		ResetNotifyData();
+		wxString path, basename, ext;
+		wxSplitPath(filename, &path, &basename, &ext);
+		
+		config->Write(wxT("CertFilePath"), path);
+		if (ext.MakeLower() == wxT("tq6")) {
+			_first = _final;
+			_final->SetPrev(0);
+			if (tqsl_importTQSLFile(filename.mb_str(), notifyImport, GetNotifyData()))
 				wxMessageBox(wxString(tqsl_getErrorString(), wxConvLocal), wxT("Error"));
 			else {
-				wxConfig::Get()->Write(wxT("RequestPending"), wxT(""));
-				export_new_cert(_parent, filename.mb_str());
+				if (tQSL_ImportCall[0] != '\0') {
+					wxString call = wxString(tQSL_ImportCall, wxConvLocal);
+					wxString pending = config->Read(wxT("RequestPending"));
+					pending.Replace(call, wxT(""), true);
+					if (pending[0] == ',')
+						pending.Replace(wxT(","), wxT(""));
+					if (pending.Last() == ',')
+						pending.Truncate(pending.Len()-1);
+					config->Write(wxT("RequestPending"), pending);
+				}
+				export_new_cert(this, filename.mb_str());
 			}
 		} else {
 			// First try with no password
-			if (!tqsl_importPKCS12File(filename.mb_str(), "", 0, GetNewPassword, notifyImport, 
-				((LoadCertWiz *)_parent)->GetNotifyData())) {
-				SetNext(((LoadCertWiz *)_parent)->Final());
-				((LoadCertWiz *)_parent)->Final()->SetPrev(this);
+			if (!tqsl_importPKCS12File(filename.mb_str(), "", 0, GetNewPassword, notifyImport, GetNotifyData())) {
+				_first = _final;
+				_final->SetPrev(0);
 			} else {
-				SetNext(((LoadCertWiz *)_parent)->P12PW());
-				((LoadCertWiz *)_parent)->P12PW()->SetPrev(this);
-				((LCW_P12PasswordPage*)GetNext())->SetFilename(filename);
+				_first=_p12pw;
+				_p12pw->SetPrev(0);
+				p12pw->SetFilename(filename);
 			}
 		}
 	}
-	return true;
+	AdjustSize();
+	CenterOnParent();
 }
 
 LCW_FinalPage::LCW_FinalPage(LoadCertWiz *parent) : LCW_Page(parent) {
+	tqslTrace("LCW_FinalPage::LCW_FinalPage", "parent=0x%lx", (void *)parent);
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
 	wxStaticText *st = new wxStaticText(this, -1, wxT("Loading complete"));
@@ -289,6 +286,7 @@ LCW_FinalPage::LCW_FinalPage(LoadCertWiz *parent) : LCW_Page(parent) {
 
 void
 LCW_FinalPage::refresh() {
+	tqslTrace("LCW_FinalPage::refresh");
 	const notifyData *nd = ((LoadCertWiz *)_parent)->GetNotifyData();
 	if (nd)
 		tc_status->SetValue(nd->Message());
@@ -297,6 +295,7 @@ LCW_FinalPage::refresh() {
 }
 
 LCW_P12PasswordPage::LCW_P12PasswordPage(LoadCertWiz *parent) : LCW_Page(parent) {
+	tqslTrace("LCW_P12PasswordPage::LCW_P12PasswordPage", "parent=0x%lx", (void *)parent);
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
 	wxStaticText *st = new wxStaticText(this, -1, wxT("Enter the password to unlock the .p12 file:"));
@@ -312,6 +311,7 @@ LCW_P12PasswordPage::LCW_P12PasswordPage(LoadCertWiz *parent) : LCW_Page(parent)
 
 bool
 LCW_P12PasswordPage::TransferDataFromWindow() {
+	tqslTrace("LCW_P12PasswordPage::TransferDataFromWindow");
 	wxString _pw = _pwin->GetValue();
 	pw_help = Parent()->GetHelp();
 	pw_helpfile = wxT("lcf2.htm");

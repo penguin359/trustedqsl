@@ -1,9 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Name=TQSLCert
-Comment=Manage TrustedQSL digital keys/certificates
-Exec=tqslcert
-Icon=trustedqsl.png
-Terminal=false
-Type=Application
-Categories=Application;HamRadio;Utility;

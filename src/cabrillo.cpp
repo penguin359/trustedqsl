@@ -17,6 +17,7 @@
 #include <cstring>
 #include <ctype.h>
 #include <errno.h>
+#include <stdlib.h>
 
 #include "winstrdefs.h"
 
@@ -25,11 +26,12 @@
 DLLEXPORTDATA TQSL_CABRILLO_ERROR_TYPE tQSL_Cabrillo_Error;
 
 static char errmsgbuf[256];
-static char errmsgdata[40];
+static char errmsgdata[128];
 
 struct TQSL_CABRILLO;
 
 static int freq_to_band(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp);
+static int freq_to_mhz(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp);
 static int mode_xlat(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp);
 static int time_fixer(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp);
 
@@ -45,7 +47,7 @@ static cabrillo_field_def cabrillo_dummy[] = {
 	{ "MODE", 1, mode_xlat },
 	{ "QSO_DATE", 2, 0 },
 	{ "TIME_ON", 3, time_fixer },
-	{ "FREQ", 0, 0 },
+	{ "FREQ", 0, freq_to_mhz },
 	{ "MYCALL", 4, 0 },
 };
 
@@ -106,58 +108,6 @@ struct cabrillo_contest {
 	int nfields;
 };
 
-/*
-static cabrillo_contest cabrillo_contests[] = {
-	// ARRL SS
-	{ "ARRL-SS-CW", TQSL_CABRILLO_HF, cabrillo_c9, sizeof cabrillo_c9 / sizeof cabrillo_c9[0] },
-	{ "ARRL-SS-SSB", TQSL_CABRILLO_HF, cabrillo_c9, sizeof cabrillo_c9 / sizeof cabrillo_c9[0] },
-	// Other ARRL HF
-	{ "ARRL-DX-CW", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "ARRL-DX-SSB", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "ARRL-10", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "ARRL-160", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "ARRL-RTTY", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "IARU-HF", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	// CQ HF
-	{ "CQ-WW-CW", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "CQ-WW-SSB", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "CQ-160-CW", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "CQ-160-SSB", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "CQ-WPX-CW", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "CQ-WPX-RTTY", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "CQ-WPX-SSB", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	// WAE
-	{ "WAEDC", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "DARC-WAEDC-CW", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "DARC-WAEDC-RTTY", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "DARC-WAEDC-SSB", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	// NA/NAQP
-	{ "NAQP-CW", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "NAQP-RTTY", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "NAQP-SSB", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "NA-SPRINT-CW", TQSL_CABRILLO_HF, cabrillo_c8, sizeof cabrillo_c8 / sizeof cabrillo_c8[0] },
-	{ "NA-SPRINT-SSB", TQSL_CABRILLO_HF, cabrillo_c8, sizeof cabrillo_c8 / sizeof cabrillo_c8[0] },
-	// Other HF
-	{ "STEW-PERRY", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "OCEANIA-DX-CW", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "OCEANIA-DX-SSB", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "AP-SPRINT", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "NEQP", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "TARA-RTTY", TQSL_CABRILLO_HF, cabrillo_c8, sizeof cabrillo_c8 / sizeof cabrillo_c8[0] },
-	{ "SAC-CW", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	{ "SAC-SSB", TQSL_CABRILLO_HF, cabrillo_c7, sizeof cabrillo_c7 / sizeof cabrillo_c7[0] },
-	// Misc HF
-	{ "BARTG-RTTY", TQSL_CABRILLO_HF, cabrillo_c8, sizeof cabrillo_c8 / sizeof cabrillo_c8[0] },
-	{ "RSGB-IOTA", TQSL_CABRILLO_HF, cabrillo_c8, sizeof cabrillo_c8 / sizeof cabrillo_c8[0] },
-	// ARRL/CQ VHF
-	{ "ARRL-UHF-AUG", TQSL_CABRILLO_VHF, cabrillo_c6, sizeof cabrillo_c6 / sizeof cabrillo_c6[0] },
-	{ "ARRL-VHF-JAN", TQSL_CABRILLO_VHF, cabrillo_c6, sizeof cabrillo_c6 / sizeof cabrillo_c6[0] },
-	{ "ARRL-VHF-JUN", TQSL_CABRILLO_VHF, cabrillo_c6, sizeof cabrillo_c6 / sizeof cabrillo_c6[0] },
-	{ "ARRL-VHF-SEP", TQSL_CABRILLO_VHF, cabrillo_c6, sizeof cabrillo_c6 / sizeof cabrillo_c6[0] },
-	{ "CQ-VHF", TQSL_CABRILLO_VHF, cabrillo_c6, sizeof cabrillo_c6 / sizeof cabrillo_c6[0] },
-};
-*/
-
 struct TQSL_CABRILLO {
 	int sentinel;
 	FILE *fp;
@@ -167,7 +117,7 @@ struct TQSL_CABRILLO {
 	char rec[TQSL_CABRILLO_MAX_RECORD_LENGTH+1];
 	char *datap;
 	int line_no;
-	char *fields[12];
+	char *fields[TQSL_CABRILLO_MAX_FIELDS];
 };
 
 #define CAST_TQSL_CABRILLO(p) ((struct TQSL_CABRILLO *)p)
@@ -218,77 +168,159 @@ freq_to_band(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp) {
 		strcpy(fp->value, "SUBMM");
 		return 0;
 	}
-	int freq = atoi(fp->value);
+	int freq = strtol(fp->value, NULL, 10);
 	const char *band = 0;
-	if (cab->contest->type == TQSL_CABRILLO_HF) {
-		if (freq < 30) {
-			// Handle known CT misbehavior
-			if (freq == 7)
-				band = "40M";
-			if (freq == 14)
-				band = "20M";
-			if (freq == 21)
-				band = "15M";
-			if (freq == 28)
-				band = "10M";
-		} else if (freq >= 1800 && freq <= 2000)
-			band = "160M";
-		else if (freq >= 3500 && freq <= 4000)
-			band = "80M";
-		else if (freq >= 7000 && freq <= 7300)
-			band = "40M";
-		else if (freq >= 10100 && freq <= 10150)
-			band = "30M";
-		else if (freq >= 14000 && freq <= 14350)
-			band = "20M";
-		else if (freq >= 18068 && freq <= 18168)
-			band = "17M";
-		else if (freq >= 21000 && freq <= 21450)
-			band = "15M";
-		else if (freq >= 24890 && freq <= 24990)
-			band = "12M";
-		else if (freq >= 28000 && freq <= 29700)
-			band = "10M";
-	} else {
-		// VHF+
-		if (freq == 50)
-			band = "6M";
-		else if (freq == 144)
-			band = "2M";
-		else if (freq == 222)
-			band = "1.25M";
-		else if (freq == 432)
-			band = "70CM";
-		else if (freq == 903)
-			band = "33CM";
-		else if (!strncmp(fp->value, "1.2", 3))
-			band = "23CM";
-		else if (!strncmp(fp->value, "2.3", 3))
-			band = "13CM";
-		else if (!strncmp(fp->value, "3.4", 3))
-			band = "9CM";
-		else if (!strncmp(fp->value, "5.7", 3))
-			band = "6CM";
-		else if (freq == 10)
-			band = "3CM";
-		else if (freq == 24)
-			band = "1.25CM";
-		else if (freq == 47)
-			band = "6MM";
-		else if (freq == 76)
-			band = "4MM";
-		else if (freq == 119)
-			band = "2.5MM";
-		else if (freq == 142)
-			band = "2MM";
-		else if (freq == 242)
-			band = "1MM";
-		else if (freq == 300)
-			band = "SUBMM";
+	if (freq < 30) {
+		// Handle known CT misbehavior
+		if (!strcmp(fp->value, "7"))
+			freq = 7000;
+		if (!strcmp(fp->value, "14"))
+			freq = 14000;
+		if (!strcmp(fp->value, "21"))
+			freq = 21000;
+		if (!strcmp(fp->value, "28"))
+			freq = 28000;
+	}
+	if (freq >= 1800 && freq <= 2000)
+		band = "160M";
+	else if (freq >= 3500 && freq <= 4000)
+		band = "80M";
+	else if (freq >= 7000 && freq <= 7300)
+		band = "40M";
+	else if (freq >= 10100 && freq <= 10150)
+		band = "30M";
+	else if (freq >= 14000 && freq <= 14350)
+		band = "20M";
+	else if (freq >= 18068 && freq <= 18168)
+		band = "17M";
+	else if (freq >= 21000 && freq <= 21450)
+		band = "15M";
+	else if (freq >= 24890 && freq <= 24990)
+		band = "12M";
+	else if (freq >= 28000 && freq <= 29700)
+		band = "10M";
+	else if (freq == 50)
+		band = "6M";
+	else if (freq == 70)
+		band = "4M";
+	else if (freq == 144)
+		band = "2M";
+	else if (freq == 222)
+		band = "1.25M";
+	else if (freq == 432)
+		band = "70CM";
+	else if (freq == 902 || freq == 903)
+		band = "33CM";
+	else if (!strcasecmp(fp->value, "1.2G") || !strcasecmp(fp->value, "1.2"))
+		band = "23CM";
+	else if (!strcasecmp(fp->value, "2.3G") || !strcasecmp(fp->value, "2.3"))
+		band = "13CM";
+	else if (!strcasecmp(fp->value, "3.4G") || !strcasecmp(fp->value, "3.4"))
+		band = "9CM";
+	else if (!strcasecmp(fp->value, "5.7G") || !strcasecmp(fp->value, "5.7"))
+		band = "6CM";
+	else if (!strcasecmp(fp->value, "10G") || !strcasecmp(fp->value, "10"))
+		band = "3CM";
+	else if (!strcasecmp(fp->value, "24G") || !strcasecmp(fp->value, "24"))
+		band = "1.25CM";
+	else if (!strcasecmp(fp->value, "47G") || !strcasecmp(fp->value, "47"))
+		band = "6MM";
+	else if (!strcasecmp(fp->value, "75G") || !strcasecmp(fp->value, "75") ||
+	         !strcasecmp(fp->value, "76G") || !strcasecmp(fp->value, "76"))
+		band = "4MM";
+	else if (!strcasecmp(fp->value, "119G") || !strcasecmp(fp->value, "119"))
+		band = "2.5MM";
+	else if (!strcasecmp(fp->value, "142G") || !strcasecmp(fp->value, "142"))
+		band = "2MM";
+	else if (!strcasecmp(fp->value, "241G")  || !strcasecmp(fp->value, "241")||
+	         !strcasecmp(fp->value, "242G") || !strcasecmp(fp->value, "242"))
+		band = "1MM";
+	else if (!strcasecmp(fp->value, "300G") || !strcasecmp(fp->value, "300"))
+		band = "SUBMM";
+
+	if (band && cab->contest->type ==  TQSL_CABRILLO_UNKNOWN) {
+		if (freq < 1000)
+			cab->contest->type = TQSL_CABRILLO_VHF;
+		else
+			cab->contest->type = TQSL_CABRILLO_HF;
 	}
 	if (band == 0)
 		return 1;
 	strcpy(fp->value, band);
+	return 0;
+}
+
+static int
+freq_to_mhz(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp) {
+	if (!strcasecmp(fp->value, "light")) {
+		return 0;
+	}
+	int freq = strtol(fp->value, NULL, 10);
+	double freqmhz = freq;
+	freqmhz /= 1000;
+
+	if (freq < 30) {
+		// Handle known CT misbehavior
+		if (freq == 7)
+			freqmhz = 7.0;
+		if (freq == 14)
+			freqmhz = 14.0;
+		if (freq == 21)
+			freqmhz = 21.0;
+		if (freq == 28)
+			freqmhz = 28.0;
+	}
+	// VHF+
+	if (!strcasecmp(fp->value, "50"))
+		freqmhz = 50.0;
+	else if (!strcasecmp(fp->value, "70"))
+		freqmhz = 70.0;
+	else if (!strcasecmp(fp->value, "144"))
+		freqmhz = 144.0;
+	else if (!strcasecmp(fp->value, "222"))
+		freqmhz = 222.0;
+	else if (!strcasecmp(fp->value, "432"))
+		freqmhz = 432.0;
+	else if (!strcasecmp(fp->value, "902") ||
+		 !strcasecmp(fp->value, "903"))
+		freqmhz = 902.0;
+	else if (!strcasecmp(fp->value, "1.2G") || !strcasecmp(fp->value, "1.2"))
+		freqmhz = 1240.0;
+	else if (!strcasecmp(fp->value, "2.3G") || !strcasecmp(fp->value, "2.3"))
+		freqmhz = 2300.0;
+	else if (!strcasecmp(fp->value, "3.4G") || !strcasecmp(fp->value, "3.4"))
+		freqmhz = 3300.0;
+	else if (!strcasecmp(fp->value, "5.7G") || !strcasecmp(fp->value, "5.7"))
+		freqmhz = 5650.0;
+	else if (!strcasecmp(fp->value, "10G")  || !strcasecmp(fp->value, "10"))
+		freqmhz = 10000.0;
+	else if (!strcasecmp(fp->value, "24G")  || !strcasecmp(fp->value, "24"))
+		freqmhz = 24000.0;
+	else if (!strcasecmp(fp->value, "47G")  || !strcasecmp(fp->value, "47"))
+		freqmhz = 47000.0;
+	else if (!strcasecmp(fp->value, "75G")  || !strcasecmp(fp->value, "75") ||
+		 !strcasecmp(fp->value, "76G")  || !strcasecmp(fp->value, "76"))
+		freqmhz = 75500.0;
+	else if (!strcasecmp(fp->value, "119G") || !strcasecmp(fp->value, "119"))
+		freqmhz = 119980.0;
+	else if (!strcasecmp(fp->value, "142G") || !strcasecmp(fp->value, "142"))
+		freqmhz = 142000.0;
+	else if (!strcasecmp(fp->value, "241G") || !strcasecmp(fp->value, "241") ||
+		 !strcasecmp(fp->value, "242G") || !strcasecmp(fp->value, "242"))
+		freqmhz = 241000.0;
+	else if (!strcasecmp(fp->value, "300G") || !strcasecmp(fp->value, "300"))
+		freqmhz = 300000.0;
+
+	if (freqmhz > 0 && cab->contest->type ==  TQSL_CABRILLO_UNKNOWN) {
+		if (freqmhz >= 50.0)		// VHF
+			cab->contest->type = TQSL_CABRILLO_VHF;
+		else
+			cab->contest->type = TQSL_CABRILLO_HF;
+	}
+
+	char strfreq[100];
+	snprintf(strfreq, sizeof strfreq, "%#f", freqmhz);
+	strcpy(fp->value, strfreq);
 	return 0;
 }
 
@@ -298,7 +330,7 @@ mode_xlat(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp) {
 		const char *cmode;
 		const char *gmode;
 	} modes[] = {
-		{"CW", "CW"}, {"PH", "Phone"}, {"FM", "Phone"}, {"RY", "RTTY"}
+		{"CW", "CW"}, {"PH", "SSB"}, {"FM", "FM"}, {"RY", "RTTY"}
 	};
 	for (int i = 0; i < int(sizeof modes / sizeof modes[0]); i++) {
 		if (!strcasecmp(fp->value, modes[i].cmode)) {
@@ -319,7 +351,7 @@ time_fixer(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp) {
 			break;
 	if (*cp)
 		return 1;
-	sprintf(fp->value, "%04d", atoi(fp->value));
+	snprintf(fp->value, sizeof fp->value, "%04d", (int) strtol(fp->value, NULL, 10));
 	return 0;
 }
 
@@ -406,18 +438,11 @@ tqsl_beginCabrillo(tQSL_Cabrillo *cabp, const char *filename) {
 				terrno = TQSL_CABRILLO_UNKNOWN_CONTEST;
 				int callfield, contest_type;
 				if (tqsl_getCabrilloMapEntry(vp, &callfield, &contest_type)) {
-					tqsl_free_cab(cab);
-					return 1;
+					// No defined contest with this name. 
+					// callfield comes back as 0
+					contest_type = TQSL_CABRILLO_UNKNOWN;
 				}
-				if (callfield != 0)
-					cab->contest = tqsl_new_cabrillo_contest(vp, callfield, contest_type);
-/*				for (int i = 0; i < int(sizeof cabrillo_contests / sizeof cabrillo_contests[0]); i++) {
-					if (!strcasecmp(vp, cabrillo_contests[i].contest_name)) {
-						cab->contest = cabrillo_contests + i;
-						break;
-					}
-				}
-*/
+				cab->contest = tqsl_new_cabrillo_contest(vp, callfield, contest_type);
 				if (cab->contest == 0) {
 					strncpy(errmsgdata, vp, sizeof errmsgdata);
 					cp = 0;
@@ -551,6 +576,61 @@ tqsl_getCabrilloField(tQSL_Cabrillo cabp, tqsl_cabrilloField *field, TQSL_CABRIL
 		
    	fp = cab->contest->fields + cab->field_idx;
    	strncpy(field->name, fp->name, sizeof field->name);
+	if (fp->loc < 0) {  // New contest
+		for (int i = 6; i < TQSL_CABRILLO_MAX_FIELDS && cab->fields[i]; i++) {
+			char *p = cab->fields[i];
+			// Simple parse: a callsign is at least 3 chars long
+			// and has at least one digit and at least one letter
+			// Nothing but alphnumeric and '/' allowed.
+		
+
+			// First, eliminate grid squares
+			if (strlen(p) == 4) {
+				if (isalpha(p[0]) && isalpha(p[1]) &&
+				    isdigit(p[2]) && isdigit(p[3])) 
+					continue;
+			}
+			int nlet = 0, ndig = 0;
+			for (; *p; p++) {
+				if (isdigit(*p)) {
+					 ndig++;
+				} else if (isalpha(*p)) {
+					 nlet++;
+				} else if (*p != '/') {
+					ndig = 0;
+					nlet = 0;
+					break;
+				}
+			}
+			if (nlet > 0 && ndig > 0 && nlet+ndig > 3) {
+				// OK, looks like a callsign. Is it possibly a gridsquare?
+				if (strlen(p) == 6) {
+					if ((isalpha(p[0]) && toupper(p[0]) < 'S') &&
+					    (isalpha(p[1]) && toupper(p[1]) < 'S') &&
+				    	    (isdigit(p[2]) && isdigit(p[3])) &&
+					    (isalpha(p[4]) && toupper(p[4]) < 'Y') &&
+					    (isalpha(p[5]) && toupper(p[5]) < 'Y')) 
+						continue;	// Gridsquare. Don't use it.
+				}
+				if (fp->loc < 0) {		// No callsign candidate yet
+					fp->loc = i;
+				} else {
+					tQSL_Cabrillo_Error = TQSL_CABRILLO_UNKNOWN_CONTEST;
+					tQSL_Error = TQSL_CABRILLO_ERROR;
+					snprintf(errmsgdata, sizeof errmsgdata, "%s\nUnable to find a unique call-worked field.\n"
+						"Please define a custom Cabrillo entry for this contest.\n", cab->contest->contest_name);
+					goto err;
+				}
+			}
+		}
+		if (fp->loc < 0) {	// Still can't find a call. Have to bail.
+			tQSL_Cabrillo_Error = TQSL_CABRILLO_UNKNOWN_CONTEST;
+			tQSL_Error = TQSL_CABRILLO_ERROR;
+			snprintf(errmsgdata, sizeof errmsgdata, "%s\nUnable to find a valid call-worked field.\n"
+				"Please define a custom Cabrillo entry for this contest.\n", cab->contest->contest_name);
+			goto err;
+		}
+	}
 	fielddat = cab->fields[fp->loc];
 	if (fielddat == 0) {
 		tQSL_Cabrillo_Error = TQSL_CABRILLO_BAD_FIELD_DATA;
@@ -559,25 +639,6 @@ tqsl_getCabrilloField(tQSL_Cabrillo cabp, tqsl_cabrilloField *field, TQSL_CABRIL
 		goto err;
 	}
    	strncpy(field->value, fielddat, sizeof field->value);
-
-/*
-	int idx;
-	for (idx = fp->start-1; idx < fp->end; idx++)
-		if (!isspace(cab->rec[idx]))
-			break;
-	if (idx < fp->end)
-	   	strncpy(field->value, cab->rec + idx, fp->end - idx);
-	field->value[fp->end - idx] = '\0';
-	if (strlen(field->value) != 0) {
-		char *sp = field->value + strlen(field->value);
-		do {
-			--sp;
-			if (!isspace(*sp))
-				break;
-			*sp = 0;
-		} while (sp != field->value);
-	}
-*/
 
 	if (fp->process && fp->process(cab, field)) {
 		tQSL_Cabrillo_Error = TQSL_CABRILLO_BAD_FIELD_DATA;

@@ -15,9 +15,11 @@
 #include "tqsllib.h"
 #include "tqslerrno.h"
 #include "adif.h"
+#include "winstrdefs.h"
 #include <string.h>
 #include <errno.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include <sys/stat.h>
 #ifdef _WIN32
 	#include <io.h>
@@ -37,9 +39,10 @@
 DLLEXPORTDATA int tQSL_Error = 0;
 DLLEXPORTDATA int tQSL_Errno = 0;
 DLLEXPORTDATA TQSL_ADIF_GET_FIELD_ERROR tQSL_ADIF_Error;
-const char *tQSL_BaseDir = 0;
+DLLEXPORTDATA const char *tQSL_BaseDir = 0;
 DLLEXPORTDATA char tQSL_ErrorFile[256];
 DLLEXPORTDATA char tQSL_CustomError[256];
+DLLEXPORTDATA char tQSL_ImportCall[256];
 
 #define TQSL_OID_BASE "1.3.6.1.4.1.12348.1."
 #define TQSL_OID_CALLSIGN TQSL_OID_BASE "1"
@@ -49,6 +52,13 @@ DLLEXPORTDATA char tQSL_CustomError[256];
 #define TQSL_OID_SUPERCEDED_CERT TQSL_OID_BASE "5"
 #define TQSL_OID_CRQ_ISSUER_ORGANIZATION TQSL_OID_BASE "6"
 #define TQSL_OID_CRQ_ISSUER_ORGANIZATIONAL_UNIT TQSL_OID_BASE "7"
+#define TQSL_OID_CRQ_EMAIL TQSL_OID_BASE "8"
+#define TQSL_OID_CRQ_ADDRESS1 TQSL_OID_BASE "9"
+#define TQSL_OID_CRQ_ADDRESS2 TQSL_OID_BASE "10"
+#define TQSL_OID_CRQ_CITY TQSL_OID_BASE "11"
+#define TQSL_OID_CRQ_STATE TQSL_OID_BASE "12"
+#define TQSL_OID_CRQ_POSTAL TQSL_OID_BASE "13"
+#define TQSL_OID_CRQ_COUNTRY TQSL_OID_BASE "14"
 
 static const char *custom_objects[][3] = {
 	{ TQSL_OID_CALLSIGN, "AROcallsign", NULL },
@@ -58,6 +68,13 @@ static const char *custom_objects[][3] = {
 	{ TQSL_OID_SUPERCEDED_CERT, "supercededCertificate", NULL },
 	{ TQSL_OID_CRQ_ISSUER_ORGANIZATION, "tqslCRQIssuerOrganization", NULL },
 	{ TQSL_OID_CRQ_ISSUER_ORGANIZATIONAL_UNIT, "tqslCRQIssuerOrganizationalUnit", NULL },
+	{ TQSL_OID_CRQ_EMAIL, "tqslCRQEmail", NULL },
+	{ TQSL_OID_CRQ_ADDRESS1, "tqslCRQAddress1", NULL },
+	{ TQSL_OID_CRQ_ADDRESS2, "tqslCRQAddress2", NULL },
+	{ TQSL_OID_CRQ_CITY, "tqslCRQCity", NULL },
+	{ TQSL_OID_CRQ_STATE, "tqslCRQState", NULL },
+	{ TQSL_OID_CRQ_POSTAL, "tqslCRQPostal", NULL },
+	{ TQSL_OID_CRQ_COUNTRY, "tqslCRQCountry", NULL },
 };
 
 static const char *error_strings[] = {
@@ -65,7 +82,7 @@ static const char *error_strings[] = {
 	"Unable to initialize random number generator",		/* TQSL_RANDOM_ERROR */
 	"Invalid argument",					/* TQSL_ARGUMENT_ERROR */
 	"Operator aborted operation",				/* TQSL_OPERATOR_ABORT */
-	"No private key matches the selected certificate",	/* TQSL_NOKEY_ERROR */
+	"No Certificate Request matches the selected Callsign Certificate",/* TQSL_NOKEY_ERROR */
 	"Buffer too small",					/* TQSL_BUFFER_ERROR */
 	"Invalid date format",					/* TQSL_INVALID_DATE */
 	"Certificate not initialized for signing",		/* TQSL_SIGNINIT_ERROR */
@@ -76,15 +93,15 @@ static const char *error_strings[] = {
 	"Invalid time format",					/* TQSL_INVALID_TIME */
 	"QSO date is not within the date range specified on your Callsign Certificate",	/* TQSL_CERT_DATE_MISMATCH */
 	"Certificate provider not found",			/* TQSL_PROVIDER_NOT_FOUND */
-	"No certificate for key",				/* TQSL_CERT_KEY_ONLY */
+	"No callsign certificate for key",			/* TQSL_CERT_KEY_ONLY */
 	"Configuration file cannot be opened",			/* TQSL_CONFIG_ERROR */
-	"Certificate or private key not found",			/* TQSL_CERT_NOT_FOUND */
+	"Callsign Certificate or Certificate Request not found",/* TQSL_CERT_NOT_FOUND */
 	"PKCS#12 file not TQSL compatible",			/* TQSL_PKCS12_ERROR */
-	"Certificate not TQSL compatible",			/* TQSL_CERT_TYPE_ERROR */
+	"Callsign Certificate not TQSL compatible",		/* TQSL_CERT_TYPE_ERROR */
 	"Date out of range",					/* TQSL_DATE_OUT_OF_RANGE */
 	"Duplicate QSO suppressed",				/* TQSL_DUPLICATE_QSO */
 	"Database error",					/* TQSL_DB_ERROR */
-	"The selected location could not be found",		/* TQSL_LOCATION_NOT_FOUND */
+	"The selected station location could not be found",	/* TQSL_LOCATION_NOT_FOUND */
 	"The selected callsign could not be found",		/* TQSL_CALL_NOT_FOUND */
 	"The TQSL configuration file cannot be parsed",		/* TQSL_CONFIG_SYNTAX_ERROR */
 	"This file can not be processed due to a system error",	/* TQSL_FILE_SYSTEM_ERROR */
@@ -101,7 +118,11 @@ static int pmkdir(const char *path, int perm) {
 	npath[0] = 0;
 	while (cp) {
 		if (strlen(cp) > 0 && cp[strlen(cp)-1] != ':') {
+#ifdef _WIN32
+			strcat(npath, "\\");
+#else
 			strcat(npath, "/");
+#endif
 			strcat(npath, cp);
 			if (MKDIR(npath, perm) != 0 && errno != EEXIST)
 				return 1;
@@ -173,7 +194,7 @@ tqsl_init() {
 			wval = GetShortPathName(path, shortPath, TQSL_MAX_PATH_LEN);
 			if (wval != 0)
 				strncpy(path, shortPath, TQSL_MAX_PATH_LEN);
-			strcat(path, "/TrustedQSL");
+			strncat(path, "\\TrustedQSL", sizeof path - strlen(path) - 1);
 #elif defined(LOTW_SERVER)
 			strcpy(path, "/var/lotw/tqsl");
 #else //some unix flavor
@@ -225,13 +246,26 @@ tqsl_getErrorString_v(int err) {
 			return buf;
 		}
 	}
-	if (err == TQSL_SYSTEM_ERROR) {
+	if (err == TQSL_DB_ERROR && tQSL_CustomError[0] != 0) {
+		snprintf(buf, sizeof buf, "Database Error: %s", tQSL_CustomError);
+		return buf;
+	}
+	
+	if (err == TQSL_SYSTEM_ERROR || err == TQSL_FILE_SYSTEM_ERROR) {
 		strcpy(buf, "System error: ");
 		if (strlen(tQSL_ErrorFile) > 0) {
 			strncat(buf, tQSL_ErrorFile, sizeof buf - strlen(buf)-1);
 			strncat(buf, ": ", sizeof buf - strlen(buf)-1);
 		}
-		strncat(buf, strerror(errno), sizeof buf - strlen(buf)-1);
+		strncat(buf, strerror(tQSL_Errno), sizeof buf - strlen(buf)-1);
+		return buf;
+	}
+	if (err == TQSL_FILE_SYNTAX_ERROR) {
+		strcpy(buf, "File syntax error: ");
+		if (strlen(tQSL_ErrorFile) > 0) {
+			strncat(buf, tQSL_ErrorFile, sizeof buf - strlen(buf)-1);
+			strncat(buf, ": ", sizeof buf - strlen(buf)-1);
+		}
 		return buf;
 	}
 	if (err == TQSL_OPENSSL_ERROR) {
@@ -262,15 +296,19 @@ tqsl_getErrorString_v(int err) {
 		return buf;
 	}
 	if (err == TQSL_OPENSSL_VERSION_ERROR) {
-		sprintf(buf, "Incompatible OpenSSL Library version %d.%d.%d; expected %d.%d.%d",
+		snprintf(buf, sizeof buf, "Incompatible OpenSSL Library version %d.%d.%d; expected %d.%d.%d",
 			int(SSLeay() >> 28) & 0xff, int(SSLeay() >> 20) & 0xff, int(SSLeay() >> 12) & 0xff,
 			int(OPENSSL_VERSION_NUMBER >> 28) & 0xff, int(OPENSSL_VERSION_NUMBER >> 20) & 0xff,
 			int(OPENSSL_VERSION_NUMBER >> 12) & 0xff);
 		return buf;
 	}
+	if (err == TQSL_CERT_NOT_FOUND && tQSL_ImportCall[0] != '\0') {
+		snprintf(buf, sizeof buf, "Callsign Certificate or Certificate Request not found for callsign %s", tQSL_ImportCall);
+		return buf;
+	}
 	adjusted_err = err - TQSL_ERROR_ENUM_BASE;
 	if (adjusted_err < 0 || adjusted_err >= (int)(sizeof error_strings / sizeof error_strings[0])) {
-		sprintf(buf, "Invalid error code: %d", err);
+		snprintf(buf, sizeof buf, "Invalid error code: %d", err);
 		return buf;
 	}
 	return error_strings[adjusted_err];
@@ -281,6 +319,7 @@ tqsl_getErrorString() {
 	const char *cp;
 	cp = tqsl_getErrorString_v(tQSL_Error);
 	tQSL_Error = TQSL_NO_ERROR;
+	tQSL_Errno = 0;
 	tQSL_ErrorFile[0] = 0;
 	tQSL_CustomError[0] = 0;
 	return cp;
@@ -372,21 +411,24 @@ tqsl_convertDateToText(const tQSL_Date *date, char *buf, int bufsiz) {
 
 	if (date == NULL || buf == NULL) {
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
+		if (buf) buf[0] = '\0';
 		return NULL;
 	}
 	if (date->year < 1 || date->year > 9999 || date->month < 1
-		|| date->month > 12 || date->day < 1 || date->day > 31)
+		|| date->month > 12 || date->day < 1 || date->day > 31) {
+		buf[0] = '\0';
 		return NULL;
-	len = sprintf(lbuf, "%04d-", date->year);
+	}
+	len = snprintf(lbuf, sizeof lbuf, "%04d-", date->year);
 	strncpy(cp, lbuf, bufleft);
 	cp += len;
 	bufleft -= len;
-	len = sprintf(lbuf, "%02d-", date->month);
+	len = snprintf(lbuf, sizeof lbuf, "%02d-", date->month);
 	if (bufleft > 0)
 		strncpy(cp, lbuf, bufleft);
 	cp += len;
 	bufleft -= len;
-	len = sprintf(lbuf, "%02d", date->day);
+	len = snprintf(lbuf, sizeof lbuf, "%02d", date->day);
 	if (bufleft > 0)
 		strncpy(cp, lbuf, bufleft);
 	bufleft -= len;
@@ -441,16 +483,16 @@ tqsl_convertTimeToText(const tQSL_Time *time, char *buf, int bufsiz) {
 	}
 	if (!tqsl_isTimeValid(time))
 		return NULL;
-	len = sprintf(lbuf, "%02d:", time->hour);
+	len = snprintf(lbuf, sizeof lbuf, "%02d:", time->hour);
 	strncpy(cp, lbuf, bufleft);
 	cp += len;
 	bufleft -= len;
-	len = sprintf(lbuf, "%02d:", time->minute);
+	len = snprintf(lbuf, sizeof lbuf, "%02d:", time->minute);
 	if (bufleft > 0)
 		strncpy(cp, lbuf, bufleft);
 	cp += len;
 	bufleft -= len;
-	len = sprintf(lbuf, "%02d", time->second);
+	len = snprintf(lbuf, sizeof lbuf, "%02d", time->second);
 	if (bufleft > 0)
 		strncpy(cp, lbuf, bufleft);
 	cp += len;
@@ -502,6 +544,72 @@ tqsl_compareDates(const tQSL_Date *a, const tQSL_Date *b) {
 	return 0;
 }
 
+// Return the number of days for a given year/month (January=1)
+static int
+days_per_month(int year, int month) {
+	switch (month) {
+		case 2:
+			if ((((year % 4) == 0) && ((year % 100) != 0)) || ((year % 400) == 0))
+				return 29;
+			else
+				return 28;
+		case 4:
+		case 6:
+		case 9:
+		case 11:
+			return 30;
+		default:
+			return 31;
+	}
+	return 0;
+}
+
+// Return the julian day number for a given date.
+// One-based year/month/day
+static int
+julian_day(int year, int month, int day) {
+	int jday = 0;
+	for (int mon = 1; mon < month; mon ++) {
+		jday += days_per_month(year, mon);
+	}
+	jday += day;
+	return jday;
+}
+
+/* Calculate the difference between two tQSL_Date values
+ */
+DLLEXPORT int CALLCONVENTION
+tqsl_subtractDates(const tQSL_Date *a, const tQSL_Date *b, int *diff) {
+	if (a == NULL || b == NULL || diff == NULL) {
+		tQSL_Error = TQSL_ARGUMENT_ERROR;
+		return 1;
+	}
+	tQSL_Date first = *a;
+	tQSL_Date last = *b;
+	int mult = 1;
+	// Ensure that the first is earliest
+	if (tqsl_compareDates(&last, &first) < 0) {
+		first = *b;
+		last = *a;
+		mult = -1;
+	}
+	int delta = 0;
+	for (; first.year < last.year; first.year++) {
+		int fday = julian_day(first.year, first.month, first.day);
+		int fend = julian_day(first.year, 12, 31);
+		delta += (fend - fday + 1);	// days until next 1 Jan
+		first.month = 1;
+		first.day = 1;
+	}
+	// Now the years are the same - calculate delta
+	int fjulian = julian_day(first.year, first.month, first.day);
+	int ljulian = julian_day(last.year, last.month, last.day);
+
+	delta += (ljulian - fjulian);
+	*diff = (delta * mult);			// Swap sign if necessary
+	return 0;
+}
+
 /* Fill a tQSL_Date struct with the date from a text string
  */
 DLLEXPORT int CALLCONVENTION
@@ -518,24 +626,24 @@ tqsl_initDate(tQSL_Date *date, const char *str) {
 	}
 	if ((cp = strchr(str, '-')) != NULL) {
 		/* Parse YYYY-MM-DD */
-		date->year = atoi(str);
+		date->year = strtol(str, NULL, 10);
 		cp++;
-		date->month = atoi(cp);
+		date->month = strtol(cp, NULL, 10);
 		cp = strchr(cp, '-');
 		if (cp == NULL)
 			goto err;
 		cp++;
-		date->day = atoi(cp);
+		date->day = strtol(cp, NULL, 10);
 	} else if (strlen(str) == 8) {
 		/* Parse YYYYMMDD */
 		char frag[10];
 		strncpy(frag, str, 4);
 		frag[4] = 0;
-		date->year = atoi(frag);
+		date->year = strtol(frag, NULL, 10);
 		strncpy(frag, str+4, 2);
 		frag[2] = 0;
-		date->month = atoi(frag);
-		date->day = atoi(str+6);
+		date->month = strtol(frag, NULL, 10);
+		date->day = strtol(str+6, NULL, 10);
 	} else	/* Invalid ISO date string */
 		goto err;
 	if (date->year < 1 || date->year > 9999)

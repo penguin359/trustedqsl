@@ -19,6 +19,6 @@ Description: QSL log signing for the Logbook of the World (LoTW)
  A QSL is a confirmation of contact between two amateur radio stations.
  The ARRL Logbook of the World project is a database which collects
  data about contacts between amateur stations (QSOs). This package 
- provides programs for maintaining your digital certificates for LoTW
- and for signing and uploading QSO log files.
+ provides the 'tqsl' program for maintaining your digital certificates
+ for LoTW and signing and uploading QSO log files.
 

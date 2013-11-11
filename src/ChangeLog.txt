@@ -1,6 +1,62 @@
 TQSLLIB changes
 ===============
 
+2.4
+---
+Fix atoi() calls throughout to use strtol() so that strings like 012 aren't
+treated as Octal due to the leading zeroes.
+
+Default Cabrillo field to 8, not 5.
+
+Fix OpenSSL workaround needed for 1.0.0c of OpenSSL so that it only applies
+to that release, not later releases with the fix already in place.
+
+Add new tqsllib APIs:
+    Retrieve a named field from a station location
+    Merge a station location definition into the database
+    Add the ability to export station locations
+    APIs to export and import certificates Base-64 encoded
+    APIs to export and import duplicates database records
+    Added an API to calculate the difference between dates
+
+Verify that the BAND and FREQ fields are consistent. Disallow freqencies
+outside of valid ranges for ham bands. This catches "10110" used (KHz)
+versus the ADIF required 10.110 (MHz).
+
+Always convert frequency values in Cabrillo logs to Megahertz
+independent of contest type (HF/VHF).
+
+Remove strcpy/strcat/sprintf and replace with strn* variants where possble.
+
+Allow FREQ=0 when BAND is set. 
+
+Try to deduce worked call field for unknown Cabrillo file contest
+names.
+
+Update mode mapping in Cabrillo files to pass FM through as is and
+convert PH to SSB.
+
+When trying to deduce call-worked field, ensure that anything that
+looks gridsquare-like is skipped. Don't accept a log if there are 
+two fields that look like callsigns.
+
+Relax lower limit for 30m, 17m, and 12m bands to allow 10MHz, 
+18MHz, and 24MHz to be allowed
+
+Recover from invalid files in the working directory (symlink loops)
+by detecting and removing them. These would cause database opens to
+fail while searching for recovery logs.
+
+Correctly handle permission problems and other system errors that occur
+when opening station data and certificate files.
+
+Strip spaces from entirely space-filled station location fields when
+creating signing data. Prior versions of tqsllib would not properly
+trim strings containing only spaces.
+
+Remove code that was trying to remove unnecessary transaction log files
+as that was causing duplicate detection to fail.
+
 2.3
 ---
 Add a mechanism to the location definition process to allow enforcement

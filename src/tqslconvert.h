@@ -24,11 +24,21 @@
   */
 /** @{ */
 
-typedef void * tQSL_Converter;
+typedef void * tQSL_Converter;  //!< Opaque converter type used by applications 
+				//!< to access conversion functions
+				//!<
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/** Create a simple converter object
+ *
+ * Allocates resources for converting logs and processing duplicate records.
+ */
+
+DLLEXPORT int CALLCONVENTION
+tqsl_beginConverter(tQSL_Converter *convp);
 
 /** Initiates the conversion process for an ADIF file.
   *
@@ -77,6 +87,14 @@ DLLEXPORT int CALLCONVENTION tqsl_setConverterAllowBadCall(tQSL_Converter conv, 
   */
 DLLEXPORT int CALLCONVENTION tqsl_setConverterAllowDuplicates(tQSL_Converter convp, int allow);
 
+/** Specify the name of the application using the conversion library.
+  * This is output in a header record in the exported log file.
+  * Call this before calling tqsl_getConverterGABBI.
+  *
+  * \c app is a c string containing the application name.
+  */
+DLLEXPORT int CALLCONVENTION tqsl_setConverterAppName(tQSL_Converter convp, const char *app);
+
 /** Roll back insertions into the duplicates database.
   *
   * This is called when cancelling creating a log, and causes any records
@@ -91,6 +109,24 @@ DLLEXPORT int CALLCONVENTION tqsl_converterRollBack(tQSL_Converter convp);
   * the presumption is that we are "done" with these QSOs.
   */
 DLLEXPORT int CALLCONVENTION tqsl_converterCommit(tQSL_Converter convp);
+
+/** Bulk read the duplicate DB records
+  *
+  * This is called to retrieve the QSO records from the dupe database.
+  * It returns the key/value pair upon each call. 
+  * Return -1 for end of file, 0 for success, 1 for errors.
+  */
+DLLEXPORT int CALLCONVENTION
+tqsl_getDuplicateRecords(tQSL_Converter convp, char *key, char *data, int keylen);
+
+/** Bulk write duplicate DB records
+  *
+  * This is called to store a QSO record into the dupe database.
+  * 
+  * Return -1 for duplicate insertion, 0 for success, 1 for errors.
+  */
+DLLEXPORT int CALLCONVENTION
+tqsl_putDuplicateRecord(tQSL_Converter convp, const char *key, const char *data, int keylen);
 
 /** Set QSO date filtering in the converter.
   *
@@ -109,8 +145,8 @@ DLLEXPORT int CALLCONVENTION tqsl_setADIFConverterDateFilter(tQSL_Converter conv
   * Returns the NULL pointer on error or EOF. (Test tQSL_Error to determine which.)
   *
   * tQSL_Error is set to TQSL_DATE_OUT_OF_RANGE if QSO date range checking
-  * is active (see ::tqsl_useADIFConverterDateFilter) and the QSO date is
-  * outside the specified range. This is a non-fatal error.
+  * is active and the QSO date is outside the specified range.
+  * This is a non-fatal error.
   *
   * tQSL_Error is set to TQSL_DUPLICATE_QSO if the QSO has already been
   * processed on the current computer.

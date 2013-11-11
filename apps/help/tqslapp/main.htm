@@ -5,7 +5,8 @@
 <BODY>
 <H3>Introduction</H3>
 <P>
-<b>TQSL</b> is application used to <A HREF="glossary.htm#digital_signature">digitally sign</A> and upload QSOs to the ARRL's <a href="lotw.htm">Logbook of the World</a> (LoTW) online service. 
+<b>TQSL</b> is an application used to <A HREF="glossary.htm#digital_signature">digitally sign</A> and upload QSOs to the ARRL's <a href="lotw.htm">Logbook of the World</a> (LoTW) online service, 
+and to manage the <A HREF="glossary.htm#callsign_certificate">Callsign Certificates</A> used when digitally signing. 
 <P>
 TQSL accepts QSOs in a <A HREF="glossary.htm#log_file">log file</A> whose format is either <A HREF="glossary.htm#adif">ADIF</a>
 or <A HREF="glossary.htm#cabrillo">Cabrillo</a>, which many logging applications can export. TQSL also includes a simple
@@ -18,8 +19,8 @@ TQSL lets you <A HREF="stnloc.htm">define and name a Station Location</A> that s
    <UL>
    <LI>a Callsign Certificate</LI>
    <LI>a DXCC entity</LI>
-   <LI>a State</LI>
-   <LI>a County</LI>
+   <LI>a Primary Administrative Subdivison (e.g. an Oblast, Province, or State)</LI>
+   <LI>a Secondary Administrative Subdivison (e.g. a County)</LI>
    <LI>a Grid Square</LI>
    <LI>a CQ zone</LI>
    <LI>an ITU zone</LI>
@@ -30,16 +31,24 @@ This collection of information can be given a name that is presented to TQSL whe
 <P>
 
 TQSL provides the ability to <a href="pref-adi.htm">map modes</a> not defined by the <A HREF="glossary.htm#adif">ADIF</a> standard to modes that it can recognize, and the ability to <a href="pref-cab.htm">specify information about less popular Cabrillo formats</a> that it needs to properly interpret the QSO data in a Cabrillo-format log file.
+<P>
+When you start TQSL, it will inform you if
+<UL>
+    <LI>a new <A HREF="glossary.htm#callsign_certificate">Callsign Certificate</A> you requested remains outstanding</li>
+    <LI>an existing <A HREF="glossary.htm#callsign_certificate">Callsign Certificate</A> will expire within the next 60 days</li>
+    <LI>a new version of <A HREF="configxml.htm">Configuration Data</A> file is available</li>
+	<LI>a new version of TQSL is available</li>
+</UL>
 
 <H5>Getting Started with LoTW</H5>
 
-Before you can submit QSOs to LotW, you must first
+Before you can submit QSOs to LoTW, you must first
 <UL>
     <LI><A HREF="certreq.htm">request your Initial Callsign Certificate</A></li>
-    <LI><A HREF="certaccept.htm">accept your Initial Callsign Certificate</A></li>
+    <LI><A HREF="certaccept.htm">accept your Initial Callsign Certificate</A> (using the same computer with which you generated the request for an Initial Callsign Certificate)</li>
     <LI><A HREF="stnloc.htm">define your Station Location</A></li>
 </UL>
 <p>
-Then you'll be able to <LI><A HREF="signupload.htm">submit a Log File to LoTW via the Internet</a></li>
+Then you'll be able to <A HREF="signupload.htm">submit a Log File to LoTW via the Internet</a> .
 	
 </BODY></HEAD>

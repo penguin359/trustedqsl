@@ -39,6 +39,11 @@
 					 </OBJECT>
 					 
 				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Visiting the LoTW web site to View QSOs and QSLs">
+					<param name="Local" value="login.htm">
+					 </OBJECT>
+					 
+				<LI> <OBJECT type="text/sitemap">
 					<param name="Name" value="Checking for Updates">
 					<param name="Local" value="update.htm">
 					 </OBJECT>
@@ -77,6 +82,11 @@
 					<param name="Local" value="moving.htm">
 					 </OBJECT>
 					 
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Deleting a Callsign Certificate">
+					<param name="Local" value="deletecert.htm">
+					 </OBJECT>
+					 
 			</UL>
 					 
 		<LI> <OBJECT type="text/sitemap">
@@ -87,7 +97,7 @@
 			 <UL>
 			 
 				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="Configuring TQSL">
+					<param name="Name" value="Setting TQSL Options">
 					<param name="Local" value="pref-opt.htm">
 					 </OBJECT>
 					 
@@ -110,6 +120,11 @@
 					<param name="Name" value="Adding and Deleting Cabrillo Contest Definitions">
 					<param name="Local" value="pref-cab.htm">
 					 </OBJECT>
+
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Configuring a Network Proxy for Internet Access">
+					<param name="Local" value="netproxy.htm">
+					 </OBJECT>
 					 
 			</UL>
 					 
@@ -123,6 +138,16 @@
 				<LI> <OBJECT type="text/sitemap">
 					<param name="Name" value="Creating and Editing an ADIF File">
 					<param name="Local" value="qsodata.htm">
+					 </OBJECT>
+					 
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Backing up and Restoring TQSL Information">
+					<param name="Local" value="backuprestore.htm">
+					 </OBJECT>
+					 
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Enabling and Disabling Diagnostic Mode">
+					<param name="Local" value="diagmode.htm">
 					 </OBJECT>
 					 
 			</UL>
@@ -140,8 +165,13 @@
 					 </OBJECT>
 					 
 					<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="LotW Files and Icons">
+					<param name="Name" value="LoTW Files and Icons">
 					<param name="Local" value="files-icons.htm">
+					 </OBJECT>
+					 
+					<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="TQSL Callsign Certificate Icons">
+					<param name="Local" value="certs-icons.htm">
 					 </OBJECT>
 					 
 					<LI> <OBJECT type="text/sitemap">
