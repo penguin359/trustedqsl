@@ -49,8 +49,8 @@
 #define TQSL_BAND_MAX                6		///< Max length of a band name
 #define TQSL_MODE_MAX                16		///< Max length of a mode name
 #define TQSL_FREQ_MAX                20		///< Max length of a frequency
-#define TQSL_SATNAME_MAX             6		///< Max length of a sat name
-#define TQSL_PROPMODE_MAX            6		///< Max length of a prop mode
+#define TQSL_SATNAME_MAX             20		///< Max length of a sat name
+#define TQSL_PROPMODE_MAX            20		///< Max length of a prop mode
 
 #define TQSL_CERT_CB_USER            0		///< Callback is for user cert
 #define TQSL_CERT_CB_CA              1		///< Callback is for CA cert
@@ -606,6 +606,34 @@ DLLEXPORT int CALLCONVENTION tqsl_getCertificatePrivateKeyType(tQSL_Cert cert);
   * \c cert should not be used again in any way.
   */
 DLLEXPORT void CALLCONVENTION tqsl_freeCertificate(tQSL_Cert cert);
+
+#define TQSL_CERT_STATUS_UNK	0	///< Status is unknown
+#define TQSL_CERT_STATUS_SUP	1	///< Certificate is superceded
+#define TQSL_CERT_STATUS_EXP	2	///< Certificate is expired
+#define TQSL_CERT_STATUS_OK	3	///< Certificate is valid
+#define TQSL_CERT_STATUS_INV	4	///< Invalid serial number
+
+/** Determine the status of a callsign certificate
+  * \li \c serial - the serial number of the certificate
+  * tqsl_selectCertificates()
+  * \li \c status - an integer to receive the certificate status
+  *
+  * Returns one of the following values:
+  *
+  * \li \c TQSL_CERT_STATUS_UNK - An error occurred and the status is unknown
+  * \li \c TQSL_CERT_STATUS_SUP - The certificate has been superceded
+  * \li \c TQSL_CERT_STATUS_EXP - The certificate has expired
+  * \li \c TQSL_CERT_STATUS_OK  - The certificate is valid
+  * \li \c TQSL_CERT_STATUS_INV	- The serial number supplied is invalid
+  *
+ */
+DLLEXPORT int CALLCONVENTION tqsl_getCertificateStatus(long serial);
+
+/** Store the status of a callsign certificate
+  * \li \c serial - serial number of the certificate
+  * \li \c status - the status value to store.
+ */
+DLLEXPORT int CALLCONVENTION tqsl_setCertificateStatus(long serial, const char *status);
 
 /* int tqsl_checkCertificate(tQSL_Cert); */
 

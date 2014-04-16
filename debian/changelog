@@ -1,3 +1,12 @@
+trustedqsl (2.0.2-1) unstable; urgency=medium
+
+  * New upstream release
+  * Debian packaging
+     - updated 01-install-libtqsllib-so-in-usr-lib-trustedqsl.patch
+     - bumped standards version
+
+ -- Kamal Mostafa <kamal@whence.com>  Wed, 16 Apr 2014 09:34:55 -0700
+
 trustedqsl (2.0-1) unstable; urgency=low
 
   * New upstream release

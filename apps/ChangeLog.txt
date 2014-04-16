@@ -1,5 +1,122 @@
-TQSL/TQSLCERT changes
-=====================
+TQSL changes
+============
+
+2.0.2
+----------
+Use OpenSSL 1.0.1g to correct the Heartbleed bug.
+
+Add a newline after "Signing using.." message when signing a log so
+any errors show up under that message, not tacked onto the end of it.
+
+
+2.0.1
+----------
+Lock the duplicates datbase so only a single TQSL instance can
+access it in cases where users have multiple TQSL windows open.
+
+Don't use the Directory chooser widget in the preferences pane for
+selecting a backup directory on Linux systems. That widget is
+not usable and can crash TQSL. Use a simple text box instead.
+
+Don't prompt the user to renew a callsign certificate that's going to
+expire soon if they've already submitted a renewal.
+
+Correct handling of callsign certificates to avoid an "Invalid argument"
+loop in some circumstances during update checking. 
+
+Fix crash when the callsign certificate status file is empty or invalid.
+
+Update the messages displayed during callsign certificate creation to
+make it more clear when signed requests are appropriate. Warn when
+a duplicate certificate request is being created that there are pending
+operations and that the user should wait.
+
+when checking for updated versions of TQSL, consider production releases
+to be "newer" than beta/alpha test versions.
+
+Correct defect in thread handling that causes hangs on pthread-based
+systems.
+
+Change handling of the Pending Callsign Certificate request list to avoid
+using a function that misbehaves on some Linux variants.
+
+When a user tries to sign a log using a Station Location that refers to an
+invalid Callsign Certificate, refuse the signing operation and let the user
+know that the Callsign Certificate is invalid.
+
+For uploaded files, use .tq8 as the extension, not the original .adi/.log to
+avoid user confusion.
+
+Remove hang when certain command line strings are empty (-p, for example).
+
+When editing a station location where there the associated callsign
+certificate is no longer installed, don't default to the first certificate.
+Display an error to properly notify the user.
+
+Correct handling of Station Location names with leading and/or trailing
+whitespace. Strip those characters when creating and editing a station
+location and ignore them when looking up existing station locations.
+
+Install and use a certificate bundle so TQSL is no longer dependent upon the
+host OS for certificate validation. 
+
+On Windows, use OpenSSL for SSL connections rather than the unreliable
+Windows SChannel implementation.
+
+Word wrap the "overlapping certificate" message properly.
+
+Fix a crash that occurred when an error was displayed due to the
+automatic backup being performed at exit.
+
+Display errors that happen while saving creating callsign certificate
+requests more prominently.
+
+When prompting for a password, don't treat an empty password response
+as a cancel. Try to use that and report a password error if appropriate.
+
+When reporting errors, don't include the filename of the proximate cause
+twice in the same error message.
+
+Don't notify users of pending callsign certificate requests with the "are
+you ready to install" prompt. This is confusing as it seems to indicate
+that TQSL has the .TQ6 already downloaded and ready to install. Since we
+can't tell when LoTW has delivered the e-mail, don't prompt for the TQ6
+at every startup.
+
+Use the LoTW certificate status web query to determine if any callsign
+certificates are current. Store this information when updates are done
+(by default, once daily) and use that to inform users that the
+callsign certificate they are using are no longer valid.
+
+Move the update operations performed at startup to a separate thread so
+the GUI can initialize while this work is ongoing. This replaces the
+2.0 behavior of starting the updates (and blocking the GUI) two seconds
+after the GUI appeared. This also corrects a potential deadlock on
+OSX where the first-time user message could appear along with an update
+dialog, both of which locked each other out.
+
+Correct callsign certificate password handling to use UTF-8 for any
+new passwords. On Windows, try UTF-8 then UCS-2 to unlock.
+
+Issue more helpful error messages when errors occur while parsing an
+ADIF file, including what field is causing the error.
+
+Correct problem where using characters like "<", ">" or quote in a station
+location field could cause restoring a .tbk file to fail with a syntax
+error.
+
+Properly handle non-ASCII characters in station location names and in callsign
+certificate request name/address fields. Store these in a form that allows
+transport between UNIX and Windows.
+
+When asking about how to handle duplicate QSOs, don't count duplicate QSOs and
+QSOs with bad callsigns as "new" - ignore them.
+
+When importing certificates, default to .tq6 files.
+
+Force the callsign certificates and station locations pane of the UI to be
+fixed size. This fixes long lists of certificates or locations to use a
+scrollbar rather than having the pane stretch the whole UI.
 
 2.0
 ----------
