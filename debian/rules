@@ -3,6 +3,9 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+# Disable WXDEBUG assertions, which are on by default in wx3.0.
+export DEB_CXXFLAGS_MAINT_APPEND=-DNDEBUG
+
 %:
 	dh $@
 

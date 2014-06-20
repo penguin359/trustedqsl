@@ -1,3 +1,10 @@
+trustedqsl (2.0.2-2) unstable; urgency=medium
+
+  [ Olly Betts ]
+  * Update to use wxWidgets 3.0 (02-wx3.0-compat.patch). Closes: #750084
+
+ -- Kamal Mostafa <kamal@whence.com>  Thu, 19 Jun 2014 17:43:09 -0700
+
 trustedqsl (2.0.2-1) unstable; urgency=medium
 
   * New upstream release
