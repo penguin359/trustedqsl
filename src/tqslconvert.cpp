@@ -367,6 +367,26 @@ tqsl_setADIFConverterDateFilter(tQSL_Converter convp, tQSL_Date *start, tQSL_Dat
 	return 0;
 }
 
+// Remove the dupes db files
+static void
+remove_db(const char *path)  {
+	DIR *dir = opendir(path);
+	if (dir != NULL) {
+		struct dirent *ent;
+		while ((ent = readdir(dir)) != NULL) {
+			if (!strcmp(ent->d_name, "duplicates.db") ||
+	    		!strncmp(ent->d_name, "log.", 4) ||
+	    		!strncmp(ent->d_name, "__db.", 5)) {
+				string fname = path;
+				fname = fname + "/" + ent->d_name;
+				unlink(fname.c_str());
+			}
+		}
+		closedir(dir);
+	}
+	return;
+}
+//
 // Open the duplicates database
 
 static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
@@ -418,8 +438,10 @@ static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 			dbinit_cleanup = true;
 			goto dbinit_end;
 		}
-		if (conv->errfile)
+		if (conv->errfile) {
 			conv->dbenv->set_errfile(conv->dbenv, conv->errfile);
+			conv->dbenv->set_verbose(conv->dbenv, DB_VERB_RECOVERY, 1);
+		}
 		// Log files default to 10 Mb each. We don't need nearly that much.
 		if (conv->dbenv->set_lg_max)
 			conv->dbenv->set_lg_max(conv->dbenv, 256 * 1024);
@@ -434,19 +456,30 @@ static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 				fprintf(conv->errfile, "opening DB %s returns status %d\n", conv->dbpath, dbret);
 			// can't open environment - try to delete it and try again.
 			if (!triedRemove) {
-				conv->dbenv->remove(conv->dbenv, conv->dbpath, DB_FORCE);
+				conv->dbenv->close(conv->dbenv, 0);
+				// Create a new environment to remove the dross
+				if (!(dbret = db_env_create(&conv->dbenv, 0))) {
+					dbret = conv->dbenv->remove(conv->dbenv, conv->dbpath, DB_FORCE);
+				}
 				triedRemove = true;
 				if (conv->errfile)
 					fprintf(conv->errfile, "About to retry after removing the environment\n");
 				continue;
 			}
-			if (conv->errfile)
+			if (conv->errfile) {
 				fprintf(conv->errfile, "Retry attempt after removing the environment failed.\n");
-				// can't open environment and cleanup efforts failed.
-				conv->dbenv->close(conv->dbenv, 0);
-				conv->dbenv = NULL;	// this can't be recovered
-				dbinit_cleanup = true;
-				goto dbinit_end;
+			}
+			if (errno == EINVAL) {  // Something really wrong with the DB
+						// Remove it and try again.
+				remove_db(fixedpath.c_str());
+				continue;
+			}
+
+			// can't open environment and cleanup efforts failed.
+			conv->dbenv->close(conv->dbenv, 0);
+			conv->dbenv = NULL;	// this can't be recovered
+			dbinit_cleanup = true;
+			goto dbinit_end;
 		}
 		break;		// Opened OK.
 	}
@@ -529,19 +562,7 @@ static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 		conv->dbenv = NULL;
 
 		// Remove the old dupe db
-		DIR *dir = opendir(fixedpath.c_str());
-		if (dir != NULL) {
-			struct dirent *ent;
-			while ((ent = readdir(dir)) != NULL) {
-				if (!strcmp(ent->d_name, "duplicates.db") ||
-				    !strncmp(ent->d_name, "log.", 4) ||
-				    !strncmp(ent->d_name, "__db.", 5)) {
-					string fname = fixedpath + "/" + ent->d_name;
-					unlink(fname.c_str());
-				}
-			}
-			closedir(dir);
-		}
+		remove_db(fixedpath.c_str());
 
 		// Now create the new database
 		if ((dbret = db_env_create(&conv->dbenv, 0))) {
@@ -1002,7 +1023,7 @@ tqsl_converterRollBack(tQSL_Converter convp) {
 	if (!(conv = check_conv(convp)))
 		return 1;
 	if (!conv->seendb)
-		return 1;
+		return 0;
 	if (conv->txn)
 		conv->txn->abort(conv->txn);
 	conv->txn = NULL;
@@ -1016,7 +1037,7 @@ tqsl_converterCommit(tQSL_Converter convp) {
 	if (!(conv = check_conv(convp)))
 		return 1;
 	if (!conv->seendb)
-		return 1;
+		return 0;
 	if (conv->txn)
 		conv->txn->commit(conv->txn, 0);
 	conv->txn = NULL;

@@ -2,10 +2,12 @@ Description: Fix to build with wxwidgets3.0
 Author: Olly Betts <olly@survex.com>
 Last-Update: 2014-05-28
 
---- a/apps/loadcertwiz.cpp
-+++ b/apps/loadcertwiz.cpp
-@@ -228,7 +228,7 @@
- 
+Index: trustedqsl-2.0.2b/apps/loadcertwiz.cpp
+===================================================================
+--- trustedqsl-2.0.2b.orig/apps/loadcertwiz.cpp	2014-07-13 09:31:15.371927748 -0700
++++ trustedqsl-2.0.2b/apps/loadcertwiz.cpp	2014-07-13 09:31:15.367927860 -0700
+@@ -231,7 +231,7 @@
+ 	tQSL_ImportCall[0] = '\0';
  	wxString path = config->Read(wxT("CertFilePath"), wxT(""));
  	wxString filename = wxFileSelector(wxT("Select Certificate File"), path,
 -		wxT(""), ext, wild, wxOPEN|wxFILE_MUST_EXIST);
@@ -13,9 +15,11 @@ Last-Update: 2014-05-28
  	if (filename == wxT("")) {
  		// Cancelled!
  		_first = 0;
---- a/apps/tqsl.cpp
-+++ b/apps/tqsl.cpp
-@@ -1297,7 +1297,7 @@
+Index: trustedqsl-2.0.2b/apps/tqsl.cpp
+===================================================================
+--- trustedqsl-2.0.2b.orig/apps/tqsl.cpp	2014-07-13 09:31:15.371927748 -0700
++++ trustedqsl-2.0.2b/apps/tqsl.cpp	2014-07-13 09:31:15.367927860 -0700
+@@ -1296,7 +1296,7 @@
  	}
  	s_fname = wxFileSelector(wxT("Log File"), wxT(""), wxT("tqsldiag.log"), wxT("log"),
  			wxT("Log files (*.log)|*.log|All files (*.*)|*.*"),
@@ -24,7 +28,7 @@ Last-Update: 2014-05-28
  	if (s_fname == wxT("")) {
  		file_menu->Check(tm_f_diag, false); //would be better to not check at all, but no, apparently that's a crazy thing to want
  		return;
-@@ -1413,7 +1413,7 @@
+@@ -1412,7 +1412,7 @@
  #else
  			wxT("ADIF files (*.adi;*.adif)|*.adi;*.adif|All files (*.*)|*.*"),
  #endif
@@ -33,7 +37,7 @@ Last-Update: 2014-05-28
  		if (s_fname == wxT(""))
  			return;
  		wxConfig::Get()->Write(wxT("QSODataPath"), wxPathOnly(s_fname));
-@@ -1495,7 +1495,7 @@
+@@ -1494,7 +1494,7 @@
  #else
  			wxT("ADIF files (*.adi;*.adif)|*.adi;*.adif|All files (*.*)|*.*"),
  #endif
@@ -42,7 +46,7 @@ Last-Update: 2014-05-28
  	if (file == wxT(""))
  		return;
  	init_modes();
-@@ -2075,7 +2075,7 @@
+@@ -2076,7 +2076,7 @@
  	virtual wxThread::ExitCode Entry() {
  		int ret = curl_easy_perform(handle);
  		wxCommandEvent evt(wxEVT_LOGUPLOAD_DONE, wxID_ANY);
@@ -51,7 +55,7 @@ Last-Update: 2014-05-28
  		return (wxThread::ExitCode)((intptr_t)ret);
  	}
  };
-@@ -3245,7 +3245,7 @@
+@@ -3264,7 +3264,7 @@
  		if (defext.IsEmpty() || !defFound)
  			defext = wxString(wxT("adi"));
  		infile = wxFileSelector(wxT("Select file to Sign"), path, wxT(""), defext, filter,
@@ -60,7 +64,7 @@ Last-Update: 2014-05-28
  		if (infile == wxT(""))
  			return;
  		wxString inPath;
-@@ -3264,7 +3264,7 @@
+@@ -3283,7 +3283,7 @@
  		basename += wxT(".") + deftype;
  		wxString outfile = wxFileSelector(wxT("Select file to write to"),
  			path, basename, deftype, filter + wxT("|All files (*.*)|*.*"),
@@ -69,7 +73,7 @@ Last-Update: 2014-05-28
  		if (outfile == wxT(""))
  			return;
  		config->Write(wxT("ExportPath"), wxPathOnly(outfile));
-@@ -3355,7 +3355,7 @@
+@@ -3374,7 +3374,7 @@
  		if (defext.IsEmpty() || !defFound)
  			defext = wxString(wxT("adi"));
  		infile = wxFileSelector(wxT("Select file to Sign"), path, wxT(""), defext, filter,
@@ -78,7 +82,7 @@ Last-Update: 2014-05-28
  		if (infile == wxT(""))
  			return;
  		wxString inPath;
-@@ -3668,7 +3668,7 @@
+@@ -3696,7 +3696,7 @@
  		wxString file_default = wxT("tqslconfig.tbk");
  		wxString filename = wxFileSelector(wxT("Enter file to save to"), wxT(""),
  			file_default, wxT(".tbk"), wxT("Configuration files (*.tbk)|*.tbk|All files (*.*)|*.*"),
@@ -87,7 +91,7 @@ Last-Update: 2014-05-28
  		if (filename == wxT(""))
  			return;
  
-@@ -3952,7 +3952,7 @@
+@@ -3991,7 +3991,7 @@
  	tqslTrace("MyFrame::OnLoadConfig");
  	wxString filename = wxFileSelector(wxT("Select saved configuration file"), wxT(""),
  					   wxT("tqslconfig.tbk"), wxT("tbk"), wxT("Saved configuration files (*.tbk)|*.tbk"),
@@ -96,7 +100,7 @@ Last-Update: 2014-05-28
  	if (filename == wxT(""))
  		return;
  
-@@ -4075,23 +4075,23 @@
+@@ -4114,23 +4114,23 @@
  	wxCmdLineParser parser;
  
  	static const wxCmdLineEntryDesc cmdLineDesc[] = {
@@ -137,7 +141,7 @@ Last-Update: 2014-05-28
  	        { wxCMD_LINE_NONE }
  	};
  
-@@ -4100,7 +4100,7 @@
+@@ -4139,7 +4139,7 @@
  	for (int i = 1; i < argc; i++) {
  		origCommandLine += wxT(" ");
  		origCommandLine += argv[i];
@@ -146,7 +150,7 @@ Last-Update: 2014-05-28
  			if (wxIsalpha(argv[i][1]) && wxIsupper(argv[i][1]))
  				argv[i][1] = wxTolower(argv[i][1]);
  	}
-@@ -4662,7 +4662,7 @@
+@@ -4722,7 +4722,7 @@
  			file = wxFileSelector(wxT("Save request"), wxT(""), file, wxT(TQSL_CRQ_FILE_EXT),
  				wxT("tQSL Cert Request files (*.") wxT(TQSL_CRQ_FILE_EXT) wxT(")|*.") wxT(TQSL_CRQ_FILE_EXT)
  					wxT("|All files (") wxT(ALLFILESWILD) wxT(")|") wxT(ALLFILESWILD),
@@ -155,7 +159,7 @@ Last-Update: 2014-05-28
  			if (file.IsEmpty()) {
  				wxLogMessage(wxT("Request cancelled"));
  				return;
-@@ -4848,7 +4848,7 @@
+@@ -4908,7 +4908,7 @@
  	wxString path = wxConfig::Get()->Read(wxT("CertFilePath"), wxT(""));
  	wxString filename = wxFileSelector(wxT("Enter the name for the new Certificate Container file"), path,
  		file_default, wxT(".p12"), wxT("Certificate Container files (*.p12)|*.p12|All files (*.*)|*.*"),
@@ -164,8 +168,10 @@ Last-Update: 2014-05-28
  	if (filename == wxT(""))
  		return;
  	wxConfig::Get()->Write(wxT("CertFilePath"), wxPathOnly(filename));
---- a/apps/tqslwiz.cpp
-+++ b/apps/tqslwiz.cpp
+Index: trustedqsl-2.0.2b/apps/tqslwiz.cpp
+===================================================================
+--- trustedqsl-2.0.2b.orig/apps/tqslwiz.cpp	2014-07-13 09:31:15.371927748 -0700
++++ trustedqsl-2.0.2b/apps/tqslwiz.cpp	2014-07-13 09:31:15.371927748 -0700
 @@ -79,7 +79,7 @@
  }
  

@@ -1,3 +1,11 @@
+trustedqsl (2.0.2b-1) unstable; urgency=medium
+
+  * New upstream "final v2.0.2" release
+     - Debian "2.0.2b" corresponds to the changed upstream tqsl-2.0.2.tar.gz
+       released on 2014-07-12.
+
+ -- Kamal Mostafa <kamal@whence.com>  Sun, 13 Jul 2014 09:15:46 -0700
+
 trustedqsl (2.0.2-2) unstable; urgency=medium
 
   [ Olly Betts ]
