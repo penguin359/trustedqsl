@@ -1,3 +1,11 @@
+trustedqsl (2.0.3-2) unstable; urgency=medium
+
+  * Fix segfault when attempting to edit or add a station location,
+    thanks to olly@survex.com  Closes: #759224
+  * Bump standards version to 3.9.6
+
+ -- Colin Tuckley <colint@debian.org>  Thu, 09 Oct 2014 14:20:08 +0100
+
 trustedqsl (2.0.3-1) unstable; urgency=medium
 
   * New Upstream Release.

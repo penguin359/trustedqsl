@@ -1,6 +1,6 @@
 Description: Fix to build with wxwidgets3.0
 Author: Olly Betts <olly@survex.com>
-Last-Update: 2014-05-28
+Last-Update: 2014-10-10
 
 Index: trustedqsl-2.0.2b/apps/loadcertwiz.cpp
 ===================================================================
@@ -172,12 +172,13 @@ Index: trustedqsl-2.0.2b/apps/tqslwiz.cpp
 ===================================================================
 --- trustedqsl-2.0.2b.orig/apps/tqslwiz.cpp	2014-07-13 09:31:15.371927748 -0700
 +++ trustedqsl-2.0.2b/apps/tqslwiz.cpp	2014-07-13 09:31:15.371927748 -0700
-@@ -79,7 +79,7 @@
+@@ -79,7 +79,8 @@
  }
  
  void TQSLWizCertPage::OnSize(wxSizeEvent& ev) {
 -	TQSLWizPage::OnSize(ev); //fix this
-+	TQSLWizPage::ProcessWindowEventLocally(ev); //fix this
++	if (GetAutoLayout())
++		Layout();
  	UpdateFields();
  }
  
