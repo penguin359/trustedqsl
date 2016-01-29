@@ -72,8 +72,9 @@ TQSLValidator::Validate(wxWindow* parent) {
 	if (!IsValid(str)) {
 		m_validatorWindow->SetFocus();
 		wxString buf;
-		buf.Printf(wxT("Invalid %s: \"%s\""), (const char *)_type.ToUTF8(), (const char *)str.ToUTF8());
-		wxMessageBox(buf, wxT("QSO Data Error"), wxOK | wxICON_EXCLAMATION, parent);
+		// TRANSLATORS: Invalid date component, such as "Invalid Month: 15"
+		buf.Printf(_("Invalid %hs: \"%hs\""), (const char *) _type.ToUTF8(),  (const char *)str.ToUTF8());
+		wxMessageBox(buf, _("QSO Data Error"), wxOK | wxICON_EXCLAMATION, parent);
 		return FALSE;
 	}
 	return TRUE;

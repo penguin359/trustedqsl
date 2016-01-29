@@ -1,6 +1,59 @@
 TQSLLIB changes
 ===============
 
+2.5
+---
+Allow build for Linux/BSD systems running older versions of Berkeley
+DB by defining a potentially missing symbol.
+
+Fix defect that could cause saving of private keys to be suppressed.
+
+Accept C7 and 4Y as valid prefixes.
+
+Display the serial number of the Callsign Certificate being processed
+along with the callsign for errors when installing Callsign Certificates.
+This allows errors to be specific when attempts to restore older
+Callsign Certificates fail.
+
+When installing multiple Callsign Certificates from a .tq6 file (such
+as that available on the LoTW website) don't quit if a certificate
+can't be installed due to a lack of a private key, as later callsign
+certificates may be able to installed.
+
+When deleting Callsign Certificates, store a copy so that certificate
+can be recovered. Add the ability to list callsign certificates available
+for restoration and a function that allows undeletion.
+
+When deleting Station Locations, store a copy so that location can
+be recovered. Add the ability to list station locations available
+for restoration and a function that allows undeletion.
+
+Correct typo that would cause duplicates database removal to fail
+on Windows systems.
+
+When processing an ADIF QSO, check that mode, band, date, and time
+are all provided. Reject QSOs which do not have the required data.
+
+Improve duplicates database open error handling. More cases should
+be automatically corrected when the database is improperly formatted
+or corrupted.
+
+Update tqsl_isCertificateExpired and tqsl_isCertificateSuperceded to
+work properly with key-only certificates.
+
+Add tqsllib tracing information to the diagnostic log, making that
+information more detailed and more likely to be useful for debugging
+TQSL errors.
+
+Report to the user when an update to the TQSL configuration file is
+blocked because the "new" file has a lower revision level.
+
+Use the ADIF 3.0.4 "SUBMODE" field when signing a log.
+
+Add API to allow the call sign for a station location to be temporarily
+specified. This allows locations with callsign='[None]' to be used
+by selecting a call when signing a log.
+
 2.4
 ---
 Fix defect that doesn't allow adding station locations if only a single

@@ -119,6 +119,7 @@ typedef struct {
 	char callsign[TQSL_CALLSIGN_MAX+1];	///< QSO callsign
 	char band[TQSL_BAND_MAX+1];		///< QSO band
 	char mode[TQSL_MODE_MAX+1];		///< QSO mode
+	char submode[TQSL_MODE_MAX+1];		///< QSO submode
 	tQSL_Date date;				///< QSO date
 	tQSL_Time time;				///< QSO time
 	char freq[TQSL_FREQ_MAX+1];		///< QSO frequency
@@ -126,6 +127,11 @@ typedef struct {
 	char rxband[TQSL_BAND_MAX+1];		///< QSO RX band
 	char propmode[TQSL_PROPMODE_MAX+1];	///< QSO prop mode
 	char satname[TQSL_SATNAME_MAX+1];	///< QSO satellite name
+	bool callsign_set;			///< QSO specifies a call worked
+	bool mode_set;				///< QSO specifies a mode
+	bool band_set;				///< QSO specifies a band or frequency
+	bool date_set;				///< QSO specifies a date
+	bool time_set;				///< QSO specifies a time
 } TQSL_QSO_RECORD;
 
 /// Base directory for tQSL library working files.
@@ -155,6 +161,10 @@ DLLEXPORTDATA extern char tQSL_CustomError[256];
 DLLEXPORTDATA extern int tQSL_Errno;
 /// Callsign used in import - used for missing public key error
 DLLEXPORTDATA extern char tQSL_ImportCall[256];
+/// Serial number of recent certificate import
+DLLEXPORTDATA extern long tQSL_ImportSerial;
+// Diagnostic log file
+DLLEXPORTDATA extern FILE* tQSL_DiagFile;
 
 /** Initialize the tQSL library
   *
@@ -329,7 +339,9 @@ DLLEXPORT int CALLCONVENTION tqsl_getConfigVersion(int *major, int *minor);
   * Returns 0 on success, nonzero on failure.
   *
   * Each of the tQSL_Cert objects in the list should be freed
-  * by calling tqsl_freeCertificate().
+  * by calling tqsl_freeCertificate(). tqsl_freeCertificateList() is a better
+  * function to use for that as it also frees the allocated array that
+  * holds the certificate pointers.
   *
   */
 DLLEXPORT int CALLCONVENTION tqsl_selectCertificates(tQSL_Cert **certlist, int *ncerts,
@@ -341,7 +353,9 @@ DLLEXPORT int CALLCONVENTION tqsl_selectCertificates(tQSL_Cert **certlist, int *
   * The function produces a list of tQSL_Cert objects.
   *
   * Each of the tQSL_Cert objects in the list should be freed
-  * by calling tqsl_freeCertificate().
+  * by calling tqsl_freeCertificate(). tqsl_freeCertificateList() is a better
+  * function to use for that as it also frees the allocated array that
+  * holds the certificate pointers.
   *
   */
 DLLEXPORT int CALLCONVENTION tqsl_selectCACertificates(tQSL_Cert **certlist, int *ncerts, const char *type);
@@ -607,6 +621,13 @@ DLLEXPORT int CALLCONVENTION tqsl_getCertificatePrivateKeyType(tQSL_Cert cert);
   */
 DLLEXPORT void CALLCONVENTION tqsl_freeCertificate(tQSL_Cert cert);
 
+/** Free the memory used by a certificate list. The allocated list
+ * of tQSL_Certs are freed and the pointer array is freed.
+ * Once this function is called, the \c list or the \c cert 
+ * should not be used again in any way.
+ */
+DLLEXPORT void CALLCONVENTION tqsl_freeCertificateList(tQSL_Cert* list, int ncerts);
+
 #define TQSL_CERT_STATUS_UNK	0	///< Status is unknown
 #define TQSL_CERT_STATUS_SUP	1	///< Certificate is superceded
 #define TQSL_CERT_STATUS_EXP	2	///< Certificate is expired
@@ -719,6 +740,15 @@ DLLEXPORT int CALLCONVENTION tqsl_importPKCS12File(const char *filename, const c
   */
 DLLEXPORT int CALLCONVENTION tqsl_importPKCS12Base64(const char *base64, const char *p12password, const char *password,
 	int (*pwcb)(char *buf, int bufsiz, void *userdata), int(*cb)(int type , const char *message, void *userdata), void *user);
+
+/** Get the list of restorable station locations. */
+DLLEXPORT int CALLCONVENTION tqsl_getDeletedCallsignCertificates(char ***calls, int *ncall, const char *filter);
+
+/** Free the list of restorable Callsign Certificates. */
+DLLEXPORT void CALLCONVENTION tqsl_freeDeletedCertificateList(char **list, int nloc);
+
+/** Restore a deleted callsign certificate by callsign. */
+DLLEXPORT int CALLCONVENTION tqsl_restoreCallsignCertificate(const char *callsign);
 
 /** Delete a certificate and private key
   */
@@ -1000,6 +1030,35 @@ DLLEXPORT int CALLCONVENTION tqsl_mergeStationLocations(const char *locdata);
 /** Remove the stored station location by name. */
 DLLEXPORT int CALLCONVENTION tqsl_deleteStationLocation(const char *name);
 
+/** Restore the deleted station location by name. */
+DLLEXPORT int CALLCONVENTION tqsl_restoreStationLocation(const char *name);
+
+/** Get the list of restorable station locations. */
+DLLEXPORT int CALLCONVENTION tqsl_getDeletedStationLocations(char ***locp, int *nloc);
+
+/** Free the list of restorable station locations. */
+DLLEXPORT void CALLCONVENTION tqsl_freeDeletedLocationList(char **list, int nloc);
+
+/** Get the number of fields on the current station location page */
+DLLEXPORT int CALLCONVENTION tqsl_getNumLocationField(tQSL_Location loc, int *numf);
+
+/** Get the number of characters in the label for the specified field */
+DLLEXPORT int CALLCONVENTION tqsl_getLocationFieldDataLabelSize(tQSL_Location loc, int field_num, int *rval);
+
+/** Get the label for the specified field */
+DLLEXPORT int CALLCONVENTION tqsl_getLocationFieldDataLabel(tQSL_Location loc, int field_num, char *buf, int bufsiz);
+
+/** Get the size of the GABBI name of the specified field */
+DLLEXPORT int CALLCONVENTION tqsl_getLocationFieldDataGABBISize(tQSL_Location loc, int field_num, int *rval);
+
+/** Get the GABBI name of the specified field */
+DLLEXPORT int CALLCONVENTION tqsl_getLocationFieldDataGABBI(tQSL_Location loc, int field_num, char *buf, int bufsiz);
+
+/** Get the input type of the input field.
+  *
+  * \c type will be one of TQSL_LOCATION_FIELD_TEXT, TQSL_LOCATION_FIELD_DDLIST
+  * or TQSL_LOCATION_FIELD_LIST
+  */
 /** Get the number of fields on the current station location page */
 DLLEXPORT int CALLCONVENTION tqsl_getNumLocationField(tQSL_Location loc, int *numf);
 
@@ -1089,6 +1148,9 @@ DLLEXPORT int CALLCONVENTION tqsl_getLocationFieldChanged(tQSL_Location loc, int
 
 /** Get the call sign from the station location. */
 DLLEXPORT int CALLCONVENTION tqsl_getLocationCallSign(tQSL_Location loc, char *buf, int bufsiz);
+
+/** Set the call sign for the station location. */
+DLLEXPORT int CALLCONVENTION tqsl_setLocationCallSign(tQSL_Location loc, const char *buf);
 
 /** Get the DXCC entity from the station location. */
 DLLEXPORT int CALLCONVENTION tqsl_getLocationDXCCEntity(tQSL_Location loc, int *dxcc);
@@ -1258,6 +1320,17 @@ DLLEXPORT const char* CALLCONVENTION tqsl_getGABBItCONTACTData(tQSL_Cert cert, t
 	int stationuid, char *signdata, int sdlen);
 
 /** @} */
+
+DLLEXPORT void CALLCONVENTION tqslTrace(const char *name, const char *format = NULL, ...);
+DLLEXPORT void CALLCONVENTION tqsl_closeDiagFile(void);
+DLLEXPORT int  CALLCONVENTION tqsl_diagFileOpen(void);
+DLLEXPORT int  CALLCONVENTION tqsl_openDiagFile(const char* file);
+
+#ifdef _WIN32
+DLLEXPORT wchar_t* CALLCONVENTION utf8_to_wchar(const char* str);
+DLLEXPORT char*    CALLCONVENTION wchar_to_utf8(const wchar_t* str, bool forceUTF8);
+DLLEXPORT void     CALLCONVENTION free_wchar(wchar_t* ptr);
+#endif
 
 #ifdef __cplusplus
 }

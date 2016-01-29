@@ -1,3 +1,16 @@
+trustedqsl (2.2-1) unstable; urgency=medium
+
+  * New upstream release
+     - no longer ships ca-bundle.crt (Closes: #748963)
+  * Debian packaging
+     - drop trustedqsl.{menu,xpm} per W: command-in-menu-file-and-desktop-file
+     - drop 02-wx3.0-compat.patch (merged upstream)
+     - upstream patches from 2.2.1-alpha:
+         02-863a887-Fix-improper-handling-of-certificate-import-causing-.patch
+         03-ea590af-Fix-improper-handling-of-certificate-import-causing-.patch
+
+ -- Kamal Mostafa <kamal@whence.com>  Fri, 29 Jan 2016 13:37:43 -0800
+
 trustedqsl (2.0.3-2) unstable; urgency=medium
 
   * Fix segfault when attempting to edit or add a station location,

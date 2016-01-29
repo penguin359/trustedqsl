@@ -17,9 +17,10 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #ifdef _WIN32
-	#include <io.h>
-	#include <windows.h>
+    #include <io.h>
+    #include <windows.h>
     #include <direct.h>
+    #include <Shlobj.h>
 #endif
 #include <openssl/err.h>
 #include <openssl/objects.h>
@@ -30,7 +31,7 @@
 #include "winstrdefs.h"
 
 #ifdef _WIN32
-#define MKDIR(x, y) _mkdir((x))
+#define MKDIR(x, y) _wmkdir((x))
 #else
 #define MKDIR(x, y) mkdir((x), (y))
 #endif
@@ -42,6 +43,8 @@ DLLEXPORTDATA const char *tQSL_BaseDir = 0;
 DLLEXPORTDATA char tQSL_ErrorFile[256];
 DLLEXPORTDATA char tQSL_CustomError[256];
 DLLEXPORTDATA char tQSL_ImportCall[256];
+DLLEXPORTDATA long tQSL_ImportSerial = 0;
+DLLEXPORTDATA FILE* tQSL_DiagFile = 0;
 
 #define TQSL_OID_BASE "1.3.6.1.4.1.12348.1."
 #define TQSL_OID_CALLSIGN TQSL_OID_BASE "1"
@@ -106,29 +109,62 @@ static const char *error_strings[] = {
 	"The TQSL configuration file cannot be parsed",		/* TQSL_CONFIG_SYNTAX_ERROR */
 	"This file can not be processed due to a system error",	/* TQSL_FILE_SYSTEM_ERROR */
 	"The format of this file is incorrect.",		/* TQSL_FILE_SYNTAX_ERROR */
+	"This Callsign Certificate could not be installed", 	/* TQSL_CERT_ERROR */
 };
 
+const char* tqsl_openssl_error(void);
+
+#if defined(_WIN32)
+static int pmkdir(const wchar_t *path, int perm) {
+	wchar_t dpath[TQSL_MAX_PATH_LEN];
+	wchar_t npath[TQSL_MAX_PATH_LEN];
+	wchar_t *cp;
+	char *p = wchar_to_utf8(path, true);
+	tqslTrace("pmkdir", "path=%s", p);
+	free(p);
+	int nleft = (sizeof npath / 2) - 1;
+	wcsncpy(dpath, path, (sizeof dpath / 2));
+	cp = wcstok(dpath, L"/\\");
+	npath[0] = 0;
+	while (cp) {
+		if (wcslen(cp) > 0 && cp[wcslen(cp)-1] != ':') {
+			wcsncat(npath, L"\\", nleft);
+			nleft--;
+			wcsncat(npath, cp, nleft);
+			nleft -= wcslen(cp);
+			if (MKDIR(npath, perm) != 0 && errno != EEXIST) {
+				tqslTrace("pmkdir", "Error creating %s: %s", npath, strerror(errno));
+				return 1;
+			}
+		} else {
+			wcsncat(npath, cp, nleft);
+			nleft -= wcslen(cp);
+		}
+		cp = wcstok(NULL, L"/\\");
+	}
+	return 0;
+}
+
+#else // defined(_WIN32)
 static int pmkdir(const char *path, int perm) {
 	char dpath[TQSL_MAX_PATH_LEN];
 	char npath[TQSL_MAX_PATH_LEN];
 	char *cp;
-
+	tqslTrace("pmkdir", "path=%s", path);
 	int nleft = sizeof npath - 1;
 	strncpy(dpath, path, sizeof dpath);
 	cp = strtok(dpath, "/\\");
 	npath[0] = 0;
 	while (cp) {
 		if (strlen(cp) > 0 && cp[strlen(cp)-1] != ':') {
-#ifdef _WIN32
-			strncat(npath, "\\", nleft);
-#else
 			strncat(npath, "/", nleft);
-#endif
 			nleft--;
 			strncat(npath, cp, nleft);
 			nleft -= strlen(cp);
-			if (MKDIR(npath, perm) != 0 && errno != EEXIST)
+			if (MKDIR(npath, perm) != 0 && errno != EEXIST) {
+				tqslTrace("pmkdir", "Error creating %s: %s", npath, strerror(errno));
 				return 1;
+			}
 		} else {
 			strncat(npath, cp, nleft);
 			nleft -= strlen(cp);
@@ -137,23 +173,29 @@ static int pmkdir(const char *path, int perm) {
 	}
 	return 0;
 }
+#endif // defined(_WIN32)
 
 DLLEXPORT int CALLCONVENTION
 tqsl_init() {
 	static char semaphore = 0;
 	unsigned int i;
-	static char path[TQSL_MAX_PATH_LEN];
 #ifdef _WIN32
+	static wchar_t path[TQSL_MAX_PATH_LEN * 2];
 	// lets cin/out/err work in windows
 	// AllocConsole();
 	// freopen("CONIN$", "r", stdin);
 // freopen("CONOUT$", "w", stdout);
 // freopen("CONOUT$", "w", stderr);
-	static char shortPath[TQSL_MAX_PATH_LEN];
-	HKEY hkey;
-	DWORD dtype;
 	DWORD bsize = sizeof path;
 	int wval;
+#else
+	static char path[TQSL_MAX_PATH_LEN];
+#endif
+
+#if !defined(_WIN32) && !defined(__APPLE__)
+// Work around ill-considered decision by Fedora to stop allowing
+// certificates with MD5 signatures
+	setenv("OPENSSL_ENABLE_MD5_VERIFY", "1", 0);
 #endif
 
 	/* OpenSSL API tends to change between minor version numbers, so make sure
@@ -167,6 +209,7 @@ tqsl_init() {
 	if (SSLmajor != TQSLmajor ||
 		(SSLminor != TQSLminor &&
 		(SSLmajor != 9 && SSLminor != 7 && TQSLminor == 6))) {
+		tqslTrace("tqsl_init", "version error - ssl %d.%d", SSLmajor, SSLminor);
 		tQSL_Error = TQSL_OPENSSL_VERSION_ERROR;
 		return 1;
 	}
@@ -178,28 +221,27 @@ tqsl_init() {
 	OpenSSL_add_all_algorithms();
 	for (i = 0; i < (sizeof custom_objects / sizeof custom_objects[0]); i++) {
 		if (OBJ_create(custom_objects[i][0], custom_objects[i][1], custom_objects[i][2]) == 0) {
+			tqslTrace("tqsl_init", "Error making custom objects: %s", tqsl_openssl_error());
 			tQSL_Error = TQSL_OPENSSL_ERROR;
 			return 1;
 		}
 	}
 	if (tQSL_BaseDir == NULL) {
+#if defined(_WIN32)
+		wchar_t *wcp;
+		if ((wcp = _wgetenv(L"TQSLDIR")) != NULL && *wcp != '\0') {
+			wcsncpy(path, wcp, sizeof path);
+#else
 		char *cp;
 		if ((cp = getenv("TQSLDIR")) != NULL && *cp != '\0') {
 			strncpy(path, cp, sizeof path);
+#endif
 		} else {
 #if defined(_WIN32)
-			if ((wval = RegOpenKeyEx(HKEY_CURRENT_USER,
-				"Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders",
-				0, KEY_READ, &hkey)) == ERROR_SUCCESS) {
-				wval = RegQueryValueEx(hkey, "AppData", 0, &dtype, (LPBYTE)path, &bsize);
-				RegCloseKey(hkey);
-			}
+			wval = SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, 0, path);
 			if (wval != ERROR_SUCCESS)
-				strncpy(path, "C:", sizeof path);
-			wval = GetShortPathName(path, shortPath, TQSL_MAX_PATH_LEN);
-			if (wval != 0)
-				strncpy(path, shortPath, TQSL_MAX_PATH_LEN);
-			strncat(path, "\\TrustedQSL", sizeof path - strlen(path) - 1);
+				wcsncpy(path, L"C:", sizeof path);
+			wcsncat(path, L"\\TrustedQSL", sizeof path - wcslen(path) - 1);
 #elif defined(LOTW_SERVER)
 			strncpy(path, "/var/lotw/tqsl", sizeof path);
 #else  // some unix flavor
@@ -213,12 +255,27 @@ tqsl_init() {
 #endif
 		}
 		if (pmkdir(path, 0700)) {
+#if defined(_WIN32)
+			char *p = wchar_to_utf8(path, false);
+			strncpy(tQSL_ErrorFile, p, sizeof tQSL_ErrorFile);
+#else
 			strncpy(tQSL_ErrorFile, path, sizeof tQSL_ErrorFile);
+#endif
 			tQSL_Error = TQSL_SYSTEM_ERROR;
 			tQSL_Errno = errno;
+#if defined(_WIN32)
+			tqslTrace("tqsl_init", "Error creating working path %s: %s", p, strerror(errno));
+			free(p);
+#else
+			tqslTrace("tqsl_init", "Error creating working path %s: %s", path, strerror(errno));
+#endif
 			return 1;
 		}
+#if defined(_WIN32)
+		tQSL_BaseDir = wchar_to_utf8(path, true);
+#else
 		tQSL_BaseDir = path;
+#endif
 	}
 	semaphore = 1;
 	return 0;
@@ -324,8 +381,8 @@ tqsl_getErrorString_v(int err) {
 	}
 	if (err == TQSL_CERT_NOT_FOUND && tQSL_ImportCall[0] != '\0') {
 		snprintf(buf, sizeof buf,
-			"Callsign Certificate or Certificate Request not found for callsign %s",
-			tQSL_ImportCall);
+			"Callsign Certificate or Certificate Request not found for callsign %s serial %ld",
+			tQSL_ImportCall, tQSL_ImportSerial);
 		return buf;
 	}
 	adjusted_err = err - TQSL_ERROR_ENUM_BASE;
@@ -358,19 +415,29 @@ tqsl_encodeBase64(const unsigned char *data, int datalen, char *output, int outp
 
 	if (data == NULL || output == NULL) {
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
+		tqslTrace("tqsl_encodeBase64", "arg err data=0x%lx, output=0x%lx", data, output);
 		return rval;
 	}
-	if ((bio = BIO_new(BIO_s_mem())) == NULL)
+	if ((bio = BIO_new(BIO_s_mem())) == NULL) {
+		tqslTrace("tqsl_encodeBase64", "BIO_new err %s", tqsl_openssl_error());
 		goto err;
-	if ((bio64 = BIO_new(BIO_f_base64())) == NULL)
+	}
+	if ((bio64 = BIO_new(BIO_f_base64())) == NULL) {
+		tqslTrace("tqsl_encodeBase64", "BIO_new64 err %s", tqsl_openssl_error());
 		goto err;
+	}
 	bio = BIO_push(bio64, bio);
-	if (BIO_write(bio, data, datalen) < 1)
+	if (BIO_write(bio, data, datalen) < 1) {
+		tqslTrace("tqsl_encodeBase64", "BIO_write err %s", tqsl_openssl_error());
 		goto err;
-	if (BIO_flush(bio) != 1)
-		goto err;;
+	}
+	if (BIO_flush(bio) != 1) {
+		tqslTrace("tqsl_encodeBase64", "BIO_flush err %s", tqsl_openssl_error());
+		goto err;
+	}
 	n = BIO_get_mem_data(bio, &memp);
 	if (n > outputlen-1) {
+		tqslTrace("tqsl_encodeBase64", "buffer has %d, avail %d", n, outputlen);
 		tQSL_Error = TQSL_BUFFER_ERROR;
 		goto end;
 	}
@@ -396,19 +463,27 @@ tqsl_decodeBase64(const char *input, unsigned char *data, int *datalen) {
 	int rval = 1;
 
 	if (input == NULL || data == NULL || datalen == NULL) {
+		tqslTrace("tqsl_decodeBase64", "arg error input=0x%lx, data=0x%lx, datalen=0x%lx", input, data, datalen);
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
 		return rval;
 	}
-	if ((bio = BIO_new_mem_buf(const_cast<char *>(input), strlen(input))) == NULL)
+	if ((bio = BIO_new_mem_buf(const_cast<char *>(input), strlen(input))) == NULL) {
+		tqslTrace("tqsl_decodeBase64", "BIO_new_mem_buf err %s", tqsl_openssl_error());
 		goto err;
+	}
 	BIO_set_mem_eof_return(bio, 0);
-	if ((bio64 = BIO_new(BIO_f_base64())) == NULL)
+	if ((bio64 = BIO_new(BIO_f_base64())) == NULL) {
+		tqslTrace("tqsl_decodeBase64", "BIO_new err %s", tqsl_openssl_error());
 		goto err;
+	}
 	bio = BIO_push(bio64, bio);
 	n = BIO_read(bio, data, *datalen);
-	if (n < 0)
+	if (n < 0) {
+		tqslTrace("tqsl_decodeBase64", "BIO_read error %s", tqsl_openssl_error());
 		goto err;
+	}
 	if (BIO_ctrl_pending(bio) != 0) {
+		tqslTrace("tqsl_decodeBase64", "ctrl_pending err %s", tqsl_openssl_error());
 		tQSL_Error = TQSL_BUFFER_ERROR;
 		goto end;
 	}
@@ -574,10 +649,11 @@ static int
 days_per_month(int year, int month) {
 	switch (month) {
                 case 2:
-			if ((((year % 4) == 0) && ((year % 100) != 0)) || ((year % 400) == 0))
+			if ((((year % 4) == 0) && ((year % 100) != 0)) || ((year % 400) == 0)) {
 				return 29;
-			else
+			} else {
 				return 28;
+			}
                 case 4:
                 case 6:
                 case 9:
@@ -692,11 +768,13 @@ tqsl_initTime(tQSL_Time *time, const char *str) {
 	int parts[3];
 	int i;
 
-	if (time == NULL || str == NULL) {
+	if (time == NULL) {
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
 		return 1;
 	}
 	time->hour = time->minute = time->second = 0;
+	if (str == NULL)
+		return 0;
 	if (strlen(str) < 3) {
 		tQSL_Error = TQSL_INVALID_TIME;
 		return 1;
@@ -742,3 +820,94 @@ tqsl_getVersion(int *major, int *minor) {
 		*minor = TQSLLIB_VERSION_MINOR;
 	return 0;
 }
+#ifdef _WIN32
+DLLEXPORT wchar_t* CALLCONVENTION
+utf8_to_wchar(const char* str) {
+	wchar_t* buffer;
+	int needed = MultiByteToWideChar(CP_UTF8, 0, str, -1, 0, 0);
+	buffer = static_cast<wchar_t *>(malloc(needed*sizeof(wchar_t) + 4));
+	if (!buffer)
+		return NULL;
+	MultiByteToWideChar(CP_UTF8, 0, str, -1, &buffer[0], needed);
+	return buffer;
+}
+
+DLLEXPORT char* CALLCONVENTION
+wchar_to_utf8(const wchar_t* str, bool forceUTF8) {
+	char* buffer;
+	int needed = WideCharToMultiByte(forceUTF8 ? CP_UTF8 : CP_ACP, 0, str, -1, 0, 0, NULL, NULL);
+	buffer = static_cast<char *>(malloc(needed + 2));
+	if (!buffer)
+		return NULL;
+	WideCharToMultiByte(forceUTF8 ? CP_UTF8 : CP_ACP, 0, str, -1, &buffer[0], needed, NULL, NULL);
+	return buffer;
+}
+
+DLLEXPORT void CALLCONVENTION
+free_wchar(wchar_t* ptr) {
+	free(ptr);
+}
+#endif
+
+DLLEXPORT void CALLCONVENTION
+tqslTrace(const char *name, const char *format, ...) {
+	va_list ap;
+	if (!tQSL_DiagFile) return;
+
+	time_t t = time(0);
+	char timebuf[50];
+	strncpy(timebuf, ctime(&t), sizeof timebuf);
+	timebuf[strlen(timebuf) - 1] = '\0';		// Strip the newline
+	if (!format) {
+		fprintf(tQSL_DiagFile, "%s %s\r\n", timebuf, name);
+		fflush(tQSL_DiagFile);
+		return;
+	} else {
+		if (name) {
+			fprintf(tQSL_DiagFile, "%s %s: ", timebuf, name);
+		}
+	}
+	va_start(ap, format);
+	vfprintf(tQSL_DiagFile, format, ap);
+	va_end(ap);
+	fprintf(tQSL_DiagFile, "\r\n");
+	fflush(tQSL_DiagFile);
+}
+
+DLLEXPORT void CALLCONVENTION
+tqsl_closeDiagFile(void) {
+	if (tQSL_DiagFile)
+		fclose(tQSL_DiagFile);
+	tQSL_DiagFile = NULL;
+}
+
+DLLEXPORT int CALLCONVENTION
+tqsl_diagFileOpen(void) {
+	return tQSL_DiagFile != NULL;
+}
+
+DLLEXPORT int CALLCONVENTION
+tqsl_openDiagFile(const char *fname) {
+#ifdef _WIN32
+        wchar_t* lfn = utf8_to_wchar(fname);
+        tQSL_DiagFile = _wfopen(lfn, L"wb");
+        free_wchar(lfn);
+#else
+        tQSL_DiagFile = fopen(fname, "wb");
+#endif
+	return (tQSL_DiagFile == NULL);
+}
+
+const char*
+tqsl_openssl_error(void) {
+	static char buf[256];
+	int openssl_err;
+
+	openssl_err = ERR_peek_error();
+	if (openssl_err)
+		ERR_error_string_n(openssl_err, buf, sizeof buf);
+	else
+		strncpy(buf, "[error code not available]", sizeof buf);
+	return buf;
+}
+

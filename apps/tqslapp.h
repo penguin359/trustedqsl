@@ -29,12 +29,6 @@
 #include "loctree.h"
 #include "wxutil.h"
 
-#if defined(_WIN32)
-#define tqslName(x) x.mb_str()
-#else
-#define tqslName(x) x.ToUTF8()
-#endif
-
 enum {
 	tm_f_import = 7000,
 	tm_f_import_compress,
@@ -48,8 +42,10 @@ enum {
 	tm_f_edit,
 	tm_f_diag,
 	tm_f_exit,
+	tm_f_lang,
 	tm_s_add,
 	tm_s_edit,
+	tm_s_undelete,
 	tm_h_contents,
 	tm_h_about,
 	tm_h_update,
@@ -84,18 +80,20 @@ enum {
 	TQSL_EXIT_QSOS_SUPPRESSED = 9,
 	TQSL_EXIT_COMMAND_ERROR = 10,
 	TQSL_EXIT_CONNECTION_FAILED = 11,
-	TQSL_EXIT_UNKNOWN = 12
+	TQSL_EXIT_UNKNOWN = 12,
+	TQSL_EXIT_BUSY = 13
 };
 
 class MyFrame : public wxFrame {
  public:
-	MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUpdates, bool quiet);
+	MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUpdates, bool quiet, wxLocale* locale);
 
 	bool IsQuiet(void) { return _quiet; }
 	void AddStationLocation(wxCommandEvent& event);
 	void EditStationLocation(wxCommandEvent& event);
 	void EnterQSOData(wxCommandEvent& event);
 	void EditQSOData(wxCommandEvent& event);
+	void ProcessQSODataFile(bool upload, bool compressed);
 	void ImportQSODataFile(wxCommandEvent& event);
 	void UploadQSODataFile(wxCommandEvent& event);
 	void OnExit(TQ_WXCLOSEEVENT& event);
@@ -111,12 +109,11 @@ class MyFrame : public wxFrame {
 	void OnPreferences(wxCommandEvent& event);
 	void OnSaveConfig(wxCommandEvent& event);
 	void OnLoadConfig(wxCommandEvent& event);
-	int ConvertLogFile(tQSL_Location loc, const wxString& infile, const wxString& outfile, bool compress = false, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, const char *password = NULL);
-	tQSL_Location SelectStationLocation(const wxString& title = wxT(""), const wxString& okLabel = wxT("OK"), bool editonly = false);
-	int ConvertLogToString(tQSL_Location loc, const wxString& infile, wxString& output, int& n, tQSL_Converter& converter, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, const char* password = NULL);
-	int UploadLogFile(tQSL_Location loc, const wxString& infile, bool compress = false, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, const char* password = NULL);
+	int ConvertLogFile(tQSL_Location loc, const wxString& infile, const wxString& outfile, bool compress = false, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, const char *password = NULL, const char *defcall = NULL);
+	tQSL_Location SelectStationLocation(const wxString& title = wxT(""), const wxString& okLabel = _("OK"), bool editonly = false);
+	int ConvertLogToString(tQSL_Location loc, const wxString& infile, wxString& output, int& n, tQSL_Converter& converter, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, const char* password = NULL, const char* defcall = NULL);
+	int UploadLogFile(tQSL_Location loc, const wxString& infile, bool compress = false, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, const char* password = NULL, const char *defcall = NULL);
 	int UploadFile(const wxString& infile, const char* filename, int numrecs, void *content, size_t clen, const wxString& fileType);
-	void WriteQSOFile(QSORecordList& recs, const char *fname = 0, bool force = false);
 
 	void CheckForUpdates(wxCommandEvent&);
 	void DoCheckForUpdates(bool quiet = false, bool noGUI = false);
@@ -134,18 +131,22 @@ class MyFrame : public wxFrame {
 	void OnCertProperties(wxCommandEvent& event);
 	void OnCertExport(wxCommandEvent& event);
 	void OnCertDelete(wxCommandEvent& event);
+	void OnCertUndelete(wxCommandEvent& event);
 //	void OnCertImport(wxCommandEvent& event);
 	void OnSign(wxCommandEvent& event);
 	void OnLoadCertificateFile(wxCommandEvent& event);
 	void OnLocProperties(wxCommandEvent& event);
 	void OnLocDelete(wxCommandEvent& event);
+	void OnLocUndelete(wxCommandEvent& event);
 	void OnLocEdit(wxCommandEvent& event);
 	void OnLocTreeSel(wxTreeEvent& event);
 	void OnLoginToLogbook(wxCommandEvent& event);
+	void OnChooseLanguage(wxCommandEvent& event);
 	void LocTreeReset(void);
 	void DisplayHelp(const char *file = "main.htm") { help->Display(wxString::FromUTF8(file)); }
 	void FirstTime(void);
 	void BackupConfig(const wxString& event, bool quiet);
+	void SaveOldBackups(const wxString& directory, const wxString& filename, const wxString& ext);
 
 	CertTree *cert_tree;
 	LocTree *loc_tree;
@@ -158,6 +159,8 @@ class MyFrame : public wxFrame {
 	CURL *curlReq;
 
 	DECLARE_EVENT_TABLE()
+
+	wxLocale* locale;
 
  private:
 	wxBitmapButton* loc_add_button;
@@ -181,7 +184,35 @@ class MyFrame : public wxFrame {
 	int renew;
 	TQSL_CERT_REQ *req;
 	bool _quiet;
-	wxTimer* _timer;
 };
+
+// language data
+static const wxLanguage langIds[] = {
+    wxLANGUAGE_DEFAULT,
+    wxLANGUAGE_FRENCH,
+    wxLANGUAGE_ITALIAN,
+    wxLANGUAGE_GERMAN,
+    wxLANGUAGE_SPANISH,
+    wxLANGUAGE_PORTUGUESE,
+    wxLANGUAGE_JAPANESE,
+    wxLANGUAGE_ENGLISH
+};
+
+// note that it makes no sense to translate these strings, they are
+// shown before we set the locale anyhow
+const wxString langNames[] = {
+    wxT("System default"),
+    wxT("French"),
+    wxT("Italian"),
+    wxT("German"),
+    wxT("Spanish"),
+    wxT("Portuguese"),
+    wxT("Japanese"),
+    wxT("English")
+};
+
+// the arrays must be in sync
+wxCOMPILE_TIME_ASSERT(WXSIZEOF(langNames) == WXSIZEOF(langIds),
+                       LangArraysMismatch);
 
 #endif // __tqslapp_h

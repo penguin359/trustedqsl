@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <sys/stat.h>
+#include <signal.h>
 #include "tqslerrno.h"
 #include <cstring>
 #include <string>
@@ -184,6 +185,7 @@ static tqsl_adifFieldDefinitions adif_qso_record_fields[] = {
         { "CALL", "", TQSL_ADIF_RANGE_TYPE_NONE, TQSL_CALLSIGN_MAX, 0, 0, NULL },
         { "BAND", "", TQSL_ADIF_RANGE_TYPE_NONE, TQSL_BAND_MAX, 0, 0, NULL },
         { "MODE", "", TQSL_ADIF_RANGE_TYPE_NONE, TQSL_MODE_MAX, 0, 0, NULL },
+        { "SUBMODE", "", TQSL_ADIF_RANGE_TYPE_NONE, TQSL_MODE_MAX, 0, 0, NULL },
         { "QSO_DATE", "", TQSL_ADIF_RANGE_TYPE_NONE, 10, 0, 0, NULL },
         { "TIME_ON", "", TQSL_ADIF_RANGE_TYPE_NONE, 10, 0, 0, NULL },
         { "FREQ", "", TQSL_ADIF_RANGE_TYPE_NONE, TQSL_FREQ_MAX, 0, 0, NULL },
@@ -196,9 +198,11 @@ static tqsl_adifFieldDefinitions adif_qso_record_fields[] = {
 
 DLLEXPORT int CALLCONVENTION
 tqsl_beginConverter(tQSL_Converter *convp) {
+	tqslTrace("tqsl_beginConverter");
 	if (tqsl_init())
 		return 0;
 	if (!convp) {
+		tqslTrace("tqsl_beginConverter", "convp=NULL");
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
 		return 1;
 	}
@@ -210,15 +214,19 @@ tqsl_beginConverter(tQSL_Converter *convp) {
 DLLEXPORT int CALLCONVENTION
 tqsl_beginADIFConverter(tQSL_Converter *convp, const char *filename, tQSL_Cert *certs,
 	int ncerts, tQSL_Location loc) {
+	tqslTrace("tqsl_beginADIFConverter");
 	if (tqsl_init())
 		return 0;
 	if (!convp || !filename) {
+		tqslTrace("tqsl_beginADIFConverter", "arg err convp=0x%lx filename=0x%lx certs=0x%lx", convp, filename, certs);
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
 		return 1;
 	}
 	tQSL_ADIF adif;
-	if (tqsl_beginADIF(&adif, filename))
+	if (tqsl_beginADIF(&adif, filename)) {
+		tqslTrace("tqsl_beginADIFConverter", "tqsl_beginADIF fail %d", tQSL_Error);
 		return 1;
+	}
 	TQSL_CONVERTER *conv = new TQSL_CONVERTER();
 	conv->adif = adif;
 	conv->certs = certs;
@@ -236,15 +244,20 @@ tqsl_beginADIFConverter(tQSL_Converter *convp, const char *filename, tQSL_Cert *
 DLLEXPORT int CALLCONVENTION
 tqsl_beginCabrilloConverter(tQSL_Converter *convp, const char *filename, tQSL_Cert *certs,
 	int ncerts, tQSL_Location loc) {
+	tqslTrace("tqsl_beginCabrilloConverter");
+
 	if (tqsl_init())
 		return 0;
 	if (!convp || !filename) {
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
+		tqslTrace("tqsl_beginCabrilloConverter", "arg error convp=0x%lx, filename=0x%lx, certs=0x%lx", convp, filename, certs);
 		return 1;
 	}
 	tQSL_Cabrillo cab;
-	if (tqsl_beginCabrillo(&cab, filename))
+	if (tqsl_beginCabrillo(&cab, filename)) {
+		tqslTrace("tqsl_beginCabrilloConverter", "tqsl_beginCabrillo fail %d", tQSL_Error);
 		return 1;
+	}
 	TQSL_CONVERTER *conv = new TQSL_CONVERTER();
 	conv->cab = cab;
 	conv->certs = certs;
@@ -261,6 +274,8 @@ tqsl_beginCabrilloConverter(tQSL_Converter *convp, const char *filename, tQSL_Ce
 
 DLLEXPORT int CALLCONVENTION
 tqsl_endConverter(tQSL_Converter *convp) {
+	tqslTrace("tqsl_endConverter");
+
 	if (!convp || CAST_TQSL_CONVERTER(*convp) == 0)
 		return 0;
 
@@ -354,6 +369,8 @@ tqsl_infer_band(const char* infreq) {
 DLLEXPORT int CALLCONVENTION
 tqsl_setADIFConverterDateFilter(tQSL_Converter convp, tQSL_Date *start, tQSL_Date *end) {
 	TQSL_CONVERTER *conv;
+	tqslTrace("tqsl_setADIFConverterDateFilter");
+
 	if (!(conv = check_conv(convp)))
 		return 1;
 	if (start == NULL)
@@ -370,33 +387,86 @@ tqsl_setADIFConverterDateFilter(tQSL_Converter convp, tQSL_Date *start, tQSL_Dat
 // Remove the dupes db files
 static void
 remove_db(const char *path)  {
+	tqslTrace("remove_db", "path=%s", path);
+#ifdef _WIN32
+	wchar_t* wpath = utf8_to_wchar(path);
+	_WDIR *dir = _wopendir(wpath);
+	free_wchar(wpath);
+#else
 	DIR *dir = opendir(path);
+#endif
 	if (dir != NULL) {
-		struct dirent *ent;
+#ifdef _WIN32
+		struct _wdirent *ent = NULL;
+		while ((ent = _wreaddir(dir)) != NULL) {
+			if (!wcscmp(ent->d_name, L"duplicates.db") ||
+	    		!wcsncmp(ent->d_name, L"log.", 4) ||
+	    		!wcsncmp(ent->d_name, L"__db.", 5)) {
+#else
+		struct dirent *ent = NULL;
 		while ((ent = readdir(dir)) != NULL) {
 			if (!strcmp(ent->d_name, "duplicates.db") ||
 	    		!strncmp(ent->d_name, "log.", 4) ||
 	    		!strncmp(ent->d_name, "__db.", 5)) {
+#endif
 				string fname = path;
+				int rstat;
+#ifdef _WIN32
+				char dname[TQSL_MAX_PATH_LEN];
+				wcstombs(dname, ent->d_name, TQSL_MAX_PATH_LEN);
+				fname = fname + "/" + dname;
+				wchar_t* wfname = utf8_to_wchar(fname.c_str());
+				tqslTrace("remove_db", "unlinking %s", fname.c_str());
+				rstat = _wunlink(wfname);
+				free_wchar(wfname);
+#else
 				fname = fname + "/" + ent->d_name;
-				unlink(fname.c_str());
+				tqslTrace("remove_db", "unlinking %s", fname.c_str());
+				rstat = unlink(fname.c_str());
+#endif
+				if (rstat < 0) {
+					tqslTrace("remove_db", "can't unlink %s: %s", fname.c_str(), strerror(errno));
+				}
 			}
 		}
+#ifdef _WIN32
+		_wclosedir(dir);
+#else
 		closedir(dir);
+#endif
 	}
 	return;
 }
-//
+#ifndef _WIN32
+// Callback method for the dbenv->failchk() call
+// Used to determine if the given pid/tid is
+// alive.
+static int isalive(DB_ENV *env, pid_t pid, db_threadid_t tid, uint32_t flags) {
+	int alive = 0;
+
+	if (pid == getpid()) {
+		alive = 1;
+	} else if (kill(pid, 0) == 0) {
+		alive = 1;
+	} else if (errno == EPERM) {
+		alive = 1;
+	}
+	return alive;
+}
+#endif // _WIN32
+
 // Open the duplicates database
 
 static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 	bool dbinit_cleanup = false;
 	int dbret;
 	bool triedRemove = false;
+	bool triedDelete = false;
 	int envflags = DB_INIT_TXN|DB_INIT_LOG|DB_INIT_MPOOL|DB_RECOVER|DB_REGISTER|DB_CREATE;
 	string fixedpath = tQSL_BaseDir; //must be first because of gotos
 	size_t found = fixedpath.find('\\');
 
+	tqslTrace("open_db", "path=%s", fixedpath.c_str());
 	//bdb complains about \\s in path on windows...
 
 	while (found != string::npos) {
@@ -419,7 +489,11 @@ static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 			string fname = fixedpath + "/" + ent->d_name;
 			if (stat(fname.c_str(), &s)) {
 				if (errno == ELOOP) {
+#ifdef _WIN32
+					_wunlink(ConvertFromUtf8ToUtf16(fname.c_str()));
+#else
 					unlink(fname.c_str());
+#endif
 				}
 			}
 		}
@@ -427,51 +501,85 @@ static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 	}
 #endif
 	string logpath = fixedpath + "/dberr.log";
+#ifdef _WIN32
+	wchar_t* wlogpath = utf8_to_wchar(logpath.c_str());
+	conv->errfile = _wfopen(wlogpath, L"wb");
+	free_wchar(wlogpath);
+#else
 	conv->errfile = fopen(logpath.c_str(), "wb");
+#endif
 
  reopen:
 
+	// Try to open the database
 	while (true) {
-		// Create the database environment handle
-		if ((dbret = db_env_create(&conv->dbenv, 0))) {
-			// can't make env handle
-			dbinit_cleanup = true;
-			goto dbinit_end;
+		if (!conv->dbenv) {
+			// Create the database environment handle
+			if ((dbret = db_env_create(&conv->dbenv, 0))) {
+				// can't make env handle
+				tqslTrace("open_db", "db_env_create error %s", db_strerror(dbret));
+				dbinit_cleanup = true;
+				goto dbinit_end;
+			}
+			tqslTrace("open_db", "dbenv=0x%lx", conv->dbenv);
+			if (conv->errfile) {
+				conv->dbenv->set_errfile(conv->dbenv, conv->errfile);
+				conv->dbenv->set_verbose(conv->dbenv, DB_VERB_RECOVERY, 1);
+			}
+			// Enable stale lock removal
+			conv->dbenv->set_thread_count(conv->dbenv, 8);
+#ifndef _WIN32
+			conv->dbenv->set_isalive(conv->dbenv, isalive);
+#endif
+			// Log files default to 10 Mb each. We don't need nearly that much.
+			if (conv->dbenv->set_lg_max)
+				conv->dbenv->set_lg_max(conv->dbenv, 256 * 1024);
+			// Allocate additional locking resources - some have run out with
+			// the default 1000 locks
+			if (conv->dbenv->set_lk_max_locks)
+				conv->dbenv->set_lk_max_locks(conv->dbenv, 20000);
+			if (conv->dbenv->set_lk_max_objects)
+				conv->dbenv->set_lk_max_objects(conv->dbenv, 20000);
 		}
-		if (conv->errfile) {
-			conv->dbenv->set_errfile(conv->dbenv, conv->errfile);
-			conv->dbenv->set_verbose(conv->dbenv, DB_VERB_RECOVERY, 1);
-		}
-		// Log files default to 10 Mb each. We don't need nearly that much.
-		if (conv->dbenv->set_lg_max)
-			conv->dbenv->set_lg_max(conv->dbenv, 256 * 1024);
-		// Allocate additional locking resources - some have run out with
-		// the default 1000 locks
-		if (conv->dbenv->set_lk_max_locks)
-			conv->dbenv->set_lk_max_locks(conv->dbenv, 20000);
-		if (conv->dbenv->set_lk_max_objects)
-			conv->dbenv->set_lk_max_objects(conv->dbenv, 20000);
+		// Now open the database
+		tqslTrace("open_db", "Opening the database at %s", conv->dbpath);
 		if ((dbret = conv->dbenv->open(conv->dbenv, conv->dbpath, envflags, 0600))) {
+			int db_errno = errno;
+			tqslTrace("open_db", "dbenv->open %s error %s", conv->dbpath, db_strerror(dbret));
 			if (conv->errfile)
-				fprintf(conv->errfile, "opening DB %s returns status %d\n", conv->dbpath, dbret);
-			// can't open environment - try to delete it and try again.
-			if (!triedRemove) {
-				conv->dbenv->close(conv->dbenv, 0);
-				// Create a new environment to remove the dross
-				if (!(dbret = db_env_create(&conv->dbenv, 0))) {
-					dbret = conv->dbenv->remove(conv->dbenv, conv->dbpath, DB_FORCE);
+				fprintf(conv->errfile, "opening DB %s returns status %s\n", conv->dbpath, db_strerror(dbret));
+			// Can't open the database - maybe try private?
+			if ((dbret == EACCES || dbret == EROFS) || (dbret == EINVAL && errno == dbret)) {
+				if (!(envflags & DB_PRIVATE)) {
+					envflags |= DB_PRIVATE;
+					continue;
 				}
+			}
+			// can't open environment - try to delete it and try again.
+			tqslTrace("open_db", "Environment open fail, triedRemove=%d", triedRemove);
+			if (!triedRemove) {
+				// Remove the dross
+				tqslTrace("open_db", "Removing environment");
+				conv->dbenv->remove(conv->dbenv, conv->dbpath, DB_FORCE);
+				conv->dbenv = NULL;
 				triedRemove = true;
 				if (conv->errfile)
 					fprintf(conv->errfile, "About to retry after removing the environment\n");
+				tqslTrace("open_db", "About to retry after removing the environment");
 				continue;
 			}
+			tqslTrace("open_db", "Retry attempt after removing the environment failed");
 			if (conv->errfile) {
 				fprintf(conv->errfile, "Retry attempt after removing the environment failed.\n");
 			}
-			if (errno == EINVAL) {  // Something really wrong with the DB
-						// Remove it and try again.
+			// EINVAL means that the database is corrupted to the point
+			// where it can't be opened. Remove it and try again.
+			if ((dbret == EINVAL || db_errno == EINVAL) && !triedDelete) {
+				tqslTrace("open_db", "EINVAL. Removing db");
+				conv->dbenv->close(conv->dbenv, 0);
+				conv->dbenv = NULL;
 				remove_db(fixedpath.c_str());
+				triedDelete = true;
 				continue;
 			}
 
@@ -479,33 +587,49 @@ static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 			conv->dbenv->close(conv->dbenv, 0);
 			conv->dbenv = NULL;	// this can't be recovered
 			dbinit_cleanup = true;
+			tqslTrace("open_db", "can't fix. abandoning.");
+			remove_db(fixedpath.c_str());
 			goto dbinit_end;
 		}
 		break;		// Opened OK.
 	}
 
+	// Stale lock removal
+	tqslTrace("open_db", "Removing stale locks");
+	dbret = conv->dbenv->failchk(conv->dbenv, 0);
+	if (dbret && conv->errfile) {
+		fprintf(conv->errfile, "lock removal for DB %s returns status %s\n", conv->dbpath, db_strerror(dbret));
+	}
+
+	tqslTrace("open_db", "calling db_create");
 	if ((dbret = db_create(&conv->seendb, conv->dbenv, 0))) {
 		// can't create db
 		dbinit_cleanup = true;
+		tqslTrace("open_db", "Can't create db");
 		goto dbinit_end;
 	}
 
 #ifndef DB_TXN_BULK
 #define DB_TXN_BULK 0
 #endif
+	tqslTrace("open_db", "starting transaction, readonly=%d", readonly);
 	if (!readonly && (dbret = conv->dbenv->txn_begin(conv->dbenv, NULL, &conv->txn, DB_TXN_BULK))) {
 		// can't start a txn
+		tqslTrace("open_db", "can't create txn %s", db_strerror(dbret));
 		dbinit_cleanup = true;
 		goto dbinit_end;
 	}
 
 	// Probe the database type
+	tqslTrace("open_db", "opening database now");
 	if ((dbret = conv->seendb->open(conv->seendb, conv->txn, "duplicates.db", NULL, DB_UNKNOWN, 0, 0600))) {
 		if (dbret == ENOENT) {
+			tqslTrace("open_db", "DB not found, making a new one");
 			dbret = conv->seendb->open(conv->seendb, conv->txn, "duplicates.db", NULL, DB_HASH, DB_CREATE, 0600);
 		}
 		if (dbret) {
 			// can't open the db
+			tqslTrace("open_db", "create failed with %s errno %d", db_strerror(dbret), errno);
 			dbinit_cleanup = true;
 			goto dbinit_end;
 		}
@@ -513,20 +637,33 @@ static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 
 	DBTYPE type;
 	conv->seendb->get_type(conv->seendb, &type);
+	tqslTrace("open_db", "type=%d", type);
 	if (type ==  DB_BTREE) {
+		tqslTrace("open_db", "BTREE type. Converting.");
 		// Have to convert the database.
 		string dumpfile = fixedpath + "/dupedump.txt";
+#ifdef _WIN32
+		wchar_t* wdumpfile = utf8_to_wchar(dumpfile.c_str());
+		FILE *dmp = _wfopen(wdumpfile, L"wb+");
+		free_wchar(wdumpfile);
+#else
 		FILE *dmp = fopen(dumpfile.c_str(), "wb+");
+#endif
 		if (!dmp) {
+			tqslTrace("open_db", "Error opening dump file %s: %s", dumpfile.c_str(), strerror(errno));
 			dbinit_cleanup = true;
 			goto dbinit_end;
 		}
 		if (!conv->cursor) {
+#ifndef DB_CURSOR_BULK
+#define DB_CURSOR_BULK 0
+#endif
 			int err = conv->seendb->cursor(conv->seendb, conv->txn, &conv->cursor, DB_CURSOR_BULK);
 			if (err) {
 				strncpy(tQSL_CustomError, db_strerror(err), sizeof tQSL_CustomError);
 				tQSL_Error = TQSL_DB_ERROR;
 				tQSL_Errno = errno;
+				tqslTrace("open_db", "Error setting cursor for old DB: %s", err);
 				dbinit_cleanup = true;
 				goto dbinit_end;
 			}
@@ -545,6 +682,7 @@ static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 				strncpy(tQSL_CustomError, db_strerror(status), sizeof tQSL_CustomError);
 				tQSL_Error = TQSL_DB_ERROR;
 				tQSL_Errno = errno;
+				tqslTrace("open_db", "Error reading for dump: %s", db_strerror(status));
 				dbinit_cleanup = true;
 				goto dbinit_end;
 			}
@@ -562,11 +700,13 @@ static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 		conv->dbenv = NULL;
 
 		// Remove the old dupe db
+		tqslTrace("open_db", "Removing old format db");
 		remove_db(fixedpath.c_str());
 
 		// Now create the new database
 		if ((dbret = db_env_create(&conv->dbenv, 0))) {
 			// can't make env handle
+			tqslTrace("open_db", "Can't make db handle: %s", db_strerror(dbret));
 			dbinit_cleanup = true;
 			goto dbinit_end;
 		}
@@ -579,6 +719,7 @@ static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 		if (conv->dbenv->set_lk_max_objects)
 			conv->dbenv->set_lk_max_objects(conv->dbenv, 20000);
 		if ((dbret = conv->dbenv->open(conv->dbenv, conv->dbpath, envflags, 0600))) {
+			tqslTrace("open_db", "Error opening db: %s", db_strerror(dbret));
 			if (conv->errfile)
 				fprintf(conv->errfile, "opening DB %s returns status %d\n", conv->dbpath, dbret);
 			dbinit_cleanup = true;
@@ -587,6 +728,7 @@ static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 
 		if ((dbret = db_create(&conv->seendb, conv->dbenv, 0))) {
 			// can't create db
+			tqslTrace("open_db", "Error creating db: %s", db_strerror(dbret));
 			dbinit_cleanup = true;
 			goto dbinit_end;
 		}
@@ -594,6 +736,7 @@ static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 		// Create the new database
 		if ((dbret = conv->seendb->open(conv->seendb, NULL, "duplicates.db", NULL, DB_HASH, DB_CREATE, 0600))) {
 			// can't open the db
+			tqslTrace("open_db", "Error opening new db: %s", db_strerror(dbret));
 			dbinit_cleanup = true;
 			goto dbinit_end;
 		}
@@ -617,9 +760,11 @@ static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 
  dbinit_end:
 	if (dbinit_cleanup) {
+		tqslTrace("open_db", "DB open failed, triedDelete=%d", triedDelete);
 		tQSL_Error = TQSL_DB_ERROR;
 		tQSL_Errno = errno;
 		strncpy(tQSL_CustomError, db_strerror(dbret), sizeof tQSL_CustomError);
+		tqslTrace("open_db", "Error opening db: %s", tQSL_CustomError);
 		if (conv->txn) conv->txn->abort(conv->txn);
 		if (conv->seendb) conv->seendb->close(conv->seendb, 0);
 		if (conv->dbenv) {
@@ -637,6 +782,13 @@ static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 		conv->cursor = NULL;
 		conv->seendb = NULL;
 		conv->errfile = NULL;
+		// Handle case where the database is just broken
+		if (dbret == EINVAL && !triedDelete) {
+			tqslTrace("open_db", "EINVAL. Removing db");
+			remove_db(fixedpath.c_str());
+			triedDelete = true;
+			goto reopen;
+		}
 		return false;
 	}
 	return true;
@@ -698,12 +850,18 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 				if (!strcasecmp(result.name, "eor"))
 					break;
 				if (!strcasecmp(result.name, "CALL") && result.data) {
+					conv->rec.callsign_set = true;
 					strncpy(conv->rec.callsign, reinterpret_cast<char *>(result.data), sizeof conv->rec.callsign);
 				} else if (!strcasecmp(result.name, "BAND") && result.data) {
-					strncpy(conv->rec.band, reinterpret_cast<char *>(result.data), sizeof conv->rec.band);
+					conv->rec.band_set = true;
+				  	strncpy(conv->rec.band, reinterpret_cast<char *>(result.data), sizeof conv->rec.band);
 				} else if (!strcasecmp(result.name, "MODE") && result.data) {
+					conv->rec.mode_set = true;
 					strncpy(conv->rec.mode, reinterpret_cast<char *>(result.data), sizeof conv->rec.mode);
+				} else if (!strcasecmp(result.name, "SUBMODE") && result.data) {
+					strncpy(conv->rec.submode, reinterpret_cast<char *>(result.data), sizeof conv->rec.submode);
 				} else if (!strcasecmp(result.name, "FREQ") && result.data) {
+					conv->rec.band_set = true;
 					strncpy(conv->rec.freq, reinterpret_cast<char *>(result.data), sizeof conv->rec.freq);
 					if (atof(conv->rec.freq) == 0.0)
 						conv->rec.freq[0] = '\0';
@@ -718,10 +876,12 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 				} else if (!strcasecmp(result.name, "PROP_MODE") && result.data) {
 					strncpy(conv->rec.propmode, reinterpret_cast<char *>(result.data), sizeof conv->rec.propmode);
 				} else if (!strcasecmp(result.name, "QSO_DATE") && result.data) {
+					conv->rec.date_set = true;
 					cstat = tqsl_initDate(&(conv->rec.date), (const char *)result.data);
 					if (cstat)
 						saveErr = tQSL_Error;
 				} else if (!strcasecmp(result.name, "TIME_ON") && result.data) {
+					conv->rec.time_set = true;
 					cstat = tqsl_initTime(&(conv->rec.time), (const char *)result.data);
 					if (cstat)
 						saveErr = tQSL_Error;
@@ -761,18 +921,24 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 				if (stat == TQSL_CABRILLO_NO_ERROR || stat == TQSL_CABRILLO_EOR) {
 					// Field found
 					if (!strcasecmp(field.name, "CALL")) {
+						conv->rec.callsign_set = true;
 						strncpy(conv->rec.callsign, field.value, sizeof conv->rec.callsign);
 					} else if (!strcasecmp(field.name, "BAND")) {
+						conv->rec.band_set = true;
 						strncpy(conv->rec.band, field.value, sizeof conv->rec.band);
 					} else if (!strcasecmp(field.name, "MODE")) {
+						conv->rec.mode_set = true;
 						strncpy(conv->rec.mode, field.value, sizeof conv->rec.mode);
 					} else if (!strcasecmp(field.name, "FREQ")) {
+						conv->rec.band_set = true;
 						strncpy(conv->rec.freq, field.value, sizeof conv->rec.freq);
 					} else if (!strcasecmp(field.name, "QSO_DATE")) {
+						conv->rec.date_set = true;
 						cstat = tqsl_initDate(&(conv->rec.date), field.value);
 						if (cstat)
 							saveErr = tQSL_Error;
 					} else if (!strcasecmp(field.name, "TIME_ON")) {
+						conv->rec.time_set = true;
 						cstat = tqsl_initTime(&(conv->rec.time), field.value);
 						if (cstat)
 							saveErr = tQSL_Error;
@@ -791,9 +957,42 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		} else {
 			tQSL_Error = TQSL_CUSTOM_ERROR;
 			strncpy(tQSL_CustomError, "Converter not initialized", sizeof tQSL_CustomError);
+			tqslTrace("tqsl_getConverterGABBI", "Converter not initialized");
 			return 0;
 		}
 	}
+	// Does the QSO have the basic required elements?
+	if (!conv->rec.callsign_set) {
+		conv->rec_done = true;
+		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid contact - QSO does not specify a Callsign");
+		tQSL_Error = TQSL_CUSTOM_ERROR;
+		return 0;
+	}
+	if (!conv->rec.band_set) {
+		conv->rec_done = true;
+		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid contact - QSO does not specify a band or frequency");
+		tQSL_Error = TQSL_CUSTOM_ERROR;
+		return 0;
+	}
+	if (!conv->rec.mode_set) {
+		conv->rec_done = true;
+		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid contact - QSO does not specify a mode");
+		tQSL_Error = TQSL_CUSTOM_ERROR;
+		return 0;
+	}
+	if (!conv->rec.date_set) {
+		conv->rec_done = true;
+		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid contact - QSO does not specify a date");
+		tQSL_Error = TQSL_CUSTOM_ERROR;
+		return 0;
+	}
+	if (!conv->rec.time_set) {
+		conv->rec_done = true;
+		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid contact - QSO does not specify a time");
+		tQSL_Error = TQSL_CUSTOM_ERROR;
+		return 0;
+	}
+
 	// Check QSO date against user-specified date range.
 	if (tqsl_isDateValid(&(conv->rec.date))) {
 		if (tqsl_isDateValid(&(conv->start)) && tqsl_compareDates(&(conv->rec.date), &(conv->start)) < 0) {
@@ -821,8 +1020,27 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 	tqsl_strtoupper(conv->rec.band);
 	tqsl_strtoupper(conv->rec.rxband);
 	tqsl_strtoupper(conv->rec.mode);
+	tqsl_strtoupper(conv->rec.submode);
 	char val[256] = "";
-	tqsl_getADIFMode(conv->rec.mode, val, sizeof val);
+	// Try to find the GABBI mode several ways.
+	val[0] = '\0';
+	if (conv->rec.submode[0] != '\0') {
+		char modeSub[256];
+		strncpy(modeSub, conv->rec.mode, sizeof modeSub);
+		size_t left = sizeof modeSub - strlen(modeSub);
+		strncat(modeSub, "%", left);
+		left = sizeof modeSub - strlen(modeSub);
+		strncat(modeSub, conv->rec.submode, left);
+		if (tqsl_getADIFMode(modeSub, val, sizeof val)) {	// mode%submode lookup failed
+			// Try just the submode, then the mode.
+			if (tqsl_getADIFMode(conv->rec.submode, val, sizeof val)) { // bare submode failed
+				tqsl_getADIFMode(conv->rec.mode, val, sizeof val);
+			}
+		}
+	} else {
+		// Just a mode, no submode. Look that up.
+		tqsl_getADIFMode(conv->rec.mode, val, sizeof val);
+	}
 	if (val[0] != '\0')
 		strncpy(conv->rec.mode, val, sizeof conv->rec.mode);
 	// Check field validities
@@ -1020,6 +1238,7 @@ DLLEXPORT int CALLCONVENTION
 tqsl_converterRollBack(tQSL_Converter convp) {
 	TQSL_CONVERTER *conv;
 
+	tqslTrace("tqsl_converterRollBack");
 	if (!(conv = check_conv(convp)))
 		return 1;
 	if (!conv->seendb)
@@ -1034,6 +1253,7 @@ DLLEXPORT int CALLCONVENTION
 tqsl_converterCommit(tQSL_Converter convp) {
 	TQSL_CONVERTER *conv;
 
+	tqslTrace("tqsl_converterCommit");
 	if (!(conv = check_conv(convp)))
 		return 1;
 	if (!conv->seendb)
@@ -1137,13 +1357,15 @@ hasValidCallSignChars(const string& call) {
 	if (call.find_first_of("0123456789") == string::npos)
 		return false;
 	// Invalid callsign patterns
-	// Starting with 0, Q, C7, or 4Y
+	// Starting with 0, Q
 	// 1x other than 1A, 1M, 1S
 	string first = call.substr(0, 1);
 	string second = call.substr(1, 1);
 	if (first == "0" || first == "Q" ||
+#ifdef MARK_C7_4Y_INVALID
 	    (first == "C" && second == "7") ||
 	    (first == "4" && second == "Y") ||
+#endif
 	    (first == "1" && second != "A" && second != "M" && second != "S"))
 		return false;
 

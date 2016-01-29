@@ -1,5 +1,0 @@
-?package(trustedqsl):needs="x11" section="Applications/Amateur Radio" \
-        title="tqsl" longtitle="TrustedQSL QSO signing" \
-        description="Sign QSO data for upload to the ARRL LoTW" \
-        command="/usr/bin/tqsl" \
-	icon="/usr/share/pixmaps/trustedqsl.xpm"

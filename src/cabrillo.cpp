@@ -398,6 +398,7 @@ tqsl_free_cab(struct TQSL_CABRILLO *cab) {
 
 DLLEXPORT int CALLCONVENTION
 tqsl_beginCabrillo(tQSL_Cabrillo *cabp, const char *filename) {
+	tqslTrace("tqsl_beginCabrillo", "cabp=0x%lx, filename=%s", cabp, filename);
 	TQSL_CABRILLO_ERROR_TYPE terrno;
 	if (filename == NULL) {
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
@@ -411,11 +412,21 @@ tqsl_beginCabrillo(tQSL_Cabrillo *cabp, const char *filename) {
 	}
 	cab->sentinel = 0x2449;
 	cab->field_idx = -1;
+#ifdef _WIN32
+	wchar_t * wfilename = utf8_to_wchar(filename);
+	if ((cab->fp = _wfopen(wfilename, L"r")) == NULL) {
+		free_wchar(wfilename);
+#else
 	if ((cab->fp = fopen(filename, "r")) == NULL) {
+#endif
 		tQSL_Error = TQSL_SYSTEM_ERROR;
 		tQSL_Errno = errno;
+		tqslTrace("tqsl_beginCabrillo", "open error, errno=%d, error=%s", errno, strerror(errno));
 		goto err;
 	}
+#ifdef _WIN32
+	free(wfilename);
+#endif
 	char *cp;
 	terrno = TQSL_CABRILLO_NO_START_RECORD;
 	while ((cp = fgets(cab->rec, sizeof cab->rec, cab->fp)) != 0) {
@@ -452,6 +463,7 @@ tqsl_beginCabrillo(tQSL_Cabrillo *cabp, const char *filename) {
 		if (ferror(cab->fp)) {
 			tQSL_Error = TQSL_SYSTEM_ERROR;
 			tQSL_Errno = errno;
+			tqslTrace("tqsl_beginCabrillo", "read error, errno=%d, error=%s", errno, strerror(errno));
 			goto err;
 		}
 		tQSL_Cabrillo_Error = terrno;
@@ -473,6 +485,7 @@ tqsl_beginCabrillo(tQSL_Cabrillo *cabp, const char *filename) {
 
 DLLEXPORT int CALLCONVENTION
 tqsl_endCabrillo(tQSL_Cabrillo *cabp) {
+	tqslTrace("tqsl_endCabrillo", "cabp=0x%lx", cabp);
 	TQSL_CABRILLO *cab;
 	if (cabp == 0)
 		return 0;
@@ -519,6 +532,7 @@ tqsl_cabrilloGetError(TQSL_CABRILLO_ERROR_TYPE err) {
 				" (%s)", errmsgdata);
 		msg = errmsgbuf;
 	}
+	tqslTrace("tqsl_cabrilloGetError", "msg=%s", msg);
 	errmsgdata[0] = '\0';
 	return msg;
 }
@@ -572,9 +586,10 @@ tqsl_getCabrilloField(tQSL_Cabrillo cabp, tqsl_cabrilloField *field, TQSL_CABRIL
 	fp = cab->contest->fields + cab->field_idx;
 	strncpy(field->name, fp->name, sizeof field->name);
 	if (fp->loc < 0) {  // New contest
+		// try to guess which field has the 'call-worked'
 		for (int i = 6; i < TQSL_CABRILLO_MAX_FIELDS && cab->fields[i]; i++) {
 			char *p = cab->fields[i];
-			// Simple parse: a callsign is at least 3 chars long
+			// Simple parse: a callsign is at least 4 chars long
 			// and has at least one digit and at least one letter
 			// Nothing but alphnumeric and '/' allowed.
 

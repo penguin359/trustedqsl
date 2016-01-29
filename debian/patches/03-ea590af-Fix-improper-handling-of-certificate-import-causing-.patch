@@ -1,0 +1,43 @@
+From ea590afe619d025ca614802ad74c20708c0876a3 Mon Sep 17 00:00:00 2001
+From: Rick Murphy <k1mu@arrl.net>
+Date: Sat, 23 Jan 2016 18:09:43 -0500
+Subject: Fix improper handling of certificate import, causing certs to be lost
+
+---
+ src/location.cpp | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/src/location.cpp b/src/location.cpp
+index 7f46152..e978f1f 100755
+--- a/src/location.cpp
++++ b/src/location.cpp
+@@ -3375,6 +3375,11 @@ tqsl_importTQSLFile(const char *file, int(*cb)(int type, const char *, void *),
+ 			cstat = section.getNextElement(cert);
+ 		}
+ 	}
++	// If any of the user certificates failed import, return the error status.
++	if (rval) {
++		return rval;
++	}
++
+ 	stat = tqsldata.getFirstElement("tqslconfig", section);
+ 	if (stat) {
+ 		// Check to make sure we aren't overwriting newer version
+@@ -3383,14 +3388,8 @@ tqsl_importTQSLFile(const char *file, int(*cb)(int type, const char *, void *),
+ 		int curmajor, curminor;
+ 		if (tqsl_getConfigVersion(&curmajor, &curminor)) {
+ 			tqslTrace("tqsl_importTQSLFile", "Get config ver error %d", tQSL_Error);
+-			if (tQSL_Error == 0) {
+-				tQSL_Error = TQSL_CERT_ERROR;
+-			}
+ 			return 1;
+ 		}
+-		if (rval && tQSL_Error == 0) {
+-			tQSL_Error = TQSL_CERT_ERROR;
+-		}
+ 		if (major < curmajor) {
+ 			if (foundcerts) {
+ 				tqslTrace("tqsl_importTQSLFile", "Suppressing update from V%d.%d to V%d.%d", curmajor, curminor, major, minor);
+-- 
+1.9.1
+

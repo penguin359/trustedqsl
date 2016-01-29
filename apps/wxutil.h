@@ -26,6 +26,11 @@
 	#include "wx/wx.h"
 #endif
 
+#include <wx/intl.h>
+
+// String extract for translation
+#define __(x) (x)
+
 #if wxCHECK_VERSION(2, 5, 0)
 	#define TQ_WXCLOSEEVENT wxCloseEvent
 	#define TQ_WXTEXTEVENT wxCommandEvent
@@ -40,5 +45,5 @@ wxSize getTextSize(wxWindow *win);
 wxString urlEncode(wxString& str);
 int utf8_to_ucs2(const char *in, char *out, size_t buflen);
 int getPasswordFromUser(wxString& result, const wxString& message, const wxString& caption, const wxString& defaultValue, wxWindow *parent);
-
+wxString getLocalizedErrorString(void);
 #endif	// __wxutil_h

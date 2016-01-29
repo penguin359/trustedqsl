@@ -16,13 +16,14 @@
 #endif
 
 enum {		// Menu items
-	tc_c_Properties,
+	tc_c_Properties = (wxID_HIGHEST+1),
 	tc_c_Sign,
 	tc_c_Renew,
 	tc_c_Import,
 	tc_c_Load,
 	tc_c_Export,
 	tc_c_Delete,
+	tc_c_Undelete,
 	tc_c_New,
 	tc_f_Delete,
 	tc_h_Contents,
@@ -34,13 +35,11 @@ enum {		// Menu items
 };
 
 enum {		// Window IDs
-	tc_CertTree = (wxID_HIGHEST+1),
+	tc_CertTree = (tl_c_Delete+1),
 	tc_CRQWizard,
 	tc_Load,
 	tc_CertPropDial,
-	tc_CertPropDialButton,
 	tl_LocPropDial,
-	tl_LocPropDialButton,
 	tc_LocTree,
 	tc_LogGrid,
 	tl_Upload,
