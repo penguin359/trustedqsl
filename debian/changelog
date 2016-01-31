@@ -1,3 +1,10 @@
+trustedqsl (2.2-2) unstable; urgency=medium
+
+  * Debian packaging
+     - 04-do-not-install-wxstd-mo-files.patch (Closes: #813344)
+
+ -- Kamal Mostafa <kamal@whence.com>  Sun, 31 Jan 2016 14:24:40 -0800
+
 trustedqsl (2.2-1) unstable; urgency=medium
 
   * New upstream release
