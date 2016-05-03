@@ -1,4 +1,1 @@
 01-install-libtqsllib-so-in-usr-lib-trustedqsl.patch
-02-863a887-Fix-improper-handling-of-certificate-import-causing-.patch
-03-ea590af-Fix-improper-handling-of-certificate-import-causing-.patch
-04-do-not-install-wxstd-mo-files.patch

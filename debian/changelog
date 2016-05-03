@@ -1,3 +1,10 @@
+trustedqsl (2.2.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * Bump standards version to 3.9.8 (No changes required)
+
+ -- Colin Tuckley <colint@debian.org>  Tue, 03 May 2016 11:49:30 +0100
+
 trustedqsl (2.2-2) unstable; urgency=medium
 
   * Debian packaging

@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=TrustedQSL
 Comment=Sign QSO data for upload to LoTW
 Exec=tqsl %F

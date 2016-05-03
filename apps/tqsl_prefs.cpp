@@ -304,7 +304,7 @@ bool AddMode::TransferDataFromWindow() {
 	if (key.IsEmpty()) return true;
 	if (modelist->FindString(key) != wxNOT_FOUND) {	// This duplicates an existing mode
 		wxMessageBox(wxString::Format(_("This mode definition conflicts with a standard mode definition for %s"),
-				key.c_str()), _("Mode Conflict"), wxOK, this);
+				key.c_str()), _("Mode Conflict"), wxOK | wxICON_ERROR, this);
 		return false;
 	}
 	return true;
@@ -374,15 +374,20 @@ FilePrefs::FilePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm"))
 	daterange->SetValue(allow);
 	sizer->Add(daterange, 0, wxLEFT|wxRIGHT|wxTOP, 10);
 	adifedit = new wxCheckBox(this, ID_PREF_FILE_EDIT_ADIF, _("Open ADIF files in ADIF editor"));
-	allow = false;
+	allow = DEFAULT_ADIF_EDIT;
 	config->Read(wxT("AdifEdit"), &allow);
 	adifedit->SetValue(allow);
 	sizer->Add(adifedit, 0, wxLEFT|wxRIGHT|wxTOP, 10);
 	dispdupes = new wxCheckBox(this, ID_PREF_FILE_DISPLAY_DUPES, _("Display details of duplicate QSOs when signing a log"));
-	allow = false;
+	allow = DEFAULT_DISP_DUPES;
 	config->Read(wxT("DispDupes"), &allow);
 	dispdupes->SetValue(allow);
 	sizer->Add(dispdupes, 0, wxLEFT|wxRIGHT|wxTOP, 10);
+	logtab = new wxCheckBox(this, ID_PREF_FILE_LOG_TAB, _("Display status messages in separate tab"));
+	allow = DEFAULT_LOG_TAB;
+	config->Read(wxT("LogTab"), &allow);
+	logtab->SetValue(allow);
+	sizer->Add(logtab, 0, wxLEFT|wxRIGHT|wxTOP, 10);
 	SetSizer(sizer);
 	sizer->Fit(this);
 	sizer->SetSizeHints(this);
@@ -420,6 +425,12 @@ bool FilePrefs::TransferDataFromWindow() {
 	config->Write(wxT("DateRange"), daterange->GetValue());
 	config->Write(wxT("AdifEdit"), adifedit->GetValue());
 	config->Write(wxT("DispDupes"), dispdupes->GetValue());
+	bool oldLog;
+	config->Read(wxT("LogTab"), &oldLog);
+	if (logtab->GetValue() != oldLog) {
+		wxMessageBox(_("Changes to the status message configuration will take affect when TQSL is restarted"), _("Warning"), wxOK | wxICON_INFORMATION, this);
+	}
+	config->Write(wxT("LogTab"), logtab->GetValue());
 	config->Write(wxT("AutoBackup"), autobackup->GetValue());
 #if !defined(__APPLE__) && !defined(_WIN32)
 	config->Write(wxT("BackupFolder"), dirPick->GetValue());
@@ -587,7 +598,7 @@ ProxyPrefs::ProxyPrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm"
 	wxCoord char_width, char_height;
 	dc.GetTextExtent(wxString(wxT('M'), FILE_TEXT_WIDTH), &char_width, &char_height);
 
-	config->Read(wxT("proxyEnabled"), &enabled, false);
+	config->Read(wxT("ProxyEnabled"), &enabled, false);
 	wxString pHost = config->Read(wxT("proxyHost"));
 	wxString pPort = config->Read(wxT("proxyPort"));
 	wxString pType = config->Read(wxT("proxyType"));
@@ -900,14 +911,14 @@ bool EditContest::TransferDataFromWindow() {
 	contest.Trim(true);
 	contest.MakeUpper();
 	if (contest == wxT("")) {
-		wxMessageBox(_("Contest name cannot be blank"), _("Error"), wxOK, this);
+		wxMessageBox(_("Contest name cannot be blank"), _("Error"), wxOK | wxICON_ERROR, this);
 		return false;
 	}
 	contest_type = type->GetSelection();
 	callsign_field = strtol(fieldnum->GetValue().ToUTF8(), NULL, 10);
 	if (callsign_field < TQSL_MIN_CABRILLO_MAP_FIELD) {
 		wxMessageBox(wxString::Format(_("Call-worked field must be %d or greater"), TQSL_MIN_CABRILLO_MAP_FIELD),
-			_("Error"), wxOK, this);
+			_("Error"), wxOK | wxICON_ERROR, this);
 		return false;
 	}
 	return true;

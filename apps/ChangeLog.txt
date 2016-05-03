@@ -1,6 +1,56 @@
 TQSL changes
 ============
 
+2.1.1
+----------
+When running in batch mode (-x or -q on the command line, don't show the
+upload progress bar, just do the upload.
+
+When changing the selected language, ensure that the window position is
+retained.
+
+When TQSL is killed while in the process of signing/uploading a log, roll-
+back the duplicates database changes and cleanly close the database.
+
+When an old .TQ6 file is loaded into TQSL, and there was a valid private
+key for that certificate, TQSL could incorrectly delete a private key
+for a pending callsign certificate, causing installation of that certificate
+to fail. TQSL now verifies that the certificate being installed is active
+and will not delete certificates improperly.
+
+Don't delete/recreate the main window when language selection doesn't change
+the selected language.
+
+Display warning that changing the status log display will require a restart.
+
+Add "Replaced" and "Expired" indicators to callsign certificate properties
+display.
+
+Save preferences in .tbk files in numeric form so on/off preferences can
+be transferred across operating systems (Windows/Mac/Unix) properly.
+
+Ensure that the callsign certificate password window always appears on the top
+of other windows. This will cause the main TQSL window to always appear when
+prompting for a password.
+
+Add enhancements to the ADIF editor. Select the proper band when a frequency
+is being entered. Default to 160M when adding a new qso, and don't lose
+changes when moving backwards from a record being added.
+
+Correct memory leaks in station location handling.
+
+Report old and new QTH details when a duplicate QSO is detected. Store and
+restore the QTH data when duplicates data is processed in a backup (tbk) file.
+
+Allow alternate UI layout that puts the status log on a separate tab. Use the
+"Display status messages in separate tab" preference setting to enable this.
+Changing this setting requires restarting TQSL for it to take effect. This
+change will make handling large number of callsign certificates or station
+locations easier.
+
+Fix error that would cause installation of a new configuration file to fail
+on systems with non-ASCII characters in the user's home directory name.
+
 2.2
 ----------
 widen fields for station location pages to accomodate long Park names. Permit
