@@ -1,3 +1,12 @@
+trustedqsl (2.2.2-1) unstable; urgency=medium
+
+  * New upstream release
+  * Debian packaging:
+    - clean up old unused debian/patches (previously merged upstream)
+    - Fix FTBFS: 02-Fix-wxWidgets-argv-ambiguous-overload-for-gcc-5-6.patch
+
+ -- Kamal Mostafa <kamal@whence.com>  Sat, 02 Jul 2016 10:36:36 -0700
+
 trustedqsl (2.2.1-1) unstable; urgency=medium
 
   * New upstream release

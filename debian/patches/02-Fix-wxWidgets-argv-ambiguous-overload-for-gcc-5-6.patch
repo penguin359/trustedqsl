@@ -1,0 +1,38 @@
+From 78e6f78235f8644ea422e7385ed11198392c1a60 Mon Sep 17 00:00:00 2001
+From: Kamal Mostafa <kamal@whence.com>
+Date: Sat, 2 Jul 2016 10:22:57 -0700
+Subject: Fix wxWidgets argv ambiguous overload for gcc-{5,6}
+
+Explicitly convert wxWidgets argv to C string.  Fixes the following
+build failure in gcc-{5,6} and builds with no warnings in gcc and clang.
+
+/build/trustedqsl-2.2.2/apps/tqsl.cpp:4834:15: error: ambiguous overload
+for 'operator!=' (operand types are 'wxString' and 'long int')
+   if (argv[i] != NULL)
+               ^
+/build/trustedqsl-2.2.2/apps/tqsl.cpp:4834:15: note: candidate:
+operator!=(const char*, const char*) <built-in>
+/build/trustedqsl-2.2.2/apps/tqsl.cpp:4834:15: note: candidate:
+operator!=(const wchar_t*, const wchar_t*) <built-in>
+/build/trustedqsl-2.2.2/apps/tqsl.cpp:4834:15: note: candidate:
+operator!=(const void*, const void*) <built-in>
+---
+ apps/tqsl.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/apps/tqsl.cpp b/apps/tqsl.cpp
+index 4e58a59..d84acd5 100644
+--- a/apps/tqsl.cpp
++++ b/apps/tqsl.cpp
+@@ -4831,7 +4831,7 @@ QSLApp::OnInit() {
+ 		origCommandLine += wxT(" ");
+ 		origCommandLine += argv[i];
+ 		// Overly complex to keep clang quiet.
+-		if (argv[i] != NULL)
++		if ((const wxChar *)argv[i])
+ 			if (argv[i][0] == wxT('-') || argv[i][0] == wxT('/'))
+ 				if (wxIsalpha(argv[i][1]) && wxIsupper(argv[i][1]))
+ 					argv[i][1] = wxTolower(argv[i][1]);
+-- 
+2.7.4
+

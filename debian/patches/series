@@ -1,1 +1,2 @@
 01-install-libtqsllib-so-in-usr-lib-trustedqsl.patch
+02-Fix-wxWidgets-argv-ambiguous-overload-for-gcc-5-6.patch

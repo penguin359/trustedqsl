@@ -1,7 +1,43 @@
 TQSL changes
 ============
 
-2.1.1
+2.2.2
+----------
+Correct a defect that could cause TQSL to crash when a user restored
+a callsign certificate from a .P12 file, created a .TBK backup, then tried
+to restore a second callsign certificate.
+
+When a new version of TQSL is available, install it rather than
+providing a link to download the installer.
+
+Add Chinese translations provided by Caros, BH4TXN.
+
+Correct a defect that causes TQSL to crash when renewing a callsign
+certificate and the user uses "Cancel" to exit the password prompt.
+
+Provide a more informative error message when the private key for the
+selected callsign certificate can't be read when displaying certificate
+properties, signing a log, and using a certificate for signing another
+callsign certificate request.
+
+Fix TQSL infinite loop when attempting to export a callsign certificate
+when the private key cannot be read. Instead of hanging, emit an error
+message with details on the error and abort saving the certificate.
+
+Update Japanese translations with those supplied by Aki, JL3OXR.
+
+Update Italian translations with those supplied by Salvatore, I4FYV.
+
+Correct language switching on Linux systems to not display spurious
+error messages.
+
+Update compilation flags to avoid relocation error on x86_64.
+
+Correct compiler warning when building on Debian Jessie.
+
+Update copyright messages to 2016.
+
+2.2.1
 ----------
 When running in batch mode (-x or -q on the command line, don't show the
 upload progress bar, just do the upload.
