@@ -2,7 +2,7 @@ Source: trustedqsl
 Section: hamradio
 Priority: optional
 Maintainer: Debian Hamradio Maintainers <debian-hams@lists.debian.org>
-Uploaders: Kamal Mostafa <kamal@whence.com>, Jaime Robles <jaime@debian.org>, Patrick Ouellette <pouelle@debian.org>, Hamish Moffatt <hamish@debian.org>, Jerry Stueve <k4int@arrl.net>, Colin Tuckley <colint@debian.org>
+Uploaders: Kamal Mostafa <kamal@whence.com>, Jaime Robles <jaime@debian.org>, Patrick Ouellette <pouelle@debian.org>, Jerry Stueve <k4int@arrl.net>, Colin Tuckley <colint@debian.org>
 Standards-Version: 3.9.8
 Build-Depends: debhelper (>= 9), cmake, libwxgtk3.0-dev, zlib1g-dev, libexpat1-dev, libssl-dev, libdb-dev, libcurl4-openssl-dev
 Homepage: http://sourceforge.net/projects/trustedqsl/

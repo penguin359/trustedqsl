@@ -1,3 +1,18 @@
+trustedqsl (2.3-1) unstable; urgency=high
+
+  * New upstream release
+    - fix FTBFS with openssl 1.1.0 (Closes: #828580)
+    - fix localization support (Closes: #833019)
+  * Debian packaging:
+    - drop 02-Fix-wxWidgets-argv-ambiguous-overload-for-gcc-5-6.patch (upstream)
+    - add openssl patches from upstream 2.3.1-beta:
+        - 0001-Another-OpenSSL-1.1-fix.patch
+        - 0001-Allow-TQSL-to-build-on-a-system-with-only-OpenSSL-1..patch
+    - update debian/watch to http://www.arrl.org/tqsl-download
+    - update uploaders: Hamish Moffatt has retired (Closes: #831486, #831487)
+
+ -- Kamal Mostafa <kamal@whence.com>  Tue, 22 Nov 2016 09:16:57 -0800
+
 trustedqsl (2.2.2-1) unstable; urgency=medium
 
   * New upstream release

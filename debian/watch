@@ -4,5 +4,7 @@ version=3
 #http://sf.net/trustedqsl/TrustedQSL-([\d\.]+)\.tar\.gz
 
 # newer versions (since 1.14.2) should work with standard sourceforge scanner
-http://sf.net/trustedqsl/tqsl-(.*)\.(?:zip|tgz|tbz|txz|(?:tar\.(?:gz|bz2|xz)))
+#http://sf.net/trustedqsl/tqsl-(.*)\.(?:zip|tgz|tbz|txz|(?:tar\.(?:gz|bz2|xz)))
 
+# versions since 2.3 are distributed from www.arrl.org
+http://www.arrl.org/tqsl-download .*/tqsl-(.*)\.(?:zip|tgz|tbz|txz|(?:tar\.(?:gz|bz2|xz)))

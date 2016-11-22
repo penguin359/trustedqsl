@@ -1,0 +1,198 @@
+From 1e09cfb423d56d9774bcab0c67fbfddd27ddabaf Mon Sep 17 00:00:00 2001
+From: Rick Murphy <k1mu@arrl.net>
+Date: Sun, 13 Nov 2016 12:38:00 -0500
+Subject: Allow TQSL to build on a system with only OpenSSL 1.1 API level
+ enabled
+
+---
+ src/openssl_cert.cpp | 20 +++++++++++++-------
+ src/openssl_cert.h   |  2 +-
+ src/tqsllib.cpp      | 45 ++++++++++++++++++++++++++++-----------------
+ 3 files changed, 42 insertions(+), 25 deletions(-)
+
+diff --git a/src/openssl_cert.cpp b/src/openssl_cert.cpp
+index a4ee1d8..da42ea1 100644
+--- a/src/openssl_cert.cpp
++++ b/src/openssl_cert.cpp
+@@ -155,6 +155,9 @@
+ #include <openssl/x509v3.h>
+ #include <openssl/pkcs12.h>
+ #include <openssl/opensslv.h>
++#include <openssl/bn.h>
++#include <openssl/rsa.h>
++#include <openssl/pkcs12.h>
+ 
+ /* Ugly workaround for Openssl 1.0 bug per:
+  * http://rt.openssl.org/Ticket/Display.html?user=guest&pass=guest&id=2123
+@@ -191,7 +194,6 @@ unsigned char *ASN1_seq_pack(void *safes, i2d_of_void *i2d,
+ #endif	// OpenSSL v1.0
+ //  Work with OpenSSL 1.1.0 and later
+ #if OPENSSL_VERSION_NUMBER >= 0x10100000L
+-
+ # define M_PKCS12_bag_type PKCS12_bag_type
+ # define M_PKCS12_cert_bag_type PKCS12_cert_bag_type
+ # define M_PKCS12_crl_bag_type PKCS12_cert_bag_type
+@@ -205,6 +207,10 @@ unsigned char *ASN1_seq_pack(void *safes, i2d_of_void *i2d,
+ # define PKCS12_x5092certbag PKCS12_SAFEBAG_create_cert
+ # define PKCS12_x509crl2certbag PKCS12_SAFEBAG_create_crl
+ # define X509_STORE_CTX_trusted_stack X509_STORE_CTX_set0_trusted_stack
++# define X509_get_notAfter X509_get0_notAfter
++# define X509_get_notBefore X509_get0_notBefore
++# define PKCS12_MAKE_SHKEYBAG PKCS12_SAFEBAG_create_pkcs8_encrypt
++# define X509_V_FLAG_CB_ISSUER_CHECK 0x0  
+ #else
+ # define ASN1_STRING_get0_data ASN1_STRING_data
+ #endif
+@@ -271,7 +277,7 @@ static int tqsl_find_matching_key(X509 *cert, EVP_PKEY **keyp, TQSL_CERT_REQ **c
+ static char *tqsl_make_cert_path(const char *filename, char *path, int size);
+ static char *tqsl_make_backup_path(const char *filename, char *path, int size);
+ static int tqsl_get_cert_ext(X509 *cert, const char *ext, unsigned char *userbuf, int *buflen, int *crit);
+-CLIENT_STATIC int tqsl_get_asn1_date(ASN1_TIME *tm, tQSL_Date *date);
++CLIENT_STATIC int tqsl_get_asn1_date(const ASN1_TIME *tm, tQSL_Date *date);
+ static char *tqsl_sign_base64_data(tQSL_Cert cert, char *b64data);
+ static int fixed_password_callback(char *buf, int bufsiz, int verify, void *userdata);
+ static int prompted_password_callback(char *buf, int bufsiz, int verify, void *userfunc);
+@@ -816,7 +822,7 @@ tqsl_isCertificateExpired(tQSL_Cert cert, int *status) {
+ 	d.year = tm->tm_year + 1900;
+ 	d.month = tm->tm_mon + 1;
+ 	d.day = tm->tm_mday;
+-	ASN1_TIME *ctm;
++	const ASN1_TIME *ctm;
+ 	if ((ctm = X509_get_notAfter(TQSL_API_TO_CERT(cert)->cert)) == NULL) {
+ 		*status = true;
+ 		return 0;
+@@ -1798,7 +1804,7 @@ tqsl_getCertificateQSONotAfterDate(tQSL_Cert cert, tQSL_Date *date) {
+ 
+ DLLEXPORT int CALLCONVENTION
+ tqsl_getCertificateNotBeforeDate(tQSL_Cert cert, tQSL_Date *date) {
+-	ASN1_TIME *tm;
++	const ASN1_TIME *tm;
+ 
+ 	tqslTrace("tqsl_getCertificateNotBeforeDate", NULL);
+ 	if (tqsl_init())
+@@ -1823,7 +1829,7 @@ tqsl_getCertificateNotBeforeDate(tQSL_Cert cert, tQSL_Date *date) {
+ 
+ DLLEXPORT int CALLCONVENTION
+ tqsl_getCertificateNotAfterDate(tQSL_Cert cert, tQSL_Date *date) {
+-	ASN1_TIME *tm;
++	const ASN1_TIME *tm;
+ 
+ 	if (tqsl_init())
+ 		return 1;
+@@ -4296,7 +4302,7 @@ tqsl_store_cert(const char *pem, X509 *cert, const char *certfile, int type, boo
+ 	int len, rval;
+ 	tQSL_Date newExpires;
+ 	string stype = "Unknown";
+-	ASN1_TIME *tm;
++	const ASN1_TIME *tm;
+ 
+ 	if (type == TQSL_CERT_CB_ROOT) {
+ 		stype = "Trusted Root Authority";
+@@ -5090,7 +5096,7 @@ tqsl_get_cert_ext(X509 *cert, const char *ext, unsigned char *userbuf, int *bufl
+ }
+ 
+ CLIENT_STATIC int
+-tqsl_get_asn1_date(ASN1_TIME *tm, tQSL_Date *date) {
++tqsl_get_asn1_date(const ASN1_TIME *tm, tQSL_Date *date) {
+ 	char *v;
+ 	int i;
+ 
+diff --git a/src/openssl_cert.h b/src/openssl_cert.h
+index 4bbcf1f..255f3a2 100644
+--- a/src/openssl_cert.h
++++ b/src/openssl_cert.h
+@@ -132,7 +132,7 @@ CLIENT_STATIC int tqsl_cert_get_subject_date(X509 *cert, const char *obj_name, t
+ #endif
+ 
+ /// Convert an ASN date
+-CLIENT_STATIC int tqsl_get_asn1_date(ASN1_TIME *tm, tQSL_Date *date);
++CLIENT_STATIC int tqsl_get_asn1_date(const ASN1_TIME *tm, tQSL_Date *date);
+ 
+ /// Filter a list (stack) of certs based on (optional) call sign, qso date and issuer criteria
+ /** Returns a (possibly empty) stack of certificates that match the criteria. Returns NULL
+diff --git a/src/tqsllib.cpp b/src/tqsllib.cpp
+index 843e0c1..ecc2a1e 100644
+--- a/src/tqsllib.cpp
++++ b/src/tqsllib.cpp
+@@ -63,21 +63,21 @@ DLLEXPORTDATA FILE* tQSL_DiagFile = 0;
+ #define TQSL_OID_CRQ_COUNTRY TQSL_OID_BASE "14"
+ 
+ static const char *custom_objects[][3] = {
+-	{ TQSL_OID_CALLSIGN, "AROcallsign", NULL },
+-	{ TQSL_OID_QSO_NOT_BEFORE, "QSONotBeforeDate", NULL },
+-	{ TQSL_OID_QSO_NOT_AFTER, "QSONotAfterDate", NULL },
+-	{ TQSL_OID_DXCC_ENTITY, "dxccEntity", NULL },
+-	{ TQSL_OID_SUPERCEDED_CERT, "supercededCertificate", NULL },
+-	{ TQSL_OID_CRQ_ISSUER_ORGANIZATION, "tqslCRQIssuerOrganization", NULL },
++	{ TQSL_OID_CALLSIGN, "AROcallsign", "AROcallsign" },
++	{ TQSL_OID_QSO_NOT_BEFORE, "QSONotBeforeDate", "QSONotBeforeDate" },
++	{ TQSL_OID_QSO_NOT_AFTER, "QSONotAfterDate", "QSONotAfterDate" },
++	{ TQSL_OID_DXCC_ENTITY, "dxccEntity", "dxccEntity" },
++	{ TQSL_OID_SUPERCEDED_CERT, "supercededCertificate", "supercededCertificate" },
++	{ TQSL_OID_CRQ_ISSUER_ORGANIZATION, "tqslCRQIssuerOrganization", "tqslCRQIssuerOrganization" },
+ 	{ TQSL_OID_CRQ_ISSUER_ORGANIZATIONAL_UNIT,
+-			"tqslCRQIssuerOrganizationalUnit", NULL },
+-	{ TQSL_OID_CRQ_EMAIL, "tqslCRQEmail", NULL },
+-	{ TQSL_OID_CRQ_ADDRESS1, "tqslCRQAddress1", NULL },
+-	{ TQSL_OID_CRQ_ADDRESS2, "tqslCRQAddress2", NULL },
+-	{ TQSL_OID_CRQ_CITY, "tqslCRQCity", NULL },
+-	{ TQSL_OID_CRQ_STATE, "tqslCRQState", NULL },
+-	{ TQSL_OID_CRQ_POSTAL, "tqslCRQPostal", NULL },
+-	{ TQSL_OID_CRQ_COUNTRY, "tqslCRQCountry", NULL },
++			"tqslCRQIssuerOrganizationalUnit", "tqslCRQIssuerOrganizationalUnit" },
++	{ TQSL_OID_CRQ_EMAIL, "tqslCRQEmail", "tqslCRQEmail" },
++	{ TQSL_OID_CRQ_ADDRESS1, "tqslCRQAddress1", "tqslCRQAddress1" },
++	{ TQSL_OID_CRQ_ADDRESS2, "tqslCRQAddress2", "tqslCRQAddress2" },
++	{ TQSL_OID_CRQ_CITY, "tqslCRQCity", "tqslCRQCity" },
++	{ TQSL_OID_CRQ_STATE, "tqslCRQState", "tqslCRQState" },
++	{ TQSL_OID_CRQ_POSTAL, "tqslCRQPostal", "tqslCRQPostal" },
++	{ TQSL_OID_CRQ_COUNTRY, "tqslCRQCountry", "tqslCRQCountry" },
+ };
+ 
+ static const char *error_strings[] = {
+@@ -200,7 +200,11 @@ tqsl_init() {
+ 
+ 	/* OpenSSL API tends to change between minor version numbers, so make sure
+ 	 * we're using the right version */
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	unsigned long SSLver = OpenSSL_version_num();
++#else
+ 	long SSLver = SSLeay();
++#endif
+ 	int SSLmajor = (SSLver >> 28) & 0xff;
+ 	int SSLminor = (SSLver >> 20) & 0xff;
+ 	int TQSLmajor = (OPENSSL_VERSION_NUMBER >> 28) & 0xff;
+@@ -217,8 +221,10 @@ tqsl_init() {
+ 	tqsl_getErrorString();	/* Clear the error status */
+ 	if (semaphore)
+ 		return 0;
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ 	ERR_load_crypto_strings();
+ 	OpenSSL_add_all_algorithms();
++#endif
+ 	for (i = 0; i < (sizeof custom_objects / sizeof custom_objects[0]); i++) {
+ 		if (OBJ_create(custom_objects[i][0], custom_objects[i][1], custom_objects[i][2]) == 0) {
+ 			tqslTrace("tqsl_init", "Error making custom objects: %s", tqsl_openssl_error());
+@@ -369,11 +375,16 @@ tqsl_getErrorString_v(int err) {
+ 		return buf;
+ 	}
+ 	if (err == TQSL_OPENSSL_VERSION_ERROR) {
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++		unsigned long SSLver = OpenSSL_version_num();
++#else
++		long SSLver = SSLeay();
++#endif
+ 		snprintf(buf, sizeof buf,
+ 			"Incompatible OpenSSL Library version %d.%d.%d; expected %d.%d.%d",
+-			static_cast<int>(SSLeay() >> 28) & 0xff,
+-			static_cast<int>(SSLeay() >> 20) & 0xff,
+-			static_cast<int>(SSLeay() >> 12) & 0xff,
++			static_cast<int>(SSLver >> 28) & 0xff,
++			static_cast<int>(SSLver >> 20) & 0xff,
++			static_cast<int>(SSLver >> 12) & 0xff,
+ 			static_cast<int>(OPENSSL_VERSION_NUMBER >> 28) & 0xff,
+ 			static_cast<int>(OPENSSL_VERSION_NUMBER >> 20) & 0xff,
+ 			static_cast<int>(OPENSSL_VERSION_NUMBER >> 12) & 0xff);
+-- 
+2.7.4
+
