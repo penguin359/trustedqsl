@@ -1,3 +1,11 @@
+trustedqsl (2.3.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * Debian packaging:
+    - clean up old unused debian/patches (previously merged upstream)
+
+ -- Kamal Mostafa <kamal@whence.com>  Mon, 11 Sep 2017 05:49:19 -0700
+
 trustedqsl (2.3-1) unstable; urgency=high
 
   * New upstream release

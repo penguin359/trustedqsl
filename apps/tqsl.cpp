@@ -2,7 +2,7 @@
                                   tqsl.cpp
                              -------------------
     begin                : Mon Nov 4 2002
-    copyright            : (C) 2002-2016 by ARRL and the TrustedQSL Developers
+    copyright            : (C) 2002-2017 by ARRL and the TrustedQSL Developers
     author               : Jon Bloom
     email                : jbloom@arrl.org
  ***************************************************************************/
@@ -1530,6 +1530,7 @@ static wxString getAbout() {
 		"Spanish: Jordi Quintero, EA3GCV\n"
 		"Italian: Salvatore Besso, I4FYV\n"
 		"Japanese: Akihiro KODA, JL3OXR\n"
+		"Finnish: Juhani Tapaninen, OH8MXL\n"
 		"Portuguese: Nuno Lopes, CT2IRY\n"
 		"Russian: Vic Goncharsky, US5WE\n"
 		"Chinese: Caros, BH4TXN\n");
@@ -2084,7 +2085,7 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 			bool has_error = (tQSL_Error != TQSL_NO_ERROR);
 			if (has_error) {
 				processed++;
-				if (dupe_error) {
+				if (!dupe_error) {
 					errors++;
 				}
 				try {
@@ -4243,7 +4244,7 @@ MyFrame::BackupConfig(const wxString& filename, bool quiet) {
 			throw TQSLException(gzerror(out, &err));
 
 		if (!quiet) {
-			wxLogMessage(wxT("Saving QSOs"));
+			wxLogMessage(_("Saving QSOs"));
 		} else {
 			tqslTrace("MyFrame::BackupConfig", "Saving QSOs");
 		}
@@ -4848,11 +4849,14 @@ QSLApp::OnInit() {
 	for (int i = 1; i < argc; i++) {
 		origCommandLine += wxT(" ");
 		origCommandLine += argv[i];
-		// Overly complex to keep clang quiet.
+		//  The following causes an false positive "null pointer
+		//  dereference" from the clang static analyzer. Hide it.
+#ifndef __clang_analyzer__
 		if ((const wxChar *)argv[i])
 			if (argv[i][0] == wxT('-') || argv[i][0] == wxT('/'))
 				if (wxIsalpha(argv[i][1]) && wxIsupper(argv[i][1]))
 					argv[i][1] = wxTolower(argv[i][1]);
+#endif
 	}
 
 	parser.SetCmdLine(argc, argv);
@@ -6424,7 +6428,7 @@ getPassword(char *buf, int bufsiz, void *callsign) {
 	wxString prompt(_("Enter the password to unlock the callsign certificate"));
 
 	if (callsign)
-		prompt = wxString::Format(_T("Enter the password for your active %hs Callsign Certificate"), callsign);
+		prompt = wxString::Format(_T("Enter the password for your active %hs Callsign Certificate"),  reinterpret_cast<char *>(callsign));
 
 	tqslTrace("getPassword", "Probing for top window");
 	wxWindow* top = wxGetApp().GetTopWindow();

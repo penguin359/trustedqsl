@@ -12,7 +12,7 @@ Index: trustedqsl-2.0.2b/src/CMakeLists.txt
  if(NOT APPLE AND NOT WIN32)
  set_source_files_properties(location.cpp PROPERTIES COMPILE_DEFINITIONS CONFDIR="${CMAKE_INSTALL_PREFIX}/share/TrustedQSL/")
  set(HEADERS_TO_INSTALL tqsllib.h tqslerrno.h cabrillo.h adif.h tqslconvert.h)
--install(TARGETS tqsllib DESTINATION lib)
+-install(TARGETS tqsllib DESTINATION lib$(LIB_SUFFIX))
 +install(TARGETS tqsllib DESTINATION lib/trustedqsl)
  install(FILES config.xml DESTINATION share/TrustedQSL)
  install(FILES ${HEADERS_TO_INSTALL} DESTINATION include)
