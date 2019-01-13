@@ -135,6 +135,10 @@ valid_list::GetChoices() const {
 		*sit++ = (*it).display;
 	return ary;
 }
+static bool
+sat_cmp(const choice& p1, const choice& p2) {
+        return p1.value < p2.value;
+}
 
 static valid_list valid_modes;
 static valid_list valid_bands;
@@ -205,8 +209,9 @@ init_valid_lists() {
 	for (int i = 0; i < count; i++) {
 		if (tqsl_getSatellite(i, &cp, &cp1, 0, 0))
 			return 1;
-		valid_satellites.push_back(choice(wxString::FromUTF8(cp), wxString::FromUTF8(cp1)));
+		valid_satellites.push_back(choice(wxString::FromUTF8(cp), wxString::Format(wxT("[%hs] %hs"), cp, cp1)));
 	}
+	sort(valid_satellites.begin(), valid_satellites.end(), sat_cmp);
 	return 0;
 }
 
@@ -552,10 +557,13 @@ bool
 QSODataDialog::TransferDataToWindow() {
 	tqslTrace("QSODataDialog::TransferDataToWindow", NULL);
 	valid_list::iterator it;
-	if ((it = find(valid_modes.begin(), valid_modes.end(), rec._mode.Upper())) != valid_modes.end())
+	wxString mode = rec._mode.Upper();
+	if ((it = find(valid_modes.begin(), valid_modes.end(), mode))  != valid_modes.end()) {
 		_mode = distance(valid_modes.begin(), it);
-	else
-		wxLogWarning(_("QSO Data: Invalid Mode ignored - %s"), (const char*) rec._mode.Upper().ToUTF8());
+	} else {
+		wxLogWarning(_("QSO Data: Invalid Mode ignored - %s"), mode.c_str());
+		_mode = 0;
+	}
 	if ((it = find(valid_bands.begin(), valid_bands.end(), rec._band.Upper())) != valid_bands.end()) {
 		_band = distance(valid_bands.begin(), it);
 		_band_ctrl->SetSelection(_band);

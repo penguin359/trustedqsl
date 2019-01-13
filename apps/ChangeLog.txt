@@ -1,6 +1,32 @@
 TQSL changes
 ============
 
+2.3.1
+----------
+Update copyright messages to 2017.
+
+Add the ADIF satellite name to the pulldown menu in the ADIF editor to allow
+satellites to be more easily looked up.
+
+Add 'Saving QSOs' to the messages to be translated.
+
+Add Finnish translation from Juhani, OH8MXL.
+
+When renewing a callsign certificate and backing up to earlier pages in
+the wizard, don't display a spurious certificate type selection page.
+
+When editing an ADIF file that has an invalid mode setting, notify the
+user that it is being ignored.
+
+Fix password prompt on systems with debug assertions enabled in wxWidgets.
+
+Correct the invocation of the Windows Installer when an update is available.
+
+Add a missing error message.
+
+Correct the counts reported when duplicate QSOs are found along with QSOs
+with other errors.
+
 2.3
 ----------
 Add Russian translation provided by Vic, US5WE.
@@ -12,7 +38,7 @@ the valid range for the associated DXCC entity. Detect out of range dates and
 report these errors to the user for correction.
 
 Correct defect that could cause a spurious "this language is not supported"
-error message on Linux systems without the English localization files not
+error message on Linux systems without the English localization files
 installed.
 
 Fix build error using gcc-5/gcc-6.

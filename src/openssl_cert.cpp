@@ -155,6 +155,9 @@
 #include <openssl/x509v3.h>
 #include <openssl/pkcs12.h>
 #include <openssl/opensslv.h>
+#include <openssl/bn.h>
+#include <openssl/rsa.h>
+#include <openssl/pkcs12.h>
 
 /* Ugly workaround for Openssl 1.0 bug per:
  * http://rt.openssl.org/Ticket/Display.html?user=guest&pass=guest&id=2123
@@ -191,7 +194,6 @@ unsigned char *ASN1_seq_pack(void *safes, i2d_of_void *i2d,
 #endif	// OpenSSL v1.0
 //  Work with OpenSSL 1.1.0 and later
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
-
 # define M_PKCS12_bag_type PKCS12_bag_type
 # define M_PKCS12_cert_bag_type PKCS12_cert_bag_type
 # define M_PKCS12_crl_bag_type PKCS12_cert_bag_type
@@ -205,6 +207,12 @@ unsigned char *ASN1_seq_pack(void *safes, i2d_of_void *i2d,
 # define PKCS12_x5092certbag PKCS12_SAFEBAG_create_cert
 # define PKCS12_x509crl2certbag PKCS12_SAFEBAG_create_crl
 # define X509_STORE_CTX_trusted_stack X509_STORE_CTX_set0_trusted_stack
+# define X509_get_notAfter X509_get0_notAfter
+# define X509_get_notBefore X509_get0_notBefore
+# define PKCS12_MAKE_SHKEYBAG PKCS12_SAFEBAG_create_pkcs8_encrypt
+# define X509_V_FLAG_CB_ISSUER_CHECK 0x0
+#else
+# define ASN1_STRING_get0_data ASN1_STRING_data
 #endif
 #include <map>
 #include <vector>
@@ -269,7 +277,7 @@ static int tqsl_find_matching_key(X509 *cert, EVP_PKEY **keyp, TQSL_CERT_REQ **c
 static char *tqsl_make_cert_path(const char *filename, char *path, int size);
 static char *tqsl_make_backup_path(const char *filename, char *path, int size);
 static int tqsl_get_cert_ext(X509 *cert, const char *ext, unsigned char *userbuf, int *buflen, int *crit);
-CLIENT_STATIC int tqsl_get_asn1_date(ASN1_TIME *tm, tQSL_Date *date);
+CLIENT_STATIC int tqsl_get_asn1_date(const ASN1_TIME *tm, tQSL_Date *date);
 static char *tqsl_sign_base64_data(tQSL_Cert cert, char *b64data);
 static int fixed_password_callback(char *buf, int bufsiz, int verify, void *userdata);
 static int prompted_password_callback(char *buf, int bufsiz, int verify, void *userfunc);
@@ -814,7 +822,7 @@ tqsl_isCertificateExpired(tQSL_Cert cert, int *status) {
 	d.year = tm->tm_year + 1900;
 	d.month = tm->tm_mon + 1;
 	d.day = tm->tm_mday;
-	ASN1_TIME *ctm;
+	const ASN1_TIME *ctm;
 	if ((ctm = X509_get_notAfter(TQSL_API_TO_CERT(cert)->cert)) == NULL) {
 		*status = true;
 		return 0;
@@ -1796,7 +1804,7 @@ tqsl_getCertificateQSONotAfterDate(tQSL_Cert cert, tQSL_Date *date) {
 
 DLLEXPORT int CALLCONVENTION
 tqsl_getCertificateNotBeforeDate(tQSL_Cert cert, tQSL_Date *date) {
-	ASN1_TIME *tm;
+	const ASN1_TIME *tm;
 
 	tqslTrace("tqsl_getCertificateNotBeforeDate", NULL);
 	if (tqsl_init())
@@ -1821,7 +1829,7 @@ tqsl_getCertificateNotBeforeDate(tQSL_Cert cert, tQSL_Date *date) {
 
 DLLEXPORT int CALLCONVENTION
 tqsl_getCertificateNotAfterDate(tQSL_Cert cert, tQSL_Date *date) {
-	ASN1_TIME *tm;
+	const ASN1_TIME *tm;
 
 	if (tqsl_init())
 		return 1;
@@ -2179,7 +2187,7 @@ tqsl_add_bag_attribute(PKCS12_SAFEBAG *bag, const char *oidname, const string& v
 #endif
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
 					STACK_OF(X509_ATTRIBUTE) *sk;
-					sk = PKCS12_SAFEBAG_get0_attrs(bag);
+					sk = (STACK_OF(X509_ATTRIBUTE)*)PKCS12_SAFEBAG_get0_attrs(bag);
 					if (sk) {
 						sk_X509_ATTRIBUTE_push(sk, attrib);
 #else
@@ -2557,7 +2565,7 @@ struct tqsl_imported_cert {
 
 static int
 tqsl_get_bag_attribute(PKCS12_SAFEBAG *bag, const char *oidname, string& str) {
-	ASN1_TYPE *attr;
+	const ASN1_TYPE *attr;
 
 	str = "";
 	if ((attr = PKCS12_get_attr(bag, OBJ_txt2nid(const_cast<char *>(oidname)))) != 0) {
@@ -2587,7 +2595,7 @@ tqsl_importPKCS12(bool importB64, const char *filename, const char *base64, cons
 	X509 *x;
 	BASIC_CONSTRAINTS *bs = 0;
 	ASN1_OBJECT *callobj = 0, *obj = 0;
-	ASN1_TYPE *attr = 0;
+	const ASN1_TYPE *attr = 0;
 	const EVP_CIPHER *cipher;
 	unsigned char *cp;
 	int i, j, bagnid, len;
@@ -3857,7 +3865,7 @@ tqsl_get_name_stuff(X509_NAME_ENTRY *entry, TQSL_X509_NAME_ITEM *name_item) {
 	}
 	if (name_item->value_buf != NULL) {
 		value = X509_NAME_ENTRY_get_data(entry);
-		val = (const char *)ASN1_STRING_data(value);
+		val = (const char *)ASN1_STRING_get0_data(value);
 		strncpy(name_item->value_buf, val, name_item->value_buf_size);
 		name_item->value_buf[name_item->value_buf_size-1] = '\0';
 		if (strlen(val) > strlen(name_item->value_buf)) {
@@ -4294,7 +4302,7 @@ tqsl_store_cert(const char *pem, X509 *cert, const char *certfile, int type, boo
 	int len, rval;
 	tQSL_Date newExpires;
 	string stype = "Unknown";
-	ASN1_TIME *tm;
+	const ASN1_TIME *tm;
 
 	if (type == TQSL_CERT_CB_ROOT) {
 		stype = "Trusted Root Authority";
@@ -5072,7 +5080,7 @@ tqsl_get_cert_ext(X509 *cert, const char *ext, unsigned char *userbuf, int *bufl
 			}
 			*buflen = datasiz;
 			if (datasiz)
-				memcpy(userbuf, ASN1_STRING_data(data), datasiz);
+				memcpy(userbuf, ASN1_STRING_get0_data(data), datasiz);
 			userbuf[datasiz] = '\0';
 		}
 		if (crit != NULL)
@@ -5088,7 +5096,7 @@ tqsl_get_cert_ext(X509 *cert, const char *ext, unsigned char *userbuf, int *bufl
 }
 
 CLIENT_STATIC int
-tqsl_get_asn1_date(ASN1_TIME *tm, tQSL_Date *date) {
+tqsl_get_asn1_date(const ASN1_TIME *tm, tQSL_Date *date) {
 	char *v;
 	int i;
 
