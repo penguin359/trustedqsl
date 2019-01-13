@@ -3,6 +3,16 @@ TQSLLIB changes
 
 2.4
 ---
+If duplicates database recovery efforts fail, delete it and 
+recreate it.
+
+Use online certificate status checks to ensure that a superceded
+certificate is not selected even if the replacement certificate is
+not installed on the local system.
+
+Return errors when writing the station location data file to the user.
+Also return errors for the callsign certificate data file.
+
 Use a hash table for the duplicates database rather than a btree. The
 format of the dupe records causes btree to perform poorly.
 
