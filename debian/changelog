@@ -1,11 +1,11 @@
-trustedqsl (2.4.3-1) UNRELEASED; urgency=medium
+trustedqsl (2.4.3-1) unstable; urgency=medium
 
-  * New upstream release.
+  * Team upload with new upstream release.
   * Run wrap-and-sort -st.
   * Create packaging repo on salsa.
   * Add jquery-1.7.1.js source in debian/missing-sources/.
 
- -- Christoph Berg <myon@debian.org>  Sun, 13 Jan 2019 14:10:07 +0100
+ -- Christoph Berg <myon@debian.org>  Sun, 13 Jan 2019 14:35:55 +0100
 
 trustedqsl (2.3.1-1) unstable; urgency=medium
 
