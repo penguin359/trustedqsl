@@ -1,8 +1,9 @@
-TrustedQSL
-==========
+TQSL/tqsllib
+==================
 
-This is the TrustedQSL application suite, part of the TrustedQSL
-project:
+TQSL is the TrustedQSL application suite and tqsllib is the 
+TrustedQSL library. These are the two major components of the
+TrustedQSL project:
 
 http://sourceforge.net/projects/trustedqsl/
 
@@ -11,127 +12,141 @@ Contents
 
 1) Prerequisites
 
-2) Building the Applications under Unix
+2) Building the Library under Linux/Unix
 
-3) Building the Applications under Mac OS X
+3) Building the Library under Mac OS X
 
-4) Building the Applications under Windows.
+4) Building the Library under Windows.
 
 ===================================================================
 
 1) Prerequisites
 
-These applications require the tqsllib library. First build and
-install that library and its prerequisites.
+The TQSL applications depend upon the tqsllib library. First you
+should build and install that library and its prerequisites.
+
+The TrustedQSL library depends on several other libraries:
+
+OpenSSL (http://www.openssl.org/) - OpenSSL 1.0.1e was used for TQSL 1.14.
+expat 1.x XML parser library (http://expat.sourceforge.net/) - expat 2.1.0
+zlib (http://zlib.net/) zlib 1.2.7
+Berkeley DB (http://www.oracle.com/technetwork/products/berkeleydb/downloads/index.html) - BDb 5.3.21
+wxWidgets (http://wxwidgets.org/downloads) - wxWidgets 2.8.12.
+curl - (http://curl.haxx.se/download.html) - curl 7.29.0
+
+Most Unix and unix-like workstations will have these available. For
+those systems that do not, the packages are easily built. Instructions
+for building under the Windows environment are given below under
+"Building under Windows."
 
 In the instructions that follow, the versions of other packages
-that were used to build the TrustedQSL package as of the date this
+that were used to build the tqsllib package as of the date this
 document was last updated are given in parentheses.
-
-These applications make use of the wxWindows/wxWidgets GUI
-framework. (http://www.wxwindows.org/) Version 2.4.2 or later
-is required. (2.5.x recommended for Mac OS X.) For Unix and
-Mac OS X, follow the build instructions found there, or install
-the wxWindows/wxWidgets packages appropriate for your platform.
-
-Building under Windows also requires Inno Setup (version 3 or
-later), http://www.jrsoftware.org/isinfo.php.
-
-For Windows, the installable wxWindows package targets VC++.
-It may be possible to build these applications under VC++,
-but these instructions cover building the application under
-the MSYS/MinGW environment used to build the tqsllib library.
-(Note that to run the applications does *not* require any special
-environment.)
 
 ===================================================================
 
-2) Building the Applications under Linux/Unix
+2) Building under Linux/Unix
 
 The quick answer:
 
-./configure
+From the parent directory 
+cmake .
 make
 make install
 
-That will install the Applications under /usr/local/bin and the
-initial configuration data under /usr/local/share/tqsl.
+That will install the library and applications under /usr/local. It
+also will install the needed header files under /usr/local/include.
+Configuration and help files will be installed in /usr/local/share.
 
 You can change the install location via:
-./configure --prefix=/foo/bar
+cmake -DCMAKE_INSTALL_PREFIX=/foo/bar .
+
+By default, only a shared version of the library is built.
+CMake option TQSLLIB_STATIC can be set to cause a static library to be
+built, either by using 'cmake -i' or by adding '-DTQSLLIB_STATIC=YES'
+to the cmake command above.
 
 If you installed the tqsllib library or its dependent libraries
 in locations that configure can't find, you'll need to specify
-those locations to configure. See:
-
-./configure --help
+those locations to cmake. For example, you can define the location for
+the Berkeley Database headers using BDB_PREFIX. (That points to the top-level
+directory, with /include for headers and /lib for libraries assumed below
+it.)
 
 ===================================================================
 
-3) Building the Applications under Mac OS X
+3) Building under Mac OS X
 
 You'll need to have the Mac developer's tools, Xcode 1.5, installed.
 
 This is done in much the same manner as building under Linux/Unix, above.
-However, you ought *not* do "make install." Using Terminal, simply do:
 
-arch_flags="-arch i386"
-./configure CFLAGS="$arch_flags" CXXFLAGS="$arch_flags" CPPFLAGS="$arch_flags" \
-LDFLAGS="$arch_flags" OBJCFLAGS="$arch_flags" OBJCXXFLAGS="$arch_flags" \
---with-tqsllib=$HOME/tqsllib
+You will need to download and compile Berkeley DB 5.3 or later. The version
+of Berkeley DB shipped with OS X (as of 10.8) is out of date.
+
+You also may not want to install the library into system directories:
+
+cmake -DCMAKE_INSTALL_PREFIX=$HOME/tqsllib .
+make
+sudo make install
+
+To build a universal binary with compatibility from MacOS 10.4 upwards,
+use the following shell script:
+
+#!/bin/sh
+# 
+# Adjust this to where you've installed wxWidgets
+#
+PATH=$HOME/wx/bin:$PATH
+#
+# Adjust this to where you've installed Berkeley DB 5.x
+#
+bdb=$HOME/bdb
+arch_flags="-arch ppc -arch i386"
+#
+# You need to download and install the OSX 10.4 universal SDK
+# to build a universal binary. gcc 4.0 is also needed.
+#
+sdk="/Developer/SDKs/MacOSX10.4u.sdk"
+ver_min="10.4"
+
+cmake  \
+    -DCMAKE_BUILD_TYPE=Debug \
+    -DCMAKE_OSX_ARCHITECTURES="ppc;i386" \
+    -DCMAKE_LINKER=/usr/bin/gcc-4.0 \
+    -DCMAKE_CXX_COMPILER=/usr/bin/c++-4.0 \
+    -DCMAKE_C_COMPILER=/usr/bin/gcc-4.0 \
+    -DBDB_PREFIX=$bdb \
+    -DCMAKE_OSX_SYSROOT=$sdk \
+    -DCMAKE_CXX_FLAGS=" -I $HOME/bdb/include  -I /usr/include/c++/4.0.0 \
+        -I $sdk/System/Library/Frameworks/Carbon.framework/Headers \
+	-isysroot $sdk  -mmacosx-version-min=$ver_min \
+	-fno-stack-protector $arch_flags"  \
+    -DCMAKE_C_FLAGS=" -I $HOME/bdb/include  -I /usr/include/c++/4.0.0 \
+        -I $sdk/System/Library/Frameworks/Carbon.framework/Headers \
+	-isysroot $sdk  -mmacosx-version-min=$ver_min \
+	-fno-stack-protector $arch_flags"  \
+    -DCMAKE_EXE_LINKER_FLAGS=" -Wl,-syslibroot,$sdk \
+	-mmacosx-version-min=$ver_min  $arch_flags " \
+    -DCMAKE_SHARED_LINKER_FLAGS=" -Wl,-syslibroot,$sdk \
+	-mmacosx-version-min=$ver_min $arch_flags " \
+        $* .
 make
 
-This will result in the directories dist/TrustedQSL/tqsl.app and
-tqslcert.app, which comprise complete Mac OS X applications. You
-can simply move the dist/TrustedQSL folder to your system's
-Applications folder or the location of your choice, then launch
-the applications from Finder. If you want to distribute the built
-applications:
+The build will result in the directories apps/tqsl.app and
+apps/tqslcert.app, which comprise complete Mac OS X applications. You
+can simply move those folders to your system's Applications folder
+or the location of your choice, then launch the applications from
+Finder. If you want to distribute the built applications:
 
-make dmg
+./osx_createdmg.sh
 
-will make TrustedQSL-1.12.dmg, a Mac distributable disk image
+will make TrustedQSL-1.14.dmg, a Mac distributable disk image
 containing the TrustedQSL applications folder and document files.
 
 ===================================================================
 
-4) Building the Applications under Windows
+4) Building under Windows
 
-Before you can build the applications under Windows you must
-first build the tqsllib DLL. In doing so, you will set up the
-MSYS/MinGW environment as needed.
-
-STEP 1) Install needed other packages
-
-Install wxWindows/WxWidgets [wxMSW] (2.4.2)
-
-(The wxMSW installation suggests that you set an environment
-variable, WXWIN, to the base directory of your installation.
-The following directions assume you did that.)
-
-Install Inno Setup (5.0.7)
-
-STEP 2) Build the wxWindows/wxWidgets library
-
-cd $WXWIN
-mkdir build
-cd build
-../configure --disable-threads --with-msw --disable-shared --prefix=$HOME/wx
-make install
-
-STEP 3) Build the TrustedQSL applications
-
-Note: If you installed Inno Setup in a location other that its
-default, configure may need the --with-inno switch. For assistance,
-see:
-
-./configure --help
-
-cd
-tar -xzf TrustedQSL-1.12.tar.gz
-cd TrustedQSL-1.12
-./configure --without-openssl
-make installer
-
-This should result in a file, tqsl-112.exe. This is an executable
-setup file that will install the TrustedQSL applications.
+See file WindowsBuildSetup.txt in the top-level directory for details
+on how to set up MSVC to compile TQSL.
