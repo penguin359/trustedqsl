@@ -4,24 +4,20 @@ Author: Kamal Mostafa <kamal@whence.com>
 Since it is not a versioned .so, libtqsllib.so must not be installed in
 /usr/lib/ so link to and install it in /usr/lib/trustedqsl/ instead.
 
-Index: trustedqsl-2.0.2b/src/CMakeLists.txt
-===================================================================
---- trustedqsl-2.0.2b.orig/src/CMakeLists.txt	2014-07-12 13:18:13.000000000 -0700
-+++ trustedqsl-2.0.2b/src/CMakeLists.txt	2014-07-13 09:22:19.000000000 -0700
-@@ -54,7 +54,7 @@
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -53,7 +53,7 @@ include_directories(${OPENSSL_INCLUDE_DI
  if(NOT APPLE AND NOT WIN32)
  set_source_files_properties(location.cpp PROPERTIES COMPILE_DEFINITIONS CONFDIR="${CMAKE_INSTALL_PREFIX}/share/TrustedQSL/")
  set(HEADERS_TO_INSTALL tqsllib.h tqslerrno.h cabrillo.h adif.h tqslconvert.h)
--install(TARGETS tqsllib DESTINATION lib$(LIB_SUFFIX))
+-install(TARGETS tqsllib DESTINATION lib${LIB_SUFFIX})
 +install(TARGETS tqsllib DESTINATION lib/trustedqsl)
  install(FILES config.xml DESTINATION share/TrustedQSL)
  install(FILES ${HEADERS_TO_INSTALL} DESTINATION include)
  endif()
-Index: trustedqsl-2.0.2b/apps/CMakeLists.txt
-===================================================================
---- trustedqsl-2.0.2b.orig/apps/CMakeLists.txt	2014-07-12 13:18:13.000000000 -0700
-+++ trustedqsl-2.0.2b/apps/CMakeLists.txt	2014-07-13 09:22:19.000000000 -0700
-@@ -121,9 +121,9 @@
+--- a/apps/CMakeLists.txt
++++ b/apps/CMakeLists.txt
+@@ -121,9 +121,9 @@ endif()
  
  if(NOT WIN32) #rpath setup
  	SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
