@@ -44,12 +44,12 @@ using std::endl;
 	#define VSEP 3
 	#define GEOM1 4
 #elif defined(__APPLE__)
-        #define TEXT_HEIGHT 24
-        #define LABEL_HEIGHT 18
-        #define TEXT_WIDTH 8
-        #define TEXT_POINTS 10
-        #define VSEP 3
-        #define GEOM1 4
+	#define TEXT_HEIGHT 24
+	#define LABEL_HEIGHT 18
+	#define TEXT_WIDTH 8
+	#define TEXT_POINTS 10
+	#define VSEP 3
+	#define GEOM1 4
 #else
 	#define TEXT_HEIGHT 18
 	#define LABEL_HEIGHT TEXT_HEIGHT
@@ -187,7 +187,7 @@ init_valid_lists() {
 				high_s = _("UP");
 		}
 		wxString display = wxString::Format(wxT("%hs (%s-%s %hs)"), cp,
-                        low_s.c_str(), high_s.c_str(), hz);
+			low_s.c_str(), high_s.c_str(), hz);
 		valid_bands.push_back(choice(wxString::FromUTF8(cp), display, low*scale, high*scale));
 		valid_rxbands.push_back(choice(wxString::FromUTF8(cp), display, low*scale, high*scale));
 	}
@@ -802,7 +802,10 @@ QSODataDialog::UpdateControls() {
 	_recup_ctrl->Enable(_recno < static_cast<int>(_reclist->size()));
 	_rectop_ctrl->Enable(_recno < static_cast<int>(_reclist->size()));
 	_recno_ctrl->SetValue(wxString::Format(wxT("%d"), _recno));
-	_recno_label_ctrl->SetLabel(wxString::Format(wxT("%d QSO Record%hs"), static_cast<int>(_reclist->size()),
-		(_reclist->size() == 1) ? "" : "s"));
+	if (_reclist->size() == 1) {
+		_recno_label_ctrl->SetLabel(_("One QSO Record"));
+	} else {
+		_recno_label_ctrl->SetLabel(wxString::Format(_("%d QSO Records"), static_cast<int>(_reclist->size())));
+	}
 	_recadd_ctrl->Enable(_newrec < 0);
 }

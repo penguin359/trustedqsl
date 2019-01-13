@@ -1,6 +1,26 @@
 TQSL changes
 ============
 
+2.3
+----------
+Add Russian translation provided by Vic, US5WE.
+
+Add Spanish translation provided by Jordi, EA3GCV.
+
+Require the start/end date for new callsign certificate requests to be within
+the valid range for the associated DXCC entity. Detect out of range dates and
+report these errors to the user for correction.
+
+Correct defect that could cause a spurious "this language is not supported"
+error message on Linux systems without the English localization files not
+installed.
+
+Fix build error using gcc-5/gcc-6.
+
+Update Callsign Certificate request wizard to request information so that it
+can determine if the request should be authenticated and, if so, suggest which
+Callsign Certificate to use for authentication.
+
 2.2.2
 ----------
 Correct a defect that could cause TQSL to crash when a user restored
