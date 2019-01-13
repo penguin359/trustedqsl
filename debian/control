@@ -2,23 +2,35 @@ Source: trustedqsl
 Section: hamradio
 Priority: optional
 Maintainer: Debian Hamradio Maintainers <debian-hams@lists.debian.org>
-Uploaders: Kamal Mostafa <kamal@whence.com>, Jaime Robles <jaime@debian.org>, Patrick Ouellette <pouelle@debian.org>, Jerry Stueve <k4int@arrl.net>, Colin Tuckley <colint@debian.org>
+Uploaders:
+ Kamal Mostafa <kamal@whence.com>,
+ Jaime Robles <jaime@debian.org>,
+ Patrick Ouellette <pouelle@debian.org>,
+ Jerry Stueve <k4int@arrl.net>,
+ Colin Tuckley <colint@debian.org>,
 Standards-Version: 4.0.0
-Build-Depends: debhelper (>= 9), cmake, libwxgtk3.0-dev, zlib1g-dev, libexpat1-dev, libssl-dev, libdb-dev, libcurl4-openssl-dev
+Build-Depends:
+ cmake,
+ debhelper (>= 9),
+ libcurl4-openssl-dev,
+ libdb-dev,
+ libexpat1-dev,
+ libssl-dev,
+ libwxgtk3.0-dev,
+ zlib1g-dev,
 Homepage: http://sourceforge.net/projects/trustedqsl/
 Vcs-Git: git://git.code.sf.net/p/trustedqsl/tqsl
 Vcs-Browser: https://sourceforge.net/p/trustedqsl/tqsl/ci/master/tree/
 
 Package: trustedqsl
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: QSL log signing for the Logbook of the World (LoTW)
  Open source libraries and utilities to support using digital signatures
  for amateur radio QSL information.
  .
  A QSL is a confirmation of contact between two amateur radio stations.
  The ARRL Logbook of the World project is a database which collects
- data about contacts between amateur stations (QSOs). This package 
+ data about contacts between amateur stations (QSOs). This package
  provides the 'tqsl' program for maintaining your digital certificates
  for LoTW and signing and uploading QSO log files.
-
