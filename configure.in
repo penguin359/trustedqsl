@@ -1,0 +1,130 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(tqslcert.cpp)
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_CXX
+AC_PROG_RANLIB
+
+AC_MINGW32
+
+checktqsllib(){
+  if test -z "$TQSLLIB"; then
+    if test -e "$1/libtqsllib.a"; then
+      TQSLLIB="$1"
+    fi
+  fi
+}
+
+checktqslinc(){
+  if test -z "$TQSLINC"; then
+    if test -e "$1/tqsllib.h"; then
+      TQSLINC="$1"
+    fi
+  fi
+}
+
+checkssldir(){
+  if test -z "$OPENSSL"; then
+    if test -e "$1/lib/libcrypto.a"; then
+      OPENSSL="$1"
+    fi
+  fi
+}
+
+dnl Check for OpenSSL
+AC_MSG_CHECKING([for OpenSSL library (libcrypto.a)])
+AC_ARG_WITH(openssl,
+  [  --with-openssl=DIR      location of OpenSSL files],
+  [ checkssldir "$withval" ],
+  [ checkssldir "$HOME/openssl"; checkssldir "/usr"; checkssldir "../../openssl" ]
+)
+if test -z "$OPENSSL"; then
+  AC_MSG_RESULT(Not found)
+  echo
+  echo "OpenSSL not found"
+  echo "Use --with-openssl option to fix this problem"
+  echo
+  exit 1
+fi
+AC_MSG_RESULT($OPENSSL)
+AC_SUBST(OPENSSL)
+
+dnl Check for an openssl header file
+AC_MSG_CHECKING([for OpenSSL headers in $OPENSSL/include])
+if test ! -r "$OPENSSL/include/openssl/opensslv.h"; then
+  AC_MSG_RESULT(Not found)
+  echo
+  echo OpenSSL headers appear to be mising
+  echo
+  exit 1
+fi
+AC_MSG_RESULT(yes)
+
+dnl Check for tqsllib
+AC_MSG_CHECKING([for tqsllib library])
+AC_ARG_WITH(tqsllib,
+  [  --with-tqsllib=DIR      location of tqsllib files],
+  [ checktqsllib "$withval/lib" ],
+  [ checktqsllib "$HOME/tqsllib/lib"; checktqsllib "/usr/lib"; checktqsllib "../tqsllib" ]
+)
+if test -z "$TQSLLIB"; then
+  AC_MSG_RESULT(Not found)
+  echo
+  echo "tqsllib not found"
+  echo "Use --with-tqsllib option to fix this problem"
+  echo
+  exit 1
+fi
+AC_MSG_RESULT($TQSLLIB)
+AC_SUBST(TQSLLIB)
+
+dnl Check for tqsllib headers
+AC_MSG_CHECKING([for tqsllib headers])
+AC_ARG_WITH(tqslinc,
+  [  --with-tqslinc=DIR      location of tqsllib headers],
+  [ checktqslinc "$withval/include" ],
+  [ checktqslinc "$HOME/tqsllib/include"; checktqslinc "/usr/include"; checktqslinc "../tqsllib" ]
+)
+if test -z "$TQSLINC"; then
+  AC_MSG_RESULT(Not found)
+  echo
+  echo "tqsllib headers not found"
+  echo "Use --with-tqslinc option to fix this problem"
+  echo
+  exit 1
+fi
+AC_MSG_RESULT($TQSLINC)
+AC_SUBST(TQSLINC)
+
+AC_ARG_WITH(expat,
+  [  --with-expat=DIR        location of expat library],
+  [ EXPAT="$withval" ],
+  [ EXPAT="../../expat" ]
+)
+AC_SUBST(EXPAT)
+
+export LIBRARY_PATH="$OPENSSL/lib:$TQSLLIB:$EXPAT"
+
+dnl Checks for libraries.
+dnl Replace `main' with a function in -lcrypto:
+AC_CHECK_LIB(crypto, MD5_Init)
+
+AC_ARG_WITH(build,
+  [  --with-build=BUILDID    set build ID],
+  [  BUILD=$withval ]
+)
+AC_SUBST(BUILD)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_SIZE_T
+
+dnl Checks for library functions.
+AC_CHECK_FUNCS(mkdir strerror)
+
+AC_PROG_INSTALL
+AC_PREFIX_DEFAULT(/usr)
+
+AC_OUTPUT(Makefile Makefile.g95)
