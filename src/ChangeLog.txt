@@ -3,6 +3,27 @@ TQSLLIB changes
 
 2.4
 ---
+Use a hash table for the duplicates database rather than a btree. The
+format of the dupe records causes btree to perform poorly.
+
+If the certificate status file can't be parsed, discard it and create a
+new file.
+
+Fix export of "key only" certificates to correct "Invalid argument" error.
+
+Don't stop loading private keys just due to a file permission error in
+the keys directory.
+
+Add new functions to add and look up certificate status.
+
+Clean up database log files on exit. Shrink the default log file to avoid
+large amounts of wasted disk space.
+
+When scanning the working directory for bad files, close the directory to
+avoid file descriptor leaks.
+
+Add some new bad callsign patterns.
+
 Fix atoi() calls throughout to use strtol() so that strings like 012 aren't
 treated as Octal due to the leading zeroes.
 

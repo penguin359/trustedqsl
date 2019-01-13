@@ -8,6 +8,7 @@
     revision             : $Id$
  ***************************************************************************/
 
+#include <curl/curl.h>
 #ifdef HAVE_CONFIG_H
 #include "sysconfig.h"
 #endif
@@ -22,7 +23,6 @@
 
 wxString
 notifyData::Message() const {
-	
 	if (diagFile) {
 		fprintf(diagFile, "%s\n"
 			"Root Certificates:\t\tLoaded: %d  Duplicate: %d  Error: %d\n"
@@ -30,7 +30,7 @@ notifyData::Message() const {
 			"Callsign Certificates:\tLoaded: %d  Duplicate: %d  Error: %d\n"
 			"Private Keys:\t\t\tLoaded: %d  Duplicate: %d  Error: %d\n"
 			"Configuration Data:\tLoaded: %d  Duplicate: %d  Error: %d\n",
-			_S(status),
+			S(status),
 			root.loaded, root.duplicate, root.error,
 			ca.loaded, ca.duplicate, ca.error,
 			user.loaded, user.duplicate, user.error,
@@ -44,82 +44,82 @@ notifyData::Message() const {
 
 int
 notifyImport(int type, const char *message, void *data) {
-	tqslTrace("notifyImport", "type=%d, message=%s, data=0x%lx", type, message, (void *)data);
+	tqslTrace("notifyImport", "type=%d, message=%s, data=0x%lx", type, message, reinterpret_cast<void *>(data));
 	if (TQSL_CERT_CB_RESULT_TYPE(type) == TQSL_CERT_CB_PROMPT) {
 		const char *nametype = 0;
 		const char *configkey = 0;
 		bool default_prompt = false;
 		switch (TQSL_CERT_CB_CERT_TYPE(type)) {
-			case TQSL_CERT_CB_ROOT:
+                        case TQSL_CERT_CB_ROOT:
 				nametype = "Trusted root";
 				configkey = "NotifyRoot";
 				//default_prompt = true;
 				break;
-			case TQSL_CERT_CB_CA:
+                        case TQSL_CERT_CB_CA:
 				nametype = "Certificate Authority";
 				configkey = "NotifyCA";
 				break;
-			case TQSL_CERT_CB_USER:
+                        case TQSL_CERT_CB_USER:
 				nametype = "Callsign";
 				configkey = "NotifyUser";
 				break;
 		}
 		if (!nametype)
 			return 0;
-		wxConfig *config = (wxConfig *)wxConfig::Get();
+		wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
 		bool b;
-		config->Read(wxString(configkey, wxConvLocal), &b, default_prompt);
+		config->Read(wxString::FromUTF8(configkey), &b, default_prompt);
 		if (!b)
 			return 0;
 		wxString s(wxT("Okay to install "));
-		s = s + wxString(nametype, wxConvLocal) + wxT(" certificate?\n\n") + wxString(message, wxConvLocal);
+		s = s + wxString::FromUTF8(nametype) + wxT(" certificate?\n\n") + wxString::FromUTF8(message);
 		if (wxMessageBox(s, wxT("Install Certificate"), wxYES_NO) == wxYES)
 			return 0;
 		return 1;
 	} // end TQSL_CERT_CB_PROMPT
 	if (TQSL_CERT_CB_CALL_TYPE(type) == TQSL_CERT_CB_RESULT && data) {
 		// Keep count
-		notifyData *nd = (notifyData *)data;
+		notifyData *nd = reinterpret_cast<notifyData *>(data);
 		notifyData::counts *counts = 0;
 		switch (TQSL_CERT_CB_CERT_TYPE(type)) {
-			case TQSL_CERT_CB_ROOT:
+                        case TQSL_CERT_CB_ROOT:
 				counts = &(nd->root);
 				break;
-			case TQSL_CERT_CB_CA:
+                        case TQSL_CERT_CB_CA:
 				counts = &(nd->ca);
 				break;
-			case TQSL_CERT_CB_USER:
+                        case TQSL_CERT_CB_USER:
 				counts = &(nd->user);
 				break;
-			case TQSL_CERT_CB_PKEY:
+                        case TQSL_CERT_CB_PKEY:
 				counts = &(nd->pkey);
 				break;
-			case TQSL_CERT_CB_CONFIG:
+                        case TQSL_CERT_CB_CONFIG:
 				counts = &(nd->config);
 				break;
 		}
 		if (counts) {
 			switch (TQSL_CERT_CB_RESULT_TYPE(type)) {
-				case TQSL_CERT_CB_DUPLICATE:
+                                case TQSL_CERT_CB_DUPLICATE:
 					if (TQSL_CERT_CB_CERT_TYPE(type) == TQSL_CERT_CB_USER) {
 						if (message) {
-							nd->status = nd->status + wxString(message, wxConvLocal) + wxT("\n");
+							nd->status = nd->status + wxString::FromUTF8(message) + wxT("\n");
 						} else {
 							nd->status = nd->status + wxT("This callsign certificate is already installed");
 						}
 					}
 					counts->duplicate++;
 					break;
-				case TQSL_CERT_CB_ERROR:
+                                case TQSL_CERT_CB_ERROR:
 					if (message)
-						nd->status = nd->status + wxString(message, wxConvLocal) + wxT("\n");
+						nd->status = nd->status + wxString::FromUTF8(message) + wxT("\n");
 					counts->error++;
-					// wxMessageBox(wxString(message, wxConvLocal), wxT("Error"));
+					// wxMessageBox(wxString::FromUTF8(message), wxT("Error"));
 					break;
-				case TQSL_CERT_CB_LOADED:
+                                case TQSL_CERT_CB_LOADED:
 					if (TQSL_CERT_CB_CERT_TYPE(type) == TQSL_CERT_CB_USER)
-						nd->status = nd->status + wxString("Callsign Certificate ", wxConvLocal) +
-							wxString(message, wxConvLocal) + wxT("\n");
+						nd->status = nd->status + wxString::FromUTF8("Callsign Certificate ") +
+							wxString::FromUTF8(message) + wxT("\n");
 					counts->loaded++;
 					break;
 			}
@@ -151,10 +151,10 @@ GetNewPassword(char *buf, int bufsiz, void *) {
 		wxT("This password will have to be entered each time\n")
 		wxT("you use this callsign certificate for signing or\n")
 		wxT("when saving the key.\n\n")
-		wxT("Leave the password blank and click 'Ok' unless you want\n")
+		wxT("Leave the password blank and click 'OK' unless you want\n")
 		wxT("to use a password.\n\n"), true, pw_help, pw_helpfile);
 	if (dial.ShowModal() == wxID_OK) {
-		strncpy(buf, dial.Password().mb_str(), bufsiz);
+		strncpy(buf, dial.Password().ToUTF8(), bufsiz);
 		buf[bufsiz-1] = 0;
 		return 0;
 	}
@@ -166,8 +166,7 @@ export_new_cert(ExtWizard *_parent, const char *filename) {
 	tqslTrace("export_new_cert", "_parent=0x%lx, filename=%s", _parent, filename);
 	long newserial;
 	if (!tqsl_getSerialFromTQSLFile(filename, &newserial)) {
-
-		MyFrame *frame = (MyFrame *)(((LoadCertWiz *)_parent)->Parent());
+		MyFrame *frame = reinterpret_cast<MyFrame *>(((reinterpret_cast<LoadCertWiz *>(_parent))->Parent()));
 		TQ_WXCOOKIE cookie;
 		int nproviders = frame->cert_tree->GetNumIssuers();		// Number of certificate issuers - currently 1
 		wxTreeItemId root = frame->cert_tree->GetRootItem();
@@ -209,9 +208,9 @@ wxT("Would you like to back up your callsign certificate now?"), wxT("Warning"),
 	}
 }
 
-LoadCertWiz::LoadCertWiz(wxWindow *parent, wxHtmlHelpController *help, const wxString& title) :
-	ExtWizard(parent, help, title), _nd(0) {
-	tqslTrace("LoadCertWiz::LoadCertWiz", "parent=0x%lx, title=%s", (void *)parent, _S(title));
+LoadCertWiz::LoadCertWiz(wxWindow *parent, wxHtmlHelpController *help, const wxString& title, const wxString& ext)
+	: ExtWizard(parent, help, title), _nd(0) {
+	tqslTrace("LoadCertWiz::LoadCertWiz", "parent=0x%lx, title=%s, ext=%s", reinterpret_cast<void *>(parent), S(title), S(ext));
 
 	LCW_FinalPage *final = new LCW_FinalPage(this);
 	LCW_P12PasswordPage *p12pw = new LCW_P12PasswordPage(this);
@@ -221,9 +220,12 @@ LoadCertWiz::LoadCertWiz(wxWindow *parent, wxHtmlHelpController *help, const wxS
 	_final = final;
 	_p12pw = p12pw;
 
-	wxConfig *config = (wxConfig *)wxConfig::Get();
-	wxString ext(wxT("p12"));
+	wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
+#if !defined(__APPLE__) && !defined(_WIN32)
+	wxString wild(wxT("Callsign Certificate container files (*.p12;*.P12)|*.p12;*.P12|Certificate Request response files (*.tq6;*.TQ6)|*.tq6;*.TQ6"));
+#else
 	wxString wild(wxT("Callsign Certificate container files (*.p12)|*.p12|Certificate Request response files (*.tq6)|*.tq6"));
+#endif
 	wild += wxT("|All files (*.*)|*.*");
 
 	wxString path = config->Read(wxT("CertFilePath"), wxT(""));
@@ -236,35 +238,40 @@ LoadCertWiz::LoadCertWiz(wxWindow *parent, wxHtmlHelpController *help, const wxS
 		ResetNotifyData();
 		wxString path, basename, ext;
 		wxSplitPath(filename, &path, &basename, &ext);
-		
+
 		config->Write(wxT("CertFilePath"), path);
 		if (ext.MakeLower() == wxT("tq6")) {
 			_first = _final;
 			_final->SetPrev(0);
-			if (tqsl_importTQSLFile(filename.mb_str(), notifyImport, GetNotifyData()))
-				wxMessageBox(wxString(tqsl_getErrorString(), wxConvLocal), wxT("Error"));
-			else {
+			if (tqsl_importTQSLFile(filename.ToUTF8(), notifyImport, GetNotifyData())) {
+				wxMessageBox(wxString::FromUTF8(tqsl_getErrorString()), wxT("Error"));
+			} else {
 				if (tQSL_ImportCall[0] != '\0') {
-					wxString call = wxString(tQSL_ImportCall, wxConvLocal);
+					wxString call = wxString::FromUTF8(tQSL_ImportCall);
 					wxString pending = config->Read(wxT("RequestPending"));
 					pending.Replace(call, wxT(""), true);
-					if (pending[0] == ',')
-						pending.Replace(wxT(","), wxT(""));
-					if (pending.Last() == ',')
-						pending.Truncate(pending.Len()-1);
+					wxString rest;
+					while (pending.StartsWith(wxT(","), &rest))
+						pending = rest;
+					while (pending.EndsWith(wxT(","), &rest))
+						pending = rest;
 					config->Write(wxT("RequestPending"), pending);
 				}
-				export_new_cert(this, filename.mb_str());
+				export_new_cert(this, filename.ToUTF8());
 			}
 		} else {
 			// First try with no password
-			if (!tqsl_importPKCS12File(filename.mb_str(), "", 0, GetNewPassword, notifyImport, GetNotifyData())) {
+			if (!tqsl_importPKCS12File(filename.ToUTF8(), "", 0, GetNewPassword, notifyImport, GetNotifyData())) {
 				_first = _final;
 				_final->SetPrev(0);
 			} else {
-				_first=_p12pw;
-				_p12pw->SetPrev(0);
-				p12pw->SetFilename(filename);
+				if (tQSL_Error == TQSL_PASSWORD_ERROR) {
+					_first = _p12pw;
+					_p12pw->SetPrev(0);
+					p12pw->SetFilename(filename);
+				} else {
+					_first = 0;	// Cancel
+				}
 			}
 		}
 	}
@@ -273,13 +280,13 @@ LoadCertWiz::LoadCertWiz(wxWindow *parent, wxHtmlHelpController *help, const wxS
 }
 
 LCW_FinalPage::LCW_FinalPage(LoadCertWiz *parent) : LCW_Page(parent) {
-	tqslTrace("LCW_FinalPage::LCW_FinalPage", "parent=0x%lx", (void *)parent);
+	tqslTrace("LCW_FinalPage::LCW_FinalPage", "parent=0x%lx", reinterpret_cast<void *>(parent));
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
 	wxStaticText *st = new wxStaticText(this, -1, wxT("Loading complete"));
 	sizer->Add(st, 0, wxALL, 10);
 	wxSize tsize = getTextSize(this);
-	tc_status = new wxTextCtrl(this, -1, wxT(""),wxDefaultPosition, tsize.Scale(40, 16), wxTE_MULTILINE|wxTE_READONLY);
+	tc_status = new wxTextCtrl(this, -1, wxT(""), wxDefaultPosition, tsize.Scale(40, 16), wxTE_MULTILINE|wxTE_READONLY);
 	sizer->Add(tc_status, 1, wxALL|wxEXPAND, 10);
 	AdjustPage(sizer);
 }
@@ -287,7 +294,7 @@ LCW_FinalPage::LCW_FinalPage(LoadCertWiz *parent) : LCW_Page(parent) {
 void
 LCW_FinalPage::refresh() {
 	tqslTrace("LCW_FinalPage::refresh");
-	const notifyData *nd = ((LoadCertWiz *)_parent)->GetNotifyData();
+	const notifyData *nd = (reinterpret_cast<LoadCertWiz *>(_parent))->GetNotifyData();
 	if (nd)
 		tc_status->SetValue(nd->Message());
 	else
@@ -295,7 +302,7 @@ LCW_FinalPage::refresh() {
 }
 
 LCW_P12PasswordPage::LCW_P12PasswordPage(LoadCertWiz *parent) : LCW_Page(parent) {
-	tqslTrace("LCW_P12PasswordPage::LCW_P12PasswordPage", "parent=0x%lx", (void *)parent);
+	tqslTrace("LCW_P12PasswordPage::LCW_P12PasswordPage", "parent=0x%lx", reinterpret_cast<void *>(parent));
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
 	wxStaticText *st = new wxStaticText(this, -1, wxT("Enter the password to unlock the .p12 file:"));
@@ -315,13 +322,24 @@ LCW_P12PasswordPage::TransferDataFromWindow() {
 	wxString _pw = _pwin->GetValue();
 	pw_help = Parent()->GetHelp();
 	pw_helpfile = wxT("lcf2.htm");
-	if (tqsl_importPKCS12File(_filename.mb_str(), _pw.mb_str(), 0, GetNewPassword, notifyImport,
-		((LoadCertWiz *)_parent)->GetNotifyData())) {
+	if (tqsl_importPKCS12File(_filename.ToUTF8(), _pw.ToUTF8(), 0, GetNewPassword, notifyImport,
+		(reinterpret_cast<LoadCertWiz *>(_parent))->GetNotifyData())) {
+		if (tQSL_Error == TQSL_PASSWORD_ERROR) {
+			// UTF-8 password didn't work - try converting to UCS-2.
+			char unipwd[64];
+			utf8_to_ucs2(_pw.ToUTF8(), unipwd, sizeof unipwd);
+			if (!tqsl_importPKCS12File(_filename.ToUTF8(), unipwd, 0, GetNewPassword, notifyImport,
+					(reinterpret_cast<LoadCertWiz *>(_parent))->GetNotifyData())) {
+				tc_status->SetLabel(wxT(""));
+				return true;
+			}
+		}
 		if (tQSL_Error == TQSL_PASSWORD_ERROR) {
 			tc_status->SetLabel(wxT("Password error"));
 			return false;
-		} else
-			wxMessageBox(wxString(tqsl_getErrorString(), wxConvLocal), wxT("Error"));
+		} else {
+			wxMessageBox(wxString::FromUTF8(tqsl_getErrorString()), wxT("Error"));
+		}
 	}
 	tc_status->SetLabel(wxT(""));
 	return true;

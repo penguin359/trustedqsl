@@ -32,7 +32,7 @@ END_EVENT_TABLE()
 GetPasswordDialog::GetPasswordDialog(wxWindow *parent, const wxString& title,
 	const wxString& message, wxHtmlHelpController *help, wxString helpfile)
 	: wxDialog(parent, -1, title), _help(help), _helpfile(helpfile) {
-	tqslTrace("GetPassword::GetPasswordDialog","parent=%lx, title=%s, message=%s", (void *)parent, _S(title), _S(helpfile));
+	tqslTrace("GetPassword::GetPasswordDialog", "parent=%lx, title=%s, message=%s", reinterpret_cast<void *>(parent), S(title), S(helpfile));
 
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 	sizer->Add(new wxStaticText(this, -1, message), 1, wxALL|wxEXPAND, 10);
@@ -40,7 +40,7 @@ GetPasswordDialog::GetPasswordDialog(wxWindow *parent, const wxString& title,
 	sizer->Add(_pw, 0, wxLEFT|wxRIGHT|wxEXPAND, 10);
 
 	wxBoxSizer *butsizer = new wxBoxSizer(wxHORIZONTAL);
-	wxButton *okButton = new wxButton(this, GPW_ID_OK, wxT("Ok"));
+	wxButton *okButton = new wxButton(this, GPW_ID_OK, wxT("OK"));
 	butsizer->Add(okButton, 0, 0, 0);
 	okButton->SetDefault();
 	butsizer->Add(new wxButton(this, GPW_ID_CAN, wxT("Cancel")), 0, wxLEFT, 20);
@@ -95,7 +95,7 @@ END_EVENT_TABLE()
 GetNewPasswordDialog::GetNewPasswordDialog(wxWindow *parent, const wxString& title,
 	const wxString& message, bool blankok, wxHtmlHelpController *help, wxString helpfile)
 	: wxDialog(parent, -1, title), _blankok(blankok), _help(help), _helpfile(helpfile) {
-	tqslTrace("GetNewPasswordDialog::GetNewPasswordDialog", "parent=%lx, title=%s, message=%s, blankok=%d", (void *)parent, _S(title),_S(message));
+	tqslTrace("GetNewPasswordDialog::GetNewPasswordDialog", "parent=%lx, title=%s, message=%s, blankok=%d", reinterpret_cast<void *>(parent), S(title), S(message));
 
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 	sizer->Add(new wxStaticText(this, -1, message), 1, wxALL|wxEXPAND, 10);
@@ -109,7 +109,7 @@ GetNewPasswordDialog::GetNewPasswordDialog(wxWindow *parent, const wxString& tit
 	sizer->Add(_pwstatus, 0, wxALL|wxEXPAND, 10);
 
 	wxBoxSizer *butsizer = new wxBoxSizer(wxHORIZONTAL);
-	_okbut = new wxButton(this, GPW_ID_OK, wxT("Ok"));
+	_okbut = new wxButton(this, GPW_ID_OK, wxT("OK"));
 	_okbut->Enable(_blankok);
 	butsizer->Add(_okbut, 0, 0, 0);
 	butsizer->Add(new wxButton(this, GPW_ID_CAN, wxT("Cancel")), 0, wxLEFT, 20);

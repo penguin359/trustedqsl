@@ -32,14 +32,23 @@
 #include "wx/checkbox.h"
 #include "wx/grid.h"
 #include "wx/wxhtml.h"
+#if defined(__APPLE__) || defined(_WIN32)
 #include "wx/filepicker.h"
+#endif
 
 #include "tqslctrls.h"
 
 #include <map>
 
+using std::map;
+using std::pair;
+
 #define DEFAULT_CABRILLO_FILES wxT("log cbr")
-#define DEFAULT_ADIF_FILES wxT("adi")
+#if !defined(__APPLE__) && !defined(_WIN32)
+#define DEFAULT_ADIF_FILES wxT("adi adif ADI ADIF")
+#else
+#define DEFAULT_ADIF_FILES wxT("adi adif")
+#endif
 #define DEFAULT_AUTO_BACKUP true
 #define DEFAULT_CERT_WARNING 60
 //online
@@ -54,6 +63,9 @@
 #define DEFAULT_UPD_URL wxT("https://lotw.arrl.org/lotw/tqslupdate")
 #define DEFAULT_UPD_CONFIG_URL wxT("https://lotw.arrl.org/lotw/config_xml_version")
 #define DEFAULT_CONFIG_FILE_URL wxT("https://lotw.arrl.org/lotw/config.tq6")
+
+#define DEFAULT_CERT_CHECK_URL wxT("https://lotw.arrl.org/lotw/crl?serial=")
+#define DEFAULT_CERT_CHECK_RE wxT(".*<Status>(.*)</Status>.*")
 
 #define DEFAULT_LOTW_LOGIN_URL wxT("https://lotw.arrl.org/lotwuser/default")
 
@@ -83,8 +95,9 @@ enum {		// Window IDs
 	ID_PREF_ONLINE_STATUSOK,
 	ID_PREF_ONLINE_MESSAGERE,
 	ID_PREF_ONLINE_VERIFYCA,
-	ID_PREF_ONLINE_UPD_CONFIGURL, 
+	ID_PREF_ONLINE_UPD_CONFIGURL,
         ID_PREF_ONLINE_UPD_CONFIGFILE,
+	ID_PREF_ONLINE_CERT_CHECK,
 	ID_PREF_PROXY_ENABLED,
 	ID_PREF_PROXY_HOST,
 	ID_PREF_PROXY_PORT,
@@ -92,50 +105,54 @@ enum {		// Window IDs
 };
 
 class PrefsPanel : public wxPanel {
-public:
-	PrefsPanel(wxWindow *parent, const wxString& helpfile = wxT("prefs.htm")) :
-		wxPanel(parent), _helpfile(helpfile) {}
+ public:
+	PrefsPanel(wxWindow *parent, const wxString& helpfile = wxT("prefs.htm"))
+		: wxPanel(parent), _helpfile(helpfile) {}
 	wxString HelpFile() { return _helpfile; }
-private:
+ private:
 	wxString _helpfile;
 };
-	
+
 class FilePrefs : public PrefsPanel {
-public:
-	FilePrefs(wxWindow *parent);
+ public:
+	explicit FilePrefs(wxWindow *parent);
 	virtual bool TransferDataFromWindow();
 	void OnShowHide(wxCommandEvent&) { ShowHide(); }
 	void ShowHide();
-private:
+ private:
 	wxTextCtrl *cabrillo, *adif;
 	wxCheckBox *autobackup, *badcalls, *daterange;
+#if !defined(__APPLE__) && !defined(_WIN32)
+	wxTextCtrl *dirPick;
+#else
 	wxDirPickerCtrl *dirPick;
+#endif
 	DECLARE_EVENT_TABLE()
 };
 
 #if defined(ENABLE_ONLINE_PREFS)
 class OnlinePrefs : public PrefsPanel {
-public:
-	OnlinePrefs(wxWindow *parent);
+ public:
+	explicit OnlinePrefs(wxWindow *parent);
 	virtual bool TransferDataFromWindow();
 	void ShowHide();
 	void OnShowHide(wxCommandEvent&) { ShowHide(); }
 	DECLARE_EVENT_TABLE()
-private:
+ private:
 	wxTextCtrl *uploadURL, *postField, *statusRegex, *statusSuccess, *messageRegex;
-	wxTextCtrl *updConfigURL, *configFileURL;
+	wxTextCtrl *updConfigURL, *configFileURL, *certCheckURL;
 	wxCheckBox *verifyCA, *useDefaults;
 	bool defaults;
 };
 #endif
 
-typedef std::map <wxString, wxString> ModeSet;
+typedef map <wxString, wxString> ModeSet;
 
 class ModeMap : public PrefsPanel {
-public:
-	ModeMap(wxWindow *parent);
+ public:
+	explicit ModeMap(wxWindow *parent);
 	virtual bool TransferDataFromWindow();
-private:
+ private:
 	void SetModeList();
 	void OnDelete(wxCommandEvent &);
 	void OnAdd(wxCommandEvent &);
@@ -145,13 +162,13 @@ private:
 	DECLARE_EVENT_TABLE()
 };
 
-typedef std::map <wxString, std::pair <int, int> > ContestSet;
+typedef map <wxString, pair <int, int> > ContestSet;
 
 class ContestMap : public PrefsPanel {
-public:
-	ContestMap(wxWindow *parent);
+ public:
+	explicit ContestMap(wxWindow *parent);
 	virtual bool TransferDataFromWindow();
-private:
+ private:
 	void SetContestList();
 	void OnDelete(wxCommandEvent &);
 	void OnAdd(wxCommandEvent &);
@@ -165,29 +182,29 @@ private:
 };
 
 class ProxyPrefs : public PrefsPanel {
-public:
-	ProxyPrefs(wxWindow *parent);
+ public:
+	explicit ProxyPrefs(wxWindow *parent);
 	virtual bool TransferDataFromWindow();
 	void ShowHide();
 	void OnShowHide(wxCommandEvent&) { ShowHide(); }
 	DECLARE_EVENT_TABLE()
-private:
+ private:
 	wxCheckBox *proxyEnabled;
 	wxTextCtrl *proxyHost, *proxyPort;
 	wxChoice *proxyType;
 	bool enabled;
 };
 
-typedef std::map <wxString, wxString> ModeSet;
+typedef map <wxString, wxString> ModeSet;
 class Preferences : public wxFrame {
-public:
+ public:
 	Preferences(wxWindow *parent, wxHtmlHelpController *help = 0);
 	void OnOK(wxCommandEvent &);
 	void OnCancel(wxCommandEvent &);
 	void OnHelp(wxCommandEvent &);
 	void OnClose(wxCloseEvent&);
 	DECLARE_EVENT_TABLE()
-private:
+ private:
 	wxNotebook *notebook;
 	FilePrefs *fileprefs;
 	ModeMap *modemap;
@@ -200,20 +217,20 @@ private:
 };
 
 class AddMode : public wxDialog {
-public:
-	AddMode(wxWindow *parent);
+ public:
+	explicit AddMode(wxWindow *parent);
 	virtual bool TransferDataFromWindow();
 	void OnOK(wxCommandEvent &);
 	void OnCancel(wxCommandEvent &) { Close(true); }
 	wxString key, value;
 	DECLARE_EVENT_TABLE()
-private:
+ private:
 	wxTextCtrl *adif;
 	wxListBox *modelist;
 };
 
 class EditContest : public wxDialog {
-public:
+ public:
 	EditContest(wxWindow *parent, wxString ctype = wxT("Edit"), wxString _contest = wxT(""),
 		int _contest_type = 0, int _callsign_field = 5);
 	void OnOK(wxCommandEvent&);
@@ -221,11 +238,11 @@ public:
 	virtual bool TransferDataFromWindow();
 	wxString contest;
 	int contest_type, callsign_field;
-private:
+ private:
 	wxTextCtrl *name;
 	wxRadioBox *type;
 	wxTextCtrl *fieldnum;
 	DECLARE_EVENT_TABLE()
 };
-	
+
 #endif	// __TQSL_PREFS_H

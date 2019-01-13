@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Name="Trusted QSL v2.0" Id="*" UpgradeCode="BA40FA93-F9D6-44E2-BB81-82B0A676E731" Version="2.0" Manufacturer="The TrustedQSL Developers" Language="1033">
-    <Package Id="*" Description="Installer for TrustedQSL 2.0" Compressed="yes"/>
+  <Product Name="Trusted QSL v2.0.2-RC1" Id="*" UpgradeCode="BA40FA93-F9D6-44E2-BB81-82B0A676E731" Version="2.0.2" Manufacturer="The TrustedQSL Developers" Language="1033">
+    <Package Id="*" Description="Installer for TrustedQSL 2.0.2" Compressed="yes"/>
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="yes"/>
     <Condition Message="This application requires Windows 2000 or newer">
       NOT Version9X
@@ -37,7 +37,7 @@
             <RegistryValue Root="HKLM" Key="Software\TrustedQSL\TQSL" Name="InstallPath" Value="[APPLICATIONFOLDER]" Type="string"/>
           </Component>
 
-		  <Component Id="QuickStartComp" Guid="B3A4DC55-D157-4700-9282-A62330091566">
+	  <Component Id="QuickStartComp" Guid="B3A4DC55-D157-4700-9282-A62330091566">
             <File Id="QuickStart" Name="quick.txt" Source="quick" KeyPath="yes">
               <Shortcut Id="startmenuQuickStart" Directory="ProgramMenuDir" Name="Quick Start" Advertise="yes"/>
             </File>
@@ -49,6 +49,9 @@
 
           <Component Id="ChangeLogComp" Guid="7EC4628F-3870-4C49-BF93-0DC004066EEE">
             <File Id="ChangeLog" Name="ChangeLog.txt" Source="ChangeLog.txt" KeyPath="yes"/>
+          </Component>
+          <Component Id="CABundleComp" Guid="032B203C-FCF3-4603-95A6-DFB3F213ED8E">
+            <File Id="CABundle" Name="ca-bundle.crt" Source="ca-bundle.crt" KeyPath="yes"/>
           </Component>
         </Directory>
       </Directory>
@@ -79,6 +82,7 @@
       <ComponentRef Id="LicenseComp"/>
       <ComponentRef Id="ChangeLogComp"/>
       <ComponentRef Id="DesktopShortcut"/>
+      <ComponentRef Id="CABundleComp"/>
     </Feature>
 
     <Icon Id="tqsl.exe" SourceFile="key.ico"/>
