@@ -53,7 +53,7 @@ END_EVENT_TABLE()
 void
 TQSLStationListBox::OnRightDown(wxMouseEvent& event) {
 	wxMenu menu;
-	menu.Append(GS_CMD_PROPERTIES, wxT("&Properties"));
+	menu.Append(GS_CMD_PROPERTIES, _("&Properties"));
 	PopupMenu(&menu, event.GetPosition());
 }
 
@@ -63,12 +63,12 @@ class PropList : public wxDialog {
 	wxListCtrl *list;
 };
 
-PropList::PropList(wxWindow *parent) : wxDialog(parent, -1, wxT("Properties"), wxDefaultPosition,
+PropList::PropList(wxWindow *parent) : wxDialog(parent, -1, _("Properties"), wxDefaultPosition,
 	wxSize(400, 300)) {
 	tqslTrace("PropList::PropList", "parent=0x%lx", reinterpret_cast<void *>(parent));
 	list = new wxListCtrl(this, -1, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL);
-	list->InsertColumn(0, wxT("Name"), wxLIST_FORMAT_LEFT, 100);
-	list->InsertColumn(1, wxT("Value"), wxLIST_FORMAT_LEFT, 300);
+	list->InsertColumn(0, _("Name"), wxLIST_FORMAT_LEFT, 100);
+	list->InsertColumn(1, _("Value"), wxLIST_FORMAT_LEFT, 300);
 	wxLayoutConstraints *c = new wxLayoutConstraints;
 	c->top.SameAs(this, wxTop);
 	c->left.SameAs(this, wxLeft);
@@ -82,7 +82,8 @@ static void
 check_tqsl_error(int rval) {
 	if (rval == 0)
 		return;
-	throw TQSLException(tqsl_getErrorString());
+	wxString serr = getLocalizedErrorString();
+        wxLogError(serr);
 }
 
 static bool
@@ -123,10 +124,10 @@ TQSLGetStationNameDialog::OnSetFocus(wxFocusEvent& event) {
 void
 TQSLGetStationNameDialog::OnOk(wxCommandEvent&) {
 	wxString s = name_entry->GetValue().Trim().Trim(false);
-	tqslTrace("TQSLGetStationNameDialog::OnOk, selected = %s", S(s));
-	if (editonly)
+	tqslTrace("TQSLGetStationNameDialog::OnOk", "selected = %s", S(s));
+	if (editonly) {
 		EndModal(wxID_CANCEL);
-	else if (s != wxT("")) {
+	} else if (s != wxT("")) {
 		_selected = s;
 		EndModal(wxID_OK);
 	}
@@ -166,7 +167,7 @@ TQSLGetStationNameDialog::RefreshList() {
 
 TQSLGetStationNameDialog::TQSLGetStationNameDialog(wxWindow *parent, wxHtmlHelpController *help, const wxPoint& pos,
 	bool i_issave, const wxString& title, const wxString& okLabel, bool i_editonly)
-	: wxDialog(parent, -1, wxT("Select Station Data"), pos), issave(i_issave), editonly(i_editonly),
+	: wxDialog(parent, -1, _("Select Station Data"), pos), issave(i_issave), editonly(i_editonly),
 	newbut(0), modbut(0), updating(false), firstFocused(false), _help(help) {
 	tqslTrace("TQSLGetStationNameDialog::TQSLGetStationNameDialog", "parent=0x%lx, i_issave=%d, title=%s, okLabel=%s, i_editonly=%d", parent, i_issave, S(title), S(okLabel), i_editonly);
 	wxBoxSizer *topsizer = new wxBoxSizer(wxHORIZONTAL);
@@ -177,7 +178,7 @@ TQSLGetStationNameDialog::TQSLGetStationNameDialog(wxWindow *parent, wxHtmlHelpC
 	if (title != wxT(""))
 		SetTitle(title);
 	else if (issave)
-		SetTitle(wxT("Save Station Data"));
+		SetTitle(_("Save Station Data"));
 	// List
 	namelist = new TQSLStationListBox(this, GS_NAMELIST, wxDefaultPosition,
 		wxSize(control_width, text_size.GetHeight()*10),
@@ -185,7 +186,7 @@ TQSLGetStationNameDialog::TQSLGetStationNameDialog(wxWindow *parent, wxHtmlHelpC
 	sizer->Add(namelist, 1, wxALL|wxEXPAND, 10);
 	RefreshList();
 	sizer->Add(new wxStaticText(this, -1,
-		issave ? wxT("Enter a name for this Station Location") : wxT("Selected Station Location")),
+		issave ? _("Enter a name for this Station Location") : _("Selected Station Location")),
 		0, wxLEFT|wxRIGHT|wxTOP|wxEXPAND, 10);
 	name_entry = new wxTextCtrl(this, GS_NAMEENTRY, wxT(""), wxDefaultPosition,
 		wxSize(control_width, -1));
@@ -195,21 +196,21 @@ TQSLGetStationNameDialog::TQSLGetStationNameDialog(wxWindow *parent, wxHtmlHelpC
 	topsizer->Add(sizer, 1, 0, 0);
 	wxBoxSizer *button_sizer = new wxBoxSizer(wxVERTICAL);
 	if (!issave) {
-		newbut = new wxButton(this, GS_NEWBUT, wxT("New..."));
+		newbut = new wxButton(this, GS_NEWBUT, _("New..."));
 		newbut->Enable(TRUE);
 		button_sizer->Add(newbut, 0, wxALL|wxALIGN_TOP, 3);
-		modbut = new wxButton(this, GS_MODIFYBUT, wxT("Edit..."));
+		modbut = new wxButton(this, GS_MODIFYBUT, _("Edit..."));
 		modbut->Enable(FALSE);
 		button_sizer->Add(modbut, 0, wxALL|wxALIGN_TOP, 3);
 	}
-	delbut = new wxButton(this, GS_DELETEBUT, wxT("Delete"));
+	delbut = new wxButton(this, GS_DELETEBUT, _("Delete"));
 	delbut->Enable(FALSE);
 	button_sizer->Add(delbut, 0, wxALL|wxALIGN_TOP, 3);
 	button_sizer->Add(new wxStaticText(this, -1, wxT("")), 1, wxEXPAND);
 	if (_help)
-		button_sizer->Add(new wxButton(this, GS_HELPBUT, wxT("Help") ), 0, wxALL|wxALIGN_BOTTOM, 3);
+		button_sizer->Add(new wxButton(this, GS_HELPBUT, _("Help") ), 0, wxALL|wxALIGN_BOTTOM, 3);
 	if (!editonly)
-		button_sizer->Add(new wxButton(this, GS_CANCELBUT, wxT("Cancel") ), 0, wxALL|wxALIGN_BOTTOM, 3);
+		button_sizer->Add(new wxButton(this, GS_CANCELBUT, _("Cancel") ), 0, wxALL|wxALIGN_BOTTOM, 3);
 	okbut = new wxButton(this, GS_OKBUT, okLabel);
 	button_sizer->Add(okbut, 0, wxALL|wxALIGN_BOTTOM, 3);
 	topsizer->Add(button_sizer, 0, wxTOP|wxBOTTOM|wxRIGHT|wxEXPAND, 7);
@@ -281,7 +282,7 @@ TQSLGetStationNameDialog::OnDelete(wxCommandEvent&) {
 	wxString name = *reinterpret_cast<wxString *>(namelist->GetClientData(idx));
 	if (name == wxT(""))
 		return;
-	if (wxMessageBox(wxString(wxT("Delete \"")) + name + wxT("\"?"), wxT("TQSL Confirm"), wxYES_NO|wxCENTRE, this) == wxYES) {
+	if (wxMessageBox(wxString(_("Delete \"")) + name + wxT("\"?"), _("TQSL Confirm"), wxYES_NO|wxCENTRE, this) == wxYES) {
 		check_tqsl_error(tqsl_deleteStationLocation(name.ToUTF8()));
 		if (!issave)
 			name_entry->Clear();
@@ -343,6 +344,25 @@ TQSLGetStationNameDialog::OnNameChange(wxCommandEvent&) {
 	UpdateButtons();
 }
 
+// Location fields, here for translation purposes
+#ifdef tqsltranslate
+static const char* labels[] = {
+	__("State"),
+	__("Call Sign"),
+	__("Province"),
+	__("Continent"),
+	__("CQ Zone"),
+	__("DXCC Entity"),
+	__("Grid Square"),
+	__("IOTA ID"),
+	__("ITU Zone"),
+	__("Oblast"),
+	__("County"),
+	__("State"),
+	__("WPX Prefix")
+}
+#endif
+
 void
 TQSLGetStationNameDialog::DisplayProperties(wxCommandEvent&) {
 	tqslTrace("TQSLGetStationNameDialog::DisplayProperties");
@@ -364,7 +384,7 @@ TQSLGetStationNameDialog::DisplayProperties(wxCommandEvent&) {
 			for (int i = 0; i < nfield; i++) {
 				char buf[256];
 				check_tqsl_error(tqsl_getLocationFieldDataLabel(loc, i, buf, sizeof buf));
-				wxString key = wxString::FromUTF8(buf);
+				wxString key = wxGetTranslation(wxString::FromUTF8(buf));
 				int type;
 				check_tqsl_error(tqsl_getLocationFieldDataType(loc, i, &type));
 				if (type == TQSL_LOCATION_FIELD_DDLIST || type == TQSL_LOCATION_FIELD_LIST) {
@@ -417,10 +437,13 @@ TQSLGetStationNameDialog::SelectName(const wxString& name) {
 int
 TQSLGetStationNameDialog::ShowModal() {
 	tqslTrace("TQSLGetStationNameDialog::ShowModal");
-	if (namelist->GetCount() == 0 && !issave)
-		wxMessageBox(wxT("You have no Station Locations defined.\n\n")
-			wxT("You must define at least one Station Location to use for signing.\n")
-			wxT("Use the \"New\" Button of the dialog you're about to see to\ndefine a Station Location."),
-			wxT("TQSL Warning"), wxOK, this);
+	if (namelist->GetCount() == 0 && !issave) {
+		wxString msg = _("You have no Station Locations defined.");
+			msg += wxT("\n\n");
+			msg += _("You must define at least one Station Location to use for signing.");
+			msg += wxT("\n");
+			msg += _("Use the \"New\" Button of the dialog you're about to see to define a Station Location.");
+		wxMessageBox(msg, _("TQSL Warning"), wxOK, this);
+	}
 	return wxDialog::ShowModal();
 }

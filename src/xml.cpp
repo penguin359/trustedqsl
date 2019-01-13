@@ -8,7 +8,13 @@
     revision             : $Id$
  ***************************************************************************/
 
+#define TQSLLIB_DEF
+
 #include "xml.h"
+#ifdef _WIN32
+#include "tqsllib.h"
+#include <fcntl.h>
+#endif
 #include <string.h>
 #include <zlib.h>
 #include <stack>
@@ -41,17 +47,17 @@ XMLElement::getAttribute(const string& key) {
 void
 XMLElement::xml_start(void *data, const XML_Char *name, const XML_Char **atts) {
 	XMLElement *el = reinterpret_cast<XMLElement *>(data);
-	XMLElement new_el(name);
+	XMLElement *new_el = new XMLElement(name);
 //cout << "Element: " << name << endl;
 	for (int i = 0; atts[i]; i += 2) {
-		new_el.setAttribute(atts[i], atts[i+1]);
+		new_el->setAttribute(atts[i], atts[i+1]);
 	}
 	if (el->_parsingStack.empty()) {
 		el->_parsingStack.push_back(el->addElement(new_el));
 	} else {
-		new_el.setPretext(el->_parsingStack.back()->second.getText());
-		el->_parsingStack.back()->second.setText("");
-		el->_parsingStack.push_back(el->_parsingStack.back()->second.addElement(new_el));
+		new_el->setPretext(el->_parsingStack.back()->second->getText());
+		el->_parsingStack.back()->second->setText("");
+		el->_parsingStack.push_back(el->_parsingStack.back()->second->addElement(new_el));
 	}
 }
 
@@ -65,40 +71,8 @@ XMLElement::xml_end(void *data, const XML_Char *name) {
 void
 XMLElement::xml_text(void *data, const XML_Char *text, int len) {
 	XMLElement *el = reinterpret_cast<XMLElement *>(data);
-	el->_parsingStack.back()->second._text.append(text, len);
+	el->_parsingStack.back()->second->_text.append(text, len);
 }
-
-/*
-bool
-XMLElement::parseFile(const char *filename) {
-	ifstream in;
-
-	in.open(filename);
-	if (!in)
-		return false;	// Failed to open file
-	char buf[256];
-	XML_Parser xp = XML_ParserCreate(0);
-	XML_SetUserData(xp, (void *)this);
-	XML_SetStartElementHandler(xp, &XMLElement::xml_start);
-	XML_SetEndElementHandler(xp, &XMLElement::xml_end);
-	XML_SetCharacterDataHandler(xp, &XMLElement::xml_text);
-
-	_parsingStack.clear();	
-	while (in.get(buf, sizeof buf, 0).good()) {
-		// Process the XML
-		if (XML_Parse(xp, buf, strlen(buf), 0) == 0) {
-			XML_ParserFree(xp);
-			return false;
-		}
-	}
-
-	bool rval = !in.bad();
-	if (!rval)
-		rval = (XML_Parse(xp, "", 0, 1) != 0);
-	XML_ParserFree(xp);
-	return rval;
-}
-*/
 
 int
 XMLElement::parseString(const char *xmlstring) {
@@ -120,7 +94,16 @@ XMLElement::parseString(const char *xmlstring) {
 
 int
 XMLElement::parseFile(const char *filename) {
-	gzFile in = gzopen(filename, "rb");
+	gzFile in = NULL;
+#ifdef _WIN32
+	wchar_t* fn = utf8_to_wchar(filename);
+	int fd = _wopen(fn, _O_RDONLY|_O_BINARY);
+	free_wchar(fn);
+	if (fd != -1)
+		in = gzdopen(fd, "rb");
+#else
+	in = gzopen(filename, "rb");
+#endif
 
 	if (!in)
 		return XML_PARSE_SYSTEM_ERROR;	// Failed to open file

@@ -46,7 +46,7 @@ class CRQ_Page;
 class CRQWiz : public ExtWizard {
  public:
 	CRQWiz(TQSL_CERT_REQ *crq, 	tQSL_Cert cert, wxWindow* parent, wxHtmlHelpController *help = 0,
-		const wxString& title = wxT("Request a New Callsign Certificate"));
+		const wxString& title = _("Request a new Callsign Certificate"));
 	CRQ_Page *GetCurrentPage() { return reinterpret_cast<CRQ_Page *>(wxWizard::GetCurrentPage()); }
 	bool RunWizard();
 	// ProviderPage data
@@ -70,13 +70,14 @@ class CRQWiz : public ExtWizard {
 
 class CRQ_Page : public ExtWizard_Page {
  public:
-	explicit CRQ_Page(CRQWiz* parent = NULL) : ExtWizard_Page(parent) {}
+	explicit CRQ_Page(CRQWiz* parent = NULL) : ExtWizard_Page(parent) {valMsg = wxT("");}
 	CRQWiz *Parent() { return reinterpret_cast<CRQWiz *>(_parent); }
+	wxString valMsg;
 };
 
 class CRQ_ProviderPage : public CRQ_Page {
  public:
-	CRQ_ProviderPage(CRQWiz *parent, TQSL_CERT_REQ *crq = 0);
+	explicit CRQ_ProviderPage(CRQWiz *parent, TQSL_CERT_REQ *crq = 0);
 	virtual bool TransferDataFromWindow();
  private:
 	void DoUpdateInfo();
@@ -90,7 +91,7 @@ class CRQ_ProviderPage : public CRQ_Page {
 
 class CRQ_IntroPage : public CRQ_Page {
  public:
-	CRQ_IntroPage(CRQWiz *parent, TQSL_CERT_REQ *crq = 0);
+	explicit CRQ_IntroPage(CRQWiz *parent, TQSL_CERT_REQ *crq = 0);
 	virtual bool TransferDataFromWindow();
 	virtual const char *validate();
  private:
@@ -106,7 +107,7 @@ class CRQ_IntroPage : public CRQ_Page {
 
 class CRQ_NamePage : public CRQ_Page {
  public:
-	CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq = 0);
+	explicit CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq = 0);
 	virtual bool TransferDataFromWindow();
 	virtual const char *validate();
  private:
@@ -120,7 +121,7 @@ class CRQ_NamePage : public CRQ_Page {
 
 class CRQ_EmailPage : public CRQ_Page {
  public:
-	CRQ_EmailPage(CRQWiz *parent, TQSL_CERT_REQ *crq = 0);
+	explicit CRQ_EmailPage(CRQWiz *parent, TQSL_CERT_REQ *crq = 0);
 	virtual bool TransferDataFromWindow();
 	virtual const char *validate();
  private:
@@ -156,6 +157,7 @@ class CRQ_SignPage : public CRQ_Page {
 	CertTree *cert_tree;
 	wxStaticText *tc_status;
 	bool initialized;
+	int em_w;
 
 	DECLARE_EVENT_TABLE()
 };
