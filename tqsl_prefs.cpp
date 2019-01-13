@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: tqsl_prefs.cpp,v 1.4 2005/02/18 16:38:58 ke3z Exp $
+    revision             : $Id: tqsl_prefs.cpp,v 1.5 2010/03/09 01:57:20 k1mu Exp $
  ***************************************************************************/
 
 #include "tqsl_prefs.h"
@@ -38,8 +38,7 @@ Preferences::Preferences(wxWindow *parent, wxHtmlHelpController *help)
 	wxBoxSizer *topsizer = new wxBoxSizer(wxVERTICAL);
 
 	notebook = new wxNotebook(this, -1);
-	wxNotebookSizer *nbs = new wxNotebookSizer(notebook);
-	topsizer->Add(nbs, 1, wxGROW);
+	topsizer->Add(notebook, 1, wxGROW);
 	fileprefs = new FilePrefs(notebook);
 
 	wxBoxSizer *butsizer = new wxBoxSizer(wxHORIZONTAL);
@@ -280,7 +279,7 @@ FilePrefs::FilePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm"))
 
 static wxString
 fix_ext_str(const wxString& oldexts) {
-	static char *delims = ".,;: ";
+	static const char *delims = ".,;: ";
 
 	char *str = new char[oldexts.Length() + 1];
 	strcpy(str, oldexts.mb_str());

@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: stationdial.h,v 1.4 2005/02/18 16:38:58 ke3z Exp $
+    revision             : $Id: stationdial.h,v 1.5 2010/03/09 01:40:49 k1mu Exp $
  ***************************************************************************/
 
 #ifndef __stationdial_h
@@ -41,7 +41,7 @@ class TQSLStationListBox;
 class TQSLGetStationNameDialog : public wxDialog {
 public:
 	TQSLGetStationNameDialog(wxWindow *parent, wxHtmlHelpController *help = 0, const wxPoint& pos = wxDefaultPosition,
-		bool i_issave = false, const wxString& title = wxT(""), bool i_editonly = false);
+		bool i_issave = false, const wxString& title = wxT(""), const wxString& okLabel = wxT("Ok"), bool i_editonly = false);
 	void OnOk(wxCommandEvent& event);
 	void OnCancel(wxCommandEvent& event);
 	void OnDelete(wxCommandEvent& event);

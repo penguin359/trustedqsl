@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: tqslcert_prefs.cpp,v 1.3 2005/02/18 16:38:58 ke3z Exp $
+    revision             : $Id: tqslcert_prefs.cpp,v 1.5 2010/03/24 22:54:34 k1mu Exp $
  ***************************************************************************/
 
 #include "tqslcert_prefs.h"
@@ -25,9 +25,9 @@ Preferences::Preferences(wxWindow *parent) : wxDialog(parent, -1, wxString(wxT("
 	wxBoxSizer *topsizer = new wxBoxSizer(wxVERTICAL);
 
 	wxNotebook *notebook = new wxNotebook(this, -1);
-	wxNotebookSizer *nbs = new wxNotebookSizer(notebook);
-	topsizer->Add(nbs, 1, wxGROW);
+	topsizer->Add(notebook, 1, wxGROW);
 	keyprefs = new KeyPrefs(notebook);
+	certprefs = new CertPrefs(notebook);
 
 	wxBoxSizer *butsizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -40,6 +40,7 @@ Preferences::Preferences(wxWindow *parent) : wxDialog(parent, -1, wxString(wxT("
 	topsizer->Add(butsizer, 0, wxALIGN_CENTER);
 
 	notebook->AddPage(keyprefs, wxT("Import"));
+	notebook->AddPage(certprefs, wxT("Certificates"));
 
 	SetAutoLayout(TRUE);
 	SetSizer(topsizer);
@@ -51,6 +52,8 @@ Preferences::Preferences(wxWindow *parent) : wxDialog(parent, -1, wxString(wxT("
 
 void Preferences::OnOK(wxCommandEvent& WXUNUSED(event)) {
 	if (!keyprefs->TransferDataFromWindow())
+		return;
+	if (!certprefs->TransferDataFromWindow())
 		return;
 	Close(TRUE);
 }
@@ -86,3 +89,31 @@ bool KeyPrefs::TransferDataFromWindow() {
 	config->Write(wxT("NotifyUser"), user_cb->GetValue());
 	return TRUE;
 }
+
+CertPrefs::CertPrefs(wxWindow *parent) : wxPanel(parent, -1) {
+	wxConfig *config = (wxConfig *)wxConfig::Get();
+	bool b;
+	SetAutoLayout(TRUE);
+	wxBoxSizer *sizer = new wxStaticBoxSizer(
+		new wxStaticBox(this, -1, wxT("Certificates to display")),
+		wxVERTICAL);
+	showSuperceded_cb = new wxCheckBox(this, ID_PREF_ALLCERT_CB, wxT("Renewed certificates"));
+	sizer->Add(showSuperceded_cb);
+	config->Read(wxT("ShowSuperceded"), &b, false);
+	showSuperceded_cb->SetValue(b);
+	showExpired_cb = new wxCheckBox(this, ID_PREF_ALLCERT_CB, wxT("Expired certificates"));
+	sizer->Add(showExpired_cb);
+	config->Read(wxT("ShowExpired"), &b, false);
+	showExpired_cb->SetValue(b);
+	SetSizer(sizer);
+	sizer->Fit(this);
+	sizer->SetSizeHints(this);
+}
+
+bool CertPrefs::TransferDataFromWindow() {
+	wxConfig *config = (wxConfig *)wxConfig::Get();
+	config->Write(wxT("ShowSuperceded"), showSuperceded_cb->GetValue());
+	config->Write(wxT("ShowExpired"), showExpired_cb->GetValue());
+	return TRUE;
+}
+

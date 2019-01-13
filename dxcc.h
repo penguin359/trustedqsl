@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: dxcc.h,v 1.5 2005/02/18 16:38:58 ke3z Exp $
+    revision             : $Id: dxcc.h,v 1.6 2010/03/09 01:31:06 k1mu Exp $
  ***************************************************************************/
 
 #ifndef __dxcc_h
@@ -20,6 +20,7 @@ public:
 	DXCC() {};
 	int number() const { return _number; }
 	const char * name() const { return _name; }
+	const char * zonemap() const { return _zonemap; }
 	bool getFirst();
 	bool getNext();
 	bool getByEntity(int e);
@@ -28,6 +29,7 @@ private:
 	static bool _init;
 	int _number, _index;
 	const char *_name;
+	const char *_zonemap;
 };
 
 #endif // __dxcc_h

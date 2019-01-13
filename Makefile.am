@@ -19,7 +19,6 @@ SED=@SED@
 ECHO=@ECHO@
 
 WXCONFIG="$(WXDIR)/bin/wx-config"
-WXRSRC=$(WXDIR)/lib/lib`$(WXCONFIG) --basename`-`$(WXCONFIG) --version`.rsrc
 
 datadir = @datadir@/TrustedQSL
 helpdir = $(datadir)
@@ -99,7 +98,6 @@ dist/TrustedQSL/tqslcert.app: tqslcert $(srcdir)/tqslicons.icns $(srcdir)/Info.p
 	$(ECHO) -n "APPL????" >dist/TrustedQSL/tqslcert.app/Contents/PkgInfo
 	$(STRIP) tqslcert
 	$(CP) tqslcert dist/TrustedQSL/tqslcert.app/Contents/MacOS/tqslcert
-	$(CP) $(WXRSRC) dist/TrustedQSL/tqslcert.app/Contents/Resources/tqslcert.rsrc
 
 	$(SED) -e "s/EXEFILENAME/tqslcert/g" \
 	    -e "s/ICONFILE/tqslicons.icns/g"  \
@@ -122,7 +120,6 @@ dist/TrustedQSL/tqsl.app: tqsl $(srcdir)/tqslicons.icns $(srcdir)/Info.plist.in
 	$(ECHO) -n "APPL????" >dist/TrustedQSL/tqsl.app/Contents/PkgInfo
 	$(STRIP) tqsl
 	$(CP) tqsl dist/TrustedQSL/tqsl.app/Contents/MacOS/tqsl
-	$(CP) $(WXRSRC) dist/TrustedQSL/tqsl.app/Contents/Resources/tqsl.rsrc
 
 	$(SED) -e "s/EXEFILENAME/tqsl/g" \
 	    -e "s/ICONFILE/tqslicons.icns/g"  \
@@ -130,24 +127,24 @@ dist/TrustedQSL/tqsl.app: tqsl $(srcdir)/tqslicons.icns $(srcdir)/Info.plist.in
 	$(srcdir)/Info.plist.in > dist/TrustedQSL/tqsl.app/Contents/Info.plist
 
 tqsl-resources.o: tqsl.rc key.ico tqsl.ico tqsl-key1.ico
-	windres --include-dir=@WXDIR@/include -i tqsl.rc -o tqsl-resources.o $(RESFLAGS)
+	`$(WXCONFIG) --rescomp` -i tqsl.rc -o tqsl-resources.o
 
 tqslcert-resources.o: tqslcert.rc key.ico tqsl.ico tqsl-key1.ico
-	windres --include-dir=@WXDIR@/include -i tqslcert.rc -o tqslcert-resources.o $(RESFLAGS)
+	`$(WXCONFIG) --rescomp` -i tqslcert.rc -o tqslcert-resources.o
 
 quick.txt:
-	unix2dos -n $(srcdir)/quick quick.txt
+	unix2dos < $(srcdir)/quick > quick.txt
 
 ChangeLog.txt:
-	unix2dos -n $(srcdir)/ChangeLog ChangeLog1.txt
-	unix2dos -n $(TQSLINC)/../share/doc/ChangeLog ChangeLog2.txt
+	unix2dos < $(srcdir)/ChangeLog > ChangeLog1.txt
+	unix2dos < $(TQSLINC)/../share/doc/ChangeLog > ChangeLog2.txt
 	echo -e "\r\n" | cat ChangeLog1.txt - ChangeLog2.txt > ChangeLog.txt
 
 LICENSE.txt:
-	unix2dos -n $(srcdir)/LICENSE LICENSE.txt
+	unix2dos < $(srcdir)/LICENSE > LICENSE.txt
 
 setup-is.iss: setup.iss
-	unix2dos -n setup.iss setup-is.iss
+	unix2dos < setup.iss > setup-is.iss
 
 installer: all tqsl-@WINVER@.exe
 

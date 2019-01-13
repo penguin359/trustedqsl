@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: tqslcert_prefs.h,v 1.3 2005/02/18 20:28:30 ke3z Exp $
+    revision             : $Id: tqslcert_prefs.h,v 1.4 2010/03/24 22:54:34 k1mu Exp $
  ***************************************************************************/
 
 #ifndef __TQSLCERT_PREFS_H
@@ -42,12 +42,13 @@ private:
 	wxCheckBox *root_cb, *ca_cb, *user_cb;
 };
 
-class FilePrefs : public wxPanel {
+class CertPrefs : public wxPanel {
 public:
-	FilePrefs(wxWindow *parent);
+	CertPrefs(wxWindow *parent);
 	virtual bool TransferDataFromWindow();
 private:
-	wxTextCtrl *cabrillo, *adif;
+	wxCheckBox *showSuperceded_cb;
+	wxCheckBox *showExpired_cb;
 };
 
 class Preferences : public wxDialog {
@@ -58,7 +59,7 @@ public:
 	DECLARE_EVENT_TABLE()
 private:
 	KeyPrefs *keyprefs;
-	FilePrefs *fileprefs;
+	CertPrefs *certprefs;
 };
 
 #endif	// __TQSLCERT_PREFS_H

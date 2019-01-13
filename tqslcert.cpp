@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: tqslcert.cpp,v 1.8 2005/02/24 12:58:21 ke3z Exp $
+    revision             : $Id: tqslcert.cpp,v 1.14 2010/04/13 14:39:27 k1mu Exp $
  ***************************************************************************/
 
 #include <iostream>
@@ -53,8 +53,8 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
 END_EVENT_TABLE()
 
 static wxString flattenCallSign(const wxString& call);
+static int showAllCerts(void);
 
-static DocPaths docpaths(wxT("tqslcert"));
 
 /////////// Application //////////////
 
@@ -86,6 +86,8 @@ CertApp::OnInit() {
 		for (int i = 1; i < argc; i++) {
 			if (tqsl_importTQSLFile(wxString(argv[i], wxConvLocal).mb_str(), notifyImport, &nd))
 				wxMessageBox(wxString(tqsl_getErrorString(), wxConvLocal), wxT("Error"), wxOK, frame);
+			else
+				wxConfig::Get()->Write(wxT("RequestPending"), wxT(""));
 		}
 		wxMessageBox(nd.Message(), wxT("Load Certificates"), wxOK, frame);
 	}
@@ -95,12 +97,38 @@ CertApp::OnInit() {
 		wxMessageBox(wxT("Please review the introductory documentation before using this program."),
 			wxT("Notice"), wxOK, frame);
 	}
-	int ncerts = frame->cert_tree->Build(CERTLIST_FLAGS);
+	int ncerts = frame->cert_tree->Build(CERTLIST_FLAGS | showAllCerts());
 	if (ncerts == 0 && wxMessageBox(wxT("You have no certificate with which to sign log submissions.\n"
 		"Would you like to request a certificate now?"), wxT("Alert"), wxYES_NO, frame) == wxYES) {
 		wxCommandEvent e;
 		frame->CRQWizard(e);
 	}
+	wxString pend = wxConfig::Get()->Read(wxT("RequestPending"));
+	if (pend != wxT("")) {
+		bool found = false;
+		tQSL_Cert *certs;
+		int ncerts = 0;
+		if (!tqsl_selectCertificates(&certs, &ncerts, pend.mb_str(), 0, 0, 0, TQSL_SELECT_CERT_WITHKEYS)) {
+			for (int i = 0; i < ncerts; i++) {
+				int keyonly;
+				if (!tqsl_getCertificateKeyOnly(certs[i], &keyonly)) {
+					if (!found && keyonly)
+						found = true;
+				}
+				tqsl_freeCertificate(certs[i]);
+			}
+		}
+
+		if (!found) {
+			wxConfig::Get()->Write(wxT("RequestPending"), wxT(""));
+		} else {
+			if (wxMessageBox(wxT("Are you ready to load your new certificate for ") + pend + wxT(" from LoTW now?"), wxT("Alert"), wxYES_NO, frame) == wxYES) {
+				wxCommandEvent e;
+				frame->OnLoadCertificateFile(e);
+			}
+		}
+	}
+
 	if (ncerts > 0) {
 		TQ_WXCOOKIE cookie;
 		wxTreeItemId it = frame->cert_tree->GetFirstChild(frame->cert_tree->GetRootItem(), cookie);
@@ -142,6 +170,7 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h) :
 	wxFrame(0, -1, title, wxPoint(x, y), wxSize(w, h)),
 	cert_tree(0), req(0) {
 
+	DocPaths docpaths(wxT("tqslcert"));
 	wxMenu *file_menu = new wxMenu;
 
 	file_menu->Append(tc_CRQWizard, wxT("&New Certificate Request..."));
@@ -183,7 +212,7 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h) :
 		wxDefaultSize, wxTR_DEFAULT_STYLE); //wxTR_HAS_BUTTONS | wxSUNKEN_BORDER);
 
 	cert_tree->SetBackgroundColour(wxColour(255, 255, 255));
-	cert_tree->Build(CERTLIST_FLAGS);
+	cert_tree->Build(CERTLIST_FLAGS | showAllCerts());
 
 }
 
@@ -197,6 +226,7 @@ void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event)) {
 void MyFrame::OnPreferences(wxCommandEvent& WXUNUSED(event)) {
 	Preferences dial(this);
 	dial.ShowModal();
+	cert_tree->Build(CERTLIST_FLAGS | showAllCerts());
 }
 
 void MyFrame::OnHelpContents(wxCommandEvent& WXUNUSED(event)) {
@@ -204,7 +234,7 @@ void MyFrame::OnHelpContents(wxCommandEvent& WXUNUSED(event)) {
 }
 
 void MyFrame::OnHelpAbout(wxCommandEvent& WXUNUSED(event)) {
-	wxString msg = wxT("TQSLCert V" VERSION "." BUILD "\n(c) 2001-2005\nAmerican Radio Relay League\n\n");
+	wxString msg = wxT("TQSLCert V" VERSION "." BUILD "\n(c) 2001-2010\nAmerican Radio Relay League\n\n");
 	int major, minor;
 	if (tqsl_getVersion(&major, &minor))
 		wxLogError(wxString(tqsl_getErrorString(), wxConvLocal));
@@ -225,7 +255,7 @@ void MyFrame::OnHelpAbout(wxCommandEvent& WXUNUSED(event)) {
 void MyFrame::OnLoadCertificateFile(wxCommandEvent& WXUNUSED(event)) {
 	LoadCertWiz lcw(this, &help, wxT("Load Certificate File"));
 	lcw.RunWizard();
-	cert_tree->Build(CERTLIST_FLAGS);
+	cert_tree->Build(CERTLIST_FLAGS | showAllCerts());
 }
 
 void MyFrame::CRQWizardRenew(wxCommandEvent& event) {
@@ -349,7 +379,11 @@ void MyFrame::CRQWizard(wxCommandEvent& event) {
 			req.qsoNotAfter = wiz.qsonotafter;
 			req.signer = wiz.cert;
 			if (req.signer) {
-				while (tqsl_beginSigning(req.signer, 0, getPassword, 0)) {
+				char buf[40];
+				void *call = 0;
+				if (!tqsl_getCertificateCallSign(req.signer, buf, sizeof(buf)))
+					call = &buf;
+				while (tqsl_beginSigning(req.signer, 0, getPassword, call)) {
 					if (tQSL_Error != TQSL_PASSWORD_ERROR) {
 						wxMessageBox(wxString(tqsl_getErrorString(), wxConvLocal), wxT("Error"));
 						return;
@@ -372,10 +406,11 @@ void MyFrame::CRQWizard(wxCommandEvent& event) {
 					msg += wxString(wxT("see:\n   ")) + wxString(wiz.provider.url, wxConvLocal);
 				}
 				wxMessageBox(msg, wxT("tQSLCert"));
+				wxConfig::Get()->Write(wxT("RequestPending"),wiz.callsign);
 			}
 			if (req.signer)
 				tqsl_endSigning(req.signer);
-			cert_tree->Build(CERTLIST_FLAGS);
+			cert_tree->Build(CERTLIST_FLAGS | showAllCerts());
 		}
 	}
 }
@@ -431,7 +466,7 @@ wxT("Enter password for the PKCS#12 file.\n\n"
 		return;	// Cancelled
 	int terr;
 	do {
-		terr = tqsl_beginSigning(data->getCert(), 0, getPassword, 0);
+		terr = tqsl_beginSigning(data->getCert(), 0, getPassword, (void *)&call);
 		if (terr) {
 			if (tQSL_Error == TQSL_PASSWORD_ERROR)
 				continue;
@@ -461,7 +496,7 @@ wxT("WARNING! BE SURE YOU REALLY WANT TO DO THIS!\n\n"
 "ARE YOU SURE YOU WANT TO DELETE THE CERTIFICATE?"), wxT("Warning"), wxYES_NO|wxICON_QUESTION, this) == wxYES) {
 		if (tqsl_deleteCertificate(data->getCert()))
 			wxMessageBox(wxString(tqsl_getErrorString(), wxConvLocal), wxT("Error"));
-		cert_tree->Build(CERTLIST_FLAGS);
+		cert_tree->Build(CERTLIST_FLAGS | showAllCerts());
 	}
 }
 
@@ -488,7 +523,7 @@ void MyFrame::OnSign(wxCommandEvent& WXUNUSED(event)) {
 	if (sig == "")
 		return;
 	tQSL_Cert cert = data->getCert();
-	if (tqsl_beginSigning(cert, NULL, getPassword)) {
+	if (tqsl_beginSigning(cert, NULL, getPassword, 0)) {
 		if (tQSL_Error != TQSL_OPERATOR_ABORT)
 			wxMessageBox(tqsl_getErrorString(), "Error");
 		return;
@@ -531,7 +566,7 @@ END_EVENT_TABLE()
 CertPropDial::CertPropDial(tQSL_Cert cert, wxWindow *parent) :
 		wxDialog(parent, -1, wxT("Certificate Properties"), wxDefaultPosition, wxSize(400, 15 * LABEL_HEIGHT))
 {
-	char *labels[] = {
+	const char *labels[] = {
 		"Begins: ", "Expires: ", "Organization: ", "", "Serial: ", "Operator: ",
 		"Call sign: ", "DXCC Entity: ", "QSO Start Date: ", "QSO End Date: ", "Key: "
 	};
@@ -654,8 +689,13 @@ displayCertProperties(CertTreeItemData *item, wxWindow *parent) {
 }
 
 int
-getPassword(char *buf, int bufsiz, void *) {
-	GetPasswordDialog dial(wxGetApp().GetTopWindow(), wxT("Enter password"), wxT("Enter the password to unlock the private key"));
+getPassword(char *buf, int bufsiz, void *callsign) {
+	wxString prompt(wxT("Enter the password to unlock the private key"));
+	
+	if (callsign) 
+	    prompt = prompt + wxT(" for ") + wxString((const char *)callsign, wxConvLocal);
+
+	GetPasswordDialog dial(wxGetApp().GetTopWindow(), wxT("Enter password"), prompt);
 	if (dial.ShowModal() != wxID_OK)
 		return 1;
 	strncpy(buf, dial.Password().mb_str(), bufsiz);
@@ -680,3 +720,19 @@ flattenCallSign(const wxString& call) {
 		flat[idx] = '_';
 	return flat;
 }
+
+static int
+showAllCerts(void) {
+
+	wxConfig *config = (wxConfig *)wxConfig::Get();
+	int ret = 0;
+	bool b;
+	config->Read(wxT("ShowSuperceded"), &b, false);
+	if (b) 
+		ret |= TQSL_SELECT_CERT_SUPERCEDED;
+	config->Read(wxT("ShowExpired"), &b, false);
+	if (b) 
+		ret |= TQSL_SELECT_CERT_EXPIRED;
+	return ret;
+}
+

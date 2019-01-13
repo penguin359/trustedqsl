@@ -5,7 +5,7 @@
     copyright            : (C) 2003 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: loadcertwiz.h,v 1.3 2005/02/18 20:28:30 ke3z Exp $
+    revision             : $Id: loadcertwiz.h,v 1.4 2010/04/08 17:17:01 k1mu Exp $
  ***************************************************************************/
 
 #ifdef HAVE_CONFIG_H
@@ -28,9 +28,11 @@ public:
 	bool RunWizard();
 	void ResetNotifyData();
 	notifyData *GetNotifyData() { return _nd; }
+	wxWindow *Parent() { return _parent; }
 private:
 	LCW_Page *_first;
 	class notifyData *_nd;
+	wxWindow *_parent;
 };
 
 class LCW_Page : public ExtWizard_Page {

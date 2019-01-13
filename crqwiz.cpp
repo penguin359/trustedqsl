@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: crqwiz.cpp,v 1.6 2005/03/10 15:17:15 ke3z Exp $
+    revision             : $Id: crqwiz.cpp,v 1.9 2010/03/20 12:27:24 k1mu Exp $
  ***************************************************************************/
 
 #include <ctype.h>
@@ -62,10 +62,12 @@ CRQ_ProviderPage::CRQ_ProviderPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Pa
 
 	wxStaticText *st = new wxStaticText(this, -1, wxT("M"));
 	int em_h = st->GetSize().GetHeight();
+	int em_w = st->GetSize().GetWidth();
 	st->SetLabel(wxT("This will create a new certificate request file.\n\n"
 		"Once you supply the requested information and the\n"
 		"request file has been created, you must send the\n"
 		"request file to the certificate issuer."));
+	st->SetSize(em_w * 30, em_h * 5);
 
 	sizer->Add(st, 0, wxALL, 10);
 	
@@ -104,7 +106,7 @@ void
 CRQ_ProviderPage::DoUpdateInfo() {
 	int sel = tc_provider->GetSelection();
 	if (sel >= 0) {
-		int idx = (int)(tc_provider->GetClientData(sel));
+		long idx = (long)(tc_provider->GetClientData(sel));
 		if (idx >=0 && idx < (int)providers.size()) {
 			Parent()->provider = providers[idx];
 			wxString info;
@@ -144,6 +146,7 @@ BEGIN_EVENT_TABLE(CRQ_IntroPage, CRQ_Page)
 END_EVENT_TABLE()
 
 CRQ_IntroPage::CRQ_IntroPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(parent) {
+	initialized = false;
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
 	wxStaticText *dst = new wxStaticText(this, -1, wxT("DXCC entity:"));
@@ -195,7 +198,7 @@ CRQ_IntroPage::CRQ_IntroPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(par
 		{ {&tc_qsobeginy, ID_CRQ_QBYEAR}, {&tc_qsobeginm, ID_CRQ_QBMONTH}, {&tc_qsobegind,ID_CRQ_QBDAY} },
 		{ {&tc_qsoendy, ID_CRQ_QEYEAR}, {&tc_qsoendm, ID_CRQ_QEMONTH}, {&tc_qsoendd,ID_CRQ_QEDAY} }
 	};
-	char *labels[] = { "QSO begin date:", "QSO end date:" };
+	const char *labels[] = { "QSO begin date:", "QSO end date:" };
 
 	int year = wxDateTime::GetCurrentYear();
 
@@ -278,6 +281,7 @@ CRQ_IntroPage::CRQ_IntroPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(par
 	tc_status = new wxStaticText(this, -1, wxT(""), wxDefaultPosition, wxSize(0, em_h*2));
 	sizer->Add(tc_status, 0, wxALL|wxEXPAND, 10);
 	AdjustPage(sizer, wxT("crq0.htm"));
+	initialized = true;
 }
 
 BEGIN_EVENT_TABLE(CRQ_NamePage, CRQ_Page)
@@ -287,6 +291,7 @@ BEGIN_EVENT_TABLE(CRQ_NamePage, CRQ_Page)
 END_EVENT_TABLE()
 
 CRQ_NamePage::CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(parent) {
+	initialized = false;
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
 	wxStaticText *zst = new wxStaticText(this, -1, wxT("Zip/Postal"));
@@ -384,6 +389,7 @@ CRQ_NamePage::CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(paren
 	tc_status = new wxStaticText(this, -1, wxT(""));
 	sizer->Add(tc_status, 0, wxALL|wxEXPAND, 10);
 	AdjustPage(sizer, wxT("crq1.htm"));
+	initialized = true;
 }
 
 BEGIN_EVENT_TABLE(CRQ_EmailPage, CRQ_Page)
@@ -391,6 +397,7 @@ BEGIN_EVENT_TABLE(CRQ_EmailPage, CRQ_Page)
 END_EVENT_TABLE()
 
 CRQ_EmailPage::CRQ_EmailPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(parent) {
+	initialized = false;
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
 	wxStaticText *st = new wxStaticText(this, -1, wxT("M"));
@@ -413,6 +420,7 @@ CRQ_EmailPage::CRQ_EmailPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(par
 	tc_status = new wxStaticText(this, -1, wxT(""));
 	sizer->Add(tc_status, 0, wxALL|wxEXPAND, 10);
 	AdjustPage(sizer, wxT("crq2.htm"));
+	initialized = true;
 }
 
 BEGIN_EVENT_TABLE(CRQ_PasswordPage, CRQ_Page)
@@ -421,15 +429,19 @@ BEGIN_EVENT_TABLE(CRQ_PasswordPage, CRQ_Page)
 END_EVENT_TABLE()
 
 CRQ_PasswordPage::CRQ_PasswordPage(CRQWiz *parent) :  CRQ_Page(parent) {
+	initialized = false;
+
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
 	wxStaticText *st = new wxStaticText(this, -1, wxT("M"));
 	int em_w = st->GetSize().GetWidth();
+	int em_h = st->GetSize().GetHeight();
 	st->SetLabel(
 wxT("You may protect your private key for this certificate\n"
 "using a password. Doing so is recommended.\n\n"
 "Password:")
 	);
+	st->SetSize(em_w * 30, em_h * 5);
 
 	sizer->Add(st, 0, wxLEFT|wxRIGHT|wxTOP, 10);
 	tc_pw1 = new wxTextCtrl(this, ID_CRQ_PW1, wxT(""), wxDefaultPosition, wxSize(em_w*20, -1), wxTE_PASSWORD);
@@ -444,6 +456,7 @@ wxT("You may protect your private key for this certificate\n"
 	tc_status = new wxStaticText(this, -1, wxT(""));
 	sizer->Add(tc_status, 0, wxALL|wxEXPAND, 10);
 	AdjustPage(sizer, wxT("crq3.htm"));
+	initialized = true;
 }
 
 BEGIN_EVENT_TABLE(CRQ_SignPage, CRQ_Page)
@@ -461,6 +474,8 @@ void CRQ_SignPage::CertSelChanged(wxTreeEvent& event) {
 
 CRQ_SignPage::CRQ_SignPage(CRQWiz *parent)
 	:  CRQ_Page(parent) {
+
+	initialized = false;
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
 	tc_status = new wxStaticText(this, -1, wxT("M"));
@@ -479,6 +494,7 @@ CRQ_SignPage::CRQ_SignPage(CRQWiz *parent)
 	tc_status->SetLabel(wxT(""));
 	sizer->Add(tc_status, 0, wxALL|wxEXPAND, 10);
 	AdjustPage(sizer, wxT("crq4.htm"));
+	initialized = true;
 }
 
 void
@@ -499,6 +515,8 @@ CRQ_ProviderPage::TransferDataFromWindow() {
 
 const char *
 CRQ_IntroPage::validate() {
+	if (!initialized)
+		return 0;
 	wxString val = tc_call->GetValue();
 	bool ok = true;
 	wxString msg(wxT("You must enter a valid call sign."));
@@ -521,7 +539,7 @@ CRQ_IntroPage::validate() {
 		}
 		ok = (ok && havealpha && havenumeric);
 	}
-	Parent()->dxcc = (int)(tc_dxcc->GetClientData(tc_dxcc->GetSelection()));
+	Parent()->dxcc = (long)(tc_dxcc->GetClientData(tc_dxcc->GetSelection()));
 	if (Parent()->dxcc < 0) {
 		msg = wxT("You must select a DXCC entity.");
 		ok = false;
@@ -630,6 +648,8 @@ cleanString(wxString &str) {
 
 const char *
 CRQ_NamePage::validate() {
+	if (!initialized)
+		return 0;
 	Parent()->name = tc_name->GetValue();
 	Parent()->addr1 = tc_addr1->GetValue();
 	Parent()->city = tc_city->GetValue();
@@ -687,6 +707,8 @@ CRQ_NamePage::TransferDataFromWindow() {
 const char *
 CRQ_EmailPage::validate() {
 	const char *errmsg = 0;
+	if (!initialized)
+		return 0;
 	Parent()->email = tc_email->GetValue();
 	cleanString(Parent()->email);
 	int i = Parent()->email.First('@');
@@ -711,6 +733,8 @@ CRQ_EmailPage::TransferDataFromWindow() {
 const char *
 CRQ_PasswordPage::validate() {
 	const char *errmsg = 0;
+	if (!initialized)
+		return 0;
 	wxString pw1 = tc_pw1->GetValue();
 	wxString pw2 = tc_pw2->GetValue();
 
@@ -732,6 +756,8 @@ const char *
 CRQ_SignPage::validate() {
 	const char *errmsg = 0;
 
+	if (!initialized)
+		return 0;
 	if (choice->GetSelection() == 1) {
 		CertTreeItemData *data = (CertTreeItemData *)cert_tree->GetItemData(cert_tree->GetSelection());
 		if (!data)
