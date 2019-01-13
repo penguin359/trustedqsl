@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: tqslvalidator.h,v 1.1 2002/12/19 19:07:25 jbloom Exp $
+    revision             : $Id: tqslvalidator.h,v 1.4 2005/02/18 16:38:59 ke3z Exp $
  ***************************************************************************/
 
 #ifdef HAVE_CONFIG_H
@@ -55,7 +55,7 @@ protected:
 
 class TQSLDateValidator : public TQSLValidator {
 public:
-	TQSLDateValidator(tQSL_Date *date) : TQSLValidator(date) { _type = "Date"; }
+	TQSLDateValidator(tQSL_Date *date) : TQSLValidator(date) { _type = wxT("Date"); }
 	TQSLDateValidator(const TQSLDateValidator& val) : TQSLValidator(val) {}
 	virtual ~TQSLDateValidator() {}
 	virtual wxObject *Clone() const { return new TQSLDateValidator(*this); }
@@ -66,7 +66,7 @@ public:
 
 class TQSLTimeValidator : public TQSLValidator {
 public:
-	TQSLTimeValidator(tQSL_Time *time) : TQSLValidator(time) { _type = "Time"; }
+	TQSLTimeValidator(tQSL_Time *time) : TQSLValidator(time) { _type = wxT("Time"); }
 	TQSLTimeValidator(const TQSLTimeValidator& val) : TQSLValidator(val) {}
 	virtual ~TQSLTimeValidator() {}
 	virtual wxObject *Clone() const { return new TQSLTimeValidator(*this); }

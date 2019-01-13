@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: crqwiz.h,v 1.9 2003/08/11 14:20:13 jbloom Exp $
+    revision             : $Id: crqwiz.h,v 1.3 2005/02/18 16:38:58 ke3z Exp $
  ***************************************************************************/
 
 #ifndef __crqwiz_h
@@ -44,7 +44,7 @@ class CRQ_Page;
 class CRQWiz : public ExtWizard {
 public:
 	CRQWiz(TQSL_CERT_REQ *crq, 	tQSL_Cert cert, wxWindow* parent, wxHtmlHelpController *help = 0,
-		const wxString& title = "Generate Certificate Request");
+		const wxString& title = wxT("Generate Certificate Request"));
 	CRQ_Page *GetCurrentPage() { return (CRQ_Page *)wxWizard::GetCurrentPage(); }
 	bool RunWizard();
 	// ProviderPage data

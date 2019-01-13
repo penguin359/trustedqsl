@@ -5,7 +5,7 @@
     copyright            : (C) 2003 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: wxutil.h,v 1.1 2003/08/14 18:32:02 jbloom Exp $
+    revision             : $Id: wxutil.h,v 1.2 2005/02/18 16:38:59 ke3z Exp $
  ***************************************************************************/
 
 #ifndef __wxutil_h
@@ -24,6 +24,16 @@
 
 #ifndef WX_PRECOMP
 	#include "wx/wx.h"
+#endif
+
+#if wxCHECK_VERSION(2, 5, 0)
+	#define TQ_WXCLOSEEVENT wxCloseEvent
+	#define TQ_WXTEXTEVENT wxCommandEvent
+	#define TQ_WXCOOKIE wxTreeItemIdValue
+#else
+	#define TQ_WXCLOSEEVENT wxCommandEvent
+	#define TQ_WXTEXTEVENT wxEvent
+	#define TQ_WXCOOKIE long
 #endif
 
 wxSize getTextSize(wxWindow *win);

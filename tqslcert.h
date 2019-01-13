@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: tqslcert.h,v 1.15 2003/08/16 13:26:43 jbloom Exp $
+    revision             : $Id: tqslcert.h,v 1.4 2005/02/18 16:38:58 ke3z Exp $
  ***************************************************************************/
 
 #ifndef __tqslcert_h
@@ -63,7 +63,7 @@ public:
 	void OnPreferences(wxCommandEvent& event);
 	void OnHelpContents(wxCommandEvent& event);
 	void OnHelpAbout(wxCommandEvent& event);
-	void DisplayHelp(const char *file = "main.htm") { help.Display(file); }
+	void DisplayHelp(const char *file = "main.htm") { help.Display(wxString(file, wxConvLocal)); }
 
 	CertTree *cert_tree;
 private:

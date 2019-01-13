@@ -5,7 +5,7 @@
     copyright            : (C) 2003 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: loadcertwiz.h,v 1.4 2003/08/11 14:20:13 jbloom Exp $
+    revision             : $Id: loadcertwiz.h,v 1.3 2005/02/18 20:28:30 ke3z Exp $
  ***************************************************************************/
 
 #ifdef HAVE_CONFIG_H

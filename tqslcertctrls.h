@@ -5,7 +5,7 @@
     copyright            : (C) 2002 by ARRL
     author               : Jon Bloom
     email                : jbloom@arrl.org
-    revision             : $Id: tqslcertctrls.h,v 1.9 2003/08/09 13:40:18 jbloom Exp $
+    revision             : $Id: tqslcertctrls.h,v 1.3 2005/02/19 12:31:00 ke3z Exp $
  ***************************************************************************/
 
 #ifndef __tqslcertctrls_h
