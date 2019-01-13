@@ -1,5 +1,5 @@
 /***************************************************************************
-                          tqslcert_prefs.cpp  -  description
+                          tqsl_prefs.cpp  -  description
                              -------------------
     begin                : Mon Jul 1 2002
     copyright            : (C) 2002 by ARRL
@@ -15,7 +15,10 @@
 #include "wx/statbox.h"
 #include "wx/config.h"
 #include "tqsllib.h"
+#include "tqsltrace.h"
+#include "tqslapp.h"
 
+#include <stdlib.h>
 #include <iostream>
 #include <utility>
 
@@ -27,18 +30,22 @@ using namespace std;
   #define HEIGHT_ADJ(x) ((x)*3/2)
 #endif
 
-BEGIN_EVENT_TABLE(Preferences, wxDialog)
+BEGIN_EVENT_TABLE(Preferences, wxFrame)
 	EVT_BUTTON(ID_OK_BUT, Preferences::OnOK)
 	EVT_BUTTON(ID_CAN_BUT, Preferences::OnCancel)
 	EVT_BUTTON(ID_HELP_BUT, Preferences::OnHelp)
+	EVT_MENU(wxID_EXIT, Preferences::OnOK)
+	EVT_CLOSE(Preferences::OnClose)
 END_EVENT_TABLE()
 
 Preferences::Preferences(wxWindow *parent, wxHtmlHelpController *help)
-	: wxDialog(parent, -1, wxString(wxT("Preferences"))), _help(help) {
+	: wxFrame(parent, -1, wxString(wxT("Preferences"))), _help(help) {
+	tqslTrace("Preferences::Preferences", "parent=0x%lx", (void *)parent);
 	wxBoxSizer *topsizer = new wxBoxSizer(wxVERTICAL);
 
 	notebook = new wxNotebook(this, -1);
-	topsizer->Add(notebook, 1, wxGROW);
+//	topsizer->Add(notebook, 1, wxGROW);
+	topsizer->Add(notebook, 1, wxEXPAND | wxLEFT | wxRIGHT, 20);
 	fileprefs = new FilePrefs(notebook);
 
 	wxBoxSizer *butsizer = new wxBoxSizer(wxHORIZONTAL);
@@ -62,9 +69,23 @@ Preferences::Preferences(wxWindow *parent, wxHtmlHelpController *help)
 	contestmap = new ContestMap(notebook);
 	notebook->AddPage(contestmap, wxT("Cabrillo Specs"));
 
+	proxyPrefs=new ProxyPrefs(notebook);
+	notebook->AddPage(proxyPrefs, wxT("Network Proxy"));
 	//don't let the user play with these
-	//onlinePrefs=new OnlinePrefs(notebook);
-	//notebook->AddPage(onlinePrefs, wxT("Server Setup"));
+#if defined(ENABLE_ONLINE_PREFS)
+	onlinePrefs=new OnlinePrefs(notebook);
+	notebook->AddPage(onlinePrefs, wxT("Server Setup"));
+#endif
+
+#ifdef __WXMAC__
+	// You can't have a toplevel window without a menubar.
+	wxMenu *file_menu = new wxMenu;
+	file_menu->Append(wxID_EXIT, wxT("Close"));
+	// Main menu
+	wxMenuBar *menu_bar = new wxMenuBar;
+	menu_bar->Append(file_menu, wxT("&File"));
+	SetMenuBar(menu_bar);
+#endif
 
 	SetSizer(topsizer);
 	topsizer->Fit(this);
@@ -74,12 +95,35 @@ Preferences::Preferences(wxWindow *parent, wxHtmlHelpController *help)
 }
 
 void Preferences::OnOK(wxCommandEvent& WXUNUSED(event)) {
-	if (!fileprefs->TransferDataFromWindow() /* || !onlinePrefs->TransferDataFromWindow()*/)
+	tqslTrace("Preferences::OnOK");
+#if defined(ENABLE_ONLINE_PREFS)
+	if (!onlinePrefs->TransferDataFromWindow())
 		return;
-	Close(true);
+#endif
+	if (!proxyPrefs->TransferDataFromWindow())
+		return;
+	if (!fileprefs->TransferDataFromWindow())
+		return;
+	((MyFrame *) GetParent())->file_menu->Enable(tm_f_preferences, true);
+	Destroy();
+}
+
+void Preferences::OnCancel(wxCommandEvent& WXUNUSED(event)) {
+	tqslTrace("Preferences::OnOK");
+	
+	((MyFrame *) GetParent())->file_menu->Enable(tm_f_preferences, true);
+	Destroy();
+}
+
+void Preferences::OnClose(wxCloseEvent& WXUNUSED(event)) {
+	tqslTrace("Preferences::OnClose");
+	
+	((MyFrame *) GetParent())->file_menu->Enable(tm_f_preferences, true);
+	Destroy();
 }
 
 void Preferences::OnHelp(wxCommandEvent& WXUNUSED(event)) {
+	tqslTrace("Preferences::OnHelp");
 	if (_help) {
 		wxString file(wxT("pref.htm"));
 		int idx = notebook->GetSelection();
@@ -97,6 +141,7 @@ END_EVENT_TABLE()
 #define MODE_TEXT_WIDTH 15
 
 ModeMap::ModeMap(wxWindow *parent) : PrefsPanel(parent, wxT("pref-adi.htm")) {
+	tqslTrace("ModeMap::ModeMap", "parent=0x%lx", (void *)parent);
 	SetAutoLayout(true);
 
 	wxClientDC dc(this);
@@ -128,6 +173,7 @@ ModeMap::ModeMap(wxWindow *parent) : PrefsPanel(parent, wxT("pref-adi.htm")) {
 }
 
 void ModeMap::SetModeList() {
+	tqslTrace("ModeMap::SetModeList");
 	wxConfig *config = (wxConfig *)wxConfig::Get();
 	wxString key, value;
 	long cookie;
@@ -143,7 +189,7 @@ void ModeMap::SetModeList() {
 	}
 	config->SetPath(wxT("/"));
 	for (ModeSet::iterator it = modemap.begin(); it != modemap.end(); it++) {
-		map->Append(it->first + wxT(" -> ") + it->second, (void*)it->first.c_str()); //char_str on >=2.9
+		map->Append(it->first + wxT(" -> ") + it->second, (void *) &it->first);
 	}
 	if (map->GetCount() > 0)
 		map->SetSelection(0);
@@ -151,13 +197,14 @@ void ModeMap::SetModeList() {
 }
 
 void ModeMap::OnDelete(wxCommandEvent &) {
+	tqslTrace("ModeMap::OnDelete");
 	int sel = map->GetSelection();
 	if (sel >= 0) {
-		const char *keystr = (const char *)map->GetClientData(sel);
-		if (keystr) {
+		wxString* keystr = (wxString*) map->GetClientData(sel);
+		if (!keystr->IsEmpty()) {
 			wxConfig *config = (wxConfig *)wxConfig::Get();
 			config->SetPath(wxT("/modeMap"));
-			config->DeleteEntry(wxString(keystr, wxConvLocal), true);
+			config->DeleteEntry(*keystr, true);
 			config->Flush(false);
 			SetModeList();
 		}
@@ -165,6 +212,7 @@ void ModeMap::OnDelete(wxCommandEvent &) {
 }
 
 void ModeMap::OnAdd(wxCommandEvent &) {
+	tqslTrace("ModeMap::OnAdd");
 	AddMode add_dial(this);
 	int val = add_dial.ShowModal();
 	if (val == ID_OK_BUT && add_dial.key != wxT("") && add_dial.value != wxT("")) {
@@ -177,6 +225,7 @@ void ModeMap::OnAdd(wxCommandEvent &) {
 }
 
 bool ModeMap::TransferDataFromWindow() {
+	tqslTrace("ModeMap::TransferDataFromWindow");
 	return true;
 }
 
@@ -186,6 +235,7 @@ BEGIN_EVENT_TABLE(AddMode, wxDialog)
 END_EVENT_TABLE()
 
 AddMode::AddMode(wxWindow *parent) : wxDialog(parent, -1, wxString(wxT("Add ADIF mode"))) {
+	tqslTrace("AddMode::AddMode", "parent=0x%lx", (void *)parent);
 	SetAutoLayout(true);
 
 	wxClientDC dc(this);
@@ -237,6 +287,8 @@ AddMode::AddMode(wxWindow *parent) : wxDialog(parent, -1, wxString(wxT("Add ADIF
 }
 
 void AddMode::OnOK(wxCommandEvent& WXUNUSED(event)) {
+	tqslTrace("AddMode::OnOK");
+	if (!TransferDataFromWindow()) return;
 	key = adif->GetValue().Trim(true).Trim(false).MakeUpper();
 	int sel = modelist->GetSelection();
 	if (sel >= 0)
@@ -244,9 +296,26 @@ void AddMode::OnOK(wxCommandEvent& WXUNUSED(event)) {
 	EndModal(ID_OK_BUT);
 }
 
+bool AddMode::TransferDataFromWindow() {
+	tqslTrace("AddMode::TransferDataFromWindow");
+	key = adif->GetValue().Trim(true).Trim(false).MakeUpper();
+	if (key.IsEmpty()) return true;
+	if (modelist->FindString(key) != wxNOT_FOUND) {	// This duplicates an existing mode
+		wxMessageBox(wxString::Format(wxT("This mode definition conflicts with a standard mode definition for %s"),
+				key.c_str()), wxT("Mode Conflict"), wxOK, this);
+		return false;
+	}
+	return true;
+}
+
 #define FILE_TEXT_WIDTH 30
 
+BEGIN_EVENT_TABLE(FilePrefs, PrefsPanel)
+	EVT_CHECKBOX(ID_PREF_FILE_AUTO_BACKUP, FilePrefs::OnShowHide)
+END_EVENT_TABLE()
+
 FilePrefs::FilePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm")) {
+	tqslTrace("FilePrefs::FilePrefs", "parent=0x%lx", (void *)parent);
 	wxConfig *config = (wxConfig *)wxConfig::Get();
 	SetAutoLayout(true);
 
@@ -265,6 +334,19 @@ FilePrefs::FilePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm"))
 	adif = new wxTextCtrl(this, ID_PREF_FILE_ADIF, adi, wxPoint(0, 0),
 		wxSize(char_width, HEIGHT_ADJ(char_height)));
 	sizer->Add(adif, 0, wxLEFT|wxRIGHT, 10);
+	bool ab;
+	config->Read(wxT("AutoBackup"), &ab, DEFAULT_AUTO_BACKUP);
+	autobackup = new wxCheckBox(this, ID_PREF_FILE_AUTO_BACKUP, wxT("Allow automatic configuration backup"));
+	autobackup->SetValue(ab);
+	sizer->Add(autobackup, 0, wxLEFT|wxRIGHT|wxTOP, 10);
+
+	sizer->Add(new wxStaticText(this, -1, wxT("Backup File Folder:")), 0, wxTOP|wxLEFT|wxRIGHT, 10);
+	wxString bdir = config->Read(wxT("BackupFolder"), wxString(tQSL_BaseDir, wxConvLocal));
+	dirPick = new wxDirPickerCtrl(this, ID_PREF_FILE_BACKUP, bdir, wxT("Select a Folder"), wxDefaultPosition,
+		wxSize(char_width, HEIGHT_ADJ(char_height)), wxDIRP_USE_TEXTCTRL);
+	dirPick->Enable(ab);
+	sizer->Add(dirPick, 0, wxEXPAND|wxLEFT|wxRIGHT, 10);
+
 	badcalls = new wxCheckBox(this, ID_PREF_FILE_BADCALLS, wxT("Allow nonamateur call signs"));
 	bool allow = false;
 	config->Read(wxT("BadCalls"), &allow);
@@ -278,6 +360,11 @@ FilePrefs::FilePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm"))
 	SetSizer(sizer);
 	sizer->Fit(this);
 	sizer->SetSizeHints(this);
+}
+
+void
+FilePrefs::ShowHide () {
+	dirPick->Enable(autobackup->GetValue());
 }
 
 static wxString
@@ -298,20 +385,25 @@ fix_ext_str(const wxString& oldexts) {
 }
 
 bool FilePrefs::TransferDataFromWindow() {
+	tqslTrace("FilePrefs::TransferDataFromWindow");
 	wxConfig *config = (wxConfig *)wxConfig::Get();
 	config->SetPath(wxT("/"));
 	config->Write(wxT("CabrilloFiles"), fix_ext_str(cabrillo->GetValue()));
 	config->Write(wxT("ADIFFiles"), fix_ext_str(adif->GetValue()));
 	config->Write(wxT("BadCalls"), badcalls->GetValue());
 	config->Write(wxT("DateRange"), daterange->GetValue());
+	config->Write(wxT("AutoBackup"), autobackup->GetValue());
+	config->Write(wxT("BackupFolder"), dirPick->GetPath());
 	return true;
 }
 
+#if defined(ENABLE_ONLINE_PREFS)
 BEGIN_EVENT_TABLE(OnlinePrefs, PrefsPanel)
 	EVT_CHECKBOX(ID_PREF_ONLINE_DEFAULT, OnlinePrefs::OnShowHide)
 END_EVENT_TABLE()
 
 OnlinePrefs::OnlinePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm")) {
+	tqslTrace("OnlinePrefs::OnlinePrefs", "parent=0x%lx", (void *)parent);
 	wxConfig *config = (wxConfig *)wxConfig::Get();
 	config->SetPath(wxT("/LogUpload"));
 	SetAutoLayout(true);
@@ -325,7 +417,11 @@ OnlinePrefs::OnlinePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.ht
 	wxString uplStatusRE = config->Read(wxT("StatusRegex"), DEFAULT_UPL_STATUSRE);
 	wxString uplStatOK = config->Read(wxT("StatusSuccess"), DEFAULT_UPL_STATUSOK);
 	wxString uplMsgRE = config->Read(wxT("MessageRegex"), DEFAULT_UPL_MESSAGERE);
-	bool uplVerifyCA=config->Read(wxT("VerifyCA"), DEFAULT_UPL_VERIFYCA);
+	wxString cfgUpdURL = config->Read(wxT("ConfigFileVerURL"), DEFAULT_UPD_CONFIG_URL);
+	wxString cfgFileUpdURL = config->Read(wxT("NewConfigURL"), DEFAULT_CONFIG_FILE_URL);
+
+	bool uplVerifyCA;
+	config->Read(wxT("VerifyCA"), &uplVerifyCA, DEFAULT_UPL_VERIFYCA);
 
 	defaults=(
 		(uplURL==DEFAULT_UPL_URL) &&
@@ -333,7 +429,9 @@ OnlinePrefs::OnlinePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.ht
 		(uplStatusRE==DEFAULT_UPL_STATUSRE) &&
 		(uplStatOK==DEFAULT_UPL_STATUSOK) &&
 		(uplMsgRE==DEFAULT_UPL_MESSAGERE) &&
-		(uplVerifyCA==DEFAULT_UPL_VERIFYCA));
+		(uplVerifyCA==DEFAULT_UPL_VERIFYCA) &&
+		(cfgUpdURL==DEFAULT_UPD_CONFIG_URL) &&
+		(cfgFileUpdURL==DEFAULT_CONFIG_FILE_URL));
 
 
 
@@ -371,12 +469,21 @@ OnlinePrefs::OnlinePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.ht
 		wxSize(char_width, HEIGHT_ADJ(char_height)));
 	sizer->Add(messageRegex, 0, wxLEFT|wxRIGHT, 10);
 
+	sizer->Add(new wxStaticText(this, -1, wxT("Config File Version URL:")), 0, wxTOP|wxLEFT|wxRIGHT|wxRESERVE_SPACE_EVEN_IF_HIDDEN, 10);
+	updConfigURL = new wxTextCtrl(this, ID_PREF_ONLINE_UPD_CONFIGURL, cfgUpdURL, wxPoint(0, 0),
+		wxSize(char_width, HEIGHT_ADJ(char_height)));
+	sizer->Add(updConfigURL, 0, wxLEFT|wxRIGHT, 10);
+
+	sizer->Add(new wxStaticText(this, -1, wxT("New Config File URL:")), 0, wxTOP|wxLEFT|wxRIGHT|wxRESERVE_SPACE_EVEN_IF_HIDDEN, 10);
+	configFileURL = new wxTextCtrl(this, ID_PREF_ONLINE_UPD_CONFIGFILE, cfgFileUpdURL, wxPoint(0, 0),
+		wxSize(char_width, HEIGHT_ADJ(char_height)));
+	sizer->Add(configFileURL, 0, wxLEFT|wxRIGHT, 10);
+
 	verifyCA = new wxCheckBox(this, ID_PREF_ONLINE_VERIFYCA, wxT("Verify server certificate"));
 	verifyCA->SetValue(uplVerifyCA);
 	sizer->Add(verifyCA, 0, wxLEFT|wxRIGHT|wxTOP|wxRESERVE_SPACE_EVEN_IF_HIDDEN, 10);
 
 	config->SetPath(wxT("/"));
-	
 	
 
 	SetSizer(sizer);
@@ -387,17 +494,19 @@ OnlinePrefs::OnlinePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.ht
 }
 
 void OnlinePrefs::ShowHide() {
+	tqslTrace("OnlinePrefs::ShowHide");
 	defaults=useDefaults->GetValue();
-	for (int i=1; i<12; i++) GetSizer()->Show(i, !defaults); //12 items in sizer; hide all but checkbox
+	for (int i=1; i<16; i++) GetSizer()->Show(i, !defaults); //16 items in sizer; hide all but checkbox
 
 	Layout();
   //wxNotebook caches best size
 	GetParent()->InvalidateBestSize();
-  GetParent()->Fit();
+	GetParent()->Fit();
 	GetGrandParent()->Fit();
 }
 
 bool OnlinePrefs::TransferDataFromWindow() {
+	tqslTrace("OnlinePrefs::TransferDataFromWindow");
 	wxConfig *config = (wxConfig *)wxConfig::Get();
 
 	if (defaults) {
@@ -410,10 +519,113 @@ bool OnlinePrefs::TransferDataFromWindow() {
 		config->Write(wxT("StatusSuccess"), statusSuccess->GetValue());
 		config->Write(wxT("MessageRegex"), messageRegex->GetValue());
 		config->Write(wxT("VerifyCA"), verifyCA->GetValue());
+		config->Write(wxT("ConfigFileVerURL"), updConfigURL->GetValue());
+		config->Write(wxT("NewCOnfigURL"), updConfigURL->GetValue());
 		config->SetPath(wxT("/"));
 	}
 
 	return true;
+}
+#endif // ENABLE_ONLINE_PREFS
+
+BEGIN_EVENT_TABLE(ProxyPrefs, PrefsPanel)
+	EVT_CHECKBOX(ID_PREF_PROXY_ENABLED, ProxyPrefs::OnShowHide)
+END_EVENT_TABLE()
+
+ProxyPrefs::ProxyPrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm")) {
+	tqslTrace("ProxyPrefs::ProxyPrefs", "parent=0x%lx", (void *)parent);
+	wxConfig *config = (wxConfig *)wxConfig::Get();
+	config->SetPath(wxT("/Proxy"));
+	SetAutoLayout(true);
+
+	wxArrayString ptypes;
+	ptypes.Add(wxT("HTTP"));
+	ptypes.Add(wxT("Socks4"));
+	ptypes.Add(wxT("Socks5"));
+
+	wxClientDC dc(this);
+	wxCoord char_width, char_height;
+	dc.GetTextExtent(wxString(wxT('M'), FILE_TEXT_WIDTH), &char_width, &char_height);
+	
+	config->Read(wxT("proxyEnabled"), &enabled, false);
+	wxString pHost = config->Read(wxT("proxyHost"));
+	wxString pPort = config->Read(wxT("proxyPort"));
+	wxString pType = config->Read(wxT("proxyType"));
+
+	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
+
+	sizer->Add(new wxStaticText(this, -1, wxT("\nUse these settings to configure a network proxy\n")
+					      wxT("for Internet uploads and downloads. You should only\n")
+					      wxT("enable a proxy if directed by your network administrator.\n")
+					      wxT("Incorrect settings can cause TQSL to be unable to upload\n")
+					      wxT("logs or check for updates.\n")));
+
+	proxyEnabled =new wxCheckBox(this, ID_PREF_PROXY_ENABLED, wxT("Enable a Network Proxy"));
+	proxyEnabled->SetValue(enabled);
+	sizer->Add(proxyEnabled, 0, wxTop|wxCENTER|wxRIGHT, 10);
+
+	sizer->Add(new wxStaticText(this, -1, wxT("Proxy Address:")), 0, wxTOP|wxLEFT|wxRIGHT, 10);
+	
+	proxyHost = new wxTextCtrl(this, ID_PREF_PROXY_HOST, pHost, wxPoint(0, 0),
+		wxSize(char_width, HEIGHT_ADJ(char_height)));
+	sizer->Add(proxyHost, 0, wxLEFT|wxRIGHT, 10);
+	proxyHost->Enable(enabled);
+
+	wxBoxSizer *hsizer = new wxBoxSizer(wxHORIZONTAL);
+	hsizer->Add(new wxStaticText(this, -1, wxT("Port Number:")), 0, wxTOP|wxALIGN_LEFT, 4);
+	
+	proxyPort = new wxTextCtrl(this, ID_PREF_PROXY_PORT, pPort, wxPoint(0, 0),
+		wxSize(char_width/6, HEIGHT_ADJ(char_height)));
+	hsizer->Add(proxyPort, 0, wxLEFT|wxRIGHT|wxALIGN_BOTTOM, 0);
+	proxyPort->Enable(enabled);
+
+	hsizer->Add(new wxStaticText(this, -1, wxT("    Proxy Type:")), 0, wxTOP|wxALIGN_LEFT, 4);
+	
+	proxyType = new wxChoice(this, ID_PREF_PROXY_TYPE, wxPoint(0, 0),
+		wxSize(char_width/4, HEIGHT_ADJ(char_height)), ptypes, 0, wxDefaultValidator, wxT("ProxyType"));
+	hsizer->Add(proxyType, 0, wxALIGN_BOTTOM, 0);
+	proxyType->Enable(enabled);
+	proxyType->SetStringSelection(pType);
+	sizer->Add(hsizer, 0, wxALL|wxALIGN_LEFT, 10);
+
+	config->SetPath(wxT("/"));
+
+	SetSizer(sizer);
+
+	sizer->Fit(this);
+	sizer->SetSizeHints(this);
+	ShowHide();
+}
+
+void ProxyPrefs::ShowHide() {
+	tqslTrace("ProxyPrefs::ShowHide");
+
+	enabled=proxyEnabled->GetValue();
+	proxyHost->Enable(enabled);
+	proxyPort->Enable(enabled);
+	proxyType->Enable(enabled);
+	for (int i=2; i<5; i++) GetSizer()->Show(i, enabled); // 5 items in sizer; hide all but warning and checkbox
+
+	Layout();
+  //wxNotebook caches best size
+	GetParent()->InvalidateBestSize();
+	GetParent()->Fit();
+	GetGrandParent()->Fit();
+}
+
+bool ProxyPrefs::TransferDataFromWindow() {
+	tqslTrace("ProxyPrefs::TransferDataFromWindow");
+	wxConfig *config = (wxConfig *)wxConfig::Get();
+
+	config->SetPath(wxT("/Proxy"));
+	config->Write(wxT("ProxyEnabled"), enabled);
+	config->Write(wxT("ProxyHost"), proxyHost->GetValue());
+	config->Write(wxT("ProxyPort"), proxyPort->GetValue());
+	config->Write(wxT("ProxyType"), proxyType->GetStringSelection());
+	config->SetPath(wxT("/"));
+
+	return true;
+
 }
 
 BEGIN_EVENT_TABLE(ContestMap, PrefsPanel)
@@ -423,6 +635,7 @@ BEGIN_EVENT_TABLE(ContestMap, PrefsPanel)
 END_EVENT_TABLE()
 
 ContestMap::ContestMap(wxWindow *parent) : PrefsPanel(parent, wxT("pref-cab.htm")) {
+	tqslTrace("ContestMap::ContestMap", "parent=0x%lx", parent);
 	SetAutoLayout(true);
 
 	wxClientDC dc(this);
@@ -442,7 +655,7 @@ ContestMap::ContestMap(wxWindow *parent) : PrefsPanel(parent, wxT("pref-cab.htm"
 	grid->SetLabelSize(wxVERTICAL, 0);
 	grid->SetColumnWidth(0, char_width*15);
 	grid->SetColumnWidth(1, char_width*4);
-	grid->SetColumnWidth(2, char_width*3);
+	grid->SetColumnWidth(2, char_width*5);
 	grid->SetLabelValue(wxHORIZONTAL, wxT("CONTEST"), 0);
 	grid->SetLabelValue(wxHORIZONTAL, wxT("Type"), 1);
 	grid->SetLabelValue(wxHORIZONTAL, wxT("Field"), 2);
@@ -477,6 +690,7 @@ void ContestMap::Buttons() {
 }
 
 void ContestMap::SetContestList() {
+	tqslTrace("ContestMap::SetContestList");
 	wxConfig *config = (wxConfig *)wxConfig::Get();
 	wxString key, value;
 	long cookie;
@@ -489,8 +703,8 @@ void ContestMap::SetContestList() {
 	bool stat = config->GetFirstEntry(key, cookie);
 	while (stat) {
 		value = config->Read(key, wxT(""));
-		int contest_type = atoi(value.mb_str());
-		int fieldnum = atoi(value.AfterFirst(wxT(';')).mb_str());
+		int contest_type = strtol(value.mb_str(), NULL, 10);
+		int fieldnum = strtol(value.AfterFirst(wxT(';')).mb_str(), NULL, 10);
 		contestmap.insert(make_pair(key, make_pair(contest_type, fieldnum)));
 		stat = config->GetNextEntry(key, cookie);
 	}
@@ -512,10 +726,12 @@ void ContestMap::SetContestList() {
 }
 
 bool ContestMap::TransferDataFromWindow() {
+	tqslTrace("ContestMap::TransferDataFromWindow");
 	return true;
 }
 
 void ContestMap::OnDelete(wxCommandEvent &) {
+	tqslTrace("ContestMap::OnDelete");
 	int row = grid->GetCursorRow();
 	if (row >= 0) {
 		wxString contest = grid->GetCellValue(row, 0);
@@ -530,7 +746,8 @@ void ContestMap::OnDelete(wxCommandEvent &) {
 }
 
 void ContestMap::OnAdd(wxCommandEvent &) {
-	EditContest dial(this, wxT("Add"));
+	tqslTrace("ContestMap::OnAdd");
+	EditContest dial(this, wxT("Add"), wxT(""), 0, TQSL_DEF_CABRILLO_MAP_FIELD);
 	if (dial.ShowModal() == ID_OK_BUT) {
 		wxConfig *config = (wxConfig *)wxConfig::Get();
 		config->SetPath(wxT("/cabrilloMap"));
@@ -541,8 +758,9 @@ void ContestMap::OnAdd(wxCommandEvent &) {
 }
 
 void ContestMap::OnEdit(wxCommandEvent &) {
+	tqslTrace("ContestMap::OnEdit");
 	wxString contest;
-	int contest_type = 0, callsign_field = TQSL_MIN_CABRILLO_MAP_FIELD;
+	int contest_type = 0, callsign_field = TQSL_DEF_CABRILLO_MAP_FIELD;
 	int row = grid->GetCursorRow();
 	if (row >= 0) {
 		contest = grid->GetCellValue(row, 0);
@@ -551,8 +769,8 @@ void ContestMap::OnEdit(wxCommandEvent &) {
 			config->SetPath(wxT("/cabrilloMap"));
 			wxString val;
 			if (config->Read(contest, &val)) {
-				contest_type = atoi(val.mb_str());
-				callsign_field = atoi(val.AfterFirst(wxT(';')).mb_str());
+				contest_type = strtol(val.mb_str(), NULL, 10);
+				callsign_field = strtol(val.AfterFirst(wxT(';')).mb_str(), NULL, 10);
 			}
 			config->SetPath(wxT("/"));
 		}
@@ -582,6 +800,7 @@ EditContest::EditContest(wxWindow *parent, wxString ctype, wxString _contest,
 		int _contest_type, int _callsign_field)
 		: wxDialog(parent, -1, ctype + wxT(" Contest")), contest(_contest),
 		contest_type(_contest_type), callsign_field(_callsign_field) {
+	tqslTrace("EditContest::EditContest", "parent=0x%lx, ctype=%s, _contest=%s, _contest_type=%d, _callsign_field=%d", (void *)parent, _S(ctype), _S(_contest), _contest_type, _callsign_field);
 	SetAutoLayout(true);
 
 	wxClientDC dc(this);
@@ -624,11 +843,13 @@ EditContest::EditContest(wxWindow *parent, wxString ctype, wxString _contest,
 }
 
 void EditContest::OnOK(wxCommandEvent& WXUNUSED(event)) {
+	tqslTrace("EditContest::OnOK");
 	if (TransferDataFromWindow())
 		EndModal(ID_OK_BUT);
 }
 
 bool EditContest::TransferDataFromWindow() {
+	tqslTrace("EditContest::TransferDataFromWindow");
 	contest = name->GetValue();
 	contest.Trim(false);
 	contest.Trim(true);
@@ -638,7 +859,7 @@ bool EditContest::TransferDataFromWindow() {
 		return false;
 	}
 	contest_type = type->GetSelection();
-	callsign_field = atoi(fieldnum->GetValue().mb_str());
+	callsign_field = strtol(fieldnum->GetValue().mb_str(), NULL, 10);
 	if (callsign_field < TQSL_MIN_CABRILLO_MAP_FIELD) {
 		wxMessageBox(wxString::Format(wxT("Call-worked field must be %d or greater"), TQSL_MIN_CABRILLO_MAP_FIELD),
 			wxT("Error"), wxOK, this);
@@ -646,4 +867,3 @@ bool EditContest::TransferDataFromWindow() {
 	}
 	return true;
 }
-

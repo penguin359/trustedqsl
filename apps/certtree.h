@@ -50,9 +50,12 @@ public:
 	bool useContextMenu;
 	CertTreeItemData *GetItemData(wxTreeItemId id) { return (CertTreeItemData *)wxTreeCtrl::GetItemData(id); }
 	int GetNumCerts() const { return _ncerts; }
+	int GetNumIssuers() const { return _nissuers; }
+	void SelectCert(tQSL_Cert cert);
 
 private:
 	int _ncerts;
+	int _nissuers;
 	DECLARE_EVENT_TABLE()
 
 };

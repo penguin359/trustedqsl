@@ -18,14 +18,14 @@ separated from the preceding switch by one or more spaces.
 <P>
 A filename not preceded by a switch is assumed to be the name of a log file whose QSOs are to be signed.
 <P>
-After taking the actions specified by command line options, TQSL will enter its menu-driven mode of operation unless the <code>-q</code> or <code>-x</code>
-switch is present, in which case it will terminate.
+After taking the actions specified by command line options, TQSL will enter its menu-driven mode of operation unless one of the <code>-q</code>, <code>-x</code>
+or <code>-n</code> switches are present, in which case it will terminate.
 <P>
 <TABLE BORDER=1 CALLPADDING=3 CELLSPACING=0 valign="top">
 <TR><TD><B>Option</B></TD><TD><B>Description</B></TD></TR>
 
 <TR><TD><code>-a</code></TD>
-<TD>The action to be taken if a duplicate or out-of-date-range QSO is encountered while signing a log file's QSOs:<BR>
+<TD>The action to be taken if a duplicate, out-of-date-range, or invalid QSO is encountered while signing a log file's QSOs:<BR>
 &nbsp;&nbsp;<code>-a ask&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>a dialog will be provided that prompts the user to specify how to proceed<BR>
 &nbsp;&nbsp;<code>-a abort&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code>no QSOs will be signed<BR>
 &nbsp;&nbsp;<code>-a compliant&nbsp;&nbsp;</code>neither duplicate QSO nor out-of-date-range QSOs will be signed; all other QSOs will be signed<BR>
@@ -33,6 +33,8 @@ switch is present, in which case it will terminate.
 If no <code>-a</code> switch is specified and a duplicate or out-of-date-range QSO is encountered while signing QSOs, a dialog will be provided that prompts the user to specify how to proceed.
 </TD></TR>
 
+<TR><TD><code>-b&nbsp;date</code><br /><code>-e&nbsp;date</code></TD>
+<TD>Specifies the beginning <code>(-b)</code>date of QSOs to be signed or the end date <code>(-e)</code> for QSOs to be signed. QSOs before the begin date or after the end date will not be signed. If these are used, <code>-d</code> should also be specified to suppress the <A HREF="daterng.htm">QSO date-range dialog</A>.</TD></TR>
 <TR><TD><code>-d</code></TD>
 <TD>Suppress the date-range dialog; if this switch is present, the <A HREF="daterng.htm">QSO date-range dialog</A> will <i>not</i>
 be displayed before signing a log.</TD></TR>
@@ -40,10 +42,24 @@ be displayed before signing a log.</TD></TR>
 <TR><TD><code>-h</code></TD>
 <TD>Display command line help.</TD></TR>
 
+<TR><TD><code>-i&nbsp;Filename</code></TD>
+<TD>Load a specified <A HREF="files-icons.htm">Callsign Certificate File (.tq6)</A>, a <A HREF="files-icons.htm">Certificate Container File (.p12)</A>, or a <A HREF="configxml.htm">Configuration Data File (Config.tq6)</A> .</TD></TR>
+
 <TR><TD><code>-l&nbsp;Station_Location</code></TD>
 <TD>Select a defined <A HREF="glossary.htm#station_location">Station Location</A> to be used when signing log files. If the specified Station Location contains embedded spaces, it must be 
 quoted in a manner suitable for the operating system and shell that's being used. If the specified Station Location doesn't exist, no QSOs will be signed or uploaded unless <code>-s</code> is also specified. 
 If <code>-l</code> is not present and a log file is being signed, a dialog will be provided that prompts the user to select a Station Location.</TD></TR>
+
+<TR><TD><code>-n</code></TD>
+<TD>Checks for and reports the availablility of <BR>
+<UL>
+<LI>a new version of TQSL</LI>
+<LI>a new version of TQSL's <A HREF="configxml.htm">Configuration Data file</A></LI>
+<LI>expiring <a href="glossary.htm#callsign_certificate">Callsign Certificates</A> </LI>
+<LI>pending <a href="glossary.htm#callsign_certificate">Callsign Certificates</A> </LI>
+</UL>
+TQSL displays the above information (if any) to <b>stderr</b>, then exits without digitally signing any specified filename. This command line option should therefore not be used with any other command line option.
+</TD></TR>
 
 <TR><TD><code>-o&nbsp;Filename</code></TD>
 <TD>Specify the name of the <A HREF="glossary.htm#signed_log_file">digitally signed log file</A> to be created. If the specified Filename contains embedded spaces, it must be 
@@ -61,6 +77,9 @@ and the specified or selected Station Location includes a password-protected Cal
 <TR><TD><code>-s</code></TD>
 <TD>If the <code>-l</code> switch is also present, a dialog will be provided that enables the specified <A HREF="glossary.htm#station_location">Station Location</A> to be edited;
 otherwise, a dialog will be provided that enables a new Station Location to be defined.</TD></TR>
+
+<TR><TD><code>-t&nbsp;Filename</code></TD>
+<TD>Enable <A HREF="diagmode.htm">Diagnostic Mode</A> and specify the name of the log file into which diagnostic information is written.</TD></TR>
 
 <TR><TD><code>-u</code></TD>
 <TD>Instead of saving the <A HREF="glossary.htm#signed_log_file">digitally signed log file</A>, upload it to LoTW over the Internet. After processing, the uploaded file will be shown in LoTW's 
@@ -101,6 +120,11 @@ Add a station location, and then terminate:
 <BR>&nbsp;&nbsp;&nbsp;<CODE>
   tqsl -s -x
 </CODE>
+<P>
+Check for new versions and expiring or pending Callsign Certificates, and then terminate:
+<BR>&nbsp;&nbsp;&nbsp;<CODE>
+  tqsl -n 2>news.txt
+</CODE>
 
 <H5>Status Information</H5>
 
@@ -124,8 +148,8 @@ where
 <TR><TD><code>5</code></TD><TD>TQSLlib error</td></tr>
 <TR><TD><code>6</code></TD><TD>unable to open input file</td></tr>
 <TR><TD><code>7</code></TD><TD>unable to open output file</td></tr>
-<TR><TD><code>8</code></TD><TD>all QSOs were duplicates or out of date range</td></tr>
-<TR><TD><code>9</code></TD><TD>some QSOs were duplicates or out of date range</td></tr>
+<TR><TD><code>8</code></TD><TD>No QSOs were processed since some QSOs were duplicates or out of date range</td></tr>
+<TR><TD><code>9</code></TD><TD>Some QSOs were processed, and some QSOs were ignored because they were duplicates or out of date range</td></tr>
 <TR><TD><code>10</code></TD><TD>command syntax error</td></tr>
 <TR><TD><code>11</code></TD><TD>LoTW Connection error (no network or LoTW is unreachable)</td></tr>
 </table>
@@ -142,6 +166,26 @@ where
 <code>Note: TQSL assumes that this file will be uploaded to LoTW.</code><br>
 <code>Resubmitting these QSOs will cause them to be reported as duplicates.</code><br>
 <code>06:05:56 PM: Final Status: Some QSOs were duplicates or out of date range (9)</code><br>
-
 <p>
+<code>17:21:32 PM: /Signing using Callsign W4TV, DXCC Entity UNITED STATES OF AMERICA</code><br>
+<code>17:21:32 PM: /Warning: Your custom mode map WSPR conflicts with the standard mode definition for WSPR and was deleted.</code><br>
+<code>17:21:32 PM: /Attempting to upload 2 QSOs</code><br>
+<code>17:21:33 PM: /C:\Program Files\LogsAreUs\LotWUpload.ADI: Log uploaded successfully with result "File queued for processing"!</code><br>
+<code>17:21:33 PM: /After reading this message, you may close this program.</code><br>
+<code>17:21:33 PM: /Final Status: Success (0)</code><br>
+<p>
+in response to <code>-n</code><br>
+<code>17:21:32 PM: A new TQSL release (v2.0) is available.</code><br>
+<code>17:21:32 PM: A new TrustedQSL configuration file (V2.4) is available.</code><br>
+<code>17:21:32 PM: The certificate for VE6LB expires in 9 days.</code><br>
+<code>17:21:33 PM: The certificate for VE6LB/A3 expires in 15 days.</code><br>
+<code>17:21:33 PM: A Callsign Certificate for VE6LB/P5 is pending.</code><br>
+
+
+
+
+
+
+
+
 </BODY></HTML>

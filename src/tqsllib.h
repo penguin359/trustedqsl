@@ -22,9 +22,9 @@
 		#define CALLCONVENTION __stdcall
 	#endif
 #else
-	#define DLLEXPORT
-	#define DLLEXPORTDATA
-	#define CALLCONVENTION
+	#define DLLEXPORT	///< Symbol exports - Windows only
+	#define DLLEXPORTDATA	///< Symbol exports - Windows only
+	#define CALLCONVENTION	///< Symbol exports - Windows only
 #endif
 
 #include "adif.h"
@@ -35,100 +35,101 @@
   */
 
 /* Sizes */
-#define TQSL_MAX_PATH_LEN            256
-#define TQSL_PASSWORD_MAX            80
-#define TQSL_NAME_ELEMENT_MAX        256
-#define TQSL_CALLSIGN_MAX            13
-#define TQSL_CRQ_NAME_MAX            60
-#define TQSL_CRQ_ADDR_MAX            80
-#define TQSL_CRQ_CITY_MAX            80
-#define TQSL_CRQ_STATE_MAX           80
-#define TQSL_CRQ_POSTAL_MAX          20
-#define TQSL_CRQ_COUNTRY_MAX         80
-#define TQSL_CRQ_EMAIL_MAX           180
-#define TQSL_BAND_MAX                6
-#define TQSL_MODE_MAX                16
-#define TQSL_FREQ_MAX                20
-#define TQSL_SATNAME_MAX             6
-#define TQSL_PROPMODE_MAX            6
+#define TQSL_MAX_PATH_LEN            256	///< Max length of a FS path
+#define TQSL_PASSWORD_MAX            80		///< Max password length
+#define TQSL_NAME_ELEMENT_MAX        256	///< Max Org name length
+#define TQSL_CALLSIGN_MAX            13		///< Max callsign length
+#define TQSL_CRQ_NAME_MAX            60		///< Max length of request name
+#define TQSL_CRQ_ADDR_MAX            80		///< Max length of request addr
+#define TQSL_CRQ_CITY_MAX            80		///< Max length of request city
+#define TQSL_CRQ_STATE_MAX           80		///< Max length of request state
+#define TQSL_CRQ_POSTAL_MAX          20		///< Max length of request zip
+#define TQSL_CRQ_COUNTRY_MAX         80		///< Max length of req entity
+#define TQSL_CRQ_EMAIL_MAX           180	///< Max length of req email
+#define TQSL_BAND_MAX                6		///< Max length of a band name
+#define TQSL_MODE_MAX                16		///< Max length of a mode name
+#define TQSL_FREQ_MAX                20		///< Max length of a frequency
+#define TQSL_SATNAME_MAX             6		///< Max length of a sat name
+#define TQSL_PROPMODE_MAX            6		///< Max length of a prop mode
 
-#define TQSL_CERT_CB_USER            0
-#define TQSL_CERT_CB_CA              1
-#define TQSL_CERT_CB_ROOT            2
-#define TQSL_CERT_CB_PKEY            3
-#define TQSL_CERT_CB_CONFIG          4
-#define TQSL_CERT_CB_CERT_TYPE(x)    ((x) & 0xf)
-#define TQSL_CERT_CB_MILESTONE       0
-#define TQSL_CERT_CB_RESULT          0x10
-#define TQSL_CERT_CB_CALL_TYPE(x)    ((x) & TQSL_CERT_CB_RESULT)
-#define TQSL_CERT_CB_PROMPT          0
-#define TQSL_CERT_CB_DUPLICATE       0x100
-#define TQSL_CERT_CB_ERROR           0x200
-#define TQSL_CERT_CB_LOADED          0x300
-#define TQSL_CERT_CB_RESULT_TYPE(x)  ((x) & 0x0f00)
+#define TQSL_CERT_CB_USER            0		///< Callback is for user cert
+#define TQSL_CERT_CB_CA              1		///< Callback is for CA cert
+#define TQSL_CERT_CB_ROOT            2		///< Callback is for root cert
+#define TQSL_CERT_CB_PKEY            3		///< Callback is for private key
+#define TQSL_CERT_CB_CONFIG          4		///< Callback for config file
+#define TQSL_CERT_CB_CERT_TYPE(x)    ((x) & 0xf) ///< Type of the cert
+#define TQSL_CERT_CB_MILESTONE       0		///< New certificate
+#define TQSL_CERT_CB_RESULT          0x10	///< Cert import result
+#define TQSL_CERT_CB_CALL_TYPE(x)    ((x) & TQSL_CERT_CB_RESULT) ///< Callback type
+#define TQSL_CERT_CB_PROMPT          0		///< Callback prompt
+#define TQSL_CERT_CB_DUPLICATE       0x100	///< Dupe cert callback
+#define TQSL_CERT_CB_ERROR           0x200	///< Error import callback
+#define TQSL_CERT_CB_LOADED          0x300	///< Cert loaded callback
+#define TQSL_CERT_CB_RESULT_TYPE(x)  ((x) & 0x0f00) ///< Result type mask
 
-typedef void * tQSL_Cert;
-typedef void * tQSL_Location;
+typedef void * tQSL_Cert;		///< Opaque certificate type
+typedef void * tQSL_Location;		///< Opaque location type
+typedef char * tQSL_StationDataEnc;	///< Opaque station data type
 
 /** Struct that holds y-m-d */
 typedef struct {
-	int year;
-	int month;
-	int day;
+	int year;	///< Numeric year
+	int month;	///< Numeric month
+	int day;	///< Numeric day
 } tQSL_Date;
 
 /** Struct that holds h-m-s */
 typedef struct {
-	int hour;
-	int minute;
-	int second;
+	int hour;	///< Time hour field
+	int minute;	///< Time minute field
+	int second;	///< Time seconds field
 } tQSL_Time;
 
 /** Certificate provider data */
 typedef struct tqsl_provider_st {
-	char organizationName[TQSL_NAME_ELEMENT_MAX+1];
-	char organizationalUnitName[TQSL_NAME_ELEMENT_MAX+1];
-	char emailAddress[TQSL_NAME_ELEMENT_MAX+1];
-	char url[TQSL_NAME_ELEMENT_MAX+1];
+	char organizationName[TQSL_NAME_ELEMENT_MAX+1];	///< Provider name
+	char organizationalUnitName[TQSL_NAME_ELEMENT_MAX+1]; ///< Provider unit
+	char emailAddress[TQSL_NAME_ELEMENT_MAX+1];	///< Provider e-mail
+	char url[TQSL_NAME_ELEMENT_MAX+1];	///< Provider URL
 } TQSL_PROVIDER;
 
 /** Certificate request data */
-typedef struct tqsl_cert_req_st {
-	char providerName[TQSL_NAME_ELEMENT_MAX+1];
-	char providerUnit[TQSL_NAME_ELEMENT_MAX+1];
-	char callSign[TQSL_CALLSIGN_MAX+1];
-	char name[TQSL_CRQ_NAME_MAX+1];
-	char address1[TQSL_CRQ_ADDR_MAX+1];
-	char address2[TQSL_CRQ_ADDR_MAX+1];
-	char city[TQSL_CRQ_CITY_MAX+1];
-	char state[TQSL_CRQ_STATE_MAX+1];
-	char postalCode[TQSL_CRQ_POSTAL_MAX+1];
-	char country[TQSL_CRQ_COUNTRY_MAX+1];
-	char emailAddress[TQSL_CRQ_EMAIL_MAX+1];
-	int dxccEntity;
-	tQSL_Date qsoNotBefore;
-	tQSL_Date qsoNotAfter;
-	char password[TQSL_PASSWORD_MAX+1];
-	tQSL_Cert signer;
-	char renew;
+typedef struct tqsl_cert_req_st {		///< Cert request data
+	char providerName[TQSL_NAME_ELEMENT_MAX+1];	///< Provider name
+	char providerUnit[TQSL_NAME_ELEMENT_MAX+1];	///< Provider unit
+	char callSign[TQSL_CALLSIGN_MAX+1];	///< Callsign
+	char name[TQSL_CRQ_NAME_MAX+1];		///< Name
+	char address1[TQSL_CRQ_ADDR_MAX+1];	///< Address 1
+	char address2[TQSL_CRQ_ADDR_MAX+1];	///< Address 2
+	char city[TQSL_CRQ_CITY_MAX+1];		///< City
+	char state[TQSL_CRQ_STATE_MAX+1];	///< State
+	char postalCode[TQSL_CRQ_POSTAL_MAX+1];	///< Postal Code
+	char country[TQSL_CRQ_COUNTRY_MAX+1];	///< Country
+	char emailAddress[TQSL_CRQ_EMAIL_MAX+1];	///< e-mail
+	int dxccEntity;				///< DXCC Entity code
+	tQSL_Date qsoNotBefore;			///< QSOs not before date
+	tQSL_Date qsoNotAfter;			///< QSOs not after date
+	char password[TQSL_PASSWORD_MAX+1];	///< Password
+	tQSL_Cert signer;			///< Signing cert
+	char renew;				///< Rewewal reference
 } TQSL_CERT_REQ;
 
 /** QSO data */
 typedef struct {
-	char callsign[TQSL_CALLSIGN_MAX+1];
-	char band[TQSL_BAND_MAX+1];
-	char mode[TQSL_MODE_MAX+1];
-	tQSL_Date date;
-	tQSL_Time time;
-	char freq[TQSL_FREQ_MAX+1];
-	char rxfreq[TQSL_FREQ_MAX+1];
-	char rxband[TQSL_BAND_MAX+1];
-	char propmode[TQSL_PROPMODE_MAX+1];
-	char satname[TQSL_SATNAME_MAX+1];
+	char callsign[TQSL_CALLSIGN_MAX+1];	///< QSO callsign
+	char band[TQSL_BAND_MAX+1];		///< QSO band
+	char mode[TQSL_MODE_MAX+1];		///< QSO mode
+	tQSL_Date date;				///< QSO date
+	tQSL_Time time;				///< QSO time
+	char freq[TQSL_FREQ_MAX+1];		///< QSO frequency
+	char rxfreq[TQSL_FREQ_MAX+1];		///< QSO receive frequency
+	char rxband[TQSL_BAND_MAX+1];		///< QSO RX band
+	char propmode[TQSL_PROPMODE_MAX+1];	///< QSO prop mode
+	char satname[TQSL_SATNAME_MAX+1];	///< QSO satellite name
 } TQSL_QSO_RECORD;
 
 /// Base directory for tQSL library working files.
-extern const char *tQSL_BaseDir;
+DLLEXPORTDATA extern const char *tQSL_BaseDir;
 
 #ifdef __cplusplus
 extern "C" {
@@ -152,6 +153,8 @@ DLLEXPORTDATA extern char tQSL_ErrorFile[256];
 DLLEXPORTDATA extern char tQSL_CustomError[256];
 /// System errno - stored when tQSL_Error == TQSL_SYSTEM_ERROR
 DLLEXPORTDATA extern int tQSL_Errno;
+/// Callsign used in import - used for missing public key error
+DLLEXPORTDATA extern char tQSL_ImportCall[256];
 
 /** Initialize the tQSL library
   *
@@ -227,6 +230,13 @@ DLLEXPORT int CALLCONVENTION tqsl_initTime(tQSL_Time *time, const char *str);
   */
 DLLEXPORT int CALLCONVENTION tqsl_compareDates(const tQSL_Date *a, const tQSL_Date *b);
 
+/** Calculate the number of days between two tQSL_Date objects.
+  * 
+  * Returns a positive result if the first date is earlier, otherwise
+  * negative.
+  */
+DLLEXPORT int CALLCONVENTION tqsl_subtractDates(const tQSL_Date *a, const tQSL_Date *b, int *diff);
+
 /** Converts a tQSL_Date object to a YYYY-MM-DD string.
   *
   * Returns a pointer to \c buf or NULL on error
@@ -293,9 +303,9 @@ DLLEXPORT int CALLCONVENTION tqsl_getConfigVersion(int *major, int *minor);
 
 /** @{ */
 
-#define TQSL_SELECT_CERT_WITHKEYS 1
-#define TQSL_SELECT_CERT_EXPIRED 2
-#define TQSL_SELECT_CERT_SUPERCEDED 4
+#define TQSL_SELECT_CERT_WITHKEYS 1	///< Private keys only (no cert)
+#define TQSL_SELECT_CERT_EXPIRED 2	///< Include expired certs
+#define TQSL_SELECT_CERT_SUPERCEDED 4	///< Include superseded certs
 
 /** Get a list of certificates
   *
@@ -325,6 +335,17 @@ DLLEXPORT int CALLCONVENTION tqsl_getConfigVersion(int *major, int *minor);
 DLLEXPORT int CALLCONVENTION tqsl_selectCertificates(tQSL_Cert **certlist, int *ncerts,
 	const char *callsign, int dxcc, const tQSL_Date *date, const TQSL_PROVIDER *issuer, int flag);
 
+/** Get a list of authority certificates
+  *
+  * Selects a set of certificates from the root or authorities certificate stores
+  * The function produces a list of tQSL_Cert objects.
+  *
+  * Each of the tQSL_Cert objects in the list should be freed
+  * by calling tqsl_freeCertificate().
+  *
+  */
+DLLEXPORT int CALLCONVENTION tqsl_selectCACertificates(tQSL_Cert **certlist, int *ncerts, const char *type);
+
 /** Get a particulat certificate from the list returnded by
   * tqsl_selectCertificates. This function exists principally
   * to make it easier for VB programs to access the list of
@@ -336,6 +357,14 @@ DLLEXPORT int CALLCONVENTION tqsl_selectCertificates(tQSL_Cert **certlist, int *
 DLLEXPORT int CALLCONVENTION tqsl_getSelectedCertificate(tQSL_Cert *cert, const tQSL_Cert **certlist,
 	int idx);
 
+/** Find out if the "certificate" is expired
+  */
+DLLEXPORT int CALLCONVENTION tqsl_isCertificateExpired(tQSL_Cert cert, int *status);
+
+/** Find out if the "certificate" is superceded
+  */
+DLLEXPORT int CALLCONVENTION tqsl_isCertificateSuperceded(tQSL_Cert cert, int *status);
+
 /** Find out if the "certificate" is just a key pair.
   */
 DLLEXPORT int CALLCONVENTION tqsl_getCertificateKeyOnly(tQSL_Cert cert, int *keyonly);
@@ -343,6 +372,14 @@ DLLEXPORT int CALLCONVENTION tqsl_getCertificateKeyOnly(tQSL_Cert cert, int *key
 /** Get the encoded certificate for inclusion in a GABBI file.
   */
 DLLEXPORT int CALLCONVENTION tqsl_getCertificateEncoded(tQSL_Cert cert, char *buf, int bufsiz);
+
+/** Get the encoded private key for inclusion in a backup file.
+  */
+DLLEXPORT int CALLCONVENTION tqsl_getKeyEncoded(tQSL_Cert cert, char *buf, int bufsiz);
+
+/** Import a base64 encoded certificate and private key from a backup file.
+  */
+DLLEXPORT int CALLCONVENTION tqsl_importKeyPairEncoded(const char *callsign, const char *type, const char *keybuf, const char *certbuf);
 
 /** Get the issuer's serial number of the certificate.
   */
@@ -543,10 +580,10 @@ DLLEXPORT int CALLCONVENTION tqsl_getCertificateRequestPostalCode(tQSL_Cert cert
   */
 DLLEXPORT int CALLCONVENTION tqsl_getCertificateRequestCountry(tQSL_Cert cert, char *str, int bufsiz);
 
-#define TQSL_PK_TYPE_ERR	0
-#define TQSL_PK_TYPE_NONE	1
-#define TQSL_PK_TYPE_UNENC	2
-#define TQSL_PK_TYPE_ENC	3
+#define TQSL_PK_TYPE_ERR	0	///< Error retrieving private key
+#define TQSL_PK_TYPE_NONE	1	///< No private key
+#define TQSL_PK_TYPE_UNENC	2	///< Private key is not encrypted
+#define TQSL_PK_TYPE_ENC	3	///< Private key is encrypted
 
 /** Determine the nature of the private key associated with a
   * certificate.
@@ -635,9 +672,24 @@ DLLEXPORT int CALLCONVENTION tqsl_createCertRequest(const char *filename, TQSL_C
   */
 DLLEXPORT int CALLCONVENTION tqsl_exportPKCS12File(tQSL_Cert cert, const char *filename, const char *p12password);
 
+/** Save a key pair and certificates to a Base64 string in PKCS12 format.
+  *
+  * The tQSL_Cert must be initialized for signing (see tqsl_beginSigning())
+  * if the user certificate is being exported.
+  *
+  * The supplied \c p12password is used to encrypt the PKCS12 data.
+  */
+
+DLLEXPORT int CALLCONVENTION tqsl_exportPKCS12Base64(tQSL_Cert cert,  char *base64, int b64len, const char *p12password);
+
 /** Load certificates and a private key from a PKCS12 file.
   */
 DLLEXPORT int CALLCONVENTION tqsl_importPKCS12File(const char *filename, const char *p12password, const char *password,
+	int (*pwcb)(char *buf, int bufsiz, void *userdata), int(*cb)(int type , const char *message, void *userdata), void *user);
+
+/** Load certificates and a private key from a Base64 encoded PKCS12 string.
+  */
+DLLEXPORT int CALLCONVENTION tqsl_importPKCS12Base64(const char *base64, const char *p12password, const char *password,
 	int (*pwcb)(char *buf, int bufsiz, void *userdata), int(*cb)(int type , const char *message, void *userdata), void *user);
 
 /** Delete a certificate and private key
@@ -814,14 +866,14 @@ DLLEXPORT int CALLCONVENTION tqsl_endSigning(tQSL_Cert cert);
 
 /* Location field input types */
 
-#define TQSL_LOCATION_FIELD_TEXT	1
-#define TQSL_LOCATION_FIELD_DDLIST	2
-#define TQSL_LOCATION_FIELD_LIST	3
-#define TQSL_LOCATION_FIELD_BADZONE	4		// Used to return zone selection errors
+#define TQSL_LOCATION_FIELD_TEXT	1	///< Text type input field
+#define TQSL_LOCATION_FIELD_DDLIST	2	///< Dropdown list input field
+#define TQSL_LOCATION_FIELD_LIST	3	///< List type input field
+#define TQSL_LOCATION_FIELD_BADZONE	4	///< Used to return zone selection errors
 
 /* Location field data types */
-#define TQSL_LOCATION_FIELD_CHAR 1
-#define TQSL_LOCATION_FIELD_INT 2
+#define TQSL_LOCATION_FIELD_CHAR 1	///< Character field
+#define TQSL_LOCATION_FIELD_INT 2	///< Integer field
 
 /** Begin the process of generating a station record */
 DLLEXPORT int CALLCONVENTION tqsl_initStationLocationCapture(tQSL_Location *locp);
@@ -888,6 +940,9 @@ DLLEXPORT int CALLCONVENTION tqsl_getStationLocationName(tQSL_Location loc, int 
 /** Get the call sign from the station location */
 DLLEXPORT int CALLCONVENTION tqsl_getStationLocationCallSign(tQSL_Location loc, int idx, char *buf, int bufsiz);
 
+/** Get a named field from the station location */
+DLLEXPORT int CALLCONVENTION tqsl_getStationLocationField(tQSL_Location locp, const char *name, char *namebuf, int bufsize);
+
 /** Retrieve a saved station location.
   * Once finished wih the station location, tqsl_endStationLocationCapture()
   * should be called to release resources.
@@ -901,6 +956,18 @@ DLLEXPORT int CALLCONVENTION tqsl_getStationLocation(tQSL_Location *loc, const c
   * properly formatted grid squares is likely.
   */
 DLLEXPORT int CALLCONVENTION tqsl_getStationLocationErrors(tQSL_Location loc, char *buf, int bufsiz);
+
+/** Return the contents of the station data file as a byte stream.
+  * The caller is required to tqsl_freeStationDataEnc() this pointer when done with it.
+  */
+DLLEXPORT int CALLCONVENTION tqsl_getStationDataEnc(tQSL_StationDataEnc *sdata);
+
+/** Free the pointer returned by tqsl_getStationDataEnc(tQSL_StationDataEnc*)
+  */
+DLLEXPORT int CALLCONVENTION tqsl_freeStationDataEnc(tQSL_StationDataEnc sdata);
+
+/** Merge saved location data with existing */
+DLLEXPORT int CALLCONVENTION tqsl_mergeStationLocations(const char *locdata);
 
 /** Remove the stored station location by name. */
 DLLEXPORT int CALLCONVENTION tqsl_deleteStationLocation(const char *name);
@@ -1133,7 +1200,7 @@ DLLEXPORT const char* CALLCONVENTION tqsl_getGABBItSTATION(tQSL_Location loc, in
 
 /** Get a GABBI record that contains the QSO data.
   *
-  * \li \c uid is the value of the associated STATION_UID field.
+  * \li \c stationuid is the value of the associated STATION_UID field.
   *
   * N.B.: If \c cert is not initialized for signing (see tqsl_beginSigning())
   * the function will return with a TQSL_SIGNINIT_ERROR error.
@@ -1145,6 +1212,20 @@ DLLEXPORT const char* CALLCONVENTION tqsl_getGABBItSTATION(tQSL_Location loc, in
   */
 DLLEXPORT const char* CALLCONVENTION tqsl_getGABBItCONTACT(tQSL_Cert cert, tQSL_Location loc, TQSL_QSO_RECORD *qso,
 	int stationuid);
+
+/** Get a GABBI record that contains the QSO data along with the associated
+  * signdata (QSO data signed to validate the QSO).
+  *
+  * \li \c stationuid is the value of the associated STATION_UID field.
+  *
+  * N.B.: If \c cert is not initialized for signing (see tqsl_beginSigning())
+  * the function will return with a TQSL_SIGNINIT_ERROR error.
+  *
+  * Returns the NULL pointer on error.
+  *
+  * N.B. On systems that distinguish text-mode files from binary-mode files,
+  * notably Windows, the GABBI records should be written in binary mode.
+  */
 DLLEXPORT const char* CALLCONVENTION tqsl_getGABBItCONTACTData(tQSL_Cert cert, tQSL_Location loc, TQSL_QSO_RECORD *qso,
 	int stationuid, char *signdata, int sdlen);
 
@@ -1155,6 +1236,6 @@ DLLEXPORT const char* CALLCONVENTION tqsl_getGABBItCONTACTData(tQSL_Cert cert, t
 #endif
 
 /* Useful defines */
-#define TQSL_MAX_PW_LENGTH         32     /* Password buffer length */
+#define TQSL_MAX_PW_LENGTH         32     ///< Password buffer length
 
 #endif /* TQSLLIB_H */

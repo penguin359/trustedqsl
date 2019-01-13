@@ -52,14 +52,16 @@ public:
 	TQSLWizPage *GetPage(bool final = false);
 	TQSLWizPage *GetCurrentTQSLPage() { return (TQSLWizPage *)GetCurrentPage(); }
 	void SetLocationName(wxString& s) { sl_name = s; }
+	void SetDefaultCallsign(wxString& c) {sl_call = c; };
 	wxString GetLocationName() { return sl_name; }
+	wxString GetDefaultCallsign() {return sl_call; };
 	TQSLWizPage *GetFinalPage() { return (_pages.size() > 0) ? _pages[0] : 0; }
-
 	bool page_changing;
 	bool expired;
 private:
 	void OnPageChanged(wxWizardEvent&);
 	wxString sl_name;
+	wxString sl_call;
 	tQSL_Location loc;
 	int _curpage;
 	std::map<int, TQSLWizPage *> _pages;
@@ -85,9 +87,11 @@ public:
 	void OnCheckBoxEvent(wxCommandEvent&);
 	int loc_page;
 	void UpdateFields(int noupdate_field = -1);
+	virtual const char *validate();
 	virtual TQSLWizPage *GetPrev() const;
 	virtual TQSLWizPage *GetNext() const;
 	void OnSize(wxSizeEvent&);
+	const char *valMsg;
 private:
 	std::vector<void *> controls;
 	wxCheckBox *okEmptyCB;

@@ -1,11 +1,253 @@
 TQSL/TQSLCERT changes
 =====================
 
+2.0
+----------
+Major feature Additions:
+
+Merge tqslcert into tqsl. Update the UI to be more user friendly.
+
+For the Callsign Certificaates tree display, don't display the
+certificate provider list if there's only one provider.
+
+Allow users to back up and restore their TQSL configuration in a portable
+file. Automatically back up the configuration to a user-specified directory
+(or to a default one) unless this is disabled.
+
+Add diagnostic logging capability. This is used to store a verbose log
+from cURL and to write a trace log that can be used by the developers to 
+help determine the source of defects.
+
+Display unique icons in the certificate tree to allow expired and superseded
+certificates can be distinguished.
+
+Detect and report invalid frequencies in ADIF files (outside of ham bands,
+entered in KHz versus MHz.)
+
+Validate the format of Grid Squares when they're entered for a station
+location. This also fixes the case to be normal, upper case for the Field,
+lower case for the subsquare (FM18ju, for example).
+
+Other changes:
+
+Correct the defect that could cause invalid QSOs (bad call signs, for
+example) to result in a cancellation message from an attempt to sign the
+log but not provide detail on what QSO failed.
+
+Automatically back up the user's configuration whenever TQSL closes.
+
+Display the versions of the major software packages built into TQSL as part
+of the "Help/About" text.
+
+Don't ask the user to choose the file type for certificate load operations,
+just provide a file open dialog and allow them to choose.
+
+When issuing a callsign certificate request, default to "signed" unless there
+are no usable certificates to be used to sign the request. Add text to the
+dialog box explaining when unsigned requests should be used.
+
+Remove the initial "Certificate Providers" page from the certificate
+request wizard as it serves no current purpose.
+
+Always display all callsign certificates, including expired and superseded
+certficates.
+
+Use consistent terminology throughout - "Callsign Certificate" and "Station
+Location".
+
+Replace atoi() calls with strtol() to correct parsing of strings like '012'
+so they are not treated as octal.
+
+Enforce frequency entry in the ADIF editor, ensuring that frequencies are 
+entered correctly (in MHz) and within an amateur band. Reject frequencies
+that are not consistent with the BAND setting.
+
+Correct the exit code for circumstances when -a abort is used and an bad QSO
+is detected. Display the error information on that QSO before exiting.
+
+Detect new verions of the TQSL configuration file when performing the
+"check for updates" operation (manual or automatic) and allow the user to
+update the configuration file if there is a newer one available.
+
+Add new command line options "-b" to select the start date for QSOs to be
+signed (begin) and "-e" to select the end date for QSOs to be signed.
+
+Warn users on startup when they have a certificate that's going to expire
+soon (in less than 60 days).
+
+Back up certificate details (address, entity) when backing up as .p12 file.
+
+Change title of certificate request window to reflect new or renewed
+certificate.
+
+Add the ability to automatically upload a certificate request.
+
+Make the preferences window a top-level window so it doesn't block
+activity in the help screen, etc.
+
+Delete obsolete mode maps when signing a log.
+
+When creating a station location, default to the callsign selected on
+the locations tree if one is selected.
+
+Add a button to the Log Operations window that opens the Logbook of the
+world website.
+
+Add a new command line option, -n, which checks for new versions of critical
+TQSL files then exits. This is designed for use by logging programs that
+operate TQSL on behalf of the user.
+
+Add network proxy preference settings to allow users to use the TQSL network
+based functions on networks that require all traffic to use a proxy.
+
+Grab window focus when prompting for the certificate password to ensure that
+the password window appears on top of the calling logger.
+
+Simplify the messages displayed on certificate import (relegate the details
+to the diagnostic log).
+
+Detect additional cURL errors and translate them into more user-friendly
+text.
+
+Don't use "Private Key" in certificate load error messages - use certificate
+request. Provide the callsign associated with certificate loading errors.
+
+Display detailed error on certificate import errors.
+
+Display system error reason when attempts to update the TrustedQSL
+configuration file fail.
+
+Track multiple pending certificate requests and warn the user when they try to
+ask for a new or renewed certificate for callsigns where requests are already
+pending.
+
+Fix pathname separators so Windows always uses "\" for folder/directory names,
+not mixed forward and backward slashes.
+
+Add more information to signing progress display including processed, error,
+and duplicate counts.
+
+Recover from invalid ADIF files by ignoring invalid data until the next EOR
+(end of record) field is seen.
+
+Add working directory string to diagnostic log.
+
+Update documentation to reference differences for Mac OS X menus.
+
+Delete pending log file when signing cancelled.
+
+Fix crash when location entity data is missing.
+
+Display the DXCC entity name in location properties, not the entity number.
+
+Correct Grid Square parsing to allow 'a' and 'z' in subsquare fields.
+
+Update documentation to reference Mac OS X GUI fields and menu layout.
+
+Move Diagnostic Mode menu to File menu - the OS X Help menu doesn't allow
+checked items.
+
+Correct other instances of DXCC entity number being used in user messages
+to emit entity name, not the number.
+
+Generate an error message on startup when stale mode maps are in place.
+
+Don't allow a user to redefine a standard mode.
+
+When the user chooses to not ignore errors in a log, don't save or 
+upload it.
+
+Fix the way user dialog boxes (for things like date range, passwords, and
+requests for how to handle errors) get instantiated so that the windows can
+appear on top of logging programs using command line log signing.
+
+Attempt to determine the field containing the call-worked data in unknown
+Cabrillo contests without requiring the user to define a custom contest.
+
+Update the "Ignore Errors" dialog to have "Ignore" and "Cancel" options
+and to describe what each of those does.
+
+Correct batch/quiet mode (-q or -x command line options) to avoid unexpected
+windows from popping up before a dialog (password, errors, date range, etc.)
+
+Always print out the TQSL version number at the beginning of output for
+command line applications.
+
+Use new application icons contributed by K1GQ.
+
+Correct regression where duplicate QSOs would result in an action prompt
+even though "-a abort" was specified on the command line.
+
+Don't display the TQSL version number when "-n" is used on the command line.
+
+Strip leading and trailing spaces from the location name passed on the
+command line.
+
+Properly handle and report upload errors displayed by the LoTW website.
+
+Install TQSL icon when "make install" used on Linux.
+
+Make the new icons optional.
+
+Correct the suppression of the TQSL version number when "-n" is used
+on the commmand line.
+
+Report errors when critical files cannot be opened (station data,
+certificates, etc.)
+
+Correct the behavior when the user selects a callsign or a location in the
+station location pane then clicks "Create new station location". The callsign
+selected was used in the location setup, but the DXCC entity was not properly
+selected.
+
+Only display the DXCC entity once in the station location page. This fixes
+the display when there are multiple callsign certificates for a given callsign
+(one valid and one expired, for example). This defect would cause TQSL to show
+a pulldown menu with multiple copies of the same entity name.
+
+Suppress warning messages when the user has no locations defined or callsign
+certificates installed as this is normal for an initial setup.
+
+When "Sign and Save" or "Sign and Upload" are used, first check if the user
+has any callsign certificates installed. The former behavior would ask for
+the input and output files, then try to select a station location. Since
+there are none, offering to create a station location would then fail.
+
+Trim extra spaces from station location fields. These could cause
+signing to fail as LoTW was removing these but TQSL was not.
+
+Update TQSL to provide the current LoTW configuration file (v2.5)
+
+Correct error messages on version update website failures, so that it's
+clear that it was the check that failed, not the download. Increase the
+version check timeout slightly to limit premature check failures.
+
+When performing the automatic update check at startup, wait for the main GUI
+window to appear. Provide a status message in the window until the update
+check completes. This keeps TQSL from appearing to hang at startup if the
+update check is slow.
+
+Correct command line behavior to not pop up a window when invoked then
+close that window. Fix duplicate handling error introduced at RC6.
+
+1.14.3
+------
+On Windows, use a newer verions of libcurl that doesn't suffer from the defect
+fixed by http://support.microsoft.com/kb/975858. This defect causes an error
+message "schannel: failed to setup extended errors".
+
+On all platforms: show some additional libraries' versions in the about screen
+
+Correct a defect when tqsl is used as a command line tool to sign a user's log
+for their logging program. If while signing that log, tqsl detected that a
+newer version of tqsl was available, it would exit without signing or
+uploading those QSOs.
+
 1.14.2
 ------
-Fixed an error when the TrustedQSL directory had Unicode characters, don't prompt
-for updates when called silently, fail properly when the user chooses to not ignore
-signing errors
+Fixed an error when the TrustedQSL directory had Unicode characters, don't
+prompt for updates when called silently, fail properly when the user chooses
+to not ignore signing errors
 
 1.14.1
 ------
@@ -26,17 +268,17 @@ Major feature additions:
    or upload succeeded or failed, and why
 
           0=success; log signed and uploaded and accepted without incident
-	  1=Cancelled by user
-	  2=The log was rejected by the LoTW server
+          1=Cancelled by user
+          2=The log was rejected by the LoTW server
           3=The response from the LoTW server was unexpected or unrecognized
           4=An error occurred in tqsl
           5=An error occurred in tqsllib (probably a bad filename)
-	  6=Unable to open input file
-	  7=Unable to open output file
-	  8=All QSOs were duplicate or out of date range (no QSOs written)
-	  9=Some QSOs were duplicate or out of date range (some QSOs written)
-	  10=Command syntax error
-	  11=LoTW network connection failed (no network or LoTW is unreachable)
+          6=Unable to open input file
+          7=Unable to open output file
+          8=All QSOs were duplicate or out of date range (no QSOs written)
+          9=Some QSOs were duplicate or out of date range (some QSOs written)
+          10=Command syntax error
+          11=LoTW network connection failed (no network or LoTW is unreachable)
 
    The exit status is also written to Standard Error (stderr) in an easily
    recognized format.

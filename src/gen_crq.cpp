@@ -25,6 +25,7 @@
 	#include <getopt.h>
 #endif
 #include <string.h>
+#include <stdlib.h>
 #include "tqsllib.h"
 #include "tqslexc.h"
 
@@ -52,10 +53,10 @@ main(int argc, char *argv[]) {
 					sign_call = optarg;
 					break;
 				case 'x':
-					sign_dxcc = atoi(optarg);
+					sign_dxcc = strtol(optarg, NULL, 10);
 					break;
 				case 'd':
-					dxcc = atoi(optarg);
+					dxcc = strtol(optarg, NULL, 10);
 					break;
 				case 'e':
 					email_addr = optarg;
@@ -76,9 +77,10 @@ main(int argc, char *argv[]) {
 			if (ncerts < 1) {
 				string erm = "No signing certificate found for " + sign_call;
 				if (sign_dxcc) {
-					char buf[30];
-					sprintf(buf, " with DXCC=%d", sign_dxcc);
-					erm += buf;
+					const char *entity;
+					tqsl_getDXCCEntityName(sign_dxcc, &entity);
+					erm += " with DXCC Entity=";
+					erm += entity;
 				}
 				throw myexc(erm);
 			}

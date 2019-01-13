@@ -32,21 +32,30 @@
 #include "wx/checkbox.h"
 #include "wx/grid.h"
 #include "wx/wxhtml.h"
+#include "wx/filepicker.h"
+
+#include "tqslctrls.h"
 
 #include <map>
 
 #define DEFAULT_CABRILLO_FILES wxT("log cbr")
 #define DEFAULT_ADIF_FILES wxT("adi")
-
+#define DEFAULT_AUTO_BACKUP true
+#define DEFAULT_CERT_WARNING 60
 //online
+//#define ENABLE_ONLINE_PREFS
 #define DEFAULT_UPL_URL wxT("https://lotw.arrl.org/lotw/upload")
 #define DEFAULT_UPL_FIELD wxT("upfile")
-#define DEFAULT_UPL_STATUSRE wxT("<!-- .UPL. ([^-]+) -->")
+#define DEFAULT_UPL_STATUSRE wxT("<!-- .UPL.\\s*([^-]+)\\s*-->")
 #define DEFAULT_UPL_STATUSOK wxT("accepted")
-#define DEFAULT_UPL_MESSAGERE wxT("<!-- .UPLMESSAGE. ([^-]+) -->")
+#define DEFAULT_UPL_MESSAGERE wxT("<!-- .UPLMESSAGE.\\s*(.+)\\s*-->")
 #define DEFAULT_UPL_VERIFYCA true
 
 #define DEFAULT_UPD_URL wxT("https://lotw.arrl.org/lotw/tqslupdate")
+#define DEFAULT_UPD_CONFIG_URL wxT("https://lotw.arrl.org/lotw/config_xml_version")
+#define DEFAULT_CONFIG_FILE_URL wxT("https://lotw.arrl.org/lotw/config.tq6")
+
+#define DEFAULT_LOTW_LOGIN_URL wxT("https://lotw.arrl.org/lotwuser/default")
 
 enum {		// Window IDs
 	ID_OK_BUT,
@@ -54,6 +63,8 @@ enum {		// Window IDs
 	ID_HELP_BUT,
 	ID_PREF_FILE_CABRILLO = (wxID_HIGHEST+1),
 	ID_PREF_FILE_ADIF,
+	ID_PREF_FILE_AUTO_BACKUP,
+	ID_PREF_FILE_BACKUP,
 	ID_PREF_FILE_BADCALLS,
 	ID_PREF_FILE_DATERANGE,
 	ID_PREF_MODE_MAP,
@@ -71,7 +82,13 @@ enum {		// Window IDs
 	ID_PREF_ONLINE_STATUSRE,
 	ID_PREF_ONLINE_STATUSOK,
 	ID_PREF_ONLINE_MESSAGERE,
-	ID_PREF_ONLINE_VERIFYCA
+	ID_PREF_ONLINE_VERIFYCA,
+	ID_PREF_ONLINE_UPD_CONFIGURL, 
+        ID_PREF_ONLINE_UPD_CONFIGFILE,
+	ID_PREF_PROXY_ENABLED,
+	ID_PREF_PROXY_HOST,
+	ID_PREF_PROXY_PORT,
+	ID_PREF_PROXY_TYPE
 };
 
 class PrefsPanel : public wxPanel {
@@ -87,11 +104,16 @@ class FilePrefs : public PrefsPanel {
 public:
 	FilePrefs(wxWindow *parent);
 	virtual bool TransferDataFromWindow();
+	void OnShowHide(wxCommandEvent&) { ShowHide(); }
+	void ShowHide();
 private:
 	wxTextCtrl *cabrillo, *adif;
-	wxCheckBox *badcalls, *daterange;
+	wxCheckBox *autobackup, *badcalls, *daterange;
+	wxDirPickerCtrl *dirPick;
+	DECLARE_EVENT_TABLE()
 };
 
+#if defined(ENABLE_ONLINE_PREFS)
 class OnlinePrefs : public PrefsPanel {
 public:
 	OnlinePrefs(wxWindow *parent);
@@ -101,9 +123,11 @@ public:
 	DECLARE_EVENT_TABLE()
 private:
 	wxTextCtrl *uploadURL, *postField, *statusRegex, *statusSuccess, *messageRegex;
+	wxTextCtrl *updConfigURL, *configFileURL;
 	wxCheckBox *verifyCA, *useDefaults;
 	bool defaults;
 };
+#endif
 
 typedef std::map <wxString, wxString> ModeSet;
 
@@ -140,25 +164,45 @@ private:
 	DECLARE_EVENT_TABLE()
 };
 
-class Preferences : public wxDialog {
+class ProxyPrefs : public PrefsPanel {
+public:
+	ProxyPrefs(wxWindow *parent);
+	virtual bool TransferDataFromWindow();
+	void ShowHide();
+	void OnShowHide(wxCommandEvent&) { ShowHide(); }
+	DECLARE_EVENT_TABLE()
+private:
+	wxCheckBox *proxyEnabled;
+	wxTextCtrl *proxyHost, *proxyPort;
+	wxChoice *proxyType;
+	bool enabled;
+};
+
+typedef std::map <wxString, wxString> ModeSet;
+class Preferences : public wxFrame {
 public:
 	Preferences(wxWindow *parent, wxHtmlHelpController *help = 0);
 	void OnOK(wxCommandEvent &);
-	void OnCancel(wxCommandEvent &) { Close(true); }
+	void OnCancel(wxCommandEvent &);
 	void OnHelp(wxCommandEvent &);
+	void OnClose(wxCloseEvent&);
 	DECLARE_EVENT_TABLE()
 private:
 	wxNotebook *notebook;
 	FilePrefs *fileprefs;
 	ModeMap *modemap;
 	ContestMap *contestmap;
+	ProxyPrefs *proxyPrefs;
+#if defined(ENABLE_ONLINE_PREFS)
 	OnlinePrefs *onlinePrefs;
+#endif
 	wxHtmlHelpController *_help;
 };
 
 class AddMode : public wxDialog {
 public:
 	AddMode(wxWindow *parent);
+	virtual bool TransferDataFromWindow();
 	void OnOK(wxCommandEvent &);
 	void OnCancel(wxCommandEvent &) { Close(true); }
 	wxString key, value;
