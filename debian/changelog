@@ -3,6 +3,7 @@ trustedqsl (2.4.3-1) UNRELEASED; urgency=medium
   * New upstream release.
   * Run wrap-and-sort -st.
   * Create packaging repo on salsa.
+  * Add jquery-1.7.1.js source in debian/missing-sources/.
 
  -- Christoph Berg <myon@debian.org>  Sun, 13 Jan 2019 14:10:07 +0100
 
