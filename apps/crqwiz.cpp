@@ -27,6 +27,8 @@
 
 using std::string;
 
+extern int get_address_field(const char *callsign, const char *field, string& result);
+
 static wxString callTypeChoices[] = {
 	 _("My current personal callsign"),
 	 _("My former personal callsign or a portable modifier for my current callsign"),
@@ -340,6 +342,7 @@ CRQ_IntroPage::GetNext() const {
 	tqslTrace("CRQ_IntroPage::GetNext", NULL);
 	if (_parent->cert) {			// Renewal
 		_parent->signIt = false;
+		reinterpret_cast<CRQ_NamePage*>(_parent->namePage)->Preset(reinterpret_cast<CRQ_IntroPage*>(_parent->introPage));
 		return _parent->namePage;
 	}
 	if (_parent->dxcc == 0) {		// NONE always requires signature
@@ -348,8 +351,10 @@ CRQ_IntroPage::GetNext() const {
 	}
 	if (_parent->ncerts == 0) {		// No certs, can't sign.
 		_parent->signIt = false;
+		reinterpret_cast<CRQ_NamePage*>(_parent->namePage)->Preset(reinterpret_cast<CRQ_IntroPage*>(_parent->introPage));
 		return _parent->namePage;
 	}
+	reinterpret_cast<CRQ_NamePage*>(_parent->namePage)->Preset(reinterpret_cast<CRQ_IntroPage*>(_parent->introPage));
 	return _parent->typePage;
 }
 
@@ -474,6 +479,41 @@ CRQ_NamePage::CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(paren
 	sizer->Add(tc_status, 0, wxALL|wxEXPAND, 10);
 	AdjustPage(sizer, wxT("crq1.htm"));
 	initialized = true;
+}
+
+void
+CRQ_NamePage::Preset(CRQ_IntroPage *ip) {
+	wxString s;
+	string t;
+	if (get_address_field(_parent->callsign.ToUTF8(), "name", t) == 0) {
+		s = wxString::FromUTF8(t.c_str());
+		tc_name->SetValue(s);
+	}
+
+	if (get_address_field(_parent->callsign.ToUTF8(), "addr1", t) == 0) {
+		s = wxString::FromUTF8(t.c_str());
+		tc_addr1->SetValue(s);
+	}
+	if (get_address_field(_parent->callsign.ToUTF8(), "addr2", t) == 0) {
+		s = wxString::FromUTF8(t.c_str());
+		tc_addr2->SetValue(s);
+	}
+	if (get_address_field(_parent->callsign.ToUTF8(), "city", t) == 0) {
+		s = wxString::FromUTF8(t.c_str());
+		tc_city->SetValue(s);
+	}
+	if (get_address_field(_parent->callsign.ToUTF8(), "addrState", t) == 0) {
+		s = wxString::FromUTF8(t.c_str());
+		tc_state->SetValue(s);
+	}
+	if (get_address_field(_parent->callsign.ToUTF8(), "mailCode", t) == 0) {
+		s = wxString::FromUTF8(t.c_str());
+		tc_zip->SetValue(s);
+	}
+	if (get_address_field(_parent->callsign.ToUTF8(), "aCountry", t) == 0) {
+		s = wxString::FromUTF8(t.c_str());
+		tc_country->SetValue(s);
+	}
 }
 
 CRQ_Page *
@@ -733,17 +773,17 @@ CRQ_IntroPage::validate() {
 	if (!initialized)
 		return 0;
 	valMsg = wxT("");
-	wxString val = tc_call->GetValue().MakeUpper();
+	_parent->callsign = tc_call->GetValue().MakeUpper();
 	bool ok = true;
 	int sel;
 	const char *dxccname = NULL;
 	wxString pending = wxConfig::Get()->Read(wxT("RequestPending"));
 	wxStringTokenizer tkz(pending, wxT(","));
 
-	if (val.Len() < 3)
+	if (_parent->callsign.Len() < 3)
 		ok = false;
 	if (ok) {
-		string call = string(val.ToUTF8());
+		string call = string(_parent->callsign.ToUTF8());
 		// Check for invalid characters
 		if (call.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/") != string::npos)
 			ok = false;
@@ -876,8 +916,8 @@ CRQ_IntroPage::validate() {
 	// Data looks okay, now let's make sure this isn't a duplicate request
 	// (unless it's a renewal).
 
-	val.MakeUpper();
-	tqsl_selectCertificates(&certlist, &ncert, val.ToUTF8(), Parent()->dxcc, 0,
+	_parent->callsign.MakeUpper();
+	tqsl_selectCertificates(&certlist, &ncert, _parent->callsign.ToUTF8(), Parent()->dxcc, 0,
 				&(Parent()->provider), TQSL_SELECT_CERT_WITHKEYS);
 	if (!Parent()->_crq && ncert > 0) {
 		char cert_before_buf[40], cert_after_buf[40];
@@ -904,14 +944,14 @@ CRQ_IntroPage::validate() {
 			DXCC dxcc;
 			dxcc.getByEntity(Parent()->dxcc);
 			// TRANSLATORS: first argument is callsign (%s), second is the related DXCC entity name (%hs)
-			valMsg = wxString::Format(_("You have an overlapping Certificate for %s (DXCC=%hs) having QSO dates: "), val.c_str(), dxcc.name());
+			valMsg = wxString::Format(_("You have an overlapping Certificate for %s (DXCC=%hs) having QSO dates: "), _parent->callsign.c_str(), dxcc.name());
 			// TRANSLATORS: here "to" separates two dates in a date range
 			valMsg += wxString::FromUTF8(cert_before_buf) + _(" to ") + wxString::FromUTF8(cert_after_buf);
 		}
 	}
 	while (tkz.HasMoreTokens()) {
 		wxString pend = tkz.GetNextToken();
-		if (pend == val) {
+		if (pend == _parent->callsign) {
 			wxString fmt = _("You have already requested a Callsign Certificate for %s "
 				       	"and can not request another until that request has been "
 				       	"processed by LoTW Staff.");
@@ -921,7 +961,7 @@ CRQ_IntroPage::validate() {
 				fmt += wxT("\n\n");
 				fmt += _("If you are sure that the earlier request is now invalid "
 				       	"you should delete the pending Callsign Certificate for %s.");
-			valMsg = wxString::Format(fmt, val.c_str(), val.c_str());
+			valMsg = wxString::Format(fmt, _parent->callsign.c_str(), _parent->callsign.c_str());
 		}
 	}
 

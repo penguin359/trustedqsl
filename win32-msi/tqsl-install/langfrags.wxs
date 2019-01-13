@@ -25,6 +25,11 @@
   </Fragment>
   <Fragment>
     <DirectoryRef Id="APPLICATIONFOLDER">
+      <Directory Id="dir9C2F38E32B32494C905FBBB588E98A38" Name="hi_IN" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="APPLICATIONFOLDER">
       <Directory Id="dir87830DC9C2DED45B7E26F428A1DA8251" Name="it" />
     </DirectoryRef>
   </Fragment>
@@ -73,6 +78,12 @@
       </Component>
       <Component Id="cmp1C39054F9F3D48A9ABEBA4A27E5D54E1" Directory="dirD7430CCE8E23EAC3B55DD85B038538CA" Guid="*">
         <File Id="fil8D6F380B7D894F55970AED9CC7E5CCE5" KeyPath="yes" Source="$(var.langSrc)\fr\wxstd.mo" />
+      </Component>
+      <Component Id="cmpC95923836AD3438FAA1F1822EFD73D65" Directory="dir9C2F38E32B32494C905FBBB588E98A38" Guid="*">
+        <File Id="fil41B7659285534198A4669108347BD60E" KeyPath="yes" Source="$(var.langSrc)\hi_IN\tqslapp.mo" />
+      </Component>
+      <Component Id="cmpA552877FA66B45F8945E39B7D7959B38" Directory="dir9C2F38E32B32494C905FBBB588E98A38" Guid="*">
+        <File Id="fileA44627EC402246D7BFE2CCD7B5938F4C" KeyPath="yes" Source="$(var.langSrc)\hi_IN\wxstd.mo" />
       </Component>
       <Component Id="cmp03C541E3239F387DC9BBA7E29B204380" Directory="dir87830DC9C2DED45B7E26F428A1DA8251" Guid="*">
         <File Id="fil4C7B28D9431F64C171934E2ADB89E881" KeyPath="yes" Source="$(var.langSrc)\it\tqslapp.mo" />

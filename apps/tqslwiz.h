@@ -91,6 +91,8 @@ class TQSLWizCertPage : public TQSLWizPage {
 	void OnComboBoxEvent(wxCommandEvent&);
 	void OnCheckBoxEvent(wxCommandEvent&);
 	int loc_page;
+	bool invalidGrid;
+	bool allowBadGrid;
 	void UpdateFields(int noupdate_field = -1);
 	virtual const char *validate();
 	virtual TQSLWizPage *GetPrev() const;
@@ -99,6 +101,8 @@ class TQSLWizCertPage : public TQSLWizPage {
 	void OnPageChanging(wxWizardEvent &);
  private:
 	vector<void *> controls;
+	typedef map <std::string, std::string> ForcedMap;
+	ForcedMap forced;
 	wxStaticText *errlbl;
 	wxCheckBox *okEmptyCB;
 	DECLARE_EVENT_TABLE()

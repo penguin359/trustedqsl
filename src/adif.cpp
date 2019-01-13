@@ -85,7 +85,7 @@ tqsl_beginADIF(tQSL_ADIF *adifp, const char *filename) {
 	tqslTrace("tqsl_beginADIF", "Preparing to open file");
 #ifdef _WIN32
 	wchar_t *wfilename = utf8_to_wchar(filename);
-	if ((adif->fp = _wfopen(wfilename, L"rb")) == NULL) {
+	if ((adif->fp = _wfopen(wfilename, L"rb, ccs=UTF-8")) == NULL) {
 		free_wchar(wfilename);
 #else
 	if ((adif->fp = fopen(filename, "rb")) == NULL) {

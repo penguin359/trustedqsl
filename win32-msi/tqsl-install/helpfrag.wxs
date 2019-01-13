@@ -37,6 +37,12 @@
       <Component Id="cmpFF01D47405B2C4C23B06CA1F23C0E694" Directory="dir6F17F3A9FB839342385010C1698DDB65" Guid="*">
         <File Id="fil091CE27F9A0FAE4896CB0DAECB7C20E3" KeyPath="yes" Source="$(var.helpSrc)\tqslapp\backuprestore.htm" />
       </Component>
+      <Component Id="cmpE2059C025E96C985624D9EB9D0DD79AE" Directory="dir6F17F3A9FB839342385010C1698DDB65" Guid="*">
+        <File Id="fil9991CC45CF451F8A60F6006064BB83FA" KeyPath="yes" Source="$(var.helpSrc)\tqslapp\BrokenCert.bmp" />
+      </Component>
+      <Component Id="cmp5F3122F5C4B3510FF758D61653E6F09A" Directory="dir6F17F3A9FB839342385010C1698DDB65" Guid="*">
+        <File Id="fil35BBB422995C6FFE8C80D9C20869C22F" KeyPath="yes" Source="$(var.helpSrc)\tqslapp\cab-modes.htm" />
+      </Component>
       <Component Id="cmpD1763364716E9CFA679350F00E5C4FBA" Directory="dir6F17F3A9FB839342385010C1698DDB65" Guid="*">
         <File Id="fil2307A3E3D7D5E65E6055C2A12AA9EEB1" KeyPath="yes" Source="$(var.helpSrc)\tqslapp\cabrillo.htm" />
       </Component>

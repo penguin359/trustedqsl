@@ -1,6 +1,68 @@
 TQSL changes
 ============
 
+2.4.3
+----------
+Fix defect that was causing steate/province/oblast to be reset to "None" when
+editing a station location. This defect could also cause station location
+details to be forced to be the default location data for the callsign, making
+remote locations more difficult to edit.
+
+2.4.2
+----------
+Ensure that the exit status message emitted by TQSL appears in English
+so logging programs can use that to detect exit status.
+
+Improve setting of ITU and CQ zones when defining a Station Location. There
+were many cases where these were left empty.
+
+Fix issue with Windows updates of TQSL failing when the user's directory
+has a space embedded.
+
+Language fixes:
+Remove spurious error message when run on a system where the local
+language is not supported. 
+
+Allow adding translations without making code changes.
+
+When displaying a callsign certificate where the private key is missing
+from the local system, specifically state that the private key is not
+found. Add a specific message for keys that cannot be opened.
+
+
+2.4.1
+----------
+Display "No Private Key" versus an error message when displaying a callsign
+certificate with no installed private key.
+
+Fix defect that meant that some callsign certificates (those with missing
+private keys) could not be restored from a .TBK file containing a good copy.
+
+Fix defect that was causing callsign certificate renewals to have "null null
+null" as the Name in some conditions.
+
+Fix defect that was required deleting an existing callsign certificate before
+importing a replacement .P12 file
+
+
+2.4
+----------
+Add Hindi translation.
+
+Pre-load callsign certificate requests from the ARRL address data when it
+is available for a given callsign.
+
+Provide default gridsquare, state, and county for station locations when
+available from the ARRL address data. Validate that gridsquares are 
+consistent with the station's address.
+
+Retain all certificate private keys. Mark as deleted and allow them to be
+recovered. This allows the .TQ6 file downloaded from LoTW to always be used
+to recover a user's callsign certificate.
+
+Allow LMDB to be used with TQSL to work around Berkely DB licensing issues.
+
+
 2.3.1
 ----------
 Update copyright messages to 2017.
