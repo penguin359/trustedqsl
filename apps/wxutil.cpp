@@ -145,7 +145,7 @@ static const char *error_strings[] = {
 	__("Certificate provider not found"),			/* TQSL_PROVIDER_NOT_FOUND */
 	__("No callsign certificate for key"),			/* TQSL_CERT_KEY_ONLY */
 	__("Configuration file cannot be opened"),		/* TQSL_CONFIG_ERROR */
-	__("Callsign Certificate or Certificate Request not found"),/* TQSL_CERT_NOT_FOUND */
+	__("The private key for this Callsign Certificate is not present on this computer; you can obtain it by loading a .tbk or .p12 file"),				      /* TQSL_CERT_NOT_FOUND */
 	__("PKCS#12 file not TQSL compatible"),			/* TQSL_PKCS12_ERROR */
 	__("Callsign Certificate not TQSL compatible"),		/* TQSL_CERT_TYPE_ERROR */
 	__("Date out of range"),				/* TQSL_DATE_OUT_OF_RANGE */
@@ -229,7 +229,8 @@ getLocalizedErrorString_v(int err) {
 		return wxString::FromUTF8(msg);
 	}
 	if (err == TQSL_CERT_NOT_FOUND && tQSL_ImportCall[0] != '\0') {
-		return wxString::Format(_("Callsign Certificate or Certificate Request not found for callsign %hs serial %ld"),
+		return wxString::Format(
+			_("The private key for callsign %hs serial %ld is not present on this computer; you can obtain it by loading a .tbk or .p12 file"),
 			tQSL_ImportCall, tQSL_ImportSerial);
 	}
 	adjusted_err = err - TQSL_ERROR_ENUM_BASE;

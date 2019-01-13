@@ -129,6 +129,7 @@ class CRQ_NamePage : public CRQ_Page {
 	virtual const char *validate();
 	virtual CRQ_Page *GetPrev() const;
 	virtual CRQ_Page *GetNext() const;
+	void Preset(CRQ_IntroPage *ip);
  private:
 	wxTextCtrl *tc_name, *tc_addr1, *tc_addr2, *tc_city, *tc_state,
 		*tc_zip, *tc_country;

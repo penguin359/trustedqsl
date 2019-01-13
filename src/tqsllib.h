@@ -136,6 +136,7 @@ typedef struct {
 
 /// Base directory for tQSL library working files.
 DLLEXPORTDATA extern const char *tQSL_BaseDir;
+DLLEXPORTDATA extern const char *tQSL_RsrcDir;
 
 #ifdef __cplusplus
 extern "C" {
@@ -1160,6 +1161,12 @@ DLLEXPORT int CALLCONVENTION tqsl_getLocationQSODetails(tQSL_Location locp, char
 
 /** Get the station location details in canonical form. */
 DLLEXPORT int CALLCONVENTION tqsl_getLocationStationDetails(tQSL_Location locp, char *buf, int buflen);
+
+/** Save the json results for a given callsign location Detail. */
+DLLEXPORT int CALLCONVENTION tqsl_saveCallsignLocationInfo(const char *callsign, const char *json);
+
+/** Retrieve the json results for a given callsign location Detail. */
+DLLEXPORT int CALLCONVENTION tqsl_getCallsignLocationInfo(const char *callsign, char **buf);
 
 /** Get the number of DXCC entities in the master DXCC list.
   */

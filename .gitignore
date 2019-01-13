@@ -24,10 +24,33 @@ bin/
 lib/
 _UpgradeReport_Files/
 addlang.sh
+MOVE-TAG.bat
+apps/lang/de/wxstd.mo
+apps/lang/es/wxstd.mo
+apps/lang/fr/wxstd.mo
+apps/lang/it/wxstd.mo
+apps/lang/ja/wxstd.mo
+apps/lang/pt/wxstd.mo
+apps/lang/ru/wxstd.mo
+apps/lang/zh/wxstd.mo
+cmaker.bat
+tests/CTestTestfile.cmake
+ts2vc08.py
+win32-msi/tqsl-install/langfragde.wxs
+win32-msi/tqsl-install/langfrages.wxs
+win32-msi/tqsl-install/langfragfr.wxs
+win32-msi/tqsl-install/langfraghi.wxs
+win32-msi/tqsl-install/langfragit.wxs
+win32-msi/tqsl-install/langfragja.wxs
+win32-msi/tqsl-install/langfragpt.wxs
+win32-msi/tqsl-install/langfragru.wxs
+win32-msi/tqsl-install/langfragzh.wxs
+win32-msi/tqsl-install/update-lang.cmd
 
 #linux-specific products
 Makefile
 tqsl-*.tar.gz
+MOVE-TAG.sh
 
 #OSX-specific cruft
 .DS_Store

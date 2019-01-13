@@ -3,6 +3,24 @@ TQSLLIB changes
 
 2.5
 ---
+Improve the error message for missing private keys to be more descriptive.
+
+Add the ability to map Cabrillo modes to user-specified ADIF modes
+using the cab_modes.dat file in the TQSL user directory. File has Cabrillo
+modes (two characters), then an ADIF mode, comma delimited. Default file is
+provided by TQSL and users can provide their own.
+
+Correct spurious error when "LIGHT" is used in Cabrillo files.
+
+Fix error message for invalid receive band to reference the proper band
+information.
+
+Add functions for storing and retrieving station address data.
+
+Force character set for ADIF and Cabrillo files to UTF-8.
+
+Fix CMake config to use the right lib64 string on Linux.
+
 Allow 'LIGHT' in a Cabrillo file to represent 300G and higher.
 
 When there are multiple signature specifications in the configuration file,

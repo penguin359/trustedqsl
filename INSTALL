@@ -73,6 +73,10 @@ the Berkeley Database headers using BDB_PREFIX. (That points to the top-level
 directory, with /include for headers and /lib for libraries assumed below
 it.)
 
+If you choose to build with a different target directory (cmake with a
+pointer to the source), ensure that your build target/current directory is
+empty prior to invoking cmake. Vestiges of older builds can cause issues.
+
 ===================================================================
 
 3) Building under Mac OS X
@@ -141,7 +145,7 @@ If you want to distribute the built application:
 
 ./osx_createdmg.sh
 
-will make tqsl-2.3.dmg, a Mac distributable disk image
+will make tqsl-2.4.1.dmg, a Mac distributable disk image
 containing the TrustedQSL applications folder and document files.
 
 ===================================================================

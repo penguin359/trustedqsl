@@ -196,6 +196,10 @@
 			<param name="Name" value="Command Line Interface">
 			<param name="Local" value="cmdline.htm">
 			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Defining custom Cabrillo modes">
+			<param name="Local" value="cab-modes.htm">
+			</OBJECT>
 	</UL>
 </UL>
 </BODY></HTML>

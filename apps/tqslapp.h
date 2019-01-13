@@ -153,6 +153,7 @@ class MyFrame : public wxFrame {
 	void FirstTime(void);
 	void BackupConfig(const wxString& event, bool quiet);
 	void SaveOldBackups(const wxString& directory, const wxString& filename, const wxString& ext);
+	int SaveAddressInfo(const char* callsign);
 
 	CertTree *cert_tree;
 	LocTree *loc_tree;
@@ -194,6 +195,7 @@ class MyFrame : public wxFrame {
 	bool _quiet;
 };
 
+#if 0
 // language data
 static const wxLanguage langIds[] = {
     wxLANGUAGE_DEFAULT,
@@ -202,12 +204,14 @@ static const wxLanguage langIds[] = {
     wxLANGUAGE_FINNISH,
     wxLANGUAGE_FRENCH,
     wxLANGUAGE_GERMAN,
+    wxLANGUAGE_HINDI,
     wxLANGUAGE_ITALIAN,
     wxLANGUAGE_JAPANESE,
     wxLANGUAGE_PORTUGUESE,
     wxLANGUAGE_RUSSIAN,
     wxLANGUAGE_SPANISH,
 };
+
 
 // note that it makes no sense to translate these strings, they are
 // shown before we set the locale anyhow
@@ -218,6 +222,7 @@ const wxString langNames[] = {
     wxT("Finnish"),
     wxT("French"),
     wxT("German"),
+    wxT("Hindi"),
     wxT("Italian"),
     wxT("Japanese"),
     wxT("Portuguese"),
@@ -229,4 +234,5 @@ const wxString langNames[] = {
 wxCOMPILE_TIME_ASSERT(WXSIZEOF(langNames) == WXSIZEOF(langIds),
                        LangArraysMismatch);
 
+#endif
 #endif // __tqslapp_h

@@ -338,50 +338,13 @@ tqsl_load_xml_config() {
 		return 0;
 	XMLElement default_config;
 	XMLElement user_config;
-	string default_path;
 	tqslTrace("tqsl_load_xml_config", NULL);
 
 #ifdef _WIN32
-	HKEY hkey;
-	DWORD dtype;
-	char wpath[TQSL_MAX_PATH_LEN];
-	DWORD bsize = sizeof wpath;
-	int wval;
-	if ((wval = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-		"Software\\TrustedQSL", 0, KEY_READ, &hkey)) == ERROR_SUCCESS) {
-		wval = RegQueryValueEx(hkey, "InstallPath", 0, &dtype, (LPBYTE)wpath, &bsize);
-		RegCloseKey(hkey);
-		if (wval == ERROR_SUCCESS)
-			default_path = string(wpath) + "\\config.xml";
-		tqslTrace("tqsl_load_xml_config", "default_path=%s", default_path.c_str());
-	}
-#elif defined(__APPLE__)
-	// Get path to config.xml resource from bundle
-	CFBundleRef tqslBundle = CFBundleGetMainBundle();
-	CFURLRef configXMLURL = CFBundleCopyResourceURL(tqslBundle, CFSTR("config"), CFSTR("xml"), NULL);
-	if (configXMLURL) {
-		CFStringRef pathString = CFURLCopyFileSystemPath(configXMLURL, kCFURLPOSIXPathStyle);
-		CFRelease(configXMLURL);
-
-		// Convert CFString path to config.xml to string object
-		CFIndex maxStringLengthInBytes = CFStringGetMaximumSizeForEncoding(CFStringGetLength(pathString), kCFStringEncodingUTF8);
-		char *pathCString = static_cast<char *>(malloc(maxStringLengthInBytes));
-		if (pathCString) {
-			CFStringGetCString(pathString, pathCString, maxStringLengthInBytes, kCFStringEncodingASCII);
-			CFRelease(pathString);
-			default_path = string(pathCString);
-			free(pathCString);
-			tqslTrace("tqsl_load_xml_config", "default_path=%s", default_path.c_str());
-		}
-	}
-#else
-	default_path = CONFDIR "config.xml"; //KC2YWE: Removed temporarily. There's got to be a better way to do this
-	tqslTrace("tqsl_load_xml_config", "default_path=%s", default_path.c_str());
-#endif
-
-#ifdef _WIN32
+	string default_path = string(tQSL_RsrcDir) + "\\config.xml";
 	string user_path = string(tQSL_BaseDir) + "\\config.xml";
 #else
+	string default_path = string(tQSL_RsrcDir) + "/config.xml";
 	string user_path = string(tQSL_BaseDir) + "/config.xml";
 #endif
 
@@ -2161,6 +2124,23 @@ tqsl_setLocationFieldCharData(tQSL_Location locp, int field_num, const char *buf
 	fl[field_num].cdata = string(buf).substr(0, fl[field_num].data_len);
 	if (fl[field_num].flags & TQSL_LOCATION_FIELD_UPPER)
 		fl[field_num].cdata = string_toupper(fl[field_num].cdata);
+
+
+	if (fl[field_num].input_type == TQSL_LOCATION_FIELD_DDLIST
+		|| fl[field_num].input_type == TQSL_LOCATION_FIELD_LIST) {
+		if (fl[field_num].cdata == "") {
+			fl[field_num].idx = 0;
+			fl[field_num].idata = fl[field_num].items[0].ivalue;
+		} else {
+			for (int i = 0; i < static_cast<int>(fl[field_num].items.size()); i++) {
+				if (fl[field_num].items[i].text == fl[field_num].cdata) {
+					fl[field_num].idx = i;
+					fl[field_num].idata = fl[field_num].items[i].ivalue;
+					break;
+				}
+			}
+		}
+	}
 	return 0;
 }
 
@@ -3707,7 +3687,7 @@ DLLEXPORT int CALLCONVENTION
 tqsl_getLocationStationDetails(tQSL_Location locp, char *buf, int buflen) {
 	TQSL_LOCATION *loc;
 	if (!(loc = check_loc(locp, false))) {
-		tqslTrace("tqsl_getLocationDXCCEntity", "loc error %d", tQSL_Error);
+		tqslTrace("tqsl_getLocationStationDetails", "loc error %d", tQSL_Error);
 		return 1;
 	}
 	if (buf == NULL) {

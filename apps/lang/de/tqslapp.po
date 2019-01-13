@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: V2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-20 18:22-0400\n"
-"PO-Revision-Date: 2016-08-22 14:24+0200\n"
+"POT-Creation-Date: 2018-02-21 07:48-0500\n"
+"PO-Revision-Date: 2018-02-22 20:04+0100\n"
 "Last-Translator: Rick Murphy <k1mu@arrl.net>\n"
 "Language-Team: TQSL Developers\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
 "X-Generator: Poedit 1.8.8\n"
 
 #: certtree.cpp:104
@@ -37,22 +37,22 @@ msgstr "Fehler beim Analysieren des Rufzeichen-Zertifikats"
 msgid "Error parsing certificate for DXCC entity"
 msgstr "Fehler beim Analysieren des Zertifikates für das DXCC-Land"
 
-#: crqwiz.cpp:31
+#: crqwiz.cpp:33
 msgid "My current personal callsign"
 msgstr "Meine aktuellen persönlichen Rufzeichen"
 
-#: crqwiz.cpp:32
+#: crqwiz.cpp:34
 msgid ""
 "My former personal callsign or a portable modifier for my current callsign"
 msgstr ""
 "Meine ehemaligen persönlichen Rufzeichen oder eine portabel Erweiterung für "
 "mein aktuelles Rufzeichen"
 
-#: crqwiz.cpp:33
+#: crqwiz.cpp:35
 msgid "A primary club callsign"
 msgstr "Ein primäres Club Rufzeichen"
 
-#: crqwiz.cpp:34
+#: crqwiz.cpp:36
 msgid ""
 "A secondary club callsign (I have a Callsign Certificate for the primary "
 "club callsign)"
@@ -60,38 +60,38 @@ msgstr ""
 "Ein sekundäres Club Rufzeichen (ich habe ein Rufzeichen-Zertifikat für das "
 "primäre Club Rufzeichen)"
 
-#: crqwiz.cpp:35
+#: crqwiz.cpp:37
 msgid "A DXpedition, Portable, or holiday operation with multiple operators"
 msgstr ""
 "Ein Expeditions-, Portabel- oder Urlaubs-Betrieb mit mehreren Operatoren"
 
-#: crqwiz.cpp:36
+#: crqwiz.cpp:38
 msgid ""
 "A DXpedition, Portable, or holiday operation where I am the only operator"
 msgstr ""
 "Ein Expeditions-, Portabel- oder Urlaubs-Betrieb mit mir als einzigem OP"
 
-#: crqwiz.cpp:37
+#: crqwiz.cpp:39
 msgid "An operator that uses me as a QSL manager"
 msgstr "Ein Funkamateur, für den ich QSL-Manager bin"
 
-#: crqwiz.cpp:38
+#: crqwiz.cpp:40
 msgid "A special event (1x1) callsign"
 msgstr "Ein Sonderrufzeichen (1 x 1)"
 
-#: crqwiz.cpp:39
+#: crqwiz.cpp:41
 msgid "A special event callsign with multiple operators"
 msgstr "Ein Sonderrufzeichen mit mehreren OPs"
 
-#: crqwiz.cpp:40
+#: crqwiz.cpp:42
 msgid "A special event callsign where I am the only operator"
 msgstr "Ein Sonderrufzeichen mit mir als einzigem OP"
 
-#: crqwiz.cpp:112
+#: crqwiz.cpp:114
 msgid "This will create a new Callsign Certificate request file."
 msgstr "Dies erstellt eine neue Rufzeichen-Zertifikatsanforderungsdatei."
 
-#: crqwiz.cpp:114
+#: crqwiz.cpp:116
 msgid ""
 "Once you supply the requested information and the request file has been "
 "created, you must send the request file to the certificate issuer."
@@ -100,76 +100,76 @@ msgstr ""
 "Anforderungsdatei erstellt wurde, müssen Sie die Anforderungsdatei an den "
 "Aussteller des Zertifikats senden."
 
-#: crqwiz.cpp:123
+#: crqwiz.cpp:125
 msgid "Certificate Issuer:"
 msgstr "Aussteller des Zertifikats:"
 
-#: crqwiz.cpp:132 crqwiz.cpp:945 crqwiz.cpp:1040 crqwiz.cpp:1094
-#: crqwiz.cpp:1129 loadcertwiz.cpp:255 loadcertwiz.cpp:350 tqsl.cpp:2715
-#: tqsl.cpp:3147 tqsl.cpp:3162 tqsl.cpp:3217 tqsl.cpp:3232 tqsl.cpp:4736
-#: tqsl.cpp:6241 tqsl.cpp:6441 tqsl_prefs.cpp:914 tqsl_prefs.cpp:921
-#: tqslwiz.cpp:459 tqslwiz.cpp:549
+#: crqwiz.cpp:134 crqwiz.cpp:982 crqwiz.cpp:1077 crqwiz.cpp:1131
+#: crqwiz.cpp:1166 loadcertwiz.cpp:255 loadcertwiz.cpp:350 tqsl.cpp:2736
+#: tqsl.cpp:3168 tqsl.cpp:3183 tqsl.cpp:3244 tqsl.cpp:3259 tqsl.cpp:4950
+#: tqsl.cpp:6458 tqsl.cpp:6658 tqsl_prefs.cpp:914 tqsl_prefs.cpp:921
+#: tqslwiz.cpp:547 tqslwiz.cpp:638
 msgid "Error"
 msgstr "Fehler"
 
-#: crqwiz.cpp:167
+#: crqwiz.cpp:169
 msgid "Email: "
 msgstr "E-Mail: "
 
-#: crqwiz.cpp:169
+#: crqwiz.cpp:171
 msgid "URL: "
 msgstr "URL: "
 
-#: crqwiz.cpp:205
+#: crqwiz.cpp:207
 msgid "DXCC entity:"
 msgstr "DXCC-Land:"
 
-#: crqwiz.cpp:209 tqsl.cpp:1876 tqsl.cpp:3900
+#: crqwiz.cpp:211 tqsl.cpp:1911 tqsl.cpp:4105
 msgid "Call sign:"
 msgstr "Rufzeichen:"
 
-#: crqwiz.cpp:266
+#: crqwiz.cpp:268
 msgid "Date of the first QSO you made or will make using this callsign:"
 msgstr ""
 "Datum des ersten QSOs oder geplanten ersten QSOs mit diesem Rufzeichen:"
 
-#: crqwiz.cpp:314
+#: crqwiz.cpp:316
 msgid ""
 "Date of the last QSO you made or will make using this callsign:\n"
 "(Leave this date blank if this is still your valid callsign.)"
 msgstr ""
 "Datum des letzten oder geplanten letzten QSOs mit diesem Rufzeichen:\n"
-"(Bitte frei lassen, wenn dies ihr aktuelles Rufzeichen ist.)"
+"(Bitte frei lassen, wenn dies Ihr aktuelles Rufzeichen ist.)"
 
-#: crqwiz.cpp:378
+#: crqwiz.cpp:379
 msgid "Zip/Postal"
 msgstr "PLZ"
 
-#: crqwiz.cpp:383 stationdial.cpp:70
+#: crqwiz.cpp:384 stationdial.cpp:70
 msgid "Name"
 msgstr "Name"
 
-#: crqwiz.cpp:407
+#: crqwiz.cpp:408
 msgid "Address"
 msgstr "Adresse"
 
-#: crqwiz.cpp:433
+#: crqwiz.cpp:434
 msgid "City"
 msgstr "Ort"
 
-#: crqwiz.cpp:446 stationdial.cpp:351 stationdial.cpp:362
+#: crqwiz.cpp:447 stationdial.cpp:351 stationdial.cpp:362
 msgid "State"
 msgstr "Staat"
 
-#: crqwiz.cpp:468 crqwiz.cpp:471
+#: crqwiz.cpp:469 crqwiz.cpp:472
 msgid "Country"
 msgstr "Land"
 
-#: crqwiz.cpp:511
+#: crqwiz.cpp:548
 msgid "Your e-mail address"
 msgstr "Ihre E-Mail-Adresse"
 
-#: crqwiz.cpp:524
+#: crqwiz.cpp:561
 msgid ""
 "Note: The e-mail address you provide here is the address to which the issued "
 "Certificate will be sent. Make sure it's the correct address!"
@@ -178,7 +178,7 @@ msgstr ""
 "die das ausgestellte Zertifikat gesendet wird. Stellen Sie sicher, dass die "
 "Adresse richtig ist!"
 
-#: crqwiz.cpp:550
+#: crqwiz.cpp:587
 msgid ""
 "You may protect this Callsign Certificate using a password. If you are using "
 "a computer system that is shared with others, you should specify a password "
@@ -191,22 +191,22 @@ msgstr ""
 "Wenn Sie den Computer in einer privaten Umgebung verwenden, müssen Sie kein "
 "Kennwort angegeben."
 
-#: crqwiz.cpp:559 crqwiz.cpp:585
+#: crqwiz.cpp:596 crqwiz.cpp:622
 msgid ""
 "Leave the password blank and click 'Next' unless you want to use a password."
 msgstr ""
 "Lassen Sie das Kennwort leer und klicken Sie auf 'Weiter', wenn Sie ein "
 "Kennwort verwenden möchten."
 
-#: crqwiz.cpp:563
+#: crqwiz.cpp:600
 msgid "Password:"
 msgstr "Kennwort:"
 
-#: crqwiz.cpp:567
+#: crqwiz.cpp:604
 msgid "Enter the password again for verification:"
 msgstr "Geben Sie das Kennwort zur Bestätigung erneut ein:"
 
-#: crqwiz.cpp:571
+#: crqwiz.cpp:608
 msgid ""
 "DO NOT lose the password you choose! You will be unable to use the "
 "Certificate without this password!"
@@ -214,7 +214,7 @@ msgstr ""
 "Bewahren Sie das Kennwort sicher auf! Das Zertifikat kann ohne das Kennwort "
 "nicht verwendet werden!"
 
-#: crqwiz.cpp:590
+#: crqwiz.cpp:627
 msgid ""
 "Leave the password blank and click 'Finish' unless you want to use a "
 "password."
@@ -222,11 +222,11 @@ msgstr ""
 "Lassen Sie das Kennwort leer und klicken Sie auf 'Fertig stellen', wenn Sie "
 "kein Kennwort verwenden möchten."
 
-#: crqwiz.cpp:636
+#: crqwiz.cpp:673
 msgid "This Callsign Certificate is for:"
 msgstr "Dieses Rufzeichen-Zertifikat ist für:"
 
-#: crqwiz.cpp:657 crqwiz.cpp:661
+#: crqwiz.cpp:694 crqwiz.cpp:698
 msgid ""
 "Please select the Callsign Certificate for your current personal callsign to "
 "validate your request."
@@ -234,13 +234,13 @@ msgstr ""
 "Bitte wählen Sie das Rufzeichen-Zertifikat für Ihr aktuelles persönliches "
 "Rufzeichen aus, um die Anforderung zu überprüfen."
 
-#: crqwiz.cpp:658 crqwiz.cpp:663 crqwiz.cpp:665
+#: crqwiz.cpp:695 crqwiz.cpp:700 crqwiz.cpp:702
 msgid "Please select a Callsign Certificate to validate your request."
 msgstr ""
 "Bitte wählen Sie ein Rufzeichen-Zertifikat aus, um Ihre Anforderung zu "
 "überprüfen."
 
-#: crqwiz.cpp:659
+#: crqwiz.cpp:696
 msgid ""
 "Please select your club's primary Callsign Certificate to validate your "
 "request."
@@ -248,20 +248,20 @@ msgstr ""
 "Bitte wählen Sie das primäre Rufzeichen-Zertifikat Ihres Clubs aus, um Ihre "
 "Anforderung zu überprüfen"
 
-#: crqwiz.cpp:770
+#: crqwiz.cpp:807
 msgid "You must enter a valid call sign."
 msgstr "Sie müssen ein gültiges Rufzeichen eingeben."
 
-#: crqwiz.cpp:791
+#: crqwiz.cpp:828
 msgid "You must select a DXCC entity."
 msgstr "Sie müssen ein DXCC-Land auswählen."
 
-#: crqwiz.cpp:822
+#: crqwiz.cpp:859
 msgid "QSO begin date: You must choose proper values for Year, Month and Day."
 msgstr ""
 "QSO Beginn-Datum: Sie müssen gültige Werte für Jahr, Monat und Tag auswählen."
 
-#: crqwiz.cpp:826
+#: crqwiz.cpp:863
 msgid ""
 "QSO end date: You must either choose proper values for Year, Month and Day "
 "or leave all three blank."
@@ -269,11 +269,11 @@ msgstr ""
 "QSO-Enddatum: Sie müssen entweder gültige Werte für Jahr, Monat und Tag "
 "auswählen oder alle drei Felder leer lassen."
 
-#: crqwiz.cpp:831
+#: crqwiz.cpp:868
 msgid "QSO end date cannot be before QSO begin date."
 msgstr "QSO-Enddatum darf nicht vor dem Beginn-Datum liegen."
 
-#: crqwiz.cpp:863
+#: crqwiz.cpp:900
 #, c-format
 msgid ""
 "The date of your first QSO is before the first valid date (%hs) of the "
@@ -282,7 +282,7 @@ msgstr ""
 "Das Datum Ihres ersten QSOs liegt vor dem ersten Gültigkeitstages (%hs) des "
 "ausgewählten DXCC-Landes %hs"
 
-#: crqwiz.cpp:867
+#: crqwiz.cpp:904
 #, c-format
 msgid ""
 "The date of your first QSO is after the last valid date (%hs) of the "
@@ -291,7 +291,7 @@ msgstr ""
 "Das Datum Ihres ersten QSOs liegt nach dem letzten Gültigkeitstag (%hs) des "
 "ausgewählten DXCC-Landes %hs"
 
-#: crqwiz.cpp:871
+#: crqwiz.cpp:908
 #, c-format
 msgid ""
 "The date of your last QSO is before the first valid date (%hs) of the "
@@ -300,7 +300,7 @@ msgstr ""
 "Das Datum Ihres letzten QSOs liegt vor dem ersten Gültigkeitstages (%hs) des "
 "ausgewählten DXCC-Landes %hs"
 
-#: crqwiz.cpp:875
+#: crqwiz.cpp:912
 #, c-format
 msgid ""
 "The date of your last QSO is after the last valid date (%hs) of the selected "
@@ -310,7 +310,7 @@ msgstr ""
 "ausgewählten DXCC-Landes %hs"
 
 #. TRANSLATORS: first argument is callsign (%s), second is the related DXCC entity name (%hs)
-#: crqwiz.cpp:910
+#: crqwiz.cpp:947
 #, c-format
 msgid ""
 "You have an overlapping Certificate for %s (DXCC=%hs) having QSO dates: "
@@ -318,11 +318,11 @@ msgstr ""
 "Sie haben ein überlappendes Zertifikat für %s (DXCC = %hs) für QSO-Zeiten: "
 
 #. TRANSLATORS: here "to" separates two dates in a date range
-#: crqwiz.cpp:912
+#: crqwiz.cpp:949
 msgid " to "
 msgstr " bis "
 
-#: crqwiz.cpp:918
+#: crqwiz.cpp:955
 #, c-format
 msgid ""
 "You have already requested a Callsign Certificate for %s and can not request "
@@ -332,7 +332,7 @@ msgstr ""
 "kein weiteres anfordern, bis diese Anforderung von LoTW-Mitarbeitern "
 "bearbeitet wurde."
 
-#: crqwiz.cpp:922
+#: crqwiz.cpp:959
 msgid ""
 "Please wait until you receive an e-mail bearing your requested Callsign "
 "Certificate."
@@ -340,7 +340,7 @@ msgstr ""
 "Bitte warten Sie, bis Sie eine E-Mail mit dem angeforderten Rufzeichen-"
 "Zertifikat erhalten."
 
-#: crqwiz.cpp:925
+#: crqwiz.cpp:962
 #, c-format
 msgid ""
 "If you are sure that the earlier request is now invalid you should delete "
@@ -349,7 +349,7 @@ msgstr ""
 "Wenn Sie sicher sind, dass die frühere Anforderung jetzt ungültig ist, "
 "sollten Sie das ausstehende Rufzeichen-Zertifikat für %s löschen."
 
-#: crqwiz.cpp:950
+#: crqwiz.cpp:987
 msgid ""
 "You cannot select DXCC Entity NONE as you must sign any request for entity "
 "NONE and you have no valid Callsign Certificates that you can use to sign "
@@ -359,15 +359,15 @@ msgstr ""
 "unterzeichnen müssen und Sie keine gültigen Rufzeichen-Zertifikate haben, "
 "die Sie verwenden können, um diese Anforderung zu signieren."
 
-#: crqwiz.cpp:951 crqwiz.cpp:1143 tqsl.cpp:145 tqsl.cpp:164
+#: crqwiz.cpp:988 crqwiz.cpp:1180 tqsl.cpp:148 tqsl.cpp:170
 msgid "TQSL Error"
 msgstr "TQSL-Fehler"
 
-#: crqwiz.cpp:955
+#: crqwiz.cpp:992
 msgid "You have selected DXCC Entity NONE"
 msgstr "Sie haben kein DXCC-Land ausgewählt"
 
-#: crqwiz.cpp:957
+#: crqwiz.cpp:994
 msgid ""
 "QSO records signed using the Certificate will not be valid for DXCC award "
 "credit (but will be valid for other applicable awards). If the Certificate "
@@ -382,11 +382,11 @@ msgstr ""
 "verwendet werden, ist dies die richtige Auswahl. Andernfalls sollten Sie die "
 "Schaltfläche \"Zurück\" verwenden, um zur DXCC Seite zurückzukehren."
 
-#: crqwiz.cpp:965 stationdial.cpp:447
+#: crqwiz.cpp:1002 stationdial.cpp:447
 msgid "TQSL Warning"
 msgstr "TQSL-Warnung"
 
-#: crqwiz.cpp:968
+#: crqwiz.cpp:1005
 msgid ""
 "You have chosen a QSO end date for this Callsign Certificate. The 'QSO end "
 "date' should ONLY be set if that date is the date when that callsign's "
@@ -396,7 +396,7 @@ msgstr ""
 "QSO-Enddatum sollte NUR DANN festgelegt werden, wenn zu diesem Datum die "
 "Lizenz abgelaufen ist oder die Lizenz durch eine neue ersetzt wurde."
 
-#: crqwiz.cpp:972
+#: crqwiz.cpp:1009
 msgid ""
 "If you set an end date, you will not be able to sign QSOs past that date, "
 "even if the Callsign Certificate itself is still valid."
@@ -404,7 +404,7 @@ msgstr ""
 "Wenn Sie ein Enddatum festlegen, können QSOs nach diesem Datum nicht "
 "signiert werden, auch wenn das Rufzeichen-Zertifikat selbst noch gültig ist."
 
-#: crqwiz.cpp:976
+#: crqwiz.cpp:1013
 msgid ""
 "If you still hold this callsign (or if you plan to renew the license for the "
 "callsign), you should not set a 'QSO end date'."
@@ -413,42 +413,42 @@ msgstr ""
 "Rufzeichen demnächst erneuert werden soll), sollte kein QSO-Enddatum "
 "festgelegt werden."
 
-#: crqwiz.cpp:979
+#: crqwiz.cpp:1016
 msgid "Do you really want to keep this 'QSO end date'?"
 msgstr "Möchten Sie wirklich dieses QSO-Enddatum setzen?"
 
-#: crqwiz.cpp:980 loadcertwiz.cpp:199 tqsl.cpp:1771 tqsl.cpp:5118 tqsl.cpp:5864
-#: tqsl.cpp:5991 tqsl_prefs.cpp:431
+#: crqwiz.cpp:1017 loadcertwiz.cpp:199 tqsl.cpp:1806 tqsl.cpp:5335
+#: tqsl.cpp:6081 tqsl.cpp:6208 tqsl_prefs.cpp:431
 msgid "Warning"
 msgstr "Warnung"
 
-#: crqwiz.cpp:1015
+#: crqwiz.cpp:1052
 msgid "You must enter your name"
 msgstr "Sie müssen Ihren Namen eingeben"
 
-#: crqwiz.cpp:1017
+#: crqwiz.cpp:1054
 msgid "You must enter your address"
 msgstr "Sie müssen Ihre Adresse eingeben"
 
-#: crqwiz.cpp:1019
+#: crqwiz.cpp:1056
 msgid "You must enter your city"
 msgstr "Sie müssen Ihre Stadt eingeben"
 
-#: crqwiz.cpp:1081
+#: crqwiz.cpp:1118
 msgid "You must enter a valid email address"
 msgstr "Sie müssen eine gültige E-Mail-Adresse eingeben"
 
-#: crqwiz.cpp:1116
+#: crqwiz.cpp:1153
 msgid "The two copies of the password do not match."
 msgstr "Die beiden Eingaben für das Kennwort stimmen nicht überein."
 
-#: crqwiz.cpp:1157
+#: crqwiz.cpp:1194
 msgid "Click 'Finish' to complete this Callsign Certificate request."
 msgstr ""
 "Klicken Sie auf 'Fertig stellen', um diese Rufzeichen-Zertifikatsanforderung "
 "abzuschließen."
 
-#: crqwiz.cpp:1170
+#: crqwiz.cpp:1207
 #, c-format
 msgid ""
 "You are saying that the requested Certificate for %s belongs to the same "
@@ -459,19 +459,19 @@ msgstr ""
 "nachzuweisen."
 
 #: extwizard.cpp:66 getpassword.cpp:53 getpassword.cpp:126
-#: qsodatadialog.cpp:377 stationdial.cpp:212 tqsl_prefs.cpp:55
+#: qsodatadialog.cpp:382 stationdial.cpp:212 tqsl_prefs.cpp:55
 msgid "Help"
 msgstr "Hilfe"
 
-#: getpassword.cpp:48 getpassword.cpp:121 qsodatadialog.cpp:379 tqsl.cpp:402
+#: getpassword.cpp:48 getpassword.cpp:121 qsodatadialog.cpp:384 tqsl.cpp:408
 #: tqsl_prefs.cpp:58 tqsl_prefs.cpp:267 tqsl_prefs.cpp:887 stationdial.h:46
 #: tqslapp.h:116
 msgid "OK"
 msgstr "Ok"
 
-#: getpassword.cpp:51 getpassword.cpp:124 qsodatadialog.cpp:378
-#: stationdial.cpp:214 tqsl.cpp:273 tqsl.cpp:324 tqsl.cpp:403 tqsl.cpp:546
-#: tqsl.cpp:607 tqsl_prefs.cpp:61 tqsl_prefs.cpp:270 tqsl_prefs.cpp:890
+#: getpassword.cpp:51 getpassword.cpp:124 qsodatadialog.cpp:383
+#: stationdial.cpp:214 tqsl.cpp:279 tqsl.cpp:330 tqsl.cpp:409 tqsl.cpp:552
+#: tqsl.cpp:613 tqsl_prefs.cpp:61 tqsl_prefs.cpp:270 tqsl_prefs.cpp:890
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -533,7 +533,7 @@ msgstr ""
 "Dieses Kennwort müssen Sie jedes Mal eingegeben wenn Sie dieses Rufzeichen-"
 "Zertifikat zum Signieren oder zum Speichern des Schlüssels verwenden."
 
-#: loadcertwiz.cpp:156 tqsl.cpp:5806
+#: loadcertwiz.cpp:156 tqsl.cpp:6023
 msgid ""
 "Leave the password blank and click 'OK' unless you want to use a password."
 msgstr ""
@@ -574,7 +574,7 @@ msgstr ""
 "Rufzeichen-Zertifikat-Container-Dateien (*.p12)|*.p12|Zertifikatsanforderung-"
 "Antwort-Dateien (*.tq6)|*.tq6"
 
-#: loadcertwiz.cpp:235 tqsl.cpp:3858
+#: loadcertwiz.cpp:235 tqsl.cpp:4063
 msgid "|All files (*.*)|*.*"
 msgstr "|Alle Dateien (*.*)|*.*"
 
@@ -594,142 +594,142 @@ msgstr "Keine Statusinformationen verfügbar"
 msgid "Enter the password to unlock the .p12 file:"
 msgstr "Geben Sie das Kennwort ein, um die P12-Datei zu entsperren:"
 
-#: loadcertwiz.cpp:347 tqsl.cpp:2040
+#: loadcertwiz.cpp:347 tqsl.cpp:2075
 msgid "Password error"
 msgstr "Kennwort-Fehler"
 
-#: loctree.cpp:86 tqsl.cpp:1345 tqsl.cpp:6021
+#: loctree.cpp:86 tqsl.cpp:1352 tqsl.cpp:6238
 msgid "Station Locations"
 msgstr "Standorte"
 
-#: qsodatadialog.cpp:161 qsodatadialog.cpp:194 qsodatadialog.cpp:202
+#: qsodatadialog.cpp:165 qsodatadialog.cpp:198 qsodatadialog.cpp:206
 msgid "NONE"
 msgstr "KEIN"
 
-#: qsodatadialog.cpp:187
+#: qsodatadialog.cpp:191
 msgid "UP"
 msgstr "UP"
 
-#: qsodatadialog.cpp:246
+#: qsodatadialog.cpp:251
 msgid "Call Sign:"
 msgstr "Rufzeichen:"
 
-#: qsodatadialog.cpp:254
+#: qsodatadialog.cpp:259
 msgid "UTC Date (YYYY-MM-DD):"
 msgstr "UTC-Datum (JJJJ-MM-TT):"
 
-#: qsodatadialog.cpp:262
+#: qsodatadialog.cpp:267
 msgid "UTC Time (HHMM):"
 msgstr "UTC-Zeit (SSMM):"
 
-#: qsodatadialog.cpp:271
+#: qsodatadialog.cpp:276
 msgid "Mode:"
 msgstr "Mode:"
 
-#: qsodatadialog.cpp:280
+#: qsodatadialog.cpp:285
 msgid "Band:"
 msgstr "Band:"
 
-#: qsodatadialog.cpp:290
+#: qsodatadialog.cpp:295
 msgid "RX Band:"
 msgstr "RX-Band:"
 
-#: qsodatadialog.cpp:299
+#: qsodatadialog.cpp:304
 msgid "Frequency (MHz):"
 msgstr "Frequenz (MHz):"
 
-#: qsodatadialog.cpp:306
+#: qsodatadialog.cpp:311
 msgid "RX Frequency (MHz):"
 msgstr "RX-Frequenz (MHz):"
 
-#: qsodatadialog.cpp:314
+#: qsodatadialog.cpp:319
 msgid "Propagation Mode:"
 msgstr "Ausbreitungsmodus:"
 
-#: qsodatadialog.cpp:323
+#: qsodatadialog.cpp:328
 msgid "Satellite:"
 msgstr "Satellit:"
 
-#: qsodatadialog.cpp:346
+#: qsodatadialog.cpp:351
 msgid "Go to the first QSO in this log"
 msgstr "Zum ersten QSO in diesem Log"
 
-#: qsodatadialog.cpp:350
+#: qsodatadialog.cpp:355
 msgid "Go to the previous QSO in this log"
 msgstr "Zum vorherigen QSO in diesem Log"
 
-#: qsodatadialog.cpp:358
+#: qsodatadialog.cpp:363
 msgid "Go to the next QSO in this log"
 msgstr "Zum nächsten QSO in diesem Log"
 
-#: qsodatadialog.cpp:362
+#: qsodatadialog.cpp:367
 msgid "Go to the last QSO in this log"
 msgstr "Zum letzten QSO in diesem Log"
 
-#: qsodatadialog.cpp:369
+#: qsodatadialog.cpp:374
 msgid "Add QSO"
 msgstr "QSO hinzufügen"
 
-#: qsodatadialog.cpp:371 stationdial.cpp:207 tqsl_prefs.cpp:164
+#: qsodatadialog.cpp:376 stationdial.cpp:207 tqsl_prefs.cpp:164
 #: tqsl_prefs.cpp:728
 msgid "Delete"
 msgstr "Löschen"
 
-#: qsodatadialog.cpp:494
+#: qsodatadialog.cpp:499
 msgid "QSO Frequency is invalid"
 msgstr "QSO-Frequenz ist ungültig"
 
-#: qsodatadialog.cpp:494 qsodatadialog.cpp:501 qsodatadialog.cpp:510
-#: qsodatadialog.cpp:517 qsodatadialog.cpp:527 qsodatadialog.cpp:532
-#: qsodatadialog.cpp:537 qsodatadialog.cpp:542 tqslvalidator.cpp:77
+#: qsodatadialog.cpp:499 qsodatadialog.cpp:506 qsodatadialog.cpp:515
+#: qsodatadialog.cpp:522 qsodatadialog.cpp:532 qsodatadialog.cpp:537
+#: qsodatadialog.cpp:542 qsodatadialog.cpp:547 tqslvalidator.cpp:77
 msgid "QSO Data Error"
 msgstr "QSO Daten-Fehler"
 
-#: qsodatadialog.cpp:501
+#: qsodatadialog.cpp:506
 msgid "QSO Frequency is out of range for the selected band"
 msgstr "QSO-Frequenz außerhalb des Bereichs für das ausgewählte Band"
 
-#: qsodatadialog.cpp:510
+#: qsodatadialog.cpp:515
 msgid "QSO RX Frequency is invalid"
 msgstr "QSO RX-Frequenz ist ungültig"
 
-#: qsodatadialog.cpp:517
+#: qsodatadialog.cpp:522
 msgid "QSO RX Frequency is out of range for the selected band"
 msgstr "QSO RX-Frequenz außerhalb des Bereichs für das ausgewählte Band"
 
-#: qsodatadialog.cpp:527
+#: qsodatadialog.cpp:532
 msgid "You must select a band or enter a frequency"
 msgstr "Sie müssen ein Band wählen oder eine Frequenz eingeben"
 
-#: qsodatadialog.cpp:532
+#: qsodatadialog.cpp:537
 msgid "Call Sign cannot be empty"
 msgstr "Rufzeichen darf nicht leer sein"
 
-#: qsodatadialog.cpp:537
+#: qsodatadialog.cpp:542
 msgid "'Satellite' propagation mode selected, so a Satellite must be chosen"
 msgstr ""
 "\"Satelliten\"-Mode angegeben, daher muss ein Satellit ausgewählt werden"
 
-#: qsodatadialog.cpp:542
+#: qsodatadialog.cpp:547
 msgid "Satellite choice requires that Propagation Mode be 'Satellite'"
 msgstr ""
 "Die Auswahl eines Satelliten verlangt, dass der Ausbreitungs-Mode "
 "'Satellite' sein muss"
 
-#: qsodatadialog.cpp:558
+#: qsodatadialog.cpp:564
 #, c-format
 msgid "QSO Data: Invalid Mode ignored - %s"
 msgstr "QSO Daten: Ungültiger Mode ignoriert - %s"
 
-#: qsodatadialog.cpp:578
+#: qsodatadialog.cpp:586
 msgid "No QSO records"
 msgstr "Keine QSO Einträge"
 
-#: qsodatadialog.cpp:592
+#: qsodatadialog.cpp:600
 msgid "Save File"
 msgstr "Datei speichern"
 
-#: qsodatadialog.cpp:594 tqsl.cpp:1763
+#: qsodatadialog.cpp:602 tqsl.cpp:1798
 msgid ""
 "ADIF files (*.adi;*.adif;*.ADI;*.ADIF)|*.adi;*.adif;*.ADI;*.ADIF|All files "
 "(*.*)|*.*"
@@ -737,25 +737,25 @@ msgstr ""
 "ADIF-Dateien (*.adi;*.adif;*.ADI;*.ADIF)|*.adi;*.adif;*.ADI;*.ADIF|Alle "
 "Dateien (*.*)|*.*"
 
-#: qsodatadialog.cpp:596 tqsl.cpp:1765
+#: qsodatadialog.cpp:604 tqsl.cpp:1800
 msgid "ADIF files (*.adi;*.adif)|*.adi;*.adif|All files (*.*)|*.*"
 msgstr "ADIF-Dateien (*.adi;*.adif)|*.adi;*.adif|Alle Dateien (*.*)|*.*."
 
-#: qsodatadialog.cpp:656
+#: qsodatadialog.cpp:664
 #, c-format
 msgid "Wrote %d QSO records to %s"
 msgstr "%d QSO-Einträge in %s geschrieben"
 
-#: qsodatadialog.cpp:806
+#: qsodatadialog.cpp:814
 msgid "One QSO Record"
 msgstr "Ein QSO Eintrag"
 
-#: qsodatadialog.cpp:808
+#: qsodatadialog.cpp:816
 #, c-format
 msgid "%d QSO Records"
 msgstr "%d QSO Einträge"
 
-#: stationdial.cpp:56 tqsl.cpp:5373
+#: stationdial.cpp:56 tqsl.cpp:5590
 msgid "&Properties"
 msgstr "Eigenschaften"
 
@@ -857,65 +857,65 @@ msgid ""
 "Location."
 msgstr "Verwenden Sie die Schaltfläche \"Neu\", um einen Standort anzulegen."
 
-#: tqsl.cpp:160
+#: tqsl.cpp:166
 msgid "Success"
 msgstr "Erfolgreich"
 
-#: tqsl.cpp:161
+#: tqsl.cpp:167
 msgid "User Cancelled"
 msgstr "Vom Benutzer abgebrochen"
 
-#: tqsl.cpp:162
+#: tqsl.cpp:168
 msgid "Upload Rejected"
 msgstr "Upload wurde abgelehnt!"
 
-#: tqsl.cpp:163
+#: tqsl.cpp:169
 msgid "Unexpected LoTW Response"
 msgstr "Unerwartete LoTW-Antwort"
 
-#: tqsl.cpp:165
+#: tqsl.cpp:171
 msgid "TQSLLib Error"
 msgstr "TQSLLib-Fehler"
 
-#: tqsl.cpp:166
+#: tqsl.cpp:172
 msgid "Error opening input file"
 msgstr "Fehler beim Öffnen der Eingabedatei"
 
-#: tqsl.cpp:167
+#: tqsl.cpp:173
 msgid "Error opening output file"
 msgstr "Fehler beim Öffnen der Ausgabedatei"
 
-#: tqsl.cpp:168
+#: tqsl.cpp:174
 msgid "No QSOs written"
 msgstr "Keine QSOs geschrieben"
 
-#: tqsl.cpp:169
+#: tqsl.cpp:175
 msgid "Some QSOs suppressed"
 msgstr "Einige QSOs unterdrückt"
 
-#: tqsl.cpp:170
+#: tqsl.cpp:176
 msgid "Command Syntax Error"
 msgstr "Befehl Syntaxfehler"
 
-#: tqsl.cpp:171
+#: tqsl.cpp:177
 msgid "LoTW Connection Failed"
 msgstr "LoTW-Verbindung fehlgeschlagen"
 
-#: tqsl.cpp:172
+#: tqsl.cpp:178
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: tqsl.cpp:173
+#: tqsl.cpp:179
 msgid "The duplicates database is locked"
 msgstr "Die Duplikate-Datenbank ist gesperrt"
 
-#: tqsl.cpp:181
+#: tqsl.cpp:187
 #, c-format
 msgid "Final Status: %hs (%d)"
 msgstr "Endstatus: %hs (%d)"
 
 #. TRANSLATORS: this is followed by the callsign and entity name
-#: tqsl.cpp:223
+#: tqsl.cpp:229
 #, c-format
 msgid ""
 "Enter the password to unlock the callsign certificate for %hs -- %hs\n"
@@ -927,35 +927,35 @@ msgstr ""
 "(Dies ist das Kennwort, das Sie bei der Installation des Rufzeichen-"
 "Zertifikats erstellt haben.)"
 
-#: tqsl.cpp:235 tqsl.cpp:6423 getpassword.h:32 getpassword.h:33
+#: tqsl.cpp:241 tqsl.cpp:6640 getpassword.h:32 getpassword.h:33
 msgid "Enter password"
 msgstr "Kennwort eingeben"
 
-#: tqsl.cpp:266
+#: tqsl.cpp:272
 msgid "Signing QSO Data"
 msgstr "Signierung QSO-Daten"
 
-#: tqsl.cpp:269
+#: tqsl.cpp:275
 msgid "Converting "
 msgstr "Konvertieren "
 
-#: tqsl.cpp:269
+#: tqsl.cpp:275
 msgid "to TQSL format"
 msgstr "ins TQSL-Format"
 
-#: tqsl.cpp:289
+#: tqsl.cpp:295
 msgid "Uploading Signed Data"
 msgstr "signierte Daten hochladen"
 
-#: tqsl.cpp:289
+#: tqsl.cpp:295
 msgid "Uploading signed log data..."
 msgstr "Signierte Log-Daten werden hochgeladen ..."
 
-#: tqsl.cpp:373
+#: tqsl.cpp:379
 msgid "QSO Date Range"
 msgstr "QSO-Datumsbereich"
 
-#: tqsl.cpp:376
+#: tqsl.cpp:382
 msgid ""
 "You may set the starting and/or ending QSO dates in order to select QSOs "
 "from the input file."
@@ -963,7 +963,7 @@ msgstr ""
 "Sie können die QSO Start- und/oder Enddaten eingeben, um QSOs aus der "
 "Eingabedatei auszuwählen."
 
-#: tqsl.cpp:379
+#: tqsl.cpp:385
 msgid ""
 "QSOs prior to the starting date or after the ending date will not be signed "
 "or included in the output file."
@@ -971,31 +971,31 @@ msgstr ""
 "QSOs vor dem Startdatum oder nach dem Enddatum werden nicht signiert und "
 "sind nicht in der Ausgabedatei enthalten."
 
-#: tqsl.cpp:382
+#: tqsl.cpp:388
 msgid "You may leave either date (or both dates) blank."
 msgstr "Sie können ein Datumfeld (oder beide Felder) leer lassen."
 
-#: tqsl.cpp:390
+#: tqsl.cpp:396
 msgid "Start Date (YYYY-MM-DD)"
 msgstr "Startdatum (JJJJ-MM-TT)"
 
-#: tqsl.cpp:395
+#: tqsl.cpp:401
 msgid "End Date (YYYY-MM-DD)"
 msgstr "Enddatum (JJJJ-MM-TT)"
 
-#: tqsl.cpp:420
+#: tqsl.cpp:426
 msgid "Start date is invalid"
 msgstr "Startdatum ist ungültig"
 
-#: tqsl.cpp:428
+#: tqsl.cpp:434
 msgid "End date is invalid"
 msgstr "Enddatum ist ungültig"
 
-#: tqsl.cpp:468
+#: tqsl.cpp:474
 msgid "Duplicate QSOs Detected"
 msgstr "Doppelte QSOs erkannt"
 
-#: tqsl.cpp:474
+#: tqsl.cpp:480
 #, c-format
 msgid ""
 "This log contains %d QSO(s) which appear to have already been signed for "
@@ -1004,13 +1004,13 @@ msgstr ""
 "Dieses Log enthält %d QSO(s), die bereits zum Hochladen auf LoTW signiert "
 "wurden und keine neuen QSOs."
 
-#: tqsl.cpp:477
+#: tqsl.cpp:483
 msgid "Click 'Cancel' to abandon processing this log file (Recommended)."
 msgstr ""
 "Klicken Sie auf 'Abbrechen', um die Verarbeitung dieses Logs zu beenden "
 "(empfohlen)."
 
-#: tqsl.cpp:479
+#: tqsl.cpp:485
 msgid ""
 "Click 'Allow Duplicates' to re-process this log while allowing duplicate "
 "QSOs."
@@ -1018,7 +1018,7 @@ msgstr ""
 "Klicken Sie auf 'Duplikate zulassen', um dieses Log nochmals zu verarbeiten, "
 "wobei doppelte QSOs zugelassen werden."
 
-#: tqsl.cpp:484
+#: tqsl.cpp:490
 #, c-format
 msgid ""
 "This log contains %d QSO(s) which appear to have already been signed for "
@@ -1027,7 +1027,7 @@ msgstr ""
 "Dieses Log enthält %d QSO(s), die bereits für zum Hochladen auf LoTW "
 "signiert scheinen und %d neue QSOs."
 
-#: tqsl.cpp:488 tqsl.cpp:498
+#: tqsl.cpp:494 tqsl.cpp:504
 msgid ""
 "Click 'Exclude duplicates' to sign normally, without the duplicate QSOs "
 "(Recommended)."
@@ -1035,12 +1035,12 @@ msgstr ""
 "Klicken Sie auf 'Duplikate ausschließen', um normal - ohne doppelte QSOs - "
 "zu signieren (empfohlen)."
 
-#: tqsl.cpp:490 tqsl.cpp:500
+#: tqsl.cpp:496 tqsl.cpp:506
 msgid "Click 'Cancel' to abandon processing this log file."
 msgstr ""
 "Klicken Sie auf 'Abbrechen', um die Verarbeitung dieser Log-Datei zu beenden."
 
-#: tqsl.cpp:492 tqsl.cpp:502
+#: tqsl.cpp:498 tqsl.cpp:508
 msgid ""
 "Click 'Allow duplicates' to re-process this log while allowing duplicate "
 "QSOs."
@@ -1048,7 +1048,7 @@ msgstr ""
 "Klicken Sie auf 'Duplikate zulassen', um dieses Log nochmals zu verarbeiten, "
 "wobei doppelte QSOs zugelassen werden."
 
-#: tqsl.cpp:494
+#: tqsl.cpp:500
 #, c-format
 msgid ""
 "This log contains %d QSO(s) which appear to have already been signed for "
@@ -1057,7 +1057,7 @@ msgstr ""
 "Dieses Log enthält %d QSO(s), die bereits für zum Hochladen auf LoTW "
 "signiert scheinen und ein neues QSO."
 
-#: tqsl.cpp:514
+#: tqsl.cpp:520
 msgid ""
 "The log file you are uploading using your QSO Logging system consists "
 "entirely of previously uploaded QSOs (duplicates) that create unnecessary "
@@ -1071,7 +1071,7 @@ msgstr ""
 "Version Ihres Log-Programms, das dies vermeidet. Bitte überprüfen Sie beim "
 "Anbieter, ob eine aktualisierte Version vorliegt."
 
-#: tqsl.cpp:518
+#: tqsl.cpp:524
 msgid ""
 "In the meantime, please note that some loggers may exhibit strange behavior "
 "if an option other than 'Allow duplicates' is clicked. Choosing 'Cancel' is "
@@ -1086,7 +1086,7 @@ msgstr ""
 "seltsam (aber harmlos) reagieren. In dem es z. B. versucht eine leere Datei "
 "hochzuladen oder alle ausgewählten QSOs als 'gesendet' markiert."
 
-#: tqsl.cpp:523
+#: tqsl.cpp:529
 msgid ""
 "The log file you are uploading using your QSO Logging system includes some "
 "previously uploaded QSOs (duplicates) that create unnecessary work for LoTW. "
@@ -1100,7 +1100,7 @@ msgstr ""
 "Version Ihres Log-Programms, das dies vermeidet. Bitte überprüfen Sie beim "
 "Anbieter, ob eine aktualisierte Version vorliegt."
 
-#: tqsl.cpp:527
+#: tqsl.cpp:533
 msgid ""
 "In the meantime, please note that some loggers may exhibit strange behavior "
 "if an option other than 'Allow duplicates' is clicked. 'Exclude duplicates' "
@@ -1119,7 +1119,7 @@ msgstr ""
 "beeinträchtigt und markiert alle ausgewählten QSOs als gesendet im 'QSO "
 "gesendet'-Status."
 
-#: tqsl.cpp:533
+#: tqsl.cpp:539
 msgid ""
 "Choosing 'Cancel' is usually safe, but a defective logger not checking the "
 "status messages reported by TrustedQSL may produce strange (but harmless) "
@@ -1131,15 +1131,15 @@ msgstr ""
 "harmlos) reagieren. In dem es z. B. versucht eine leere Datei hochzuladen "
 "oder alle ausgewählten QSOs als 'gesendet' markiert."
 
-#: tqsl.cpp:545
+#: tqsl.cpp:551
 msgid "Exclude duplicates"
 msgstr "Duplikate ausschließen"
 
-#: tqsl.cpp:547
+#: tqsl.cpp:553
 msgid "Allow duplicates"
 msgstr "Duplikate zulassen"
 
-#: tqsl.cpp:572
+#: tqsl.cpp:578
 msgid ""
 "The only reason to re-sign duplicate QSOs is if a previous upload was not "
 "processed by LoTW, either because it was never uploaded, or there was a "
@@ -1149,25 +1149,25 @@ msgstr ""
 "vorherige Datei nicht von LoTW verarbeitet wurde. Möglicherweise schlug das "
 "Hochladen fehl oder es gab einen Server-Ausfall."
 
-#: tqsl.cpp:575
+#: tqsl.cpp:581
 msgid "Are you sure you want to proceed? Click 'No' to review the choices"
 msgstr ""
 "Sind Sie sicher, dass Sie fortfahren möchten? Klicken Sie auf 'Nein', um die "
 "Auswahl zu überprüfen"
 
-#: tqsl.cpp:576
+#: tqsl.cpp:582
 msgid "Are you sure?"
 msgstr "Sind Sie sicher?"
 
-#: tqsl.cpp:599
+#: tqsl.cpp:605
 msgid "Errors Detected"
 msgstr "Fehler gefunden"
 
-#: tqsl.cpp:606
+#: tqsl.cpp:612
 msgid "Ignore"
 msgstr "Ignorieren"
 
-#: tqsl.cpp:647
+#: tqsl.cpp:653
 #, c-format
 msgid ""
 "Your custom mode map %s conflicts with the standard mode definition for %hs "
@@ -1176,228 +1176,228 @@ msgstr ""
 "Ihre benutzerdefinierte Mode-Tabelle %s kollidiert mit den Standard-Mode-"
 "Definitionen für %hs und wurde gelöscht."
 
-#: tqsl.cpp:874
+#: tqsl.cpp:880
 #, c-format
 msgid "Error renaming backup file %s: %hs"
 msgstr "Fehler bei der Umbenennung der Sicherungsdatei %s: %hs"
 
-#: tqsl.cpp:1014 tqsl.cpp:1033
+#: tqsl.cpp:1021 tqsl.cpp:1040
 msgid "Checking for TQSL updates..."
 msgstr "Überprüfe auf TQSL-Aktualisierungen..."
 
-#: tqsl.cpp:1080
+#: tqsl.cpp:1087
 msgid "Sign and &upload ADIF or Cabrillo File..."
 msgstr "Signieren und hochladen einer ADIF- oder Cabrillo-Datei…"
 
-#: tqsl.cpp:1081
+#: tqsl.cpp:1088
 msgid "&Sign and save ADIF or Cabrillo file..."
 msgstr "Signieren und speichern einer ADIF- oder Cabrillo-Datei…"
 
-#: tqsl.cpp:1083
+#: tqsl.cpp:1090
 msgid "&Backup Station Locations, Certificates, and Preferences..."
 msgstr "Sichern von Standorten, Zertifikaten und Einstellungen..."
 
-#: tqsl.cpp:1084
+#: tqsl.cpp:1091
 msgid "&Restore Station Locations, Certificates, and Preferences..."
 msgstr "Wiederherstellen von Standorten, Zertifikaten und Einstellungen..."
 
-#: tqsl.cpp:1086
+#: tqsl.cpp:1093
 msgid "Create &New ADIF file..."
 msgstr "Neue ADIF-Datei erstellen..."
 
-#: tqsl.cpp:1087
+#: tqsl.cpp:1094
 msgid "&Edit existing ADIF file..."
 msgstr "Bearbeiten einer vorhandenden ADIF-Datei..."
 
-#: tqsl.cpp:1090
+#: tqsl.cpp:1097
 msgid "&Preferences..."
 msgstr "Einstellungen..."
 
-#: tqsl.cpp:1092
+#: tqsl.cpp:1099
 msgid "Display or Modify &Preferences..."
 msgstr "Anzeigen oder Ändern der Einstellungen..."
 
-#: tqsl.cpp:1095 tqsl.cpp:6082
+#: tqsl.cpp:1102 tqsl.cpp:6299
 msgid "Language"
 msgstr "Sprache"
 
-#: tqsl.cpp:1097
+#: tqsl.cpp:1104
 msgid "Dia&gnostic Mode"
 msgstr "Diagnose-Modus"
 
-#: tqsl.cpp:1102
+#: tqsl.cpp:1109 tqslupdater.cpp:106
 msgid "E&xit TQSL\tAlt-X"
 msgstr "TQSL Beenden\tAlt-X"
 
-#: tqsl.cpp:1107
+#: tqsl.cpp:1114
 msgid "&Display Station Location Properties"
 msgstr "Anzeige der Standort-Eigenschaften"
 
-#: tqsl.cpp:1109
+#: tqsl.cpp:1116
 msgid "&Edit Station Location"
 msgstr "Bearbeiten des Standortes"
 
-#: tqsl.cpp:1110
+#: tqsl.cpp:1117
 msgid "&Add Station Location"
 msgstr "Hinzufügen eines Standortes"
 
-#: tqsl.cpp:1116
+#: tqsl.cpp:1123
 msgid "&Restore a Deleted Station Location"
 msgstr "Wiederherstellen eines gelöschten Standortes"
 
-#: tqsl.cpp:1129
+#: tqsl.cpp:1136
 msgid "&Contents"
 msgstr "Inhalt"
 
-#: tqsl.cpp:1131
+#: tqsl.cpp:1138
 msgid "Display &Documentation"
 msgstr "Anzeigen der Anleitung"
 
-#: tqsl.cpp:1136
+#: tqsl.cpp:1143
 msgid "Check for &Updates..."
 msgstr "Auf Aktualisierungen prüfen..."
 
-#: tqsl.cpp:1138
+#: tqsl.cpp:1145
 msgid "&About"
 msgstr "Über"
 
-#: tqsl.cpp:1141 tqsl_prefs.cpp:88
+#: tqsl.cpp:1148 tqsl_prefs.cpp:88
 msgid "&File"
 msgstr "Datei"
 
-#: tqsl.cpp:1142
+#: tqsl.cpp:1149
 msgid "&Station Location"
 msgstr "Standort"
 
-#: tqsl.cpp:1143
+#: tqsl.cpp:1150
 msgid "Callsign &Certificate"
 msgstr "Rufzeichen-Zertifikat"
 
-#: tqsl.cpp:1144
+#: tqsl.cpp:1151
 msgid "&Help"
 msgstr "Hilfe"
 
-#: tqsl.cpp:1159 tqsl.cpp:1236
+#: tqsl.cpp:1166 tqsl.cpp:1243
 msgid "Log Operations"
 msgstr "Log-Operationen"
 
-#: tqsl.cpp:1165 tqsl.cpp:1456
+#: tqsl.cpp:1172 tqsl.cpp:1463
 msgid "Status Log"
 msgstr "Statusprotokoll"
 
-#: tqsl.cpp:1187 tqsl.cpp:1192
+#: tqsl.cpp:1194 tqsl.cpp:1199
 msgid "Sign a log and upload it automatically to LoTW"
 msgstr "Log signieren und automatisch auf LoTW hochladen"
 
-#: tqsl.cpp:1201 tqsl.cpp:1205
+#: tqsl.cpp:1208 tqsl.cpp:1212
 msgid "Sign a log and save it for uploading later"
 msgstr "Log signieren und speichern, um es später hochzuladen"
 
-#: tqsl.cpp:1215 tqsl.cpp:1219
+#: tqsl.cpp:1222 tqsl.cpp:1226
 msgid "Create an ADIF file for signing and uploading"
 msgstr "Neue ADIF-Datei für die Signatur und das Hochladen erstellen"
 
-#: tqsl.cpp:1228 tqsl.cpp:1232
+#: tqsl.cpp:1235 tqsl.cpp:1239
 msgid "Log in to the Logbook of the World Site"
 msgstr "Melden Sie sich auf der LoTW Seite an"
 
-#: tqsl.cpp:1262
+#: tqsl.cpp:1269
 msgid "Select a Station Location to process      "
 msgstr "Wählen Sie einen Standort zur Bearbeitung      "
 
-#: tqsl.cpp:1293
+#: tqsl.cpp:1300
 msgid "Create a new Station Location"
 msgstr "Erstellen eines neuen Standortes"
 
-#: tqsl.cpp:1308 tqsl.cpp:5935 tqsl.cpp:5936
+#: tqsl.cpp:1315 tqsl.cpp:6152 tqsl.cpp:6153
 msgid "Edit a Station Location"
 msgstr "Bearbeiten eines Standortes"
 
-#: tqsl.cpp:1324 tqsl.cpp:5937 tqsl.cpp:5938
+#: tqsl.cpp:1331 tqsl.cpp:6154 tqsl.cpp:6155
 msgid "Delete a Station Location"
 msgstr "Löschen eines Standortes"
 
-#: tqsl.cpp:1340 tqsl.cpp:5939 tqsl.cpp:5940
+#: tqsl.cpp:1347 tqsl.cpp:6156 tqsl.cpp:6157
 msgid "Display Station Location Properties"
 msgstr "Standort-Eigenschaften anzeigen"
 
-#: tqsl.cpp:1366 tqsl.cpp:5703
+#: tqsl.cpp:1373 tqsl.cpp:5920
 msgid "Select a Callsign Certificate to process"
 msgstr "Wählen Sie ein Rufzeichen-Zertifikat zur Verarbeitung aus"
 
-#: tqsl.cpp:1392
+#: tqsl.cpp:1399
 msgid "Load a Callsign Certificate"
 msgstr "Rufzeichen-Zertifikat laden"
 
-#: tqsl.cpp:1409 tqsl.cpp:5695 tqsl.cpp:5696
+#: tqsl.cpp:1416 tqsl.cpp:5912 tqsl.cpp:5913
 msgid "Save a Callsign Certificate"
 msgstr "Speichern eines Rufzeichen-Zertifikats"
 
-#: tqsl.cpp:1425 tqsl.cpp:5509 tqsl.cpp:5697 tqsl.cpp:5698 tqsl.cpp:5753
-#: tqsl.cpp:5754
+#: tqsl.cpp:1432 tqsl.cpp:5726 tqsl.cpp:5914 tqsl.cpp:5915 tqsl.cpp:5970
+#: tqsl.cpp:5971
 msgid "Renew a Callsign Certificate"
 msgstr "Erneuern eines Rufzeichen-Zertifikats"
 
-#: tqsl.cpp:1441
+#: tqsl.cpp:1448
 msgid "Display a Callsign Certificate's Properties"
 msgstr "Eigenschaften eines Rufzeichen-Zertifikats anzeigen"
 
-#: tqsl.cpp:1446 tqsl.cpp:5913
+#: tqsl.cpp:1453 tqsl.cpp:6130
 msgid "Callsign Certificates"
 msgstr "Rufzeichen-Zertifikate"
 
-#: tqsl.cpp:1470 tqsl.cpp:1566 tqsl.cpp:1596
+#: tqsl.cpp:1477 tqsl.cpp:1601 tqsl.cpp:1631
 msgid "Add Station Location"
 msgstr "Standort hinzufügen"
 
-#: tqsl.cpp:1533
+#: tqsl.cpp:1550
 msgid "About"
 msgstr "Über"
 
-#: tqsl.cpp:1546
+#: tqsl.cpp:1563
 msgid "Log File"
 msgstr "Logdatei"
 
-#: tqsl.cpp:1547
+#: tqsl.cpp:1564
 msgid "Log files (*.log)|*.log|All files (*.*)|*.*"
 msgstr "Log-Dateien (*.log)|*.log|Alle Dateien (*.*)|*.*"
 
-#: tqsl.cpp:1554
+#: tqsl.cpp:1571
 #, c-format
 msgid "Error opening diagnostic log %s: %hs"
 msgstr "Fehler beim Öffnen des Diagnoseprotokolls %s: %hs"
 
-#: tqsl.cpp:1555
+#: tqsl.cpp:1572
 msgid "Log File Error"
 msgstr "Logdateifehler"
 
 #. TRANSLATORS: uncommon error - error in a station location, followed by the ignore message that follows.
-#: tqsl.cpp:1623 tqsl.cpp:2860 tqsl.cpp:6053
+#: tqsl.cpp:1658 tqsl.cpp:2881 tqsl.cpp:6270
 msgid "The invalid data was ignored."
 msgstr "Die ungültigen Daten wurden ignoriert."
 
-#: tqsl.cpp:1624
+#: tqsl.cpp:1659
 msgid "Location data error"
 msgstr "Standortdatenfehler"
 
-#: tqsl.cpp:1628 tqsl.cpp:1654 tqsl.cpp:2865 tqsl.cpp:6058
+#: tqsl.cpp:1663 tqsl.cpp:1689 tqsl.cpp:2886 tqsl.cpp:6275
 #, c-format
 msgid "Edit Station Location : %hs - %s"
 msgstr "Standort bearbeiten: %hs - %s"
 
-#: tqsl.cpp:1662 tqsl.cpp:5021
+#: tqsl.cpp:1697 tqsl.cpp:5238
 msgid "Edit Station Location"
 msgstr "Standort bearbeiten"
 
-#: tqsl.cpp:1662 tqsl.cpp:6285 tqsl.cpp:6391 tqsl_prefs.cpp:85
+#: tqsl.cpp:1697 tqsl.cpp:6502 tqsl.cpp:6608 tqsl_prefs.cpp:85
 msgid "Close"
 msgstr "Schließen"
 
-#: tqsl.cpp:1761
+#: tqsl.cpp:1796
 msgid "Open File"
 msgstr "Datei öffnen"
 
-#: tqsl.cpp:1771 tqsl.cpp:5118
+#: tqsl.cpp:1806 tqsl.cpp:5335
 msgid ""
 "Warning: The TQSL ADIF editor only processes a limited number of ADIF "
 "fields.\n"
@@ -1409,85 +1409,85 @@ msgstr ""
 "\n"
 "Durch die Benutzung können QSO-Details verloren gehen!"
 
-#: tqsl.cpp:1859
+#: tqsl.cpp:1894
 msgid "Please choose a callsign for this Station Location"
 msgstr "Bitte wählen Sie ein Rufzeichen für diesen Standort"
 
-#: tqsl.cpp:1860
+#: tqsl.cpp:1895
 msgid "Select Callsign"
 msgstr "Wählen Sie ein Rufzeichen"
 
 #. TRANSLATORS: filename being signed, station location and callsign added later.
-#: tqsl.cpp:1872 tqsl.cpp:3896
+#: tqsl.cpp:1907 tqsl.cpp:4101
 #, c-format
 msgid "The file (%s) will be signed using:"
 msgstr "Die Datei (%s) wird signiert mit:"
 
-#: tqsl.cpp:1874 tqsl.cpp:3898
+#: tqsl.cpp:1909 tqsl.cpp:4103
 msgid "Station Location:"
 msgstr "Standort:"
 
-#: tqsl.cpp:1878 tqsl.cpp:3902
+#: tqsl.cpp:1913 tqsl.cpp:4107
 msgid "DXCC:"
 msgstr "DXCC:"
 
-#: tqsl.cpp:1880 tqsl.cpp:3904
+#: tqsl.cpp:1915 tqsl.cpp:4109
 msgid "Is this correct?"
 msgstr "Ist das richtig?"
 
-#: tqsl.cpp:1886 tqsl.cpp:3906
+#: tqsl.cpp:1921 tqsl.cpp:4111
 msgid "TQSL - Confirm signing"
 msgstr "TQSL-Signierung bestätigen"
 
-#: tqsl.cpp:1900
+#: tqsl.cpp:1935
 msgid "There are no valid callsign certificates for callsign"
 msgstr "Es liegen keine gültigen Rufzeichen-Zertifikate für das Rufzeichen vor"
 
-#: tqsl.cpp:1903
+#: tqsl.cpp:1938
 msgid "in entity"
 msgstr "im Land"
 
-#: tqsl.cpp:1905 tqsl.cpp:1910
+#: tqsl.cpp:1940 tqsl.cpp:1945
 msgid "Signing aborted."
 msgstr "Signierung abgebrochen."
 
-#: tqsl.cpp:1918
+#: tqsl.cpp:1953
 #, c-format
 msgid "Signing using Callsign %hs, DXCC Entity %hs"
 msgstr "Signierung mit Rufzeichen %hs, DXCC %hs"
 
-#: tqsl.cpp:1930
+#: tqsl.cpp:1965
 msgid ""
 "TQSL must wait for other running copies of TQSL to exit before signing..."
 msgstr ""
 "TQSL muss vor der Signierung warten bis andere laufende Instanzen von TQSL "
 "enden..."
 
-#: tqsl.cpp:1958 tqsl.cpp:2186
+#: tqsl.cpp:1993 tqsl.cpp:2221
 msgid "Cancelled"
 msgstr "Abgebrochen"
 
-#: tqsl.cpp:2007 tqsl.cpp:2017
+#: tqsl.cpp:2042 tqsl.cpp:2052
 #, c-format
 msgid "QSOs: %d"
 msgstr "QSOs: %d"
 
-#: tqsl.cpp:2009 tqsl.cpp:2019
+#: tqsl.cpp:2044 tqsl.cpp:2054
 #, c-format
 msgid "Duplicates: %d"
 msgstr "Duplikate: %d"
 
-#: tqsl.cpp:2011 tqsl.cpp:2021
+#: tqsl.cpp:2046 tqsl.cpp:2056
 #, c-format
 msgid "Errors: %d"
 msgstr "Fehler: %d"
 
-#: tqsl.cpp:2085 tqsl.cpp:2166
+#: tqsl.cpp:2120 tqsl.cpp:2201
 #, c-format
 msgid "on line %d"
 msgstr "in Zeile %d"
 
-#: tqsl.cpp:2095
+#: tqsl.cpp:2130
 #, c-format
 msgid ""
 "Your QTH Details changed for this QSO.\n"
@@ -1504,142 +1504,142 @@ msgstr ""
 "\n"
 "Bitte stellen Sie sicher, dass Sie dieses QSO ändern wollen!\n"
 
-#: tqsl.cpp:2117
+#: tqsl.cpp:2152
 msgid "Click 'Ignore' to continue signing this log while ignoring errors."
 msgstr ""
 "Klicken Sie auf 'Ignorieren', um mit der Signierung dieses Logs fortzufahren "
 "und die Fehler zu ignorieren."
 
-#: tqsl.cpp:2119
+#: tqsl.cpp:2154
 msgid "Click 'Cancel' to abandon signing this log."
 msgstr ""
 "Klicken Sie auf 'Abbrechen', um die Signierung dieses Logs abzubrechen."
 
-#: tqsl.cpp:2147
+#: tqsl.cpp:2182
 msgid "Signing cancelled"
 msgstr "Signierung abgebrochen"
 
-#: tqsl.cpp:2150
+#: tqsl.cpp:2185
 msgid "Signing aborted"
 msgstr "Signierung abgebrochen"
 
-#: tqsl.cpp:2169
+#: tqsl.cpp:2204
 msgid "Signing aborted due to errors"
 msgstr "Signieren wegen Fehlern abgebrochen"
 
-#: tqsl.cpp:2173
+#: tqsl.cpp:2208
 #, c-format
 msgid "%s: %d QSO records were outside the selected date range"
 msgstr "%s: %d QSOs waren außerhalb des gewählten Zeitraums"
 
-#: tqsl.cpp:2205
+#: tqsl.cpp:2240
 msgid "All QSOs are duplicates; aborted"
 msgstr "Alle QSOs sind Duplikate; abgebrochen"
 
-#: tqsl.cpp:2212
+#: tqsl.cpp:2247
 #, c-format
 msgid "%d of %d QSOs are duplicates; aborted"
 msgstr "%d von %d QSOs sind Duplikate; abgebrochen"
 
-#: tqsl.cpp:2228
+#: tqsl.cpp:2263
 #, c-format
 msgid "%s: %d QSO records were duplicates"
 msgstr "%s: %d QSOs waren Duplikate"
 
-#: tqsl.cpp:2250
+#: tqsl.cpp:2285
 msgid "Invalid contact - QSO does not specify a Callsign"
 msgstr "Ungültiger Kontakt - kein Rufzeichen im QSO angegeben"
 
-#: tqsl.cpp:2251
+#: tqsl.cpp:2286
 msgid "Invalid contact - QSO does not specify a band or frequency"
 msgstr "Ungültiger Kontakt - kein Band oder keine Frequenz angegeben"
 
-#: tqsl.cpp:2252
+#: tqsl.cpp:2287
 msgid "Invalid contact - QSO does not specify a mode"
 msgstr "Ungültiger Kontakt - keinen Mode angegeben"
 
-#: tqsl.cpp:2253
+#: tqsl.cpp:2288
 msgid "Invalid contact - QSO does not specify a date"
 msgstr "Ungültiger Kontakt - kein Datum angegeben"
 
-#: tqsl.cpp:2254
+#: tqsl.cpp:2289
 msgid "Invalid contact - QSO does not specify a time"
 msgstr "Ungültiger Kontakt - keine Zeit angegeben"
 
-#: tqsl.cpp:2256
+#: tqsl.cpp:2291
 msgid "This callsign certificate is already active and cannot be restored."
 msgstr ""
 "Das Rufzeichen-Zertifikat ist bereits aktiv und kann nicht wiederhergestellt "
 "werden."
 
-#: tqsl.cpp:2291
+#: tqsl.cpp:2326
 #, c-format
 msgid "Unable to open %s for output"
 msgstr "Kann %s nicht zur Ausgabe öffnen"
 
-#: tqsl.cpp:2300
+#: tqsl.cpp:2335
 msgid "No records output"
 msgstr "Keine Daten ausgegeben"
 
-#: tqsl.cpp:2355
+#: tqsl.cpp:2390
 #, c-format
 msgid "%s: wrote %d records to %s"
 msgstr "%s: schrieb %d Datensätze in %s"
 
-#: tqsl.cpp:2357
+#: tqsl.cpp:2392
 #, c-format
 msgid "%s is ready to be emailed or uploaded."
 msgstr "%s ist bereit, zum Mailen oder hochgeladen zu werden."
 
-#: tqsl.cpp:2358
+#: tqsl.cpp:2393
 msgid "Note: TQSL assumes that this file will be uploaded to LoTW."
 msgstr ""
 "Hinweis: TQSL geht davon aus, dass diese Datei zum LoTW hochgeladen werden "
 "soll."
 
-#: tqsl.cpp:2359
+#: tqsl.cpp:2394
 msgid "Resubmitting these QSOs will cause them to be reported as duplicates."
 msgstr "Werden diese QSOs erneut gesendet, werden sie als Duplikate gemeldet."
 
-#: tqsl.cpp:2451
+#: tqsl.cpp:2471
 msgid "No records to upload"
 msgstr "Nichts zum Hochladen da"
 
-#: tqsl.cpp:2464
+#: tqsl.cpp:2484
 msgid "Error compressing before upload"
 msgstr "Fehler beim Komprimieren vor dem Hochladen"
 
-#: tqsl.cpp:2615
+#: tqsl.cpp:2636
 msgid "Error: Could not upload file (CURL Init error)"
 msgstr "Fehler: Datei konnte nicht hochgeladen werden (CURL Init-Fehler)"
 
-#: tqsl.cpp:2650
+#: tqsl.cpp:2671
 msgid "Attempting to upload one QSO"
 msgstr "Versuche ein QSO hochzuladen"
 
-#: tqsl.cpp:2652
+#: tqsl.cpp:2673
 #, c-format
 msgid "Attempting to upload %d QSOs"
 msgstr "Versuche %d QSOs hochzuladen"
 
-#: tqsl.cpp:2655
+#: tqsl.cpp:2676
 #, c-format
 msgid "Attempting to upload %s"
 msgstr "Versuche %s hochzuladen"
 
-#: tqsl.cpp:2662
+#: tqsl.cpp:2683
 msgid "Uploading Callsign Certificate"
 msgstr "Hochladen des Rufzeichen-Zertifikats"
 
-#: tqsl.cpp:2662
+#: tqsl.cpp:2683
 msgid "Uploading Callsign Certificate Request..."
 msgstr "Hochladen der Rufzeichen-Zertifikatsanforderung..."
 
-#: tqsl.cpp:2671
+#: tqsl.cpp:2692
 msgid "Could not spawn upload thread!"
 msgstr "Hochladen konnte nicht gestartet werden!"
 
-#: tqsl.cpp:2703
+#: tqsl.cpp:2724
 #, c-format
 msgid ""
 "%s: Log uploaded successfully with result:\n"
@@ -1650,11 +1650,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: tqsl.cpp:2705 tqsl.cpp:2726
+#: tqsl.cpp:2726 tqsl.cpp:2747
 msgid "After reading this message, you may close this program."
 msgstr "Nach dem Lesen dieser Meldung können Sie das Programm schließen."
 
-#: tqsl.cpp:2713 tqsl.cpp:2718
+#: tqsl.cpp:2734 tqsl.cpp:2739
 #, c-format
 msgid ""
 "%s uploaded with result:\n"
@@ -1665,7 +1665,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: tqsl.cpp:2715
+#: tqsl.cpp:2736
 #, c-format
 msgid ""
 "%s Uploaded with result:\n"
@@ -1676,34 +1676,34 @@ msgstr ""
 "\n"
 "%s"
 
-#: tqsl.cpp:2725
+#: tqsl.cpp:2746
 #, c-format
 msgid "%s: Log uploaded successfully"
 msgstr "%s: Log erfolgreich hochgeladen"
 
-#: tqsl.cpp:2728
+#: tqsl.cpp:2749
 #, c-format
 msgid "%s uploaded successfully"
 msgstr "%s erfolgreich hochgeladen"
 
-#: tqsl.cpp:2735
+#: tqsl.cpp:2756
 #, c-format
 msgid "%s: %s upload was rejected with result \"%s\""
 msgstr "%s: %s Hochladen wurde abgelehnt wegen \"%s\""
 
-#: tqsl.cpp:2739
+#: tqsl.cpp:2760
 #, c-format
 msgid "%s: %s upload was rejected"
 msgstr "% s: %s Hochladen wurde abgelehnt"
 
-#: tqsl.cpp:2745
+#: tqsl.cpp:2766
 #, c-format
 msgid "%s: Got an unexpected response on %s upload! Maybe the site is down?"
 msgstr ""
 "%s: Erhielt eine unerwartete Antwort auf %s Upload! Vielleicht ist die Seite "
 "nicht erreichbar?"
 
-#: tqsl.cpp:2757
+#: tqsl.cpp:2778
 #, c-format
 msgid ""
 "%s: Unable to upload - either your Internet connection is down or LoTW is "
@@ -1712,44 +1712,44 @@ msgstr ""
 "%s: Hochladen leider nicht möglich - entweder ist die Internetverbindung "
 "ausgefallen oder LoTW ist nicht erreichbar."
 
-#: tqsl.cpp:2758 tqsl.cpp:2762 tqsl.cpp:2766
+#: tqsl.cpp:2779 tqsl.cpp:2783 tqsl.cpp:2787
 #, c-format
 msgid "Please try uploading the %s later."
 msgstr "Bitte versuchen Sie %s später hochzuladen."
 
-#: tqsl.cpp:2761
+#: tqsl.cpp:2782
 #, c-format
 msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
 msgstr ""
 "%s: kann nicht hochladen. Das Netzwerk ist nicht verfügbar oder die LoTW "
 "Webseite ist zu beschäftigt."
 
-#: tqsl.cpp:2765
+#: tqsl.cpp:2786
 #, c-format
 msgid "%s: Unable to connect to the upload site."
 msgstr "%s: Kann nicht zur Upload-Webseite verbinden."
 
-#: tqsl.cpp:2769
+#: tqsl.cpp:2790
 #, c-format
 msgid "%s: Upload cancelled"
 msgstr "%s: Hochladen abgebrochen"
 
-#: tqsl.cpp:2774
+#: tqsl.cpp:2795
 #, c-format
 msgid "%s: Couldn't upload the file: CURL returned \"%hs\" (%hs)"
 msgstr ""
 "%s: Die Datei konnte nicht hochgeladen werden: CURL meldet \"%hs\" (%hs)"
 
-#: tqsl.cpp:2787
+#: tqsl.cpp:2808
 msgid "Your upload appears to have failed. Should TQSL try again?"
 msgstr ""
 "Hochladen scheint fehlgeschlagen zu sein. Soll TQSL es noch einmal versuchen?"
 
-#: tqsl.cpp:2787
+#: tqsl.cpp:2808
 msgid "Retry?"
 msgstr "Wiederholen?"
 
-#: tqsl.cpp:2816
+#: tqsl.cpp:2837
 #, c-format
 msgid ""
 "There are no callsign certificates for callsign %hs. This station location "
@@ -1758,11 +1758,11 @@ msgstr ""
 "Es sind keine Rufzeichen-Zertifikate für Rufzeichen %hs vorhanden. Dieser "
 "Standort kann nicht bearbeitet werden."
 
-#: tqsl.cpp:2816 tqsl.cpp:2818
+#: tqsl.cpp:2837 tqsl.cpp:2839
 msgid "No Certificate"
 msgstr "Kein Zertifikat"
 
-#: tqsl.cpp:2818
+#: tqsl.cpp:2839
 #, c-format
 msgid ""
 "There are no current callsign certificates for callsign %hs. This station "
@@ -1771,24 +1771,24 @@ msgstr ""
 "Es sind keine aktuellen Rufzeichen-Zertifikate für Rufzeichen %hs vorhanden. "
 "Dieser Standort kann nicht verwendet werden, um ein Log zu signieren."
 
-#: tqsl.cpp:2861 tqsl.cpp:2881 tqsl.cpp:6054
+#: tqsl.cpp:2882 tqsl.cpp:2902 tqsl.cpp:6271
 msgid "Station Location data error"
 msgstr "Standort Datenfehler"
 
-#: tqsl.cpp:2880
+#: tqsl.cpp:2901
 msgid "This should be corrected before signing a log file."
 msgstr "Dies sollte vor der Signierung einer Log-Datei korrigiert werden."
 
-#: tqsl.cpp:3051
+#: tqsl.cpp:3072
 msgid "TQSL Update Available"
 msgstr "TQSL-Update verfügbar"
 
-#: tqsl.cpp:3063
+#: tqsl.cpp:3084
 #, c-format
 msgid "A new TQSL release (V%s) is available!"
 msgstr "Eine neue TQSL-Version (V%s) ist verfügbar!"
 
-#: tqsl.cpp:3065
+#: tqsl.cpp:3086
 #, c-format
 msgid ""
 "An updated TrustedQSL configuration file (V%s) is available!\n"
@@ -1798,46 +1798,46 @@ msgstr ""
 "Die Konfigurationsdatei installiert Definitionen für Länder, Betriebsarten "
 "usw."
 
-#: tqsl.cpp:3073
+#: tqsl.cpp:3094
 msgid "Download from:"
 msgstr "Herunterladen von:"
 
-#: tqsl.cpp:3082
+#: tqsl.cpp:3103
 msgid "More details at:"
 msgstr "Mehr Details unter:"
 
-#: tqsl.cpp:3090
+#: tqsl.cpp:3111
 msgid "Click 'OK' to install the new version of TQSL, or Cancel to ignore it."
 msgstr ""
 "Klicken Sie auf 'OK', um die neue Version von TQSL, oder brechen Sie ab, um "
 "es zu ignorieren."
 
-#: tqsl.cpp:3095
+#: tqsl.cpp:3116
 msgid ""
 "Click 'OK' to install the new configuration file, or Cancel to ignore it."
 msgstr ""
 "Klicken Sie auf 'OK', um die neue Konfigurationsdatei zu installieren, oder "
 "Abbrechen zum ignorieren."
 
-#: tqsl.cpp:3147
+#: tqsl.cpp:3168
 #, c-format
 msgid "Can't open new configuration file %s: %hs"
 msgstr "Die neue Konfigurationsdatei %s: %hs kann nicht geöffnet werden"
 
-#: tqsl.cpp:3162 tqsl.cpp:3232
+#: tqsl.cpp:3183 tqsl.cpp:3259
 #, c-format
 msgid "Error writing new configuration file %s: %hs"
 msgstr "Fehler beim Schreiben der neuen Konfigurationsdatei %s:%hs"
 
-#: tqsl.cpp:3170
+#: tqsl.cpp:3191
 msgid "Configuration file successfully updated"
 msgstr "Konfigurationsdatei erfolgreich aktualisiert"
 
-#: tqsl.cpp:3170
+#: tqsl.cpp:3191
 msgid "Update Completed"
 msgstr "Aktualisierung abgeschlossen"
 
-#: tqsl.cpp:3183 tqsl.cpp:3248
+#: tqsl.cpp:3204 tqsl.cpp:3275
 msgid ""
 "Unable to update - either your Internet connection is down or LoTW is "
 "unreachable."
@@ -1845,93 +1845,93 @@ msgstr ""
 "Aktualisieren fehlgeschlagen - entweder ist die Internetverbindung "
 "ausgefallen oder LoTW ist nicht erreichbar."
 
-#: tqsl.cpp:3184 tqsl.cpp:3187 tqsl.cpp:3190 tqsl.cpp:3249 tqsl.cpp:3252
-#: tqsl.cpp:3255 tqsl.cpp:3686 tqsl.cpp:3693 tqsl.cpp:3699 tqsl.cpp:3722
-#: tqsl.cpp:3728 tqsl.cpp:3734
+#: tqsl.cpp:3205 tqsl.cpp:3208 tqsl.cpp:3211 tqsl.cpp:3276 tqsl.cpp:3279
+#: tqsl.cpp:3282 tqsl.cpp:3737 tqsl.cpp:3743 tqsl.cpp:3749 tqsl.cpp:3772
+#: tqsl.cpp:3778 tqsl.cpp:3784
 msgid "Please try again later."
 msgstr "Bitte versuchen Sie es später noch einmal."
 
-#: tqsl.cpp:3186 tqsl.cpp:3251
+#: tqsl.cpp:3207 tqsl.cpp:3278
 msgid "Unable to update. The nework is down or the LoTW site is too busy."
 msgstr ""
 "Keine Aktualisierung möglich. Entweder ist das Netzwerk nicht verfügbar oder "
 "die LoTW-Website ist zu beschäftigt."
 
-#: tqsl.cpp:3189 tqsl.cpp:3254 tqsl.cpp:3697 tqsl.cpp:3732
+#: tqsl.cpp:3210 tqsl.cpp:3281 tqsl.cpp:3747 tqsl.cpp:3782
 msgid "Unable to connect to the update site."
 msgstr "Keine Verbindung zur Update-Webseite möglich."
 
-#: tqsl.cpp:3192
+#: tqsl.cpp:3213
 msgid "Error downloading new configuration file:"
 msgstr "Fehler beim Herunterladen der neuen Konfigurationsdatei:"
 
-#: tqsl.cpp:3194 tqsl.cpp:3259 tqsl.cpp:3508
+#: tqsl.cpp:3215 tqsl.cpp:3286 tqsl.cpp:3553
 msgid "Update"
 msgstr "Aktualisierung"
 
-#: tqsl.cpp:3217
+#: tqsl.cpp:3244
 #, c-format
 msgid "Can't open TQSL update file %s: %hs"
 msgstr "TQSL-Update-Datei kann nicht geöffnet werden %s: %hs."
 
-#: tqsl.cpp:3257
+#: tqsl.cpp:3284
 msgid "Error downloading new file:"
 msgstr "Fehler beim Herunterladen der Datei."
 
-#: tqsl.cpp:3471
+#: tqsl.cpp:3516
 msgid "Error checking for expired callsign certificates:"
 msgstr "Fehler bei der Überprüfung auf abgelaufene Rufzeichen-Zertifikate:"
 
-#: tqsl.cpp:3472
+#: tqsl.cpp:3517
 msgid "Check Error"
 msgstr "Fehler bei der Überprüfung"
 
-#: tqsl.cpp:3475
+#: tqsl.cpp:3520
 #, c-format
 msgid "The certificate for %hs expires in %d days."
 msgstr "Das Zertifikat für %hs läuft in %d Tagen ab."
 
-#: tqsl.cpp:3478
+#: tqsl.cpp:3523
 #, c-format
 msgid "The certificate for %hs expires in %d days"
 msgstr "Das Zertifikat für %hs läuft in %d Tagen ab"
 
-#: tqsl.cpp:3480
+#: tqsl.cpp:3525
 msgid "Do you want to renew it now?"
 msgstr "Möchten Sie es jetzt erneuern?"
 
-#: tqsl.cpp:3482
+#: tqsl.cpp:3527
 msgid "Certificate Expiring"
 msgstr "Auslaufendes Zertifikat"
 
-#: tqsl.cpp:3515
+#: tqsl.cpp:3560
 #, c-format
 msgid "A new TQSL release (V%s) is available."
 msgstr "Eine steht neue TQSL-Version (V%s) zur Verfügung."
 
-#: tqsl.cpp:3532
+#: tqsl.cpp:3577
 #, c-format
 msgid "A new TrustedQSL configuration file (V%s) is available."
 msgstr "Es ist eine neue TrustedQSL-Konfigurationsdatei (V%s) verfügbar."
 
-#: tqsl.cpp:3545
+#: tqsl.cpp:3590
 msgid "Your system is up to date"
 msgstr "Ihr System ist auf dem neusten Stand"
 
-#: tqsl.cpp:3547
+#: tqsl.cpp:3592
 #, c-format
 msgid "TQSL Version %hs and Configuration Data Version %s"
 msgstr "TQSL- %hs und Konfigurationsdaten-Version %s"
 
-#: tqsl.cpp:3549
+#: tqsl.cpp:3594
 msgid "are the newest available"
 msgstr "sind auf dem neusten Stand"
 
-#: tqsl.cpp:3550
+#: tqsl.cpp:3595
 msgid "No Updates"
 msgstr "Keine Updates"
 
-#: tqsl.cpp:3684 tqsl.cpp:3720
+#: tqsl.cpp:3735 tqsl.cpp:3770
 msgid ""
 "Unable to check for updates - either your Internet connection is down or "
 "LoTW is unreachable."
@@ -1939,277 +1939,281 @@ msgstr ""
 "Kann nicht nach Updates suchen - entweder ist die Internetverbindung "
 "ausgefallen oder LoTW ist nicht erreichbar."
 
-#: tqsl.cpp:3691 tqsl.cpp:3726
+#: tqsl.cpp:3741 tqsl.cpp:3776
 msgid ""
 "Unable to check for updates. The nework is down or the LoTW site is too busy."
 msgstr ""
 "Kann nicht nach Updates suchen. Das Netzwerk ist nicht verfügbar oder die "
 "LoTW Webseite ist zu beschäftigt."
 
-#: tqsl.cpp:3702
+#: tqsl.cpp:3752
 msgid "Error downloading new version information:"
 msgstr "Fehler beim Herunterladen von Informationen zur neuen Version:"
 
-#: tqsl.cpp:3737
+#: tqsl.cpp:3787
 msgid "Error downloading update version information:"
 msgstr "Fehler beim Herunterladen von Informationen zur aktuellen Version:"
 
-#: tqsl.cpp:3795
+#: tqsl.cpp:4000
 msgid "You have no callsign certificates to use to sign a log file."
 msgstr "Sie haben keine Rufzeichen-Zertifikate, um ein Log zu signieren."
 
-#: tqsl.cpp:3797
+#: tqsl.cpp:4002
 msgid "Please install a callsign certificate then try again."
 msgstr ""
 "Bitte installieren Sie ein Rufzeichen-Zertifikat und versuchen es dann "
 "erneut."
 
-#: tqsl.cpp:3798
+#: tqsl.cpp:4003
 msgid "No Callsign Certificates"
 msgstr "Keine Rufzeichen-Zertifikate"
 
-#: tqsl.cpp:3823
+#: tqsl.cpp:4028
 msgid "|ADIF files ("
 msgstr "|ADIF-Dateien ("
 
-#: tqsl.cpp:3835
+#: tqsl.cpp:4040
 msgid "|Cabrillo files ("
 msgstr "|Cabrillo-Dateien ("
 
-#: tqsl.cpp:3838
+#: tqsl.cpp:4043
 msgid "Select file to Sign"
 msgstr "Wählen Sie eine Datei zum Signieren"
 
-#: tqsl.cpp:3854
+#: tqsl.cpp:4059
 msgid "TQSL compressed data files (*.tq8)|*.tq8"
 msgstr "TQSL komprimierte Daten-Dateien (*.tq8)|*.tq8"
 
-#: tqsl.cpp:3855
+#: tqsl.cpp:4060
 msgid "TQSL data files (*.tq7)|*.tq7"
 msgstr "TQSL Datendateien (*.tq7)|*.tq7"
 
-#: tqsl.cpp:3857
+#: tqsl.cpp:4062
 msgid "Select file to write to"
 msgstr "Wählen Sie eine Datei zum Speichern"
 
-#: tqsl.cpp:3872 tqsl.cpp:5136
+#: tqsl.cpp:4077 tqsl.cpp:5353
 msgid "Select Station Location for Signing"
 msgstr "Standort für die Signierung auswählen"
 
-#: tqsl.cpp:3913
+#: tqsl.cpp:4118
 msgid "Signing abandoned"
 msgstr "Signierung abgebrochen"
 
-#: tqsl.cpp:4100
+#: tqsl.cpp:4305
 msgid ""
 "TQSL must wait for other running copies of TQSL to exit before backing up..."
 msgstr ""
 "TQSL muss auf andere laufende Kopien TQSL warten, um speichern zu können ..."
 
-#: tqsl.cpp:4115 tqsl.cpp:4644
+#: tqsl.cpp:4320 tqsl.cpp:4855
 #, c-format
 msgid "Error opening save file %s: %hs"
 msgstr "Fehler beim Öffnen der Sicherungsdatei %s: %hs"
 
-#: tqsl.cpp:4130
+#: tqsl.cpp:4335
 msgid "Saving callsign certificates"
 msgstr "Speichern der Rufzeichen-Zertifikate"
 
-#: tqsl.cpp:4174
+#: tqsl.cpp:4379
 #, c-format
 msgid "Saving callsign certificate for %hs"
 msgstr "Speichern des Rufzeichen-Zertifikats für %hs"
 
-#: tqsl.cpp:4207
+#: tqsl.cpp:4412
 msgid "Saving Station Locations"
 msgstr "Speichern der Standorte"
 
-#: tqsl.cpp:4222
+#: tqsl.cpp:4427
 msgid "Saving TQSL Preferences"
 msgstr "Speichern der TQSL-Einstellungen"
 
-#: tqsl.cpp:4273
+#: tqsl.cpp:4440
+msgid "Saving QSOs"
+msgstr "Speichern der QSOs"
+
+#: tqsl.cpp:4484
 msgid "Save operation complete."
 msgstr "Speichern abgeschlossen."
 
-#: tqsl.cpp:4281
+#: tqsl.cpp:4492
 #, c-format
 msgid "Error performing automatic backup: %hs"
 msgstr "Fehler bei der Durchführung des automatischen Backup: %hs"
 
-#: tqsl.cpp:4282
+#: tqsl.cpp:4493
 msgid "Backup Error"
 msgstr "Backup-Fehler"
 
-#: tqsl.cpp:4284 tqsl.cpp:4303
+#: tqsl.cpp:4495 tqsl.cpp:4514
 #, c-format
 msgid "Backup operation failed: %hs"
 msgstr "Backup-Vorgang ist fehlgeschlagen: %hs"
 
-#: tqsl.cpp:4294
+#: tqsl.cpp:4505
 msgid "Enter file to save to"
 msgstr "Geben Sie die Datei zum Speichern an"
 
-#: tqsl.cpp:4295
+#: tqsl.cpp:4506
 msgid "Configuration files (*.tbk)|*.tbk|All files (*.*)|*.*"
 msgstr "Konfigurationsdateien (*.tbk)|*.tbk|Alle Dateien (*.*)|*.*"
 
-#: tqsl.cpp:4334
+#: tqsl.cpp:4545
 #, c-format
 msgid "Restoring callsign certificate for %hs"
 msgstr "Wiederherstellen des Rufzeichen-Zertifikats für %hs"
 
-#: tqsl.cpp:4380
+#: tqsl.cpp:4591
 msgid "Restoring Preferences"
 msgstr "Wiederherstellung der Einstellungen"
 
-#: tqsl.cpp:4439
+#: tqsl.cpp:4650
 msgid "Restoring Station Locations"
 msgstr "Wiederherstellung der Standorte"
 
-#: tqsl.cpp:4460
+#: tqsl.cpp:4671
 msgid "Restoring QSO records"
 msgstr "Wiederherstellung der QSO-Daten"
 
-#: tqsl.cpp:4510
+#: tqsl.cpp:4721
 #, c-format
 msgid "Error importing station locations: %hs"
 msgstr "Fehler beim Importieren der Standorte: %hs"
 
-#: tqsl.cpp:4576
+#: tqsl.cpp:4787
 msgid "Restoring Callsign Certificates"
 msgstr "Wiederherstellung der Rufzeichen-Zertifikate"
 
-#: tqsl.cpp:4583 tqsl.cpp:4591 tqsl.cpp:4596
+#: tqsl.cpp:4794 tqsl.cpp:4802 tqsl.cpp:4807
 #, c-format
 msgid "Error parsing saved configuration file: %hs"
 msgstr "Fehler bei der Analyse der gespeicherten Konfigurationsdatei: %hs"
 
-#: tqsl.cpp:4600
+#: tqsl.cpp:4811
 msgid "Restore Complete."
 msgstr "Wiederherstellung abgeschlossen."
 
-#: tqsl.cpp:4614
+#: tqsl.cpp:4825
 #, c-format
 msgid "Error parsing station location file: %hs"
 msgstr "Fehler bei der Analyse der Standort-Datei: %hs"
 
-#: tqsl.cpp:4626
+#: tqsl.cpp:4837
 msgid "Select saved configuration file"
 msgstr "Wählen Sie eine gespeicherte Konfigurationsdatei"
 
-#: tqsl.cpp:4627
+#: tqsl.cpp:4838
 msgid "Saved configuration files (*.tbk)|*.tbk"
 msgstr "Gespeicherte Konfigurationsdateien (*.tbk)|*.tbk"
 
-#: tqsl.cpp:4657
+#: tqsl.cpp:4868
 #, c-format
 msgid "Restore operation failed: %hs"
 msgstr "Wiederherstellungsvorgang fehlgeschlagen: %hs"
 
-#: tqsl.cpp:4814
+#: tqsl.cpp:5028
 msgid "Specify dialog action - abort, all, compliant or ask"
 msgstr "Wählen Sie - Abbruch, alle, richtig oder fragen"
 
-#: tqsl.cpp:4815
+#: tqsl.cpp:5029
 msgid "Specify start date for QSOs to sign"
 msgstr "Geben Sie das Startdatum für die zu signierenden QSOs an"
 
-#: tqsl.cpp:4816
+#: tqsl.cpp:5030
 msgid "Specify default callsign for log signing"
 msgstr "Geben Sie das Standard-Rufzeichen für die Log-Signierung an"
 
-#: tqsl.cpp:4817
+#: tqsl.cpp:5031
 msgid "Specify end date for QSOs to sign"
 msgstr "Geben Sie das Enddatum für die zu signierenden QSOs an"
 
-#: tqsl.cpp:4818
+#: tqsl.cpp:5032
 msgid "Suppress date range dialog"
 msgstr "Auswahl des Zeitraums unterdrücken"
 
-#: tqsl.cpp:4819
+#: tqsl.cpp:5033
 msgid "Import a certificate file (.p12 or .tq6)"
 msgstr "Importieren einer Zertifikats-Datei (.p12 oder .tq6)"
 
-#: tqsl.cpp:4820
+#: tqsl.cpp:5034
 msgid "Selects Station Location"
 msgstr "Wählt Standort"
 
-#: tqsl.cpp:4821
+#: tqsl.cpp:5035
 msgid "Edit (if used with -l) or create Station Location"
 msgstr "Bearbeiten (wenn mit -l verwendet) oder Standort anlegen"
 
-#: tqsl.cpp:4822
+#: tqsl.cpp:5036
 msgid "Output file name (defaults to input name minus extension plus .tq8"
 msgstr ""
 "Name der Ausgabedatei (Standard: Eingabedateiname minus Erweiterung und .tq8)"
 
-#: tqsl.cpp:4823
+#: tqsl.cpp:5037
 msgid "Upload after signing instead of saving"
 msgstr "Nach Signierung hochladen statt zu speichern"
 
-#: tqsl.cpp:4824
+#: tqsl.cpp:5038
 msgid "Exit after processing log (otherwise start normally)"
 msgstr "Nach Verarbeitung des Logs verlassen (sonst normal starten)"
 
-#: tqsl.cpp:4825
+#: tqsl.cpp:5039
 msgid "Password for the signing key"
 msgstr "Kennwort für den Signaturschlüssel"
 
-#: tqsl.cpp:4826
+#: tqsl.cpp:5040
 msgid "Quiet Mode - same behavior as -x"
 msgstr "Leise-Modus - gleiches Verhalten wie -x"
 
-#: tqsl.cpp:4827
+#: tqsl.cpp:5041
 msgid "File name for diagnostic tracking log"
 msgstr "Dateiname für das Diagnoseprotokoll"
 
-#: tqsl.cpp:4828
+#: tqsl.cpp:5042
 msgid "Display the version information and exit"
 msgstr "Versionsinformation anzeigen und beenden"
 
-#: tqsl.cpp:4829
+#: tqsl.cpp:5043
 msgid "Check for updates to tqsl and the configuration file"
 msgstr "Nach Updates für tqsl und die Konfigurationsdatei suchen"
 
-#: tqsl.cpp:4830
+#: tqsl.cpp:5044
 msgid "Display command line help"
 msgstr "Befehlszeilen-Hilfe anzeigen"
 
-#: tqsl.cpp:4831
+#: tqsl.cpp:5045
 msgid "Input ADIF or Cabrillo log file to sign"
 msgstr "ADIF- oder Cabrillo-Log-Datei zum Signieren laden"
 
-#: tqsl.cpp:4965 tqsl.cpp:4968
+#: tqsl.cpp:5182 tqsl.cpp:5185
 #, c-format
 msgid "Start date of %s is invalid"
 msgstr "Startdatum von %s ist ungültig"
 
-#: tqsl.cpp:4979 tqsl.cpp:4982
+#: tqsl.cpp:5196 tqsl.cpp:5199
 #, c-format
 msgid "End date of %s is invalid"
 msgstr "Enddatum von %s ist ungültig"
 
-#: tqsl.cpp:5004
+#: tqsl.cpp:5221
 #, c-format
 msgid "The -a parameter %hs is not recognized"
 msgstr "Der Parameter -a '%hs' wird nicht erkannt"
 
-#: tqsl.cpp:5103
+#: tqsl.cpp:5320
 msgid "No logfile to sign!"
 msgstr "Keine Logdatei zum Signieren!"
 
-#: tqsl.cpp:5218
+#: tqsl.cpp:5435
 msgid "Please review the introductory documentation before using this program."
 msgstr ""
 "Bitte lesen Sie die Einführungsdokumentation bevor Sie dieses Programm "
 "benutzen."
 
-#: tqsl.cpp:5219
+#: tqsl.cpp:5436
 msgid "Notice"
 msgstr "Hinweis"
 
-#: tqsl.cpp:5224
+#: tqsl.cpp:5441
 msgid ""
 "You have no callsign certificate installed on this computer with which to "
 "sign log submissions."
@@ -2217,157 +2221,157 @@ msgstr ""
 "Auf diesem Computer ist kein Rufzeichen-Zertifikat installiert, mit dem Logs "
 "signiert werden könnten."
 
-#: tqsl.cpp:5226
+#: tqsl.cpp:5443
 msgid "Would you like to request a callsign certificate now?"
 msgstr "Möchten Sie jetzt ein Rufzeichen-Zertifikat anfordern?"
 
-#: tqsl.cpp:5227
+#: tqsl.cpp:5444
 msgid "Alert"
 msgstr "Warnung"
 
-#: tqsl.cpp:5343
+#: tqsl.cpp:5560
 msgid "Display Callsign Certificate &Properties"
 msgstr "Rufzeichen-Zertifikat anzeigen"
 
-#: tqsl.cpp:5346
+#: tqsl.cpp:5563
 msgid "&Load Callsign Certificate from File"
 msgstr "Rufzeichen-Zertifikat aus Datei laden"
 
-#: tqsl.cpp:5347
+#: tqsl.cpp:5564
 msgid "&Save Callsign Certificate to File..."
 msgstr "Rufzeichen-Zertifikat in eine Datei schreiben ..."
 
-#: tqsl.cpp:5351
+#: tqsl.cpp:5568
 msgid "Request &New Callsign Certificate..."
 msgstr "Neues Rufzeichen-Zertifikat anfordern ..."
 
-#: tqsl.cpp:5352
+#: tqsl.cpp:5569
 msgid "&Renew Callsign Certificate"
 msgstr "Rufzeichen-Zertifikat erneuern"
 
-#: tqsl.cpp:5357
+#: tqsl.cpp:5574
 msgid "&Delete Callsign Certificate"
 msgstr "Rufzeichen-Zertifikat löschen"
 
-#: tqsl.cpp:5363
+#: tqsl.cpp:5580
 msgid "Restore Deleted Callsign Certificate"
 msgstr "Wiederherstellen eines gelöschten Rufzeichen-Zertifikats"
 
-#: tqsl.cpp:5376
+#: tqsl.cpp:5593
 msgid "&Edit"
 msgstr "Bearbeiten"
 
-#: tqsl.cpp:5378
+#: tqsl.cpp:5595
 msgid "&Delete"
 msgstr "Löschen"
 
-#: tqsl.cpp:5387
+#: tqsl.cpp:5604
 msgid "Load Certificate File"
 msgstr "Lade Zertifikatsdatei"
 
-#: tqsl.cpp:5509 crqwiz.h:49
+#: tqsl.cpp:5726 crqwiz.h:49
 msgid "Request a new Callsign Certificate"
 msgstr "Neues Rufzeichen-Zertifikat anfordern"
 
-#: tqsl.cpp:5542
+#: tqsl.cpp:5759
 msgid "Do you want to upload this certificate request to LoTW now?"
 msgstr "Möchten Sie diese Zertifikats-Anforderung jetzt zum LoTW hochladen?"
 
-#: tqsl.cpp:5545
+#: tqsl.cpp:5762
 msgid "You do not need an account on LoTW to do this."
 msgstr "Zur Durchführung benötigen Sie kein Konto auf LoTW."
 
-#: tqsl.cpp:5547
+#: tqsl.cpp:5764
 msgid "Upload"
 msgstr "Hochladen"
 
-#: tqsl.cpp:5557
+#: tqsl.cpp:5774
 msgid "tQSL Cert Request files (*."
 msgstr "tQSL Cert Antrags-Dateien (*."
 
-#: tqsl.cpp:5559
+#: tqsl.cpp:5776
 msgid "|All files ("
 msgstr "|Alle Dateien ("
 
-#: tqsl.cpp:5560
+#: tqsl.cpp:5777
 msgid "Save request"
 msgstr "Anfrage speichern"
 
-#: tqsl.cpp:5563
+#: tqsl.cpp:5780
 msgid "Request cancelled"
 msgstr "Anfrage abgebrochen"
 
-#: tqsl.cpp:5624
+#: tqsl.cpp:5841
 #, c-format
 msgid "Error creating callsign certificate request: %hs"
 msgstr "Fehler beim Erstellen der Rufzeichen-Zertifikatsanforderung: %hs"
 
-#: tqsl.cpp:5624
+#: tqsl.cpp:5841
 msgid "Error creating Callsign Certificate Request"
 msgstr "Fehler beim Erstellen der Rufzeichen-Zertifikatsanforderung"
 
-#: tqsl.cpp:5637
+#: tqsl.cpp:5854
 #, c-format
 msgid "Error opening certificate request file %s: %hs"
 msgstr "Fehler beim Öffnen der Zertifikatanforderungsdatei %s: %hs"
 
-#: tqsl.cpp:5647
+#: tqsl.cpp:5864
 msgid "Certificate Request"
 msgstr "Zertifikatsanforderung"
 
-#: tqsl.cpp:5651
+#: tqsl.cpp:5868
 msgid "Your certificate request did not upload properly"
 msgstr "Die Zertifikatsanforderung wurde nicht richtig hochgeladen"
 
-#: tqsl.cpp:5652
+#: tqsl.cpp:5869
 msgid "Please try again."
 msgstr "Bitte versuchen Sie es erneut."
 
-#: tqsl.cpp:5657
+#: tqsl.cpp:5874
 msgid "You may now send your new certificate request ("
 msgstr "Jetzt können Sie Ihre neue Zertifikatsanforderung abschicken ("
 
-#: tqsl.cpp:5662
+#: tqsl.cpp:5879
 msgid "to:"
 msgstr "an:"
 
-#: tqsl.cpp:5669
+#: tqsl.cpp:5886
 msgid "or "
 msgstr "oder "
 
-#: tqsl.cpp:5670
+#: tqsl.cpp:5887
 msgid "see:"
 msgstr "siehe:"
 
-#: tqsl.cpp:5699 tqsl.cpp:5700
+#: tqsl.cpp:5916 tqsl.cpp:5917
 msgid "Display a Callsign Certificate"
 msgstr "Ein Rufzeichen-Zertifikat anzeigen"
 
-#: tqsl.cpp:5742 tqsl.cpp:5744
+#: tqsl.cpp:5959 tqsl.cpp:5961
 msgid "Save the Callsign Certificate for"
 msgstr "Speichern Sie das Rufzeichen-Zertifikat für"
 
-#: tqsl.cpp:5745 tqsl.cpp:5747
+#: tqsl.cpp:5962 tqsl.cpp:5964
 msgid "Display the Callsign Certificate properties for"
 msgstr "Anzeige der Rufzeichen-Zertifikateigenschaften für"
 
-#: tqsl.cpp:5749 tqsl.cpp:5751
+#: tqsl.cpp:5966 tqsl.cpp:5968
 msgid "Renew the Callsign Certificate for"
 msgstr "Erneuern Sie das Rufzeichen-Zertifikat für"
 
-#: tqsl.cpp:5790
+#: tqsl.cpp:6007
 msgid "Enter the name for the new Certificate Container file"
 msgstr "Geben Sie den Namen für die neue Zertifikats-Container-Datei ein"
 
-#: tqsl.cpp:5791
+#: tqsl.cpp:6008
 msgid "Certificate Container files (*.p12)|*.p12|All files (*.*)|*.*"
 msgstr "Zertifikats-Container-Dateien (*.p12)|*.p12|Alle Dateien (*.*)|*.*"
 
-#: tqsl.cpp:5796
+#: tqsl.cpp:6013
 msgid "Enter the password for the certificate container file."
 msgstr "Geben Sie das Kennwort für die Zertifikats-Container-Datei ein."
 
-#: tqsl.cpp:5798
+#: tqsl.cpp:6015
 msgid ""
 "If you are using a computer system that is shared with others, you should "
 "specify a password to protect this certificate. However, if you are using a "
@@ -2377,7 +2381,7 @@ msgstr ""
 "ein Kennwort zum Schutz dieses Zertifikats angeben. Bei Verwendung des "
 "Computers in einer privaten Umgebung muss kein Kennwort angegeben werden."
 
-#: tqsl.cpp:5803
+#: tqsl.cpp:6020
 msgid ""
 "You will have to enter the password any time you load the file into "
 "TrustedQSL."
@@ -2385,207 +2389,207 @@ msgstr ""
 "Sie müssen das Kennwort jedes Mal eingeben, wenn Sie die Datei in TrustedQSL "
 "laden."
 
-#: tqsl.cpp:5809
+#: tqsl.cpp:6026
 msgid "Certificate Container Password"
 msgstr "Zertifikats-Container Kennwort"
 
-#: tqsl.cpp:5840
+#: tqsl.cpp:6057
 #, c-format
 msgid "Export to %s failed: %hs"
 msgstr "Exportieren nach %s fehlgeschlagen: %hs"
 
-#: tqsl.cpp:5842
+#: tqsl.cpp:6059
 #, c-format
 msgid "Certificate saved in file %s"
 msgstr "Zertifikat in der Datei %s gespeichert"
 
-#: tqsl.cpp:5853
+#: tqsl.cpp:6070
 msgid "This will remove the selected callsign certificate from your system."
 msgstr ""
 "Hierdurch wird das ausgewählte Rufzeichen-Zertifikat von Ihrem System "
 "entfernt."
 
-#: tqsl.cpp:5855
+#: tqsl.cpp:6072
 msgid "You will NOT be able to recover it by loading a .TQ6 file."
 msgstr "Sie können es durch das Laden einer .TQ6 Datei NICHT wiederherstellen."
 
-#: tqsl.cpp:5857
+#: tqsl.cpp:6074
 msgid "You WILL be able to recover it from a container (.p12) file,"
 msgstr "Es KANN aus einem Container (.p12) Datei wiederhergestellt werden,"
 
-#: tqsl.cpp:5859
+#: tqsl.cpp:6076
 msgid "if you have created one via the Callsign Certificate menu's"
 msgstr "wenn Sie diesen über das Rufzeichen-Zertifikats-Menü erstellt haben"
 
-#: tqsl.cpp:5861
+#: tqsl.cpp:6078
 msgid "'Save Callsign Certificate' command."
 msgstr "Befehl \"Rufzeichen-Zertifikate speichern\"."
 
-#: tqsl.cpp:5863
+#: tqsl.cpp:6080
 msgid "Are you sure you want to delete the certificate?"
 msgstr "Sind Sie sicher, dass Sie das Zertifikat löschen wollen?"
 
-#: tqsl.cpp:5901
+#: tqsl.cpp:6118
 msgid "There are no deleted Callsign Certificates to restore"
 msgstr "Es sind keine Rufzeichen-Zertifikate zur Wiederherstellung vorhanden"
 
-#: tqsl.cpp:5901 tqsl.cpp:6009
+#: tqsl.cpp:6118 tqsl.cpp:6226
 msgid "Undelete Error"
 msgstr "Wiederherstellungs-Fehler"
 
-#: tqsl.cpp:5912
+#: tqsl.cpp:6129
 msgid "Choose a Callsign Certificate to restore"
 msgstr "Wählen Sie ein Rufzeichen-Zertifikat zum Wiederherstellen"
 
-#: tqsl.cpp:5941
+#: tqsl.cpp:6158
 msgid "Select a Station Location to process"
 msgstr "Standort zur Bearbeitung auswählen"
 
-#: tqsl.cpp:5960 tqsl.cpp:5962
+#: tqsl.cpp:6177 tqsl.cpp:6179
 msgid "Edit Station Location "
 msgstr "Standort bearbeiten "
 
-#: tqsl.cpp:5963 tqsl.cpp:5965
+#: tqsl.cpp:6180 tqsl.cpp:6182
 msgid "Delete Station Location "
 msgstr "Standort löschen "
 
-#: tqsl.cpp:5966 tqsl.cpp:5968
+#: tqsl.cpp:6183 tqsl.cpp:6185
 msgid "Display Station Location Properties for "
 msgstr "Standort-Eigenschaften anzeigen für "
 
-#: tqsl.cpp:5988
+#: tqsl.cpp:6205
 msgid "This will remove this station location from your system."
 msgstr "Dieser Standort wird dauerhaft von Ihrem System entfernt."
 
-#: tqsl.cpp:5990
+#: tqsl.cpp:6207
 msgid "Are you sure you want to delete this station location?"
 msgstr "Sind Sie sicher, dass Sie diesen Standort löschen wollen?"
 
-#: tqsl.cpp:6009
+#: tqsl.cpp:6226
 msgid "There are no deleted Station Locations to restore"
 msgstr "Keine gelöschten Standorte zum Wiederherstellen vorhanden"
 
-#: tqsl.cpp:6020
+#: tqsl.cpp:6237
 msgid "Choose a Station Location to restore"
 msgstr "Standort zum Wiederherstellen auswählen"
 
-#: tqsl.cpp:6081
+#: tqsl.cpp:6298
 msgid "Please choose language:"
 msgstr "Bitte wählen Sie die Sprache aus:"
 
-#: tqsl.cpp:6133
+#: tqsl.cpp:6350
 msgid "Certificate Properties"
 msgstr "Zertifikatseigenschaften"
 
-#: tqsl.cpp:6136
+#: tqsl.cpp:6353
 msgid "Begins: "
 msgstr "Gültig ab:  "
 
-#: tqsl.cpp:6137
+#: tqsl.cpp:6354
 msgid "Expires: "
 msgstr "Gültig bis: "
 
-#: tqsl.cpp:6138
+#: tqsl.cpp:6355
 msgid "Organization: "
 msgstr "Organisation: "
 
-#: tqsl.cpp:6140
+#: tqsl.cpp:6357
 msgid "Serial: "
 msgstr "Seriennummer: "
 
-#: tqsl.cpp:6141
+#: tqsl.cpp:6358
 msgid "Operator: "
 msgstr "Inhaber: "
 
-#: tqsl.cpp:6142 tqsl.cpp:6320
+#: tqsl.cpp:6359 tqsl.cpp:6537
 msgid "Call sign: "
 msgstr "Rufzeichen: "
 
-#: tqsl.cpp:6143 tqsl.cpp:6321
+#: tqsl.cpp:6360 tqsl.cpp:6538
 msgid "DXCC Entity: "
 msgstr "DXCC-Land: "
 
-#: tqsl.cpp:6144
+#: tqsl.cpp:6361
 msgid "QSO Start Date: "
 msgstr "QSO-Startdatum: "
 
-#: tqsl.cpp:6145
+#: tqsl.cpp:6362
 msgid "QSO End Date: "
 msgstr "QSO-Enddatum: "
 
-#: tqsl.cpp:6146
+#: tqsl.cpp:6363
 msgid "Password: "
 msgstr "Kennwort: "
 
-#: tqsl.cpp:6242
+#: tqsl.cpp:6459
 msgid "<ERROR>"
 msgstr "<Fehler>"
 
-#: tqsl.cpp:6245 tqsl.cpp:6248
+#: tqsl.cpp:6462 tqsl.cpp:6465
 msgid "None"
 msgstr "Keines"
 
-#: tqsl.cpp:6251
+#: tqsl.cpp:6468
 msgid "Password protected"
 msgstr "durch Kennwort geschützt"
 
-#: tqsl.cpp:6257
+#: tqsl.cpp:6474
 msgid "Certificate Request:"
 msgstr "Zertifikatsanforderung: "
 
-#: tqsl.cpp:6259
+#: tqsl.cpp:6476
 msgid "Awaiting response from ARRL"
 msgstr "Warten auf Antwort der ARRL"
 
-#: tqsl.cpp:6274
+#: tqsl.cpp:6491
 msgid "Replaced"
 msgstr "Ersetzt"
 
-#: tqsl.cpp:6279
+#: tqsl.cpp:6496
 msgid "Expired"
 msgstr "Abgelaufen"
 
-#: tqsl.cpp:6317
+#: tqsl.cpp:6534
 msgid "Station Location Properties"
 msgstr "Standort-Eigenschaften"
 
-#: tqsl.cpp:6322
+#: tqsl.cpp:6539
 msgid "Grid Square: "
 msgstr "Lokator: "
 
-#: tqsl.cpp:6323
+#: tqsl.cpp:6540
 msgid "ITU Zone: "
 msgstr "ITU Zone: "
 
-#: tqsl.cpp:6324
+#: tqsl.cpp:6541
 msgid "CQ Zone: "
 msgstr "CQ Zone: "
 
-#: tqsl.cpp:6325
+#: tqsl.cpp:6542
 msgid "IOTA Locator: "
 msgstr "IOTA-Lokator: "
 
-#: tqsl.cpp:6326 tqsl.cpp:6333
+#: tqsl.cpp:6543 tqsl.cpp:6550
 msgid "State: "
 msgstr "Staat: "
 
-#: tqsl.cpp:6327
+#: tqsl.cpp:6544
 msgid "County: "
 msgstr "County: "
 
-#: tqsl.cpp:6328 tqsl.cpp:6330 tqsl.cpp:6334
+#: tqsl.cpp:6545 tqsl.cpp:6547 tqsl.cpp:6551
 msgid "Park: "
 msgstr "Park: "
 
-#: tqsl.cpp:6329 tqsl.cpp:6332
+#: tqsl.cpp:6546 tqsl.cpp:6549
 msgid "Province: "
 msgstr "Provinz: "
 
-#: tqsl.cpp:6331
+#: tqsl.cpp:6548
 msgid "Oblast: "
 msgstr "Oblast: "
 
-#: tqsl.cpp:6413
+#: tqsl.cpp:6630
 msgid "Enter the password to unlock the callsign certificate"
 msgstr "Geben Sie das Kennwort ein, um das Rufzeichen-Zertifikat zu entsperren"
 
@@ -2788,63 +2792,71 @@ msgstr "Gearbeitetes Rufzeichen-Feld muss %d oder mehr betragen"
 msgid "Invalid %hs: \"%hs\""
 msgstr "Ungültige %hs: \"%hs\""
 
-#: tqslwiz.cpp:158
+#: tqslwiz.cpp:225
 msgid "[None]"
 msgstr "[ohne]"
 
-#: tqslwiz.cpp:306
+#: tqslwiz.cpp:379
 msgid "Allow 'None' for "
 msgstr "Zulassen von 'ohne' für "
 
-#: tqslwiz.cpp:343
+#: tqslwiz.cpp:416
 #, c-format
 msgid "You must select a %hs"
 msgstr "Sie müssen ein %hs wählen"
 
-#: tqslwiz.cpp:368 tqslwiz.cpp:372
+#: tqslwiz.cpp:444 tqslwiz.cpp:448
 #, c-format
 msgid "%s: Invalid Grid Square Field"
 msgstr "%s: Ungültiges Lokator-Feld"
 
-#: tqslwiz.cpp:376 tqslwiz.cpp:380 tqslwiz.cpp:384 tqslwiz.cpp:403
+#: tqslwiz.cpp:452 tqslwiz.cpp:456 tqslwiz.cpp:460 tqslwiz.cpp:479
 #, c-format
 msgid "%s: Invalid Grid Square"
 msgstr "%s: Ungültiger Lokator"
 
-#: tqslwiz.cpp:394 tqslwiz.cpp:398
+#: tqslwiz.cpp:470 tqslwiz.cpp:474
 #, c-format
 msgid "%s: Invalid Subsquare"
 msgstr "%s: Ungültiges Kleinfeld"
 
-#: tqslwiz.cpp:415
+#: tqslwiz.cpp:485
+#, c-format
+msgid ""
+"Grid %s is not correct for your QTH. Click 'Next' again to use it anyway."
+msgstr ""
+"Lokator %s passt nicht zu Ihrem QTH. 'Next' nochmals anklicken, um ihn "
+"dennoch zu verwenden."
+
+#: tqslwiz.cpp:502
 msgid "Invalid zone selections for state"
 msgstr "Ungültige Zonen-Auswahl für Staat"
 
-#: tqslwiz.cpp:416
+#: tqslwiz.cpp:503
 msgid "Invalid zone selections for province"
 msgstr "Ungültige Zonen-Auswahl für Provinz"
 
-#: tqslwiz.cpp:417
+#: tqslwiz.cpp:504
 msgid "Invalid zone selections for oblast"
 msgstr "Ungültige Zonen-Auswahl für Oblast"
 
-#: tqslwiz.cpp:418
+#: tqslwiz.cpp:505
 msgid "Invalid zone selections for DXCC entity"
 msgstr "Ungültige Zonen-Auswahl für DXCC-Land"
 
-#: tqslwiz.cpp:492
+#: tqslwiz.cpp:581
 msgid "Station Data input complete"
 msgstr "Standort-Dateneingabe abgeschlossen"
 
-#: tqslwiz.cpp:496
+#: tqslwiz.cpp:585
 msgid "Select or enter name of this station location"
 msgstr "Wählen Sie aus oder geben Sie den Namen dieses Standortes ein"
 
-#: tqslwiz.cpp:519
+#: tqslwiz.cpp:608
 msgid "Station Location Name"
 msgstr "Name des Standortes"
 
-#: tqslwiz.cpp:561
+#: tqslwiz.cpp:650
 msgid "Station name must be provided"
 msgstr "Stationsname muss eingegeben werden"
 
@@ -2963,39 +2975,43 @@ msgstr "Diese Datei kann aufgrund eines Systemfehlers nicht verarbeitet werden"
 msgid "The format of this file is incorrect."
 msgstr "Falsches Dateiformat."
 
-#: wxutil.cpp:167
+#: wxutil.cpp:159
+msgid "Callsign certificate could not be installed"
+msgstr "Das Rufzeichen-Zertifikat konnte nicht installiert werden"
+
+#: wxutil.cpp:168
 msgid "NO ERROR"
 msgstr "KEIN FEHLER"
 
-#: wxutil.cpp:170
+#: wxutil.cpp:171
 msgid "Unknown custom error"
 msgstr "Unbekannter benutzerdefinierter Fehler"
 
-#: wxutil.cpp:176
+#: wxutil.cpp:177
 #, c-format
 msgid "Database Error: %hs"
 msgstr "Datenbankfehler: %hs"
 
-#: wxutil.cpp:181
+#: wxutil.cpp:182
 #, c-format
 msgid "System error: %hs : %hs"
 msgstr "Systemfehler: %hs : %hs"
 
-#: wxutil.cpp:185
+#: wxutil.cpp:186
 #, c-format
 msgid "System error: %hs"
 msgstr "Systemfehler: %hs"
 
-#: wxutil.cpp:192
+#: wxutil.cpp:193
 #, c-format
 msgid "File syntax error: %hs"
 msgstr "Datei Syntaxfehler: %hs"
 
-#: wxutil.cpp:196
+#: wxutil.cpp:197
 msgid "File syntax error"
 msgstr "Datei Syntaxfehler"
 
-#: wxutil.cpp:231
+#: wxutil.cpp:232
 #, c-format
 msgid ""
 "Callsign Certificate or Certificate Request not found for callsign %hs "
@@ -3004,7 +3020,7 @@ msgstr ""
 "Rufzeichen-Zertifikat oder Zertifikatsanforderung nicht gefunden für "
 "Rufzeichen %hs serielle % ld"
 
-#: wxutil.cpp:238
+#: wxutil.cpp:239
 #, c-format
 msgid "Invalid error code: %d"
 msgstr "Ungültiger Fehlercode: %d"

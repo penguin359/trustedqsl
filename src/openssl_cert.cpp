@@ -232,6 +232,7 @@ unsigned char *ASN1_seq_pack(void *safes, i2d_of_void *i2d,
 #endif
 
 #define tqsl_malloc malloc
+#define tqsl_realloc realloc
 #define tqsl_calloc calloc
 #define tqsl_free free
 
@@ -285,9 +286,15 @@ static int tqsl_check_crq_field(tQSL_Cert cert, char *buf, int bufsiz);
 static bool safe_strncpy(char *dest, const char *src, int size);
 static int tqsl_ssl_error_is_nofile();
 static int tqsl_unlock_key(const char *pem, EVP_PKEY **keyp, const char *password, int (*cb)(char *, int, void *), void *);
-static int tqsl_replace_key(const char *callsign, const char *path, map<string, string>& newfields, int (*cb)(int, const char *, void *), void *);
+static int tqsl_replace_key(const char *callsign, const char *path, map<string, string>& newfields, int (*cb)(int, const char *, void *), void *userdata);
 static int tqsl_self_signed_is_ok(int ok, X509_STORE_CTX *ctx);
 static int tqsl_expired_is_ok(int ok, X509_STORE_CTX *ctx);
+static int tqsl_clear_deleted(const char *callsign, const char *path, EVP_PKEY *cert_key);
+static int tqsl_key_exists(const char *callsign, EVP_PKEY *cert_key);
+static int tqsl_open_key_file(const char *path);
+static int tqsl_read_key(map<string, string>& fields);
+static void tqsl_close_key_file(void);
+
 extern const char* tqsl_openssl_error(void);
 
 /* Private data structures */
@@ -576,6 +583,7 @@ tqsl_createCertRequest(const char *filename, TQSL_CERT_REQ *userreq,
 	tqsl_write_adif_field(out, "TQSL_CRQ_PROVIDER", 0, (unsigned char *)req->providerName, -1);
 	tqsl_write_adif_field(out, "TQSL_CRQ_PROVIDER_UNIT", 0, (unsigned char *)req->providerUnit, -1);
 	tqsl_write_adif_field(out, "TQSL_CRQ_EMAIL", 0, (unsigned char *)req->emailAddress, -1);
+	tqsl_write_adif_field(out, "TQSL_CRQ_NAME", 0, (unsigned char *)req->name, -1);
 	tqsl_write_adif_field(out, "TQSL_CRQ_ADDRESS1", 0, (unsigned char *)req->address1, -1);
 	tqsl_write_adif_field(out, "TQSL_CRQ_ADDRESS2", 0, (unsigned char *)req->address2, -1);
 	tqsl_write_adif_field(out, "TQSL_CRQ_CITY", 0, (unsigned char *)req->city, -1);
@@ -798,7 +806,7 @@ tqsl_isCertificateExpired(tQSL_Cert cert, int *status) {
 	if (cert == NULL || status == NULL || !tqsl_cert_check(TQSL_API_TO_CERT(cert), false)) {
 		tqslTrace("tqsl_isCertificateExpired", "arg error cert=0x%lx status=0x%lx", cert, status);
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
-		*status = false;
+		if (status) *status = false;
 		return 1;
 	}
 
@@ -1072,6 +1080,8 @@ tqsl_selectCertificates(tQSL_Cert **certlist, int *ncerts,
 			if (!safe_strncpy(crq->providerUnit, (*it)["TQSL_CRQ_PROVIDER_UNIT"].c_str(), sizeof crq->providerUnit))
 				goto end;
 			if (!safe_strncpy(crq->callSign, (*it)["CALLSIGN"].c_str(), sizeof crq->callSign))
+				goto end;
+			if (!safe_strncpy(crq->name, (*it)["TQSL_CRQ_NAME"].c_str(), sizeof crq->name))
 				goto end;
 			if (!safe_strncpy(crq->emailAddress, (*it)["TQSL_CRQ_EMAIL"].c_str(), sizeof crq->emailAddress))
 				goto end;
@@ -1445,12 +1455,15 @@ DLLEXPORT int CALLCONVENTION
 tqsl_importKeyPairEncoded(const char *callsign, const char *type, const char *keybuf, const char *certbuf) {
 	BIO *in = NULL;
 	BIO *b64 = NULL;
-	BIO *out = NULL;
+	BIO *pub = NULL;
 	X509 *cert;
-	char path[256];
+	char path[TQSL_MAX_PATH_LEN];
+	char temppath[TQSL_MAX_PATH_LEN];
 	char biobuf[4096];
-	int len;
 	int cb = 0;
+	map<string, string> fields;
+	void* userdata = NULL;
+
 	tqslTrace("tqsl_importKeyPairEncoded", NULL);
 
 	if (tqsl_init())
@@ -1478,35 +1491,85 @@ tqsl_importKeyPairEncoded(const char *callsign, const char *type, const char *ke
 	}
 	if (keybuf) {
 		if (!tqsl_make_key_path(callsign, path, sizeof path)) {
-			tqslTrace("tqsl_importKeyPairEncoded", "make key path err %d", tQSL_Error);
-			return 1;
+			goto noprv;
 		}
 
 		in = BIO_new_mem_buf(static_cast<void *>(const_cast<char *>(keybuf)), strlen(keybuf));
 		if (in == NULL) {
-			tqslTrace("tqsl_importKeyPairEncoded", "new_mem_buf err %s", tqsl_openssl_error());
-			tQSL_Error = TQSL_OPENSSL_ERROR;
-			return 1;
+			goto noprv;
 		}
 
 		b64 = BIO_new(BIO_f_base64());
 		in = BIO_push(b64, in);
 
-		out = BIO_new_file(path, "a");
-		if (!out) {
+		size_t bloblen;
+		bloblen = BIO_read(in, biobuf, strlen(keybuf));
+		if (bloblen >= 0)
+			biobuf[bloblen] = '\0';
+
+		strncpy(temppath, tQSL_BaseDir, sizeof temppath);
+		FILE *temp = NULL;
+#ifdef _WIN32
+		strncat(temppath, "\\pk.tmp", sizeof temppath - strlen(temppath));
+		wchar_t* wpath = utf8_to_wchar(temppath);
+		if ((temp = _wfopen(wpath, TQSL_OPEN_WRITE)) == NULL) {
+			free_wchar(wpath);
+#else
+		strncat(temppath, "/pk.tmp", sizeof temppath - strlen(temppath));
+		if ((temp = fopen(temppath, TQSL_OPEN_WRITE)) == NULL) {
+#endif
+			strncpy(tQSL_ErrorFile, temppath, sizeof tQSL_ErrorFile);
+			tqslTrace("tqsl_importKeyPairEncoded", "Open file - system error %s", strerror(errno));
 			tQSL_Error = TQSL_SYSTEM_ERROR;
 			tQSL_Errno = errno;
-			snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Unable to open private key %s: %s",
-				path, strerror(errno));
-			tqslTrace("tqsl_importKeyPairEncoded", "new_file err %s", tQSL_CustomError);
 			return 1;
 		}
-		while ((len = BIO_read(in, biobuf, sizeof biobuf)) > 0)
-			BIO_write(out, biobuf, len);
-		BIO_free_all(in);
-		BIO_free_all(out);
+#ifdef _WIN32
+		free_wchar(wpath);
+#endif
+		if (fputs(biobuf, temp) == EOF) {
+			strncpy(tQSL_ErrorFile, temppath, sizeof tQSL_ErrorFile);
+			tqslTrace("tqsl_importKeyPairEncoded", "Write request file - system error %s", strerror(errno));
+			tQSL_Error = TQSL_SYSTEM_ERROR;
+			tQSL_Errno = errno;
+			return 1;
+		}
+		if (fclose(temp) == EOF) {
+			strncpy(tQSL_ErrorFile, temppath, sizeof tQSL_ErrorFile);
+			tQSL_Error = TQSL_SYSTEM_ERROR;
+			tQSL_Errno = errno;
+			tqslTrace("tqsl_importKeyPairEncoded", "write error %d", errno);
+			return 1;
+		}
+
+// Now is there a private key already with this serial?
+		char *pubkey = strstr(biobuf, "-----BEGIN PUBLIC KEY-----");
+		char *endpub = strstr(biobuf, "-----END PUBLIC KEY-----");
+		int publen = endpub - pubkey + strlen("-----END PUBLIC KEY-----");
+		if (pubkey) {
+			EVP_PKEY *new_key = NULL;
+			if ((pub = BIO_new_mem_buf(reinterpret_cast<void *>(pubkey), publen)) == NULL) {
+				goto noprv;
+			}
+			if ((new_key = PEM_read_bio_PUBKEY(pub, NULL, NULL, NULL)) == NULL) {
+				goto noprv;
+			}
+			BIO_free(pub);
+			pub = 0;
+			if (!tqsl_key_exists(callsign, new_key)) {
+				// Populate fields from the temp file
+				if (!tqsl_open_key_file(temppath)) {
+					if (!tqsl_read_key(fields)) {
+						tqsl_replace_key(callsign, path, fields, NULL, userdata);
+					}
+					tqsl_close_key_file();
+				}
+			}
+			BIO_free_all(in);
+		}
 	} // Import of private key
 
+ noprv:
 	if (strlen(certbuf) == 0) 		// Keyonly 'certificates'
 		return 0;
 
@@ -1524,7 +1587,12 @@ tqsl_importKeyPairEncoded(const char *callsign, const char *type, const char *ke
 		tQSL_Error = TQSL_OPENSSL_ERROR;
 		return 1;
 	}
-	return tqsl_store_cert(certbuf, cert, type, cb, true, NULL, NULL);
+	int ret = tqsl_store_cert(certbuf, cert, type, cb, true, NULL, NULL);
+	// it's OK if installing the cert gets a dupe
+	if (ret != 0 && tQSL_Error == TQSL_CERT_ERROR) {
+		ret = 0;
+	}
+	return ret;
 }
 
 DLLEXPORT int CALLCONVENTION
@@ -3045,6 +3113,9 @@ tqsl_backup_cert(tQSL_Cert cert) {
 		tqsl_getCertificateSerial(cert, &serial);
 	tqsl_getCertificateDXCCEntity(cert, &dxcc);
 
+#ifndef PATH_MAX
+#define PATH_MAX 1024
+#endif
 	char backupPath[PATH_MAX];
 	tqsl_make_backup_path(callsign, backupPath, sizeof backupPath);
 
@@ -4556,6 +4627,7 @@ tqsl_read_key(map<string, string>& fields) {
 		 { "TQSL_CRQ_DXCC_ENTITY", "", TQSL_ADIF_RANGE_TYPE_NONE, 2000, 0, 0, NULL, NULL },
 		 { "TQSL_CRQ_QSO_NOT_BEFORE", "", TQSL_ADIF_RANGE_TYPE_NONE, 2000, 0, 0, NULL, NULL },
 		 { "TQSL_CRQ_QSO_NOT_AFTER", "", TQSL_ADIF_RANGE_TYPE_NONE, 2000, 0, 0, NULL, NULL },
+		 { "DELETED", "", TQSL_ADIF_RANGE_TYPE_NONE, 200, 0, 0, NULL, NULL },
 		 { "eor", "", TQSL_ADIF_RANGE_TYPE_NONE, 0, 0, 0, NULL, NULL },
 		 { "", "", TQSL_ADIF_RANGE_TYPE_NONE, 0, 0, 0, NULL, NULL },
 	};
@@ -4618,6 +4690,16 @@ tqsl_replace_key(const char *callsign, const char *path, map<string, string>& ne
 		tQSL_Error = TQSL_NO_ERROR;
 	}
 	while (tqsl_read_key(fields) == 0) {
+		vector<string>seen;
+		bool match = false;
+		for (size_t i = 0; i < seen.size(); i++) {
+			if (seen[i] == fields["PUBLIC_KEY"]) {
+				match = true;
+				break;
+			}
+		}
+		if (match) continue;			// Drop dupes
+		seen.push_back(fields["PUBLIC_KEY"]);
 		if ((bio = BIO_new_mem_buf(reinterpret_cast<void *>(const_cast<char *>(fields["PUBLIC_KEY"].c_str())),
 					   fields["PUBLIC_KEY"].length())) == NULL) {
 			tqslTrace("tqsl_replace_key", "BIO_new_mem_buf error %s", tqsl_openssl_error());
@@ -4629,8 +4711,9 @@ tqsl_replace_key(const char *callsign, const char *path, map<string, string>& ne
 		}
 		BIO_free(bio);
 		bio = NULL;
-		if (EVP_PKEY_cmp(key, new_key) == 1)
-			continue;	// Skip record with matching public key
+		if (EVP_PKEY_cmp(key, new_key) == 1) {
+			fields["DELETED"] = "True";	// Mark as deleted
+		}
 		records.push_back(fields);
 	}
 	tqsl_close_key_file();
@@ -4804,8 +4887,10 @@ tqsl_find_matching_key(X509 *cert, EVP_PKEY **keyp, TQSL_CERT_REQ **crq, const c
 	EVP_PKEY *curkey = NULL;
 	int rval = 0;
 	int match = 0;
+	int deleted = 0;
 	BIO *bio = NULL;
 	map<string, string> fields;
+	bool finddeleted = false;
 
 	if (keyp != NULL)
 		*keyp = NULL;
@@ -4821,6 +4906,7 @@ tqsl_find_matching_key(X509 *cert, EVP_PKEY **keyp, TQSL_CERT_REQ **crq, const c
 		goto end_nokey;
 	}
 	strncpy(ImportCall, aro, sizeof ImportCall);
+ again:
 	if (tqsl_open_key_file(path)) {
 		/* Friendly error for file not found */
 		if (tQSL_Error == TQSL_SYSTEM_ERROR) {
@@ -4859,9 +4945,16 @@ tqsl_find_matching_key(X509 *cert, EVP_PKEY **keyp, TQSL_CERT_REQ **crq, const c
 		}
 		BIO_free(bio);
 		bio = NULL;
-		if (EVP_PKEY_cmp(curkey, cert_key) == 1)
-			match = 1;
-
+		if (EVP_PKEY_cmp(curkey, cert_key) == 1) {
+			if (fields["DELETED"] == "True") {
+				if (finddeleted) {
+					match = 1;
+					deleted = 1;
+				}
+			} else {
+				match = 1;
+			}
+		}
 		if (match) {
 			/* We have a winner */
 			if (tqsl_unlock_key(fields["PRIVATE_KEY"].c_str(), keyp, password, cb, userdata)) {
@@ -4895,6 +4988,11 @@ tqsl_find_matching_key(X509 *cert, EVP_PKEY **keyp, TQSL_CERT_REQ **crq, const c
 	}
 	if (match)
 		goto end;
+	if (!finddeleted) {
+		finddeleted = true;
+		tqsl_close_key_file();
+		goto again;
+	}
 	tqslTrace("tqsl_find_matching_key", "No matching private key found");
 	rval = 1;
 	tQSL_Error = TQSL_CERT_NOT_FOUND;
@@ -4905,6 +5003,11 @@ tqsl_find_matching_key(X509 *cert, EVP_PKEY **keyp, TQSL_CERT_REQ **crq, const c
 	tQSL_Error = TQSL_OPENSSL_ERROR;
  end:
 	tqsl_close_key_file();
+	if (deleted) {
+		int savedErr = tQSL_Error;
+		tqsl_clear_deleted(aro, path, cert_key);
+		tQSL_Error = savedErr;
+	}
  end_nokey:
 	if (curkey != NULL)
 		EVP_PKEY_free(curkey);
@@ -4991,8 +5094,20 @@ tqsl_make_key_list(vector< map<string, string> > & keys) {
 		}
 #endif
 		if (!tqsl_open_key_file(filename.c_str())) {
+			vector<string>seen;
 			map<string, string> fields;
 			while (!tqsl_read_key(fields)) {
+				if (fields["DELETED"] == "True")
+					continue;		// Skip this one
+				bool match = false;
+				for (size_t i = 0; i < seen.size(); i++) {
+					if (seen[i] == fields["PUBLIC_KEY"]) {
+						match = true;
+						break;
+					}
+				}
+				if (match) continue;
+				seen.push_back(fields["PUBLIC_KEY"]);
 				if (tqsl_clean_call(fields["CALLSIGN"].c_str(), fixcall, sizeof fixcall)) {
 					rval = 1;
 					savedError = tQSL_Error;
@@ -5304,3 +5419,328 @@ tqsl_setCertificateStatus(long serial, const char *status) {
 	sfile.setText("\n");
 	return tqsl_dump_cert_status_data(sfile);
 }
+
+static int
+tqsl_clear_deleted(const char *callsign, const char *path, EVP_PKEY *cert_key) {
+	char newpath[300];
+	char savepath[300];
+#ifdef _WIN32
+	wchar_t* wnewpath = NULL;
+#endif
+	map<string, string> fields;
+	vector< map<string, string> > records;
+	vector< map<string, string> >::iterator it;
+	EVP_PKEY *new_key = NULL, *key = NULL;
+	BIO *bio = 0;
+	FILE *out = 0;
+	int rval = 1;
+
+	if (tqsl_open_key_file(path)) {
+		if (tQSL_Error != TQSL_SYSTEM_ERROR || tQSL_Errno != ENOENT) {
+			tqslTrace("tqsl_clear_deleted", "error opening key file %s: %s", path, strerror(tQSL_Errno));
+			return 1;
+		}
+		tQSL_Error = TQSL_NO_ERROR;
+	}
+	while (tqsl_read_key(fields) == 0) {
+		if ((bio = BIO_new_mem_buf(reinterpret_cast<void *>(const_cast<char *>(fields["PUBLIC_KEY"].c_str())),
+					   fields["PUBLIC_KEY"].length())) == NULL) {
+			tqslTrace("tqsl_clear_deleted", "BIO_new_mem_buf error %s", tqsl_openssl_error());
+			goto trk_end;
+		}
+		if ((key = PEM_read_bio_PUBKEY(bio, NULL, NULL, NULL)) == NULL) {
+			tqslTrace("tqsl_clear_deleted", "Pem_read_bio_rsa_pubkey error %s", tqsl_openssl_error());
+			goto trk_end;
+		}
+		BIO_free(bio);
+		bio = NULL;
+		if (EVP_PKEY_cmp(key, cert_key) == 1) {
+			fields["DELETED"] = "False";
+		}
+		records.push_back(fields);
+	}
+	tqsl_close_key_file();
+	strncpy(newpath, path, sizeof newpath);
+	strncat(newpath, ".new", sizeof newpath - strlen(newpath)-1);
+	strncpy(savepath, path, sizeof savepath);
+	strncat(savepath, ".save", sizeof savepath - strlen(savepath)-1);
+#ifdef _WIN32
+	wnewpath = utf8_to_wchar(newpath);
+	if ((out = _wfopen(wnewpath, TQSL_OPEN_WRITE)) == NULL) {
+		free_wchar(wnewpath);
+#else
+	if ((out = fopen(newpath, TQSL_OPEN_WRITE)) == NULL) {
+#endif
+		tQSL_Error = TQSL_SYSTEM_ERROR;
+		tQSL_Errno = errno;
+		tqslTrace("tqsl_clear_deleted", "open file %s: %s", newpath, strerror(tQSL_Errno));
+		goto trk_end;
+	}
+	for (it = records.begin(); it != records.end(); it++) {
+		map<string, string>::iterator mit;
+		for (mit = it->begin(); mit != it->end(); mit++) {
+			if (tqsl_write_adif_field(out, mit->first.c_str(), 0, (const unsigned char *)mit->second.c_str(), -1)) {
+				tqslTrace("tqsl_clear_deleted", "error writing %s", strerror(tQSL_Errno));
+#ifdef _WIN32
+				free_wchar(wnewpath);
+#endif
+				goto trk_end;
+			}
+		}
+		tqsl_write_adif_field(out, "eor", 0, NULL, 0);
+	}
+	if (fclose(out) == EOF) {
+		tQSL_Error = TQSL_SYSTEM_ERROR;
+		tQSL_Errno = errno;
+		tqslTrace("tqsl_clear_deleted", "error closing %s", strerror(tQSL_Errno));
+#ifdef _WIN32
+		free_wchar(wnewpath);
+#endif
+		goto trk_end;
+	}
+	out = 0;
+
+	/* Output file looks okay. Replace the old file with the new one. */
+#ifdef _WIN32
+	wchar_t* wsavepath = utf8_to_wchar(savepath);
+	if (_wunlink(wsavepath) && errno != ENOENT) {
+		free_wchar(wsavepath);
+		free_wchar(wnewpath);
+#else
+	if (unlink(savepath) && errno != ENOENT) {
+#endif
+		tQSL_Error = TQSL_SYSTEM_ERROR;
+		tQSL_Errno = errno;
+		tqslTrace("tqsl_clear_deleted", "unlink file %s: %s", savepath, strerror(tQSL_Errno));
+		goto trk_end;
+	}
+#ifdef _WIN32
+	wchar_t* wpath = utf8_to_wchar(path);
+	if (_wrename(wpath, wsavepath) && errno != ENOENT) {
+		free_wchar(wpath);
+		free_wchar(wsavepath);
+		free_wchar(wnewpath);
+#else
+	if (rename(path, savepath) && errno != ENOENT) {
+#endif
+		tQSL_Error = TQSL_SYSTEM_ERROR;
+		tQSL_Errno = errno;
+		tqslTrace("tqsl_clear_deleted", "rename file %s->%s: %s", path, savepath, strerror(tQSL_Errno));
+		goto trk_end;
+	}
+#ifdef _WIN32
+	if (_wrename(wnewpath, wpath)) {
+		free_wchar(wnewpath);
+		free_wchar(wpath);
+		free_wchar(wsavepath);
+#else
+	if (rename(newpath, path)) {
+#endif
+		tQSL_Error = TQSL_SYSTEM_ERROR;
+		tQSL_Errno = errno;
+		tqslTrace("tqsl_clear_deleted", "rename file %s->%s: %s", newpath, path, strerror(tQSL_Errno));
+		goto trk_end;
+	}
+#ifdef _WIN32
+	free_wchar(wnewpath);
+	free_wchar(wpath);
+	free_wchar(wsavepath);
+#endif
+
+	rval = 0;
+ trk_end:
+	tqsl_close_key_file();
+	if (out)
+		fclose(out);
+	if (new_key)
+		EVP_PKEY_free(new_key);
+	if (key)
+		EVP_PKEY_free(key);
+	if (bio)
+		BIO_free(bio);
+	return rval;
+}
+
+static int
+tqsl_key_exists(const char *callsign, EVP_PKEY *cert_key) {
+	map<string, string> fields;
+	vector< map<string, string> >::iterator it;
+	EVP_PKEY *key = NULL;
+	BIO *bio = 0;
+	int rval = 0;
+	char path[256];
+
+	if (!tqsl_make_key_path(callsign, path, sizeof path)) {
+		tqslTrace("tqsl_createCertRequest", "make_key_path error %d", errno);
+		return 0;
+	}
+
+	if (tqsl_open_key_file(path)) {
+		return 0;
+	}
+
+	while (tqsl_read_key(fields) == 0) {
+		if ((bio = BIO_new_mem_buf(reinterpret_cast<void *>(const_cast<char *>(fields["PUBLIC_KEY"].c_str())),
+					   fields["PUBLIC_KEY"].length())) == NULL) {
+			tqslTrace("tqsl_clear_deleted", "BIO_new_mem_buf error %s", tqsl_openssl_error());
+			goto trk_end;
+		}
+		if ((key = PEM_read_bio_PUBKEY(bio, NULL, NULL, NULL)) == NULL) {
+			tqslTrace("tqsl_clear_deleted", "Pem_read_bio_rsa_pubkey error %s", tqsl_openssl_error());
+			goto trk_end;
+		}
+		BIO_free(bio);
+		bio = NULL;
+		if (EVP_PKEY_cmp(key, cert_key) == 1) {
+			rval = 1;
+		}
+	}
+ trk_end:
+	tqsl_close_key_file();
+	if (key)
+		EVP_PKEY_free(key);
+	if (bio)
+		BIO_free(bio);
+	return rval;
+}
+/** Save the json results for a given callsign location Detail. */
+DLLEXPORT int CALLCONVENTION
+tqsl_saveCallsignLocationInfo(const char *callsign, const char *json) {
+	FILE *out;
+
+	if (callsign == NULL || json == NULL) {
+		tqslTrace("tqsl_saveCallsinLocationInfo", "arg error callsign=0x%lx, json=0x%lx", callsign, json);
+		tQSL_Error = TQSL_ARGUMENT_ERROR;
+		return 1;
+	}
+	char fixcall[256];
+	char path[PATH_MAX];
+	size_t size = sizeof path;
+
+	tqsl_clean_call(callsign, fixcall, sizeof fixcall);
+	strncpy(path, tQSL_BaseDir, size);
+#ifdef _WIN32
+	strncat(path, "\\", size - strlen(path));
+#else
+	strncat(path, "/", size - strlen(path));
+#endif
+	strncat(path, fixcall, size - strlen(path));
+	strncat(path, ".json", size - strlen(path));
+	/* Try opening the output stream */
+
+#ifdef _WIN32
+	wchar_t* wfilename = utf8_to_wchar(path);
+	if ((out = _wfopen(wfilename, TQSL_OPEN_WRITE)) == NULL) {
+		free_wchar(wfilename);
+#else
+	if ((out = fopen(path, TQSL_OPEN_WRITE)) == NULL) {
+#endif
+		strncpy(tQSL_ErrorFile, path, sizeof tQSL_ErrorFile);
+		tqslTrace("tqsl_saveCallsignLocationInfo", "Open file - system error %s", strerror(errno));
+		tQSL_Error = TQSL_SYSTEM_ERROR;
+		tQSL_Errno = errno;
+		return 1;
+	}
+#ifdef _WIN32
+	free_wchar(wfilename);
+#endif
+	if (fputs(json, out) == EOF) {
+		strncpy(tQSL_ErrorFile, path, sizeof tQSL_ErrorFile);
+		tqslTrace("tqsl_createCertRequest", "Write request file - system error %s", strerror(errno));
+		tQSL_Error = TQSL_SYSTEM_ERROR;
+		tQSL_Errno = errno;
+		return 1;
+	}
+	if (fclose(out) == EOF) {
+		strncpy(tQSL_ErrorFile, path, sizeof tQSL_ErrorFile);
+		tQSL_Error = TQSL_SYSTEM_ERROR;
+		tQSL_Errno = errno;
+		tqslTrace("tqsl_saveCallsignLocationInfo", "write error %d", errno);
+		return 1;
+	}
+	return 0;
+}
+
+/** Retrieve the json results for a given callsign location Detail. */
+DLLEXPORT int CALLCONVENTION
+tqsl_getCallsignLocationInfo(const char *callsign, char **buf) {
+	FILE *in;
+	static void* mybuf = NULL;
+	static size_t bufsize = 0;
+
+	if (bufsize == 0) {
+		bufsize = 4096;
+		mybuf = tqsl_malloc(bufsize);
+	}
+	if (callsign == NULL || buf == NULL) {
+		tqslTrace("tqsl_getCallsinLocationInfo", "arg error callsign=0x%lx, buf=0x%lx", callsign, buf);
+		tQSL_Error = TQSL_ARGUMENT_ERROR;
+		return 1;
+	}
+	char fixcall[256];
+	char path[PATH_MAX];
+	size_t size = sizeof path;
+
+	tqsl_clean_call(callsign, fixcall, sizeof fixcall);
+	strncpy(path, tQSL_BaseDir, size);
+#ifdef _WIN32
+	strncat(path, "\\", size - strlen(path));
+#else
+	strncat(path, "/", size - strlen(path));
+#endif
+	strncat(path, fixcall, size - strlen(path));
+	strncat(path, ".json", size - strlen(path));
+
+	size_t buflen = bufsize;
+#ifdef _WIN32
+	struct _stat32 s;
+	wchar_t* wfilename = utf8_to_wchar(path);
+	if (_wstat32(wfilename, &s) == 0) {
+		buflen = s.st_size + 512;
+	}
+	if ((in = _wfopen(wfilename, TQSL_OPEN_READ)) == NULL) {
+		free_wchar(wfilename);
+#else
+	struct stat s;
+	if (stat(path, &s) == 0) {
+		buflen = s.st_size + 512;
+	}
+	if ((in = fopen(path, TQSL_OPEN_READ)) == NULL) {
+#endif
+		strncpy(tQSL_ErrorFile, path, sizeof tQSL_ErrorFile);
+		tqslTrace("tqsl_getCallsignLocationInfo", "Open file - system error %s", strerror(errno));
+		tQSL_Error = TQSL_SYSTEM_ERROR;
+		tQSL_Errno = errno;
+		return 1;
+	}
+#ifdef _WIN32
+	free_wchar(wfilename);
+#endif
+	if (buflen > bufsize) {
+		bufsize = buflen + 512;
+		mybuf = tqsl_realloc(mybuf, bufsize);
+	}
+	*buf = reinterpret_cast<char *>(mybuf);
+	size_t len;
+	if ((len = fread(mybuf, 1, buflen, in)) == 0) {
+		strncpy(tQSL_ErrorFile, path, sizeof tQSL_ErrorFile);
+		tqslTrace("tqsl_getCallsignLocationInformation", "Read file - system error %s", strerror(errno));
+		tQSL_Error = TQSL_SYSTEM_ERROR;
+		tQSL_Errno = errno;
+		return 1;
+	}
+	if (fclose(in) == EOF) {
+		strncpy(tQSL_ErrorFile, path, sizeof tQSL_ErrorFile);
+		tQSL_Error = TQSL_SYSTEM_ERROR;
+		tQSL_Errno = errno;
+		tqslTrace("tqsl_getCallsignLocationInformation", "read error %d", errno);
+		return 1;
+	}
+	if (len < (size_t)buflen) {
+		char *t = reinterpret_cast<char *>(mybuf);
+		t[len] = '\0';
+	}
+	return 0;
+}
+
+
