@@ -279,8 +279,9 @@ QSODataDialog::QSODataDialog(wxWindow *parent, wxString& filename, wxHtmlHelpCon
 	choices = valid_bands.GetChoices();
 	sizer->Add(new wxStaticText(this, -1, _("Band:"), wxDefaultPosition,
 		wxSize(LABEL_WIDTH, TEXT_HEIGHT), wxALIGN_RIGHT), 0, wxALL, QD_MARGIN);
-	sizer->Add(new wxChoice(this, QD_BAND, wxDefaultPosition, wxDefaultSize,
-		valid_bands.size(), choices, 0, wxGenericValidator(&_band)), 0, wxALL, QD_MARGIN);
+	_band_ctrl = new wxChoice(this, QD_BAND, wxDefaultPosition, wxDefaultSize,
+		valid_bands.size(), choices, 0, wxGenericValidator(&_band));
+	sizer->Add(_band_ctrl, 0, wxALL, QD_MARGIN);
 	delete[] choices;
 	topsizer->Add(sizer, 0);
 	// RX Band
@@ -288,8 +289,9 @@ QSODataDialog::QSODataDialog(wxWindow *parent, wxString& filename, wxHtmlHelpCon
 	choices = valid_rxbands.GetChoices();
 	sizer->Add(new wxStaticText(this, -1, _("RX Band:"), wxDefaultPosition,
 		wxSize(LABEL_WIDTH, TEXT_HEIGHT), wxALIGN_RIGHT), 0, wxALL, QD_MARGIN);
-	sizer->Add(new wxChoice(this, QD_BAND, wxDefaultPosition, wxDefaultSize,
-		valid_rxbands.size(), choices, 0, wxGenericValidator(&_rxband)), 0, wxALL, QD_MARGIN);
+	_rxband_ctrl = new wxChoice(this, QD_RXBAND, wxDefaultPosition, wxDefaultSize,
+		valid_rxbands.size(), choices, 0, wxGenericValidator(&_rxband));
+	sizer->Add(_rxband_ctrl, 0, wxALL, QD_MARGIN);
 	delete[] choices;
 	topsizer->Add(sizer, 0);
 	// Frequency
@@ -386,6 +388,9 @@ QSODataDialog::QSODataDialog(wxWindow *parent, wxString& filename, wxHtmlHelpCon
 
 	SetFocus();
 	CentreOnParent();
+	if (_reclist) rec = (*_reclist)[0];
+	_recno = 1;
+	TransferDataToWindow();
 }
 
 QSODataDialog::~QSODataDialog() {
@@ -407,14 +412,46 @@ QSODataDialog::OnFieldChanged(wxCommandEvent& event) {
 	// If there's an error in the data, can't Add.
 	if (!wxDialog::TransferDataFromWindow())
 		return;
-	if (_call_ctrl->GetValue() == wxT(""))	// No callsign
+	// Update the band selections to match the frequencies
+	double freq, rxfreq;
+	bool freqOK = false, rxfreqOK = false;
+
+	char *oldloc = setlocale(LC_ALL, "C");
+	if (!rec._freq.IsEmpty()) {
+		freqOK = rec._freq.Trim(TRUE).Trim(FALSE).ToDouble(&freq);
+	}
+	if (!rec._rxfreq.IsEmpty()) {
+		rxfreqOK = rec._rxfreq.Trim(TRUE).Trim(FALSE).ToDouble(&rxfreq);
+	}
+	setlocale(LC_ALL, oldloc);
+	if (freqOK) {
+		freq = freq * 1000.0;		// Freq is is MHz but the limits are in KHz
+		for (size_t i = 0; i < valid_bands.size(); i++) {
+			if (freq >= valid_bands[i].low && freq <= valid_bands[i].high) {
+				_band = i;
+				_band_ctrl->SetSelection(_band);
+				break;
+			}
+		}
+	}
+	if (rxfreqOK) {
+		rxfreq = rxfreq * 1000.0;		// Freq is is MHz but the limits are in KHz
+		for (size_t i = 0; i < valid_bands.size(); i++) {
+			if (rxfreq >= valid_bands[i].low && rxfreq <= valid_bands[i].high) {
+				_rxband = i+1;	// Add one for 'NONE'.
+				_rxband_ctrl->SetSelection(_rxband);
+				break;
+			}
+		}
+	}
+
+	if (_call_ctrl->GetValue() == wxT("") || _call_ctrl->GetValue() == wxT("NONE"))	// No callsign
 		return;
 	if (_date_ctrl->GetValue() == wxT(""))	// No date
 		return;
 	if (_time_ctrl->GetValue() == wxT(""))	// No time
 		return;
 	// All is OK, allow save.
-	_newrec = -1;
 	_recadd_ctrl->Enable(true);
 }
 
@@ -466,6 +503,7 @@ QSODataDialog::TransferDataFromWindow() {
 				setlocale(LC_ALL, oldloc);
 				return false;
 			}
+			_band_ctrl->SetSelection(_band);
 		}
 		if (!rec._rxfreq.IsEmpty()) {
 			if (!rec._rxfreq.ToDouble(&freq)) {
@@ -481,6 +519,7 @@ QSODataDialog::TransferDataFromWindow() {
 				setlocale(LC_ALL, oldloc);
 				return false;
 			}
+			_rxband_ctrl->SetSelection(_rxband);
 		}
 		// No other numeric conversions, revert to original locale
 		setlocale(LC_ALL, oldloc);
@@ -517,10 +556,14 @@ QSODataDialog::TransferDataToWindow() {
 		_mode = distance(valid_modes.begin(), it);
 	else
 		wxLogWarning(_("QSO Data: Invalid Mode ignored - %s"), (const char*) rec._mode.Upper().ToUTF8());
-	if ((it = find(valid_bands.begin(), valid_bands.end(), rec._band.Upper())) != valid_bands.end())
+	if ((it = find(valid_bands.begin(), valid_bands.end(), rec._band.Upper())) != valid_bands.end()) {
 		_band = distance(valid_bands.begin(), it);
-	if ((it = find(valid_rxbands.begin(), valid_rxbands.end(), rec._rxband.Upper())) != valid_rxbands.end())
+		_band_ctrl->SetSelection(_band);
+	}
+	if ((it = find(valid_rxbands.begin(), valid_rxbands.end(), rec._rxband.Upper())) != valid_rxbands.end()) {
 		_rxband = distance(valid_rxbands.begin(), it);
+		_rxband_ctrl->SetSelection(_rxband);
+	}
 	if ((it = find(valid_propmodes.begin(), valid_propmodes.end(), rec._propmode.Upper())) != valid_propmodes.end())
 		_propmode = distance(valid_propmodes.begin(), it);
 	if ((it = find(valid_satellites.begin(), valid_satellites.end(), rec._satellite.Upper())) != valid_satellites.end())
@@ -568,9 +611,13 @@ QSODataDialog::WriteQSOFile(QSORecordList& recs, const char *fname) {
 	if (!out.is_open())
 		return false;
 	unsigned char buf[256];
+	int rec_cnt = 0;
 	QSORecordList::iterator it;
 	for (it = recs.begin(); it != recs.end(); it++) {
 		wxString dtstr;
+		if (it->_call == wxT("NONE"))		// Skipped back on added record
+			continue;
+		rec_cnt++;
 		tqsl_adifMakeField("CALL", 0, (const unsigned char*)(const char *)it->_call.ToUTF8(), -1, buf, sizeof buf);
 		out << buf << endl;
 		tqsl_adifMakeField("BAND", 0, (const unsigned char*)(const char *)it->_band.ToUTF8(), -1, buf, sizeof buf);
@@ -606,7 +653,7 @@ QSODataDialog::WriteQSOFile(QSORecordList& recs, const char *fname) {
 		out << "<EOR>" << endl;
 	}
 	out.close();
-	wxLogMessage(_("Wrote %d QSO records to %s"), static_cast<int>(recs.size()), s_fname.c_str());
+	wxLogMessage(_("Wrote %d QSO records to %s"), rec_cnt, s_fname.c_str());
 	return true;
 }
 
@@ -673,20 +720,12 @@ QSODataDialog::OnRecDown(wxCommandEvent&) {
 		return;
 	if (_recno == _newrec) { 		// Backing up from a record being added
 		if (rec._call == wxT("")) { 	// And the call is empty
-			_reclist->erase(_reclist->begin() + _recno - 1);
-			if (_reclist->empty())
-				_reclist->push_back(QSORecord());
-			if (_recno > static_cast<int>(_reclist->size()))
-				_recno = _reclist->size();
-			rec = (*_reclist)[_recno-1];
-			TransferDataToWindow();
-			SetRecno(_recno);
+			rec._call = wxT("NONE");
+			_call_ctrl->SetValue(wxT("NONE"));
 		}
-		_newrec = -1;
-		_recadd_ctrl->Enable(true);
-	} else {
-		SetRecno(_recno - 1);
 	}
+	if (_recno > 1)
+		SetRecno(_recno - 1);
 }
 
 void
@@ -702,16 +741,10 @@ QSODataDialog::OnRecBottom(wxCommandEvent&) {
 		return;
 	if (_recno == _newrec) { 		// Backing up from a record being added
 		if (rec._call == wxT("")) { 	// And the call is empty
+			rec._call = wxT("NONE");
+			_call_ctrl->SetValue(wxT("NONE"));
 			_reclist->erase(_reclist->begin() + _recno - 1);
-			if (_reclist->empty())
-				_reclist->push_back(QSORecord());
-			if (_recno > static_cast<int>(_reclist->size()))
-				_recno = _reclist->size();
-			rec = (*_reclist)[_recno-1];
-			TransferDataToWindow();
 		}
-		_newrec = -1;
-		_recadd_ctrl->Enable(true);
 	}
 	SetRecno(1);
 }
@@ -731,7 +764,6 @@ QSODataDialog::OnRecTop(wxCommandEvent&) {
 			rec = (*_reclist)[_recno-1];
 			TransferDataToWindow();
 		}
-		_newrec = -1;
 		_recadd_ctrl->Enable(true);
 	}
 	SetRecno(_reclist->size());

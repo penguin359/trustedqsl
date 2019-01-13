@@ -62,6 +62,8 @@ enum {
 	TQSL_ACTION_UNSPEC = 4
 };
 
+#define TQSL_LOG_TAB 3
+
 #define TQSL_CD_MSG TQSL_ID_LOW
 #define TQSL_CD_CANBUT TQSL_ID_LOW+1
 
@@ -96,6 +98,7 @@ class MyFrame : public wxFrame {
 	void ProcessQSODataFile(bool upload, bool compressed);
 	void ImportQSODataFile(wxCommandEvent& event);
 	void UploadQSODataFile(wxCommandEvent& event);
+	void SaveWindowLayout(void);
 	void OnExit(TQ_WXCLOSEEVENT& event);
 	void DoExit(wxCommandEvent& event);
 	void DoUpdateCheck(bool silent, bool noGUI);
@@ -111,7 +114,7 @@ class MyFrame : public wxFrame {
 	void OnLoadConfig(wxCommandEvent& event);
 	int ConvertLogFile(tQSL_Location loc, const wxString& infile, const wxString& outfile, bool compress = false, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, const char *password = NULL, const char *defcall = NULL);
 	tQSL_Location SelectStationLocation(const wxString& title = wxT(""), const wxString& okLabel = _("OK"), bool editonly = false);
-	int ConvertLogToString(tQSL_Location loc, const wxString& infile, wxString& output, int& n, tQSL_Converter& converter, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, const char* password = NULL, const char* defcall = NULL);
+	int ConvertLogToString(tQSL_Location loc, const wxString& infile, wxString& output, int& n, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, const char* password = NULL, const char* defcall = NULL);
 	int UploadLogFile(tQSL_Location loc, const wxString& infile, bool compress = false, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, const char* password = NULL, const char *defcall = NULL);
 	int UploadFile(const wxString& infile, const char* filename, int numrecs, void *content, size_t clen, const wxString& fileType);
 
@@ -151,12 +154,14 @@ class MyFrame : public wxFrame {
 	CertTree *cert_tree;
 	LocTree *loc_tree;
 	wxTextCtrl *logwin;
+	wxNotebook *notebook;
 	wxHtmlHelpController *help;
 	wxMenu* file_menu;
 	wxMenu *cert_menu;
 	wxMenu* help_menu;
 	FILE *curlLogFile;
 	CURL *curlReq;
+	tQSL_Converter logConv;
 
 	DECLARE_EVENT_TABLE()
 
