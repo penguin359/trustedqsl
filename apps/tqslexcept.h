@@ -25,7 +25,7 @@ class TQSLException : public exception {
  public:
 	explicit TQSLException(const char *msg);
 	~TQSLException() throw() {}
-	virtual const char *what() throw () { return _msg.c_str(); }
+	virtual const char *what() const throw () { return _msg.c_str(); }
  private:
 	string _msg;
 };

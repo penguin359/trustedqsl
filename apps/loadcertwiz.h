@@ -25,7 +25,14 @@ class LoadCertWiz : public ExtWizard {
 	explicit LoadCertWiz(wxWindow *parent, wxHtmlHelpController *help = 0, const wxString& title = wxEmptyString, const wxString& ext = wxT("tq6"));
 	~LoadCertWiz();
 	LCW_Page *GetCurrentPage() { return reinterpret_cast<LCW_Page *>(wxWizard::GetCurrentPage()); }
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
 	bool RunWizard();
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 	void ResetNotifyData();
 	notifyData *GetNotifyData() { return _nd; }
 	wxWindow *Parent() { return _parent; }

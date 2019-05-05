@@ -4,6 +4,9 @@ TQSLVER=`cat apps/tqslversion.ver|sed -e 's/\.0$//'`
 TQSLLIBPATH=`pwd`/src/libtqsllib.dylib
 WORKDIR=`mktemp -d /tmp/tqsl.XXXXX` || exit 1
 WINHELPFILE=$WORKDIR/TrustedQSL/$app.app/Contents/Resources/Help/tqslapp.chm
+IMGNAME="tqsl"
+
+file apps/tqsl.app/Contents/MacOS/tqsl | grep -q x86_64 || IMGNAME="tqsl-legacy"
 
 /bin/echo -n "Copying files to image directory... "
 
@@ -26,7 +29,7 @@ do
     cp apps/ca-bundle.crt $WORKDIR/TrustedQSL/$app.app/Contents/Resources
     cp apps/languages.dat $WORKDIR/TrustedQSL/$app.app/Contents/Resources
     cp apps/cab_modes.dat $WORKDIR/TrustedQSL/$app.app/Contents/Resources
-    for lang in de es fi fr hi_IN it ja pt zh ru
+    for lang in de es fi fr hi_IN it ja pl_PL pt zh ru tr_TR
     do
 	mkdir $WORKDIR/TrustedQSL/$app.app/Contents/Resources/$lang.lproj
 	cp apps/lang/$lang/tqslapp.mo $WORKDIR/TrustedQSL/$app.app/Contents/Resources/$lang.lproj
@@ -47,7 +50,7 @@ cp -r apps/help/tqslapp $WORKDIR/TrustedQSL/tqsl.app/Contents/Resources/Help
 /bin/echo "Creating the disk image..."
 
 #hdiutil uses dots to show progress
-hdiutil create -ov -srcfolder $WORKDIR -volname "TrustedQSL v$TQSLVER" "tqsl-$TQSLVER.dmg"
+hdiutil create -ov -srcfolder $WORKDIR -volname "TrustedQSL v$TQSLVER" "$IMGNAME-$TQSLVER.dmg"
 
 /bin/echo -n "Cleaning up temporary files.. "
 rm -r $WORKDIR

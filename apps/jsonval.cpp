@@ -8,10 +8,12 @@
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef __GNUG__
-    #pragma implementation "jsonval.cpp"
+#ifdef __GNUG_
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunknown-pragmas"
+    #pragma interface "jsonval.cpp"
+#pragma clang diagnostic pop
 #endif
-
 
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"

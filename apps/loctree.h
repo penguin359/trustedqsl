@@ -49,7 +49,14 @@ class LocTree : public wxTreeCtrl {
 	void OnItemActivated(wxTreeEvent& event);
 	void OnRightDown(wxMouseEvent& event);
 	bool useContextMenu;
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
 	LocTreeItemData *GetItemData(wxTreeItemId id) { return reinterpret_cast<LocTreeItemData *>(wxTreeCtrl::GetItemData(id)); }
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 	int GetNumLocations() const { return _nloc; }
 
  private:

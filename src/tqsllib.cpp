@@ -229,8 +229,8 @@ tqsl_get_rsrc_dir() {
 	}
 #else
 	string p = CONFDIR;
-	if (p.back() == '/')
-		p.pop_back();
+	if (p[p.length() - 1] == '/')
+		p = p.substr(0, p.length() - 1);
 	tQSL_RsrcDir = strdup(p.c_str());
 #endif
 	tqslTrace("tqsl_get_rsrc_dir", "rsrc_path=%s", tQSL_RsrcDir);

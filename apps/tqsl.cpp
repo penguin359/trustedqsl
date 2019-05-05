@@ -2,7 +2,7 @@
                                   tqsl.cpp
                              -------------------
     begin                : Mon Nov 4 2002
-    copyright            : (C) 2002-2018 by ARRL and the TrustedQSL Developers
+    copyright            : (C) 2002-2019 by ARRL and the TrustedQSL Developers
     author               : Jon Bloom
     email                : jbloom@arrl.org
  ***************************************************************************/
@@ -236,7 +236,7 @@ getCertPassword(char *buf, int bufsiz, tQSL_Cert cert) {
 
 	// TRANSLATORS: this is followed by the callsign and entity name
 	wxString fmt = _("Enter the password to unlock the callsign certificate for %hs -- %hs\n"
-		"(This is the password you made up when you installed the callsign certificate.)");
+		L"(This is the password you made up when you installed the callsign certificate.)");
 	wxString message = wxString::Format(fmt, call, dx.name());
 
 	wxWindow* top = wxGetApp().GetTopWindow();
@@ -388,11 +388,9 @@ END_EVENT_TABLE()
 DateRangeDialog::DateRangeDialog(wxWindow *parent) : wxDialog(parent, -1, wxString(_("QSO Date Range"))) {
 	tqslTrace("DateRangeDialog::DateRangeDialog", NULL);
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
-	wxString msgstr = _("You may set the starting and/or ending QSO dates "
-		  "in order to select QSOs from the input file.");
+	wxString msgstr = _("You may set the starting and/or ending QSO dates in order to select QSOs from the input file.");
 		msgstr += wxT("\n\n");
-		msgstr += _("QSOs prior to the starting date or after the ending "
-		  "date will not be signed or included in the output file.");
+		msgstr += _("QSOs prior to the starting date or after the ending date will not be signed or included in the output file.");
 		msgstr += wxT("\n\n");
 		msgstr += _("You may leave either date (or both dates) blank.");
 	wxSize sz = getTextSize(this);
@@ -486,36 +484,32 @@ DupesDialog::DupesDialog(wxWindow *parent, int qso_count, int dupes, int action)
 	wxString message;
 
 	if (qso_count == dupes) {
-		wxString fmt = _("This log contains %d QSO(s) which appear "
-		"to have already been signed for upload to LoTW, and no new QSOs.");
+		wxString fmt = _("This log contains %d QSO(s) which appear to have already been signed for upload to LoTW, and no new QSOs.");
 		fmt += wxT("\n\n");
 		fmt += _("Click 'Cancel' to abandon processing this log file (Recommended).");
 		fmt += wxT("\n");
-		fmt += _("Click 'Allow Duplicates' to re-process this "
-		"log while allowing duplicate QSOs.");
+		fmt += _("Click 'Allow Duplicates' to re-process this log while allowing duplicate QSOs.");
 		message = wxString::Format(fmt, qso_count);
 	} else {
 		int newq = qso_count - dupes;
 		wxString fmt = _("This log contains %d QSO(s) which appear "
-			"to have already been signed for upload to LoTW, and "
-			"%d QSOs which are new.");
+				L"to have already been signed for upload to LoTW, and "
+				L"%d QSOs which are new.");
 			fmt += wxT("\n\n");
 		  	fmt += _("Click 'Exclude duplicates' to sign normally, without the duplicate QSOs (Recommended).");
 			fmt += wxT("\n");
 			fmt += _("Click 'Cancel' to abandon processing this log file.");
 			fmt += wxT("\n");
-			fmt += _("Click 'Allow duplicates' to re-process this log "
-			"while allowing duplicate QSOs.");
+			fmt += _("Click 'Allow duplicates' to re-process this log while allowing duplicate QSOs.");
 		wxString fmt1 = _("This log contains %d QSO(s) which appear "
-			"to have already been signed for upload to LoTW, and "
-			"one QSO which is new.");
+				L"to have already been signed for upload to LoTW, and "
+				L"one QSO which is new.");
 			fmt1 += wxT("\n\n");
 		  	fmt1 += _("Click 'Exclude duplicates' to sign normally, without the duplicate QSOs (Recommended).");
 			fmt1 += wxT("\n");
 			fmt1 += _("Click 'Cancel' to abandon processing this log file.");
 			fmt1 += wxT("\n");
-			fmt1 += _("Click 'Allow duplicates' to re-process this log "
-			"while allowing duplicate QSOs.");
+			fmt1 += _("Click 'Allow duplicates' to re-process this log while allowing duplicate QSOs.");
 		if (newq == 1) {
 			message = wxString::Format(fmt1, dupes);
 		} else {
@@ -527,26 +521,26 @@ DupesDialog::DupesDialog(wxWindow *parent, int qso_count, int dupes, int action)
 		if (qso_count == dupes) {
 			message+= wxT("\n\n");
 			message += _("The log file you are uploading using your QSO Logging system consists entirely of previously uploaded "
-				  "QSOs (duplicates) that create unnecessary work for LoTW. There may be a more recent version of your QSO "
-				  "Logging system that would prevent this. Please check with your QSO Logging system's vendor for an updated version.");
+				L"QSOs (duplicates) that create unnecessary work for LoTW. There may be a more recent version of your QSO "
+				L"Logging system that would prevent this. Please check with your QSO Logging system's vendor for an updated version.");
 			message += wxT("\n");
 			message += _("In the meantime, please note that some loggers may exhibit strange behavior if an option other than 'Allow duplicates' "
-				  "is clicked. Choosing 'Cancel' is usually safe, but a defective logger not checking the status messages reported by TrustedQSL may produce "
-				  "strange (but harmless) behavior such as attempting to upload an empty file or marking all chosen QSOs as 'sent'");
+				L"is clicked. Choosing 'Cancel' is usually safe, but a defective logger not checking the status messages reported by TrustedQSL may produce "
+				L"strange (but harmless) behavior such as attempting to upload an empty file or marking all chosen QSOs as 'sent'");
 		} else {
 			message+= wxT("\n\n");
 			message += _("The log file you are uploading using your QSO Logging system includes some previously uploaded "
-				  "QSOs (duplicates) that create unnecessary work for LoTW. There may be a more recent version of your "
-				  "QSO Logging system that would prevent this. Please check with your QSO Logging system's vendor for an updated version.");
+				L"QSOs (duplicates) that create unnecessary work for LoTW. There may be a more recent version of your "
+				L"QSO Logging system that would prevent this. Please check with your QSO Logging system's vendor for an updated version.");
 			message += wxT("\n");
 			message += _("In the meantime, please note that some loggers may exhibit strange behavior if an option other than 'Allow duplicates' "
-				  "is clicked. 'Exclude duplicates' is recommended, but a logger that does its own duplicate tracking may incorrectly "
-				  "set the status in this case. A logger that doesn't track duplicates should be unaffected by choosing 'Exclude duplicates' "
-				  "and if it tracks 'QSO sent' status, will correctly mark all selected QSOs as sent - they are in your account even though "
-				  "they would not be in this specific batch");
+				L"is clicked. 'Exclude duplicates' is recommended, but a logger that does its own duplicate tracking may incorrectly "
+				L"set the status in this case. A logger that doesn't track duplicates should be unaffected by choosing 'Exclude duplicates' "
+				L"and if it tracks 'QSO sent' status, will correctly mark all selected QSOs as sent - they are in your account even though "
+				L"they would not be in this specific batch");
 			message += wxT("\n");
 			message += _("Choosing 'Cancel' is usually safe, but a defective logger not checking the status messages reported by TrustedQSL may produce "
-				  "strange (but harmless) behavior such as attempting to upload an empty file or marking all chosen QSOs as 'sent'");
+				L"strange (but harmless) behavior such as attempting to upload an empty file or marking all chosen QSOs as 'sent'");
 		}
 	}
 	wxStaticText* mtext = new wxStaticText(this, -1, message);
@@ -585,7 +579,7 @@ DupesDialog::OnAllow(wxCommandEvent&) {
 	tqslTrace("DupesDialog::OnAllow", NULL);
 
 	wxString msg = _("The only reason to re-sign duplicate QSOs is if a previous upload "
-		"was not processed by LoTW, either because it was never uploaded, or there was a server failure");
+			L"was not processed by LoTW, either because it was never uploaded, or there was a server failure");
 		msg += wxT("\n\n");
 		msg += _("Are you sure you want to proceed? Click 'No' to review the choices");
 	if (wxMessageBox(msg, _("Are you sure?"), wxYES_NO|wxICON_EXCLAMATION, this) == wxYES) {
@@ -752,7 +746,7 @@ void LogList::DoLogString(const wxChar *szString, time_t) {
 		_logwin = _frame->logwin;
 	if (_logwin == 0) {
 #ifdef _WIN32
-		cerr << szString << endl;
+		fwprintf(stderr, L"%ls\n", szString);
 #else
 		fprintf(stderr, "%ls\n", szString);
 #endif
@@ -777,7 +771,7 @@ void LogStderr::DoLogString(const wxChar *szString, time_t) {
 	if (wxString(szString).StartsWith(wxT("Debug:")))
 		return;
 #ifdef _WIN32
-	cerr << szString << endl;
+	fwprintf(stderr, L"%ls\n", szString);
 #else
 	fprintf(stderr, "%ls\n", szString);
 #endif
@@ -895,7 +889,7 @@ MyFrame::SaveOldBackups(const wxString& directory, const wxString& filename, con
 	wxArrayString bfiles;
 
 #ifdef _WIN32
-	wchar_t* wpath = utf8_to_wchar(directory);
+	wchar_t* wpath = utf8_to_wchar(directory.ToUTF8());
 	_WDIR *dir = _wopendir(wpath);
 	free_wchar(wpath);
 #else
@@ -1206,7 +1200,10 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	b1sizer->Add(up, 0, wxALL, 1);
 	wxString b1lbl = wxT("\n");
 	b1lbl += _("Sign a log and upload it automatically to LoTW");
-	b1sizer->Add(new wxStaticText(b1Panel, -1, b1lbl), 1, wxALL, 1);
+	wxStaticText *b1txt = new wxStaticText(b1Panel, -1, b1lbl);
+	b1sizer->Add(b1txt, 1, wxFIXED_MINSIZE | wxALL, 1);
+	b1txt->SetLabel(b1lbl);
+	up->SetLabel(b1lbl);
 	bsizer->Add(b1Panel, 0, wxALL, 1);
 
 	wxPanel* b2Panel = new wxPanel(buttons);
@@ -1219,7 +1216,10 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	b2sizer->Add(signsave, 0, wxALL, 1);
 	wxString b2lbl = wxT("\n");
 	b2lbl += _("Sign a log and save it for uploading later");
-	b2sizer->Add(new wxStaticText(b2Panel, -1, b2lbl), 1, wxALL, 1);
+	wxStaticText *b2txt = new wxStaticText(b2Panel, -1, b2lbl);
+	b2txt->SetLabel(b2lbl);
+	signsave->SetLabel(b2lbl);
+	b2sizer->Add(b2txt, 1, wxALL, 1);
 	bsizer->Add(b2Panel, 0, wxALL, 1);
 
 	wxPanel* b3Panel = new wxPanel(buttons);
@@ -1233,7 +1233,10 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	b3sizer->Add(fed, 0, wxALL, 1);
 	wxString b3lbl = wxT("\n");
 	b3lbl += _("Create an ADIF file for signing and uploading");
-	b3sizer->Add(new wxStaticText(b3Panel, -1, b3lbl), 1, wxALL, 1);
+	wxStaticText *b3txt = new wxStaticText(b3Panel, -1, b3lbl);
+	b3sizer->Add(b3txt, 1, wxALL, 1);
+	b3txt->SetLabel(b3lbl);
+	fed->SetLabel(b3lbl);
 	bsizer->Add(b3Panel, 0, wxALL, 1);
 
 	wxPanel* b4Panel = new wxPanel(buttons);
@@ -1246,7 +1249,10 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	b4sizer->Add(lotw, 0, wxALL, 1);
 	wxString b4lbl = wxT("\n");
 	b4lbl += _("Log in to the Logbook of the World Site");
-	b4sizer->Add(new wxStaticText(b4Panel, -1, b4lbl), 1, wxALL, 1);
+	wxStaticText *b4txt = new wxStaticText(b4Panel, -1, b4lbl);
+	b4sizer->Add(b4txt, 1, wxALL, 1);
+	b4txt->SetLabel(b4lbl);
+	lotw->SetLabel(b4lbl);
 	bsizer->Add(b4Panel, 0, wxALL, 1);
 
 	notebook->AddPage(buttons, _("Log Operations"));
@@ -1522,7 +1528,11 @@ MyFrame::OnHelpContents(wxCommandEvent& WXUNUSED(event)) {
 // Return the "About" string
 //
 static wxString getAbout() {
-	wxString msg = wxT("TQSL V") wxT(VERSION) wxT(" build ") wxT(BUILD) wxT("\n(c) 2001-2018 American Radio Relay League\n\n");
+	wxString msg = wxT("TQSL V") wxT(VERSION) wxT(" build ") wxT(BUILD);
+#ifdef OSX_PLATFORM
+	msg += wxT("\nBuilt for ") wxT(OSX_PLATFORM);
+#endif
+	msg += wxT("\n(c) 2001-2019 American Radio Relay League\n\n");
 	int major, minor;
 	if (tqsl_getVersion(&major, &minor))
 		wxLogError(getLocalizedErrorString());
@@ -1545,16 +1555,18 @@ static wxString getAbout() {
 #else
 	msg+=wxString::Format(wxT("%hs"), DB_VERSION_STRING);
 #endif
-	msg+=wxT("\n\n\nTranslators:\n"
-		"German: Andreas Rehberg, DF4WC\n"
-		"Spanish: Jordi Quintero, EA3GCV\n"
-		"Italian: Salvatore Besso, I4FYV\n"
-		"Japanese: Akihiro KODA, JL3OXR\n"
-		"Finnish: Juhani Tapaninen, OH8MXL\n"
-		"Portuguese: Nuno Lopes, CT2IRY\n"
-		"Russian: Vic Goncharsky, US5WE\n"
-		"Chinese: Caros, BH4TXN\n"
-		"Hindi: Manmohan Bhagat, VU3YBH\n");
+	msg+=wxT("\n\n\nTranslators:\n");
+	msg+=wxT("Chinese: Caros, BH4TXN\n");
+	msg+=wxT("Finnish: Juhani Tapaninen, OH8MXL\n");
+	msg+=wxT("German: Andreas Rehberg, DF4WC\n");
+	msg+=wxT("Hindi: Manmohan Bhagat, VU3YBH\n");
+	msg+=wxT("Italian: Salvatore Besso, I4FYV\n");
+	msg+=wxT("Japanese: Akihiro KODA, JL3OXR\n");
+	msg+=wxT("Polish: Roman Bagiński, SP4JEU\n");
+	msg+=wxT("Portuguese: Nuno Lopes, CT2IRY\n");
+	msg+=wxT("Russian: Vic Goncharsky, US5WE\n");
+	msg+=wxT("Spanish: Jordi Quintero, EA3GCV\n");
+	msg+=wxT("Turkish: Oguzhan Kayhan, TA2NC\n");
 	return msg;
 }
 
@@ -2456,7 +2468,7 @@ long compressToBuf(string& buf, const char* input) {
 	buf.insert(buf.end(), tbuf, tbuf+TBUFSIZ-stream.avail_out);
 	deflateEnd(&stream);
 
-	delete tbuf;
+	delete[] tbuf;
 
 	return buf.length();
 }
@@ -2556,7 +2568,7 @@ tqsl_curl_init(const char *logTitle, const char *url, FILE **curlLogFile, bool n
 
 	wxString filename;
 #ifdef _WIN32
-	filename.Printf(wxT("%hs\\curl.log"), wxString::FromUTF8(tQSL_BaseDir));
+	filename.Printf(wxT("%hs\\curl.log"), tQSL_BaseDir);
 #else
 	filename.Printf(wxT("%hs/curl.log"), tQSL_BaseDir);
 #endif
@@ -3178,7 +3190,7 @@ void MyFrame::UpdateConfigFile() {
 
 	wxString filename;
 #ifdef _WIN32
-	filename.Printf(wxT("%hs\\config.tq6"), wxString::FromUTF8(tQSL_BaseDir));
+	filename.Printf(wxT("%hs\\config.tq6"), tQSL_BaseDir);
 	wchar_t* lfn = utf8_to_wchar(filename.ToUTF8());
 	FILE *configFile = _wfopen(lfn, L"wb");
 	free_wchar(lfn);
@@ -3253,7 +3265,7 @@ void MyFrame::UpdateTQSL(wxString& url) {
 	}
 
 	wxString filename;
-	filename.Printf(wxT("%hs\\tqslupdate.msi"), wxString::FromUTF8(tQSL_BaseDir));
+	filename.Printf(wxT("%hs\\tqslupdate.msi"), tQSL_BaseDir);
 	wchar_t* lfn = utf8_to_wchar(filename.ToUTF8());
 	FILE *updateFile = _wfopen(lfn, L"wb");
 	free_wchar(lfn);
@@ -3696,7 +3708,14 @@ MyFrame::DoCheckForUpdates(bool silent, bool noGUI) {
 			tqslTrace("MyFrame::DoCheckForUpdates", "Prog + Config rev returns %d chars, %s", handler.s.size(), handler.s.c_str());
 			wxString result = wxString::FromAscii(handler.s.c_str());
 			wxString url;
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-local-typedef"
+#endif
 			WX_DECLARE_STRING_HASH_MAP(wxString, URLHashMap);
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 			URLHashMap map;
 			ri->newProgramRev = NULL;
 			ri->newConfigRev = NULL;
@@ -5074,6 +5093,9 @@ QSLApp::OnInit() {
 	// Add locale search path for where we install language files
 	locale->AddCatalogLookupPathPrefix(wxT("/usr/local/share/locale"));
 #endif
+#if wxMAJOR_VERSION > 2
+	lang = langWX2toWX3(lang);		// Translate to wxWidgets 3 language ID.
+#endif
 	if (wxLocale::IsAvailable(lang)) {
 		locale = new wxLocale(lang);
 		if (!locale)
@@ -5098,7 +5120,7 @@ QSLApp::OnInit() {
 	// This should not be used in production.
 	if (!locale->AddCatalog(wxT("tqslapp"))) {
 		const char* cname = pinfo->CanonicalName.ToUTF8();
-		wxLogError(wxT("Can't find the tqslappp catalog for locale '%s'."), cname);
+		wxLogError(wxT("Can't find the tqslapp catalog for locale '%s'."), cname);
 	}
 #else
 	locale->AddCatalog(wxT("tqslapp"));
@@ -6135,15 +6157,13 @@ void MyFrame::OnCertExport(wxCommandEvent& WXUNUSED(event)) {
 	wxString msg = _("Enter the password for the certificate container file.");
 		msg += wxT("\n\n");
 		msg += _("If you are using a computer system that is shared "
-			"with others, you should specify a password to "
-			"protect this certificate. However, if you are using "
-			"a computer in a private residence, no password need be specified.");
+			L"with others, you should specify a password to "
+			L"protect this certificate. However, if you are using "
+			L"a computer in a private residence, no password need be specified.");
 		msg += wxT("\n\n");
-		msg += _("You will have to enter the password any time you "
-			"load the file into TrustedQSL.");
+		msg += _("You will have to enter the password any time you load the file into TrustedQSL.");
 		msg += wxT("\n\n");
-		msg += _("Leave the password blank and click 'OK' unless you want to "
-			"use a password.");
+		msg += _("Leave the password blank and click 'OK' unless you want to use a password.");
 		msg += wxT("\n\n");
 	GetNewPasswordDialog dial(this, _("Certificate Container Password"), msg, true, help, wxT("save.htm"));
 	if (dial.ShowModal() != wxID_OK)
@@ -6426,8 +6446,12 @@ void MyFrame::OnChooseLanguage(wxCommandEvent& WXUNUSED(event)) {
 	wxConfig::Get()->Write(wxT("Language"), static_cast<int>(langIds[lng]));
 	wxConfig::Get()->Flush();
 
-	if (wxLocale::IsAvailable(langIds[lng])) {
-		locale = new wxLocale(langIds[lng]);
+	wxLanguage chosen = langIds[lng];
+#if wxMAJOR_VERSION > 2
+	chosen = langWX2toWX3(chosen);
+#endif
+	if (wxLocale::IsAvailable(chosen)) {
+		locale = new wxLocale(chosen);
 		if (!locale) locale = new wxLocale(wxLANGUAGE_DEFAULT);
 	} else {
 		wxLogError(wxT("This language is not supported by the system."));

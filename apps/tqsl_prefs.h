@@ -190,7 +190,6 @@ class ContestMap : public PrefsPanel {
 	wxButton *delete_but, *edit_but;
 	wxGrid *grid;
 	wxComboBox *dgmodes;
-	int numModes;
 	vector <const char *> modes;
 	ContestSet contestmap;
 	DECLARE_EVENT_TABLE()

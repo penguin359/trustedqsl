@@ -68,7 +68,7 @@ class TQSLWizard : public ExtWizard {
 	tQSL_Location loc;
 	int _curpage;
 	map<int, TQSLWizPage *> _pages;
-	TQSLWizPage *final;
+	// TQSLWizPage *final;
 
 	DECLARE_EVENT_TABLE()
 };

@@ -1504,18 +1504,17 @@ tqsl_importKeyPairEncoded(const char *callsign, const char *type, const char *ke
 
 		size_t bloblen;
 		bloblen = BIO_read(in, biobuf, strlen(keybuf));
-		if (bloblen >= 0)
-			biobuf[bloblen] = '\0';
+		biobuf[bloblen] = '\0';
 
 		strncpy(temppath, tQSL_BaseDir, sizeof temppath);
 		FILE *temp = NULL;
 #ifdef _WIN32
-		strncat(temppath, "\\pk.tmp", sizeof temppath - strlen(temppath));
+		strncat(temppath, "\\pk.tmp", sizeof temppath - strlen(temppath) -1);
 		wchar_t* wpath = utf8_to_wchar(temppath);
 		if ((temp = _wfopen(wpath, TQSL_OPEN_WRITE)) == NULL) {
 			free_wchar(wpath);
 #else
-		strncat(temppath, "/pk.tmp", sizeof temppath - strlen(temppath));
+		strncat(temppath, "/pk.tmp", sizeof temppath - strlen(temppath) -1);
 		if ((temp = fopen(temppath, TQSL_OPEN_WRITE)) == NULL) {
 #endif
 			strncpy(tQSL_ErrorFile, temppath, sizeof tQSL_ErrorFile);
@@ -3364,8 +3363,8 @@ tqsl_deleteCertificate(tQSL_Cert cert) {
 		goto dc_end;
 	}
 #ifdef _WIN32
-	free(wpath);
-	free(wnewpath);
+	free_wchar(wpath);
+	free_wchar(wnewpath);
 #endif
 
  dc_ok:
@@ -4222,7 +4221,7 @@ tqsl_make_key_path(const char *callsign, char *path, int size) {
 		return 0;
 	}
 #ifdef _WIN32
-	free(wpath);
+	free_wchar(wpath);
 	strncat(path, "\\", size - strlen(path));
 #else
 	strncat(path, "/", size - strlen(path));
@@ -4253,7 +4252,7 @@ tqsl_make_backup_path(const char *callsign, char *path, int size) {
 		return 0;
 	}
 #ifdef _WIN32
-	free(wpath);
+	free_wchar(wpath);
 	strncat(path, "\\", size - strlen(path));
 #else
 	strncat(path, "/", size - strlen(path));
@@ -4539,7 +4538,7 @@ tqsl_store_cert(const char *pem, X509 *cert, const char *certfile, int type, boo
 		return 1;
 	}
 #ifdef _WIN32
-	free(wpath);
+	free_wchar(wpath);
 #endif
 	// Make sure there's always a newline between certs
 	size_t pemlen = strlen(pem);

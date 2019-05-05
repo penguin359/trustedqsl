@@ -11,8 +11,11 @@
 #if !defined(_WX_JSONREADER_H)
 #define _WX_JSONREADER_H
 
-#ifdef __GNUG__
+#ifdef __GNUG_
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunknown-pragmas"
     #pragma interface "jsonreader.h"
+#pragma clang diagnostic pop
 #endif
 
 // For compilers that support precompilation, includes "wx/wx.h".

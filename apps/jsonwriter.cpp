@@ -8,8 +8,11 @@
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef __GNUG__
+#ifdef __GNUG_
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunknown-pragmas"
     #pragma implementation "jsonwriter.cpp"
+#pragma clang diagnostic pop
 #endif
 
 
