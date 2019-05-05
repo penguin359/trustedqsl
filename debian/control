@@ -8,6 +8,7 @@ Uploaders:
  Patrick Ouellette <pouelle@debian.org>,
  Jerry Stueve <k4int@arrl.net>,
  Colin Tuckley <colint@debian.org>,
+ Christoph Berg <myon@debian.org>,
 Standards-Version: 4.3.0
 Build-Depends:
  cmake,
