@@ -606,11 +606,10 @@ ProxyPrefs::ProxyPrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm"
 
 	wxString msg = wxT("\n");
 		msg += _("Use these settings to configure a network proxy "
-		      "for Internet uploads and downloads. You should only "
-		      "enable a proxy if directed by your network administrator.");
+			L"for Internet uploads and downloads. You should only "
+			L"enable a proxy if directed by your network administrator.");
 		msg += wxT("\n");
-		msg += _("Incorrect settings can cause TQSL to be unable to upload "
-		      "logs or check for updates.");
+		msg += _("Incorrect settings can cause TQSL to be unable to upload logs or check for updates.");
 	wxStaticText *st = new wxStaticText(this, -1, msg, wxDefaultPosition, wxSize(char_width, char_height *8));
 	sizer->Add(st);
 
@@ -739,7 +738,11 @@ ContestMap::ContestMap(wxWindow *parent) : PrefsPanel(parent, wxT("pref-cab.htm"
 }
 
 void ContestMap::Buttons() {
+#if wxMAJOR_VERSION > 2
+	bool editable = grid->GetGridCursorRow() >= 0;
+#else
 	bool editable = grid->GetCursorRow() >= 0;
+#endif
 	delete_but->Enable(editable);
 	edit_but->Enable(editable);
 }
@@ -782,8 +785,8 @@ void ContestMap::SetContestList() {
 
 void ContestMap::DoUpdateInfo(wxCommandEvent&) {
 	wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
-        unsigned int sel = dgmodes->GetSelection();
-	if (sel >= 0) {
+        int sel = dgmodes->GetSelection();
+	if (sel != wxNOT_FOUND) {
 		const char* mapped = modes[sel];
 		config->Write(wxT("CabrilloDGMap"), wxString::FromUTF8(mapped));
 		config->Flush(false);
@@ -798,7 +801,11 @@ bool ContestMap::TransferDataFromWindow() {
 
 void ContestMap::OnDelete(wxCommandEvent &) {
 	tqslTrace("ContestMap::OnDelete", NULL);
+#if wxMAJOR_VERSION > 2
+	int row = grid->GetGridCursorRow();
+#else
 	int row = grid->GetCursorRow();
+#endif
 	if (row >= 0) {
 		wxString contest = grid->GetCellValue(row, 0);
 		if (contest != wxT("")) {
@@ -827,7 +834,11 @@ void ContestMap::OnEdit(wxCommandEvent &) {
 	tqslTrace("ContestMap::OnEdit", NULL);
 	wxString contest;
 	int contest_type = 0, callsign_field = TQSL_DEF_CABRILLO_MAP_FIELD;
+#if wxMAJOR_VERSION > 2
+	int row = grid->GetGridCursorRow();
+#else
 	int row = grid->GetCursorRow();
+#endif
 	if (row >= 0) {
 		contest = grid->GetCellValue(row, 0);
 		if (contest != wxT("")) {

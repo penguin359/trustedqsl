@@ -48,7 +48,14 @@ class CertTree : public wxTreeCtrl {
 	void OnItemActivated(wxTreeEvent& event);
 	void OnRightDown(wxMouseEvent& event);
 	bool useContextMenu;
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
 	CertTreeItemData *GetItemData(wxTreeItemId id) { return reinterpret_cast<CertTreeItemData *>(wxTreeCtrl::GetItemData(id)); }
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 	int GetNumCerts() const { return _ncerts; }
 	int GetNumIssuers() const { return _nissuers; }
 	void SelectCert(tQSL_Cert cert);

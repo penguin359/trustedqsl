@@ -2132,12 +2132,19 @@ tqsl_setLocationFieldCharData(tQSL_Location locp, int field_num, const char *buf
 			fl[field_num].idx = 0;
 			fl[field_num].idata = fl[field_num].items[0].ivalue;
 		} else {
+			bool found = false;
 			for (int i = 0; i < static_cast<int>(fl[field_num].items.size()); i++) {
 				if (fl[field_num].items[i].text == fl[field_num].cdata) {
 					fl[field_num].idx = i;
 					fl[field_num].idata = fl[field_num].items[i].ivalue;
+					found = true;
 					break;
 				}
+			}
+			if (!found) { 	// There's no entry in the list that matches!
+				fl[field_num].cdata = "";
+				fl[field_num].idx = 0;
+				fl[field_num].idata = 0;
 			}
 		}
 	}

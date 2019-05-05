@@ -48,7 +48,14 @@ class CRQWiz : public ExtWizard {
 	CRQWiz(TQSL_CERT_REQ *crq, 	tQSL_Cert cert, wxWindow* parent, wxHtmlHelpController *help = 0,
 		const wxString& title = _("Request a new Callsign Certificate"));
 	CRQ_Page *GetCurrentPage() { return reinterpret_cast<CRQ_Page *>(wxWizard::GetCurrentPage()); }
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
 	bool RunWizard();
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 	int ncerts;		// Number of valid certificates
 	int nprov;		// Number of providers
 	bool signIt;

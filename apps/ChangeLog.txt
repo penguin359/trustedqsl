@@ -1,5 +1,35 @@
 TQSL changes
 ============
+2.4.7
+----------
+Correct defect that keeps TQSL updates on Windows from working properly.
+
+2.4.6
+----------
+Fix error messages for Windows command line users. The text was garbled due
+to changes made to implement Unicode on Windows (no changes for Linux or Mac).
+
+2.4.5
+----------
+Fix log messages for Windows command line users to not be a string of Hex
+characters.
+
+2.4.4
+----------
+Add localization for Turkish.
+
+Add support for a 64-bit build for MacOS. Add an indicator of what platforms
+are supported for an Mac build (i386/ppc or x86_64/i386).
+
+Fix error that was keeping the State and County from being defaulted when
+creating a new Station Location.
+
+Add another callsign certificate request type - one for a new callsign for
+the primary user.
+
+Add language support for Polish. Fix problem that was keeping Hindi from
+properly displaying on Windows.
+
 
 2.4.3
 ----------

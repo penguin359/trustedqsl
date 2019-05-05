@@ -40,6 +40,11 @@
   </Fragment>
   <Fragment>
     <DirectoryRef Id="APPLICATIONFOLDER">
+      <Directory Id="dirD008988B9EE240A981862D98D2EB80E1" Name="pl_PL" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="APPLICATIONFOLDER">
       <Directory Id="dirE7D57DDBD1E700871049BD47E755B20D" Name="pt" />
     </DirectoryRef>
   </Fragment>
@@ -51,6 +56,11 @@
   <Fragment>
     <DirectoryRef Id="APPLICATIONFOLDER">
       <Directory Id="dirC332EE54B19E15D0A758A1C5E6D52056" Name="ru" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="APPLICATIONFOLDER">
+      <Directory Id="dirD0E6D5EEDC6345B4A3A09DBAAAE899B1" Name="tr_TR" />
     </DirectoryRef>
   </Fragment>
   <Fragment>
@@ -97,6 +107,12 @@
       <Component Id="cmp9375E74F9EC6417F84723B412D0D99E5" Directory="dir2325DE467EB3C09A2BCC4942D90AC105" Guid="*">
         <File Id="fil84F8A399FC064A79A5AB60C786B915B2" KeyPath="yes" Source="$(var.langSrc)\ja\wxstd.mo" />
       </Component>
+      <Component Id="cmpBF7B965CCBD64C5CAC75FE9EB615B0F2" Directory="dirD008988B9EE240A981862D98D2EB80E1" Guid="*">
+        <File Id="fil5D9FF2B3D6554B5B815E8E35D098FA3E" KeyPath="yes" Source="$(var.langSrc)\pl_PL\tqslapp.mo" />
+      </Component>
+      <Component Id="cmp72F892FDF5FD4112A18B3DCEBBECC8FA" Directory="dirD008988B9EE240A981862D98D2EB80E1" Guid="*">
+        <File Id="file4EDA39C325DA443AAABD333E8B4EF944" KeyPath="yes" Source="$(var.langSrc)\pl_PL\wxstd.mo" />
+      </Component>
       <Component Id="cmpD034F2F1F0808F51CC8FAEDB2272EDCB" Directory="dirE7D57DDBD1E700871049BD47E755B20D" Guid="*">
         <File Id="fil5DFFBCC7D22EE96E4820414EF99CD614" KeyPath="yes" Source="$(var.langSrc)\pt\tqslapp.mo" />
       </Component>
@@ -114,6 +130,12 @@
       </Component>
       <Component Id="cmp956327FA375C38F32F3A37AD6A178952" Directory="dirC332EE54B19E15D0A758A1C5E6D52056" Guid="*">
         <File Id="fil936DBB25DF52CB70D9E6330A7134B221" KeyPath="yes" Source="$(var.langSrc)\ru\wxstd.mo" />
+      </Component>
+      <Component Id="cmpA15A521703D54A2C908076E3C9097864" Directory="dirD0E6D5EEDC6345B4A3A09DBAAAE899B1" Guid="*">
+        <File Id="fil2208B0C91EAE4E8AAB478C0310884CAC" KeyPath="yes" Source="$(var.langSrc)\tr_TR\tqslapp.mo" />
+      </Component>
+      <Component Id="cmpBBEB7843204C4FEC94699E593BDE2ADA" Directory="dirD0E6D5EEDC6345B4A3A09DBAAAE899B1" Guid="*">
+        <File Id="file5A6571619FB04AD58AF34552986B3017" KeyPath="yes" Source="$(var.langSrc)\tr_TR\wxstd.mo" />
       </Component>
     </ComponentGroup>
   </Fragment>

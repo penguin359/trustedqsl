@@ -47,4 +47,8 @@ wxString urlEncode(wxString& str);
 int utf8_to_ucs2(const char *in, char *out, size_t buflen);
 int getPasswordFromUser(wxString& result, const wxString& message, const wxString& caption, const wxString& defaultValue, wxWindow *parent);
 wxString getLocalizedErrorString(void);
+#if wxMAJOR_VERSION > 2
+wxLanguage langWX2toWX3(wxLanguage wx2);
+#endif // WX3
+
 #endif	// __wxutil_h

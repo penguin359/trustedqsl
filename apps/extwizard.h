@@ -38,7 +38,14 @@ class ExtWizard_Page;
 class ExtWizard : public wxWizard {
  public:
 	explicit ExtWizard(wxWindow *parent, wxHtmlHelpController *help = 0, const wxString& title = wxEmptyString);
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
 	ExtWizard_Page *GetCurrentPage() { return reinterpret_cast<ExtWizard_Page *>(wxWizard::GetCurrentPage()); }
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 	wxHtmlHelpController *GetHelp() { return _help; }
 	void DisplayHelp(const wxString& file) { if (_help) _help->Display(file); }
 	void ReportSize(const wxSize& size);
