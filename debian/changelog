@@ -2,6 +2,7 @@ trustedqsl (2.4.7-1) experimental; urgency=medium
 
   * New upstream release.
   * Add myself to Uploaders.
+  * Add debian/gitlab-ci.yml.
 
  -- Christoph Berg <myon@debian.org>  Sun, 05 May 2019 17:43:25 +0200
 
