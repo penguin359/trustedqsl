@@ -17,7 +17,7 @@ Build-Depends:
  libdb-dev,
  libexpat1-dev,
  libssl-dev,
- libwxgtk3.0-dev,
+ libwxgtk3.0-gtk3-dev,
  zlib1g-dev,
 Homepage: http://sourceforge.net/projects/trustedqsl/
 Vcs-Git: https://salsa.debian.org/debian-hamradio-team/trustedqsl.git
