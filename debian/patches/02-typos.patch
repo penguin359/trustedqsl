@@ -1,0 +1,438 @@
+Description: correct typos in source
+Author: tony mancill <tmancill@debian.org>
+
+--- a/src/location.cpp
++++ b/src/location.cpp
+@@ -1113,7 +1113,7 @@
+ 		return 1;
+ 	}
+ 	if (init_cabrillo_map()) {
+-		tqslTrace("tqsl_getCabrilloMapEntry", "init_cabrillo_map errror %d", tQSL_Error);
++		tqslTrace("tqsl_getCabrilloMapEntry", "init_cabrillo_map error %d", tQSL_Error);
+ 		return 1;
+ 	}
+ 	map<string, pair<int, int> >::iterator it;
+@@ -2126,7 +2126,7 @@
+ 	}
+ 	TQSL_LOCATION_FIELDLIST &fl = loc->pagelist[loc->page-1].fieldlist;
+ 	if (buf == NULL || field_num < 0 || field_num >= static_cast<int>(fl.size())) {
+-		tqslTrace("tqsl_getLocationFieldCharData", "arg errror buf=0x%lx, field_num=%d", buf, field_num);
++		tqslTrace("tqsl_getLocationFieldCharData", "arg error buf=0x%lx, field_num=%d", buf, field_num);
+ 		tQSL_Error = TQSL_ARGUMENT_ERROR;
+ 		return 1;
+ 	}
+--- a/apps/lang/de/tqslapp.po
++++ b/apps/lang/de/tqslapp.po
+@@ -1746,7 +1746,7 @@
+ 
+ #: tqsl.cpp:2827
+ #, c-format
+-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
++msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "%s: kann nicht hochladen. Das Netzwerk ist nicht verfügbar oder die LoTW "
+ "Webseite ist zu beschäftigt."
+@@ -1879,7 +1879,7 @@
+ msgstr "Bitte versuchen Sie es später noch einmal."
+ 
+ #: tqsl.cpp:3252 tqsl.cpp:3319
+-msgid "Unable to update. The nework is down or the LoTW site is too busy."
++msgid "Unable to update. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "Keine Aktualisierung möglich. Entweder ist das Netzwerk nicht verfügbar oder "
+ "die LoTW-Website ist zu beschäftigt."
+@@ -1968,7 +1968,7 @@
+ 
+ #: tqsl.cpp:3789 tqsl.cpp:3824
+ msgid ""
+-"Unable to check for updates. The nework is down or the LoTW site is too busy."
++"Unable to check for updates. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "Kann nicht nach Updates suchen. Das Netzwerk ist nicht verfügbar oder die "
+ "LoTW Webseite ist zu beschäftigt."
+--- a/apps/lang/es/tqslapp.po
++++ b/apps/lang/es/tqslapp.po
+@@ -1741,7 +1741,7 @@
+ 
+ #: tqsl.cpp:2827
+ #, c-format
+-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
++msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "%s: no se pudo subir. No hay red o el sitio web de LoTW está muy ocupado."
+ 
+@@ -1871,7 +1871,7 @@
+ msgstr "Por favor inténtalo más tarde."
+ 
+ #: tqsl.cpp:3252 tqsl.cpp:3319
+-msgid "Unable to update. The nework is down or the LoTW site is too busy."
++msgid "Unable to update. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "No se puede actualizar. La red no funciona o el sitio web de LoTW está "
+ "demasiado ocupado."
+@@ -1960,7 +1960,7 @@
+ 
+ #: tqsl.cpp:3789 tqsl.cpp:3824
+ msgid ""
+-"Unable to check for updates. The nework is down or the LoTW site is too busy."
++"Unable to check for updates. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "No se puede comprobar si hay actualizaciones. La red no funciona o el sitio "
+ "de LOTW está demasiado ocupado."
+--- a/apps/lang/fi/tqslapp.po
++++ b/apps/lang/fi/tqslapp.po
+@@ -1739,7 +1739,7 @@
+ 
+ #: tqsl.cpp:2827
+ #, c-format
+-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
++msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "%s: Ei voida lähettää. Verkko on alhaalla tai LoTW-palvelin on liian "
+ "kiireinen."
+@@ -1869,7 +1869,7 @@
+ msgstr "Yritä uudelleen myöhemmin."
+ 
+ #: tqsl.cpp:3252 tqsl.cpp:3319
+-msgid "Unable to update. The nework is down or the LoTW site is too busy."
++msgid "Unable to update. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "Ei voida päivittää. Joko verkko on poissa käytöstä tai LoTW-sivusto on liian "
+ "kiireinen."
+@@ -1958,7 +1958,7 @@
+ 
+ #: tqsl.cpp:3789 tqsl.cpp:3824
+ msgid ""
+-"Unable to check for updates. The nework is down or the LoTW site is too busy."
++"Unable to check for updates. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "Ei voida tarkistaa päivityksiä. Joko verkko on poissa käytöstä tai LoTW-"
+ "sivusto on liian kiireinen."
+--- a/apps/lang/fr/tqslapp.po
++++ b/apps/lang/fr/tqslapp.po
+@@ -1759,7 +1759,7 @@
+ 
+ #: tqsl.cpp:2827
+ #, c-format
+-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
++msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "%s : impossible de télécharger. Le réseau est hors service ou le site de "
+ "LoTW est trop occupé."
+@@ -1891,7 +1891,7 @@
+ msgstr "Réessayez plus tard."
+ 
+ #: tqsl.cpp:3252 tqsl.cpp:3319
+-msgid "Unable to update. The nework is down or the LoTW site is too busy."
++msgid "Unable to update. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "Impossible de mettre à jour. Le réseau est hors service ou le site de LoTW "
+ "est trop occupé."
+@@ -1981,7 +1981,7 @@
+ 
+ #: tqsl.cpp:3789 tqsl.cpp:3824
+ msgid ""
+-"Unable to check for updates. The nework is down or the LoTW site is too busy."
++"Unable to check for updates. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "Impossible de vérifier les mises à jour. Le réseau est hors service ou le "
+ "site de LoTW est trop occupé."
+--- a/apps/lang/hi_IN/tqslapp.po
++++ b/apps/lang/hi_IN/tqslapp.po
+@@ -1561,7 +1561,7 @@
+ 
+ #: tqsl.cpp:2827
+ #, c-format
+-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
++msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
+ msgstr "%s: अपलोड करने में असमर्थ. नेटवर्क बंद है या LoTW साइट बहुत व्यस्त है."
+ 
+ #: tqsl.cpp:2831
+@@ -1675,7 +1675,7 @@
+ msgstr "कृपया पुन: प्रयास करें."
+ 
+ #: tqsl.cpp:3252 tqsl.cpp:3319
+-msgid "Unable to update. The nework is down or the LoTW site is too busy."
++msgid "Unable to update. The network is down or the LoTW site is too busy."
+ msgstr "अद्यतन करने में असमर्थ-या तो आपका इंटरनेट कनेक्शन बंद है या LoTW साइट बहुत व्यस्त है."
+ 
+ #: tqsl.cpp:3255 tqsl.cpp:3322 tqsl.cpp:3795 tqsl.cpp:3830
+@@ -1757,7 +1757,7 @@
+ msgstr "अद्यतनों के लिए जांच करने में असमर्थ - या तो आपका इंटरनेट बंद है या LoTW पहुँच से बहार है."
+ 
+ #: tqsl.cpp:3789 tqsl.cpp:3824
+-msgid "Unable to check for updates. The nework is down or the LoTW site is too busy."
++msgid "Unable to check for updates. The network is down or the LoTW site is too busy."
+ msgstr "अद्यतनों के लिए जांच करने में असमर्थ. नेटवर्क बंद है या LoTW साइट बहुत व्यस्त है."
+ 
+ #: tqsl.cpp:3800
+--- a/apps/lang/it/tqslapp.po
++++ b/apps/lang/it/tqslapp.po
+@@ -1749,7 +1749,7 @@
+ 
+ #: tqsl.cpp:2827
+ #, c-format
+-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
++msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "%s: Impossibile caricare. La rete è giù oppure il sito di LoTW è troppo "
+ "occupato."
+@@ -1879,7 +1879,7 @@
+ msgstr "Per favore riprova più tardi."
+ 
+ #: tqsl.cpp:3252 tqsl.cpp:3319
+-msgid "Unable to update. The nework is down or the LoTW site is too busy."
++msgid "Unable to update. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "Impossibile aggiornare. La rete è giù oppure il sito di LoTW è troppo "
+ "occupato."
+@@ -1968,7 +1968,7 @@
+ 
+ #: tqsl.cpp:3789 tqsl.cpp:3824
+ msgid ""
+-"Unable to check for updates. The nework is down or the LoTW site is too busy."
++"Unable to check for updates. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "Impossibile controllare gli aggiornamenti. La rete è giù oppure il sito di "
+ "LoTW è troppo occupato."
+--- a/apps/lang/ja/tqslapp.po
++++ b/apps/lang/ja/tqslapp.po
+@@ -1723,7 +1723,7 @@
+ 
+ #: tqsl.cpp:2827
+ #, c-format
+-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
++msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "%s：　アップロードできません。 ネットワークがダウンしているか、LoTW　サイトが"
+ "ビジー状態です。"
+@@ -1854,7 +1854,7 @@
+ msgstr "後でもう一度お試しください。"
+ 
+ #: tqsl.cpp:3252 tqsl.cpp:3319
+-msgid "Unable to update. The nework is down or the LoTW site is too busy."
++msgid "Unable to update. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "更新できません。 ネットワークがダウンしているか、LoTW　サイトがビジー状態で"
+ "す。"
+@@ -1943,7 +1943,7 @@
+ 
+ #: tqsl.cpp:3789 tqsl.cpp:3824
+ msgid ""
+-"Unable to check for updates. The nework is down or the LoTW site is too busy."
++"Unable to check for updates. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "アップデートを確認できません。 ネットワークがダウンしているか、LoTW　サイトが"
+ "ビジー状態です。"
+--- a/apps/lang/pl_PL/tqslapp.po
++++ b/apps/lang/pl_PL/tqslapp.po
+@@ -1724,7 +1724,7 @@
+ 
+ #: tqsl.cpp:2827
+ #, c-format
+-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
++msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "%s Nie można przesłać.  Sieć jest wyłączona lub witryna LoTW jest zbyt "
+ "zajęta."
+@@ -1855,7 +1855,7 @@
+ msgstr "Spróbuj ponownie później."
+ 
+ #: tqsl.cpp:3252 tqsl.cpp:3319
+-msgid "Unable to update. The nework is down or the LoTW site is too busy."
++msgid "Unable to update. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "Nie można zaktualizować.  Sieć jest wyłączona lub witryna LoTW jest zbyt "
+ "zajęta."
+@@ -1944,7 +1944,7 @@
+ 
+ #: tqsl.cpp:3789 tqsl.cpp:3824
+ msgid ""
+-"Unable to check for updates. The nework is down or the LoTW site is too busy."
++"Unable to check for updates. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "Nie można sprawdzić aktualizacji.  Sieć jest wyłączona lub witryna LoTW jest "
+ "zbyt zajęta."
+--- a/apps/lang/pt/tqslapp.po
++++ b/apps/lang/pt/tqslapp.po
+@@ -1702,7 +1702,7 @@
+ 
+ #: tqsl.cpp:2827
+ #, c-format
+-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
++msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "%s: Não é possível fazer o upload. A rede está em baixo ou o site do LoTW "
+ "está muito ocupado."
+@@ -1833,7 +1833,7 @@
+ msgstr "Por favor, tente novamente mais tarde. "
+ 
+ #: tqsl.cpp:3252 tqsl.cpp:3319
+-msgid "Unable to update. The nework is down or the LoTW site is too busy."
++msgid "Unable to update. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "Não é possível atualizar. A rede está em baixo ou o site LoTW está muito "
+ "ocupado."
+@@ -1923,7 +1923,7 @@
+ 
+ #: tqsl.cpp:3789 tqsl.cpp:3824
+ msgid ""
+-"Unable to check for updates. The nework is down or the LoTW site is too busy."
++"Unable to check for updates. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "Não é possível verificar se há atualizações. A rede está em baixo ou o site "
+ "do LoTW está muito ocupado."
+--- a/apps/lang/ru/tqslapp.po
++++ b/apps/lang/ru/tqslapp.po
+@@ -1722,7 +1722,7 @@
+ 
+ #: tqsl.cpp:2827
+ #, c-format
+-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
++msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
+ msgstr "%s: Загрузка невозможна. Отказ сети, или сайт LoTW перегружен."
+ 
+ #: tqsl.cpp:2831
+@@ -1850,7 +1850,7 @@
+ msgstr "Поробуйте позднее."
+ 
+ #: tqsl.cpp:3252 tqsl.cpp:3319
+-msgid "Unable to update. The nework is down or the LoTW site is too busy."
++msgid "Unable to update. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "Обновление невозможно. Соединение с сетью отсутствует или сайт LoTW "
+ "перегружен."
+@@ -1939,7 +1939,7 @@
+ 
+ #: tqsl.cpp:3789 tqsl.cpp:3824
+ msgid ""
+-"Unable to check for updates. The nework is down or the LoTW site is too busy."
++"Unable to check for updates. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "Невозможно проверить наличие обновлений. Отказ сети, или сайт LoTW "
+ "перегружен."
+--- a/apps/lang/tr_TR/tqslapp.po
++++ b/apps/lang/tr_TR/tqslapp.po
+@@ -1681,7 +1681,7 @@
+ 
+ #: tqsl.cpp:2827
+ #, c-format
+-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
++msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "%s: Yükleme Yapılamadı.  Internet sorunu ya da LOTW sitesinde Problem var."
+ 
+@@ -1809,7 +1809,7 @@
+ msgstr "Lütfen daha sonra tekrar deneyiniz."
+ 
+ #: tqsl.cpp:3252 tqsl.cpp:3319
+-msgid "Unable to update. The nework is down or the LoTW site is too busy."
++msgid "Unable to update. The network is down or the LoTW site is too busy."
+ msgstr "Güncelleme başarısız. Ağ bağlantısı yok , ya da LOTW sitesi meşgul."
+ 
+ #: tqsl.cpp:3255 tqsl.cpp:3322 tqsl.cpp:3795 tqsl.cpp:3830
+@@ -1896,7 +1896,7 @@
+ 
+ #: tqsl.cpp:3789 tqsl.cpp:3824
+ msgid ""
+-"Unable to check for updates. The nework is down or the LoTW site is too busy."
++"Unable to check for updates. The network is down or the LoTW site is too busy."
+ msgstr ""
+ "Güncellemeler kontrol edilemedi.  Internet sorunu ya da LOTW sitesinde "
+ "Problem var."
+--- a/apps/lang/zh/tqslapp.po
++++ b/apps/lang/zh/tqslapp.po
+@@ -1630,7 +1630,7 @@
+ 
+ #: tqsl.cpp:2827
+ #, c-format
+-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
++msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
+ msgstr "%s: 不能上传 - 网络掉线或者LoTW网站太忙。"
+ 
+ #: tqsl.cpp:2831
+@@ -1748,7 +1748,7 @@
+ msgstr "请稍后再试。"
+ 
+ #: tqsl.cpp:3252 tqsl.cpp:3319
+-msgid "Unable to update. The nework is down or the LoTW site is too busy."
++msgid "Unable to update. The network is down or the LoTW site is too busy."
+ msgstr "不能更新--或者你的网络掉线或者LoTW网站太忙。"
+ 
+ #: tqsl.cpp:3255 tqsl.cpp:3322 tqsl.cpp:3795 tqsl.cpp:3830
+@@ -1833,7 +1833,7 @@
+ 
+ #: tqsl.cpp:3789 tqsl.cpp:3824
+ msgid ""
+-"Unable to check for updates. The nework is down or the LoTW site is too busy."
++"Unable to check for updates. The network is down or the LoTW site is too busy."
+ msgstr "不能检测更新--或者你的网络掉线或者LoTW网站太忙。"
+ 
+ #: tqsl.cpp:3800
+--- a/apps/tqsl.cpp
++++ b/apps/tqsl.cpp
+@@ -2824,7 +2824,7 @@
+ 			wxLogMessage(_("Please try uploading the %s later."), fileType.c_str());
+ 			retval = TQSL_EXIT_CONNECTION_FAILED;
+ 		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
+-			wxLogMessage(_("%s: Unable to upload. The nework is down or the LoTW site is too busy."), infile.c_str());
++			wxLogMessage(_("%s: Unable to upload. The network is down or the LoTW site is too busy."), infile.c_str());
+ 			wxLogMessage(_("Please try uploading the %s later."), fileType.c_str());
+ 			retval = TQSL_EXIT_CONNECTION_FAILED;
+ 		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
+@@ -3249,7 +3249,7 @@
+ 			wxLogMessage(_("Unable to update - either your Internet connection is down or LoTW is unreachable."));
+ 			wxLogMessage(_("Please try again later."));
+ 		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
+-			wxLogMessage(_("Unable to update. The nework is down or the LoTW site is too busy."));
++			wxLogMessage(_("Unable to update. The network is down or the LoTW site is too busy."));
+ 			wxLogMessage(_("Please try again later."));
+ 		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
+ 			wxLogMessage(_("Unable to connect to the update site."));
+@@ -3316,7 +3316,7 @@
+ 			wxLogMessage(_("Unable to update - either your Internet connection is down or LoTW is unreachable."));
+ 			wxLogMessage(_("Please try again later."));
+ 		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
+-			wxLogMessage(_("Unable to update. The nework is down or the LoTW site is too busy."));
++			wxLogMessage(_("Unable to update. The network is down or the LoTW site is too busy."));
+ 			wxLogMessage(_("Please try again later."));
+ 		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
+ 			wxLogMessage(_("Unable to connect to the update site."));
+@@ -3786,7 +3786,7 @@
+ 			} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
+ 				networkError = true;
+ 				ri->error = true;
+-				ri->errorText = wxString(_("Unable to check for updates. The nework is down or the LoTW site is too busy."));
++				ri->errorText = wxString(_("Unable to check for updates. The network is down or the LoTW site is too busy."));
+ 				ri->errorText += wxT("\n");
+ 				ri->errorText += _("Please try again later.");
+ 			} else if (retval == CURLE_SSL_CONNECT_ERROR) {
+@@ -3821,7 +3821,7 @@
+ 		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
+ 			networkError = true;
+ 			ri->error = true;
+-			ri->errorText = wxString(_("Unable to check for updates. The nework is down or the LoTW site is too busy."));
++			ri->errorText = wxString(_("Unable to check for updates. The network is down or the LoTW site is too busy."));
+ 			ri->errorText += wxT("\n");
+ 			ri->errorText += _("Please try again later.");
+ 		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
+--- a/apps/tqslupdater.cpp
++++ b/apps/tqslupdater.cpp
+@@ -217,7 +217,7 @@
+ 		if (retval == CURLE_COULDNT_RESOLVE_HOST || retval == CURLE_COULDNT_CONNECT) {
+ 			wxMessageBox(wxT("Unable to update - either your Internet connection is down or LoTW is unreachable.\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
+ 		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
+-			wxMessageBox(wxT("Unable to update. The nework is down or the LoTW site is too busy\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
++			wxMessageBox(wxT("Unable to update. The network is down or the LoTW site is too busy\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
+ 		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
+ 			wxMessageBox(wxT("Unable to connect to the update site.\nPlease try again later"), wxT("Error"), wxOK | wxICON_ERROR, this);
+ 		} else { // some other error
+@@ -301,7 +301,7 @@
+ 		if (retval == CURLE_COULDNT_RESOLVE_HOST || retval == CURLE_COULDNT_CONNECT) {
+ 			wxMessageBox(wxT("Unable to check for updates - either your Internet connection is down or LoTW is unreachable.\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
+ 		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
+-			wxMessageBox(wxT("Unable to check for updates. The nework is down or the LoTW site is too busy.\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
++			wxMessageBox(wxT("Unable to check for updates. The network is down or the LoTW site is too busy.\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
+ 		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
+ 			wxMessageBox(wxT("Unable to connect to the update site.\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
+ 		} else { // some other error
