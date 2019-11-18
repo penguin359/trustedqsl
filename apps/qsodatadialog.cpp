@@ -630,7 +630,15 @@ QSODataDialog::WriteQSOFile(QSORecordList& recs, const char *fname) {
 		out << buf << endl;
 		tqsl_adifMakeField("BAND", 0, (const unsigned char*)(const char *)it->_band.ToUTF8(), -1, buf, sizeof buf);
 		out << "   " << buf << endl;
-		tqsl_adifMakeField("MODE", 0, (const unsigned char*)(const char *)it->_mode.ToUTF8(), -1, buf, sizeof buf);
+		char mode[128], submode[128];
+		if (tqsl_getADIFSubMode(it->_mode.ToUTF8(), mode, submode, sizeof mode) == 0) {
+			tqsl_adifMakeField("MODE", 0, (const unsigned char*)mode, -1, buf, sizeof buf);
+			out << "   " << buf;
+			tqsl_adifMakeField("SUBMODE", 0, (const unsigned char*)submode, -1, buf, sizeof buf);
+			out << buf << endl;
+		} else {
+			tqsl_adifMakeField("MODE", 0, (const unsigned char*)(const char *)it->_mode.ToUTF8(), -1, buf, sizeof buf);
+		}
 		out << "   " << buf << endl;
 		dtstr.Printf(wxT("%04d%02d%02d"), it->_date.year, it->_date.month, it->_date.day);
 		tqsl_adifMakeField("QSO_DATE", 0, (const unsigned char*)(const char *)dtstr.ToUTF8(), -1, buf, sizeof buf);

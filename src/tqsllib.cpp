@@ -21,6 +21,8 @@
     #include <windows.h>
     #include <direct.h>
     #include <Shlobj.h>
+#else
+#include <unistd.h>
 #endif
 #ifdef __APPLE__
 #include <CoreFoundation/CFBundle.h>
@@ -110,7 +112,7 @@ static const char *error_strings[] = {
 	"PKCS#12 file not TQSL compatible",			/* TQSL_PKCS12_ERROR */
 	"Callsign Certificate not TQSL compatible",		/* TQSL_CERT_TYPE_ERROR */
 	"Date out of range",					/* TQSL_DATE_OUT_OF_RANGE */
-	"Duplicate QSO suppressed",				/* TQSL_DUPLICATE_QSO */
+	"Already Uploaded QSO suppressed",			/* TQSL_DUPLICATE_QSO */
 	"Database error",					/* TQSL_DB_ERROR */
 	"The selected station location could not be found",	/* TQSL_LOCATION_NOT_FOUND */
 	"The selected callsign could not be found",		/* TQSL_CALL_NOT_FOUND */
@@ -341,10 +343,31 @@ tqsl_init() {
 #endif
 			return 1;
 		}
+		FILE *test;
 #if defined(_WIN32)
 		tQSL_BaseDir = wchar_to_utf8(path, true);
+		wcsncat(path, L"\\tmp.tmp", sizeof path - wcslen(path) - 1);
+		if ((test = _wfopen(path, L"wb")) == NULL) {
+			tQSL_Errno = errno;
+			char *p = wchar_to_utf8(path, false);
+			snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Unable to create files in the TQSL working directory (%s): %m", p);
+			tQSL_Error = TQSL_CUSTOM_ERROR;
+			return 1;
+		}
+		fclose(test);
+		_wunlink(path);
 #else
-		tQSL_BaseDir = path;
+		if (tQSL_BaseDir) free (const_cast<char *>(tQSL_BaseDir));
+		tQSL_BaseDir = strdup(path);
+		strncat(path, "/tmp.tmp", sizeof path -strlen(path) - 1);
+		if ((test = fopen(path, "wb")) == NULL) {
+			tQSL_Errno = errno;
+			snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Unable to create files in the TQSL working directory (%s): %m", tQSL_BaseDir);
+			tQSL_Error = TQSL_CUSTOM_ERROR;
+			return 1;
+		}
+		fclose(test);
+		unlink(path);
 #endif
 	}
 	semaphore = 1;

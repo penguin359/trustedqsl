@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?define UpgradeCode = "BA40FA93-F9D6-44E2-BB81-82B0A676E731" ?>
 <?define BadUpgradeCode = "BA40FA94-F9D6-44E2-BB81-82B0A676E741" ?>
-<?define tqslVersion = "2.4.7" ?>
+<?define tqslVersion = "2.5.1" ?>
 <?define beta = "" ?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Product Name="Trusted QSL $(var.tqslVersion)$(var.beta)" Id="*" UpgradeCode="$(var.UpgradeCode)" Version="$(var.tqslVersion)" Manufacturer="The TrustedQSL Developers" Language="1033">
     <Package Id="*" Description="Installer for TrustedQSL $(var.tqslVersion)" Compressed="yes"/>
-    <!-- <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="yes" MigrateFeatures="yes"/> -->
-    <Upgrade Id="$(var.UpgradeCode)">
-	<UpgradeVersion OnlyDetect='yes' Property='NEWERFOUND'
-        	Minimum="$(var.tqslVersion)" IncludeMinimum='no' />
-	<UpgradeVersion Minimum="1.0.0.0" Maximum="$(var.tqslVersion)" 
-			Language="1033,1034" Property="OLDERINSTALLED"
-			IncludeMinimum="yes" IncludeMaximum="yes" />
-    </Upgrade>
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="yes" MigrateFeatures="yes"/>
+    <!-- Remove versions with the bad upgrade code -->
     <Upgrade Id="$(var.BadUpgradeCode)">
-	<UpgradeVersion Minimum="1.0.0.0" Maximum="$(var.tqslVersion)" 
+	<UpgradeVersion Minimum="1.0.0.0" Maximum="2.4.7" 
 			Language="1033,1034" Property="BADOLDERINSTALLED"
 			IncludeMinimum="yes" IncludeMaximum="yes" />
     </Upgrade>
@@ -133,7 +127,8 @@
     
     <InstallExecuteSequence>
       <Custom Action="RemoveInnoVersion" After="InstallInitialize">ISINNOINSTALLED</Custom>
-      <RemoveExistingProducts Before="InstallInitialize" />
+      <!-- Not needed with MajorUpgrade -->
+      <!-- <RemoveExistingProducts Before="InstallInitialize" / -->
       <Custom Action='NoDowngrade' After='FindRelatedProducts'>NEWERFOUND</Custom>
     </InstallExecuteSequence>
     <CustomAction Id="RemoveInnoVersion"  Property="ISINNOINSTALLED" ExeCommand="/silent /suppressmsgboxes" Return="check" Impersonate="no" Execute="deferred"/> <!-- don't UAC prompt twice -->

@@ -19,6 +19,10 @@
 #include "tqsllib.h"
 #include "tqslerrno.h"
 
+#if wxMAJOR_VERSION == 3 && wxMINOR_VERSION > 0
+#define WX31		// wxWidgets isn't done until stuff doesn't run
+#endif
+
 wxSize
 getTextSize(wxWindow *win) {
 	wxClientDC dc(win);
@@ -149,7 +153,7 @@ static const char *error_strings[] = {
 	__("PKCS#12 file not TQSL compatible"),			/* TQSL_PKCS12_ERROR */
 	__("Callsign Certificate not TQSL compatible"),		/* TQSL_CERT_TYPE_ERROR */
 	__("Date out of range"),				/* TQSL_DATE_OUT_OF_RANGE */
-	__("Duplicate QSO suppressed"),				/* TQSL_DUPLICATE_QSO */
+	__("Already Uploaded QSO suppressed"),			/* TQSL_DUPLICATE_QSO */
 	__("Database error"),					/* TQSL_DB_ERROR */
 	__("The selected station location could not be found"),	/* TQSL_LOCATION_NOT_FOUND */
 	__("The selected callsign could not be found"),		/* TQSL_CALL_NOT_FOUND */
@@ -308,7 +312,9 @@ getLocalizedErrorString() {
 	    { wxLANGUAGE_BRETON, 38 },
 	    { wxLANGUAGE_BULGARIAN, 39 },
 	    { wxLANGUAGE_BURMESE, 40 },
+#ifndef WX31
 	    { wxLANGUAGE_CAMBODIAN, 41 },
+#endif
 	    { wxLANGUAGE_CATALAN, 42 },
 	    { wxLANGUAGE_CHINESE, 43 },
 	    { wxLANGUAGE_CHINESE_SIMPLIFIED, 44 },
@@ -379,11 +385,17 @@ getLocalizedErrorString() {
 	    { wxLANGUAGE_ITALIAN_SWISS, 109 },
 	    { wxLANGUAGE_JAPANESE, 110 },
 	    { wxLANGUAGE_JAVANESE, 111 },
+#ifdef WX31
+	    { wxLANGUAGE_KABYLE, wxLANGUAGE_KABYLE + 0x8000 },
+#endif
 	    { wxLANGUAGE_KANNADA, 112 },
 	    { wxLANGUAGE_KASHMIRI, 113 },
 	    { wxLANGUAGE_KASHMIRI_INDIA, 114 },
 	    { wxLANGUAGE_KAZAKH, 115 },
 	    { wxLANGUAGE_KERNEWEK, 116 },
+#ifdef WX31
+	    { wxLANGUAGE_KHMER, 41 },
+#endif
 	    { wxLANGUAGE_KINYARWANDA, 117 },
 	    { wxLANGUAGE_KIRGHIZ, 118 },
 	    { wxLANGUAGE_KIRUNDI, 119 },
@@ -499,13 +511,15 @@ getLocalizedErrorString() {
 	    { wxLANGUAGE_YORUBA, 227 },
 	    { wxLANGUAGE_ZHUANG, 228 },
 	    { wxLANGUAGE_ZULU, 229 },
-	    { wxLANGUAGE_KABYLE, wxLANGUAGE_KABYLE + 0x8000 },
+#ifndef WX31
+	    { wxLANGUAGE_KABYLE, wxLANGUAGE_KABYLE + 0x8000 },	// wx3.1 moved this to after Javanese.
+#endif
 	    { wxLANGUAGE_USER_DEFINED, 230 },
 	    { wxLANGUAGE_DEFAULT, -1}
 	};
 
 wxLanguage langWX2toWX3(wxLanguage wx2) {
-	for (int i = 0; i < WXSIZEOF(mapping); i++) {
+	for (unsigned int i = 0; i < WXSIZEOF(mapping); i++) {
 		if (mapping[i].wx2 == -1) return wx2;
 		if (mapping[i].wx2 == wx2) return mapping[i].wx3;
 	}

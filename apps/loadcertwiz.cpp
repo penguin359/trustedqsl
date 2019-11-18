@@ -20,6 +20,7 @@
 #include "tqslerrno.h"
 #include "tqslapp.h"
 #include "tqsltrace.h"
+#include "tqsl_prefs.h"
 
 wxString
 notifyData::Message() const {
@@ -111,9 +112,13 @@ notifyImport(int type, const char *message, void *data) {
 					counts->duplicate++;
 					break;
 				case TQSL_CERT_CB_ERROR:
-					if (message)
-						nd->status = nd->status + wxString::FromUTF8(message) + wxT("\n");
-					counts->error++;
+					if (message) {
+						// Suppress expiration message other than for user certs
+						if (strcmp(message, "certificate has expired") || TQSL_CERT_CB_CERT_TYPE(type) == TQSL_CERT_CB_USER) {
+							nd->status = nd->status + wxString::FromUTF8(message) + wxT("\n");
+							counts->error++;
+						}
+					}
 					// wxMessageBox(wxString::FromUTF8(message), _("Error"));
 					break;
 				case TQSL_CERT_CB_LOADED:
@@ -224,8 +229,11 @@ LoadCertWiz::LoadCertWiz(wxWindow *parent, wxHtmlHelpController *help, const wxS
 	_parent = parent;
 	_final = final;
 	_p12pw = p12pw;
+	bool setPassword = false;
 
 	wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
+	config->Read(wxT("CertPwd"), &setPassword, DEFAULT_CERTPWD);
+
 #if !defined(__APPLE__) && !defined(_WIN32)
 	wxString wild(_("Callsign Certificate container files (*.p12;*.P12)|*.p12;*.P12|Certificate Request response files (*.tq6;*.TQ6)|*.tq6;*.TQ6"));
 #else
@@ -269,7 +277,7 @@ LoadCertWiz::LoadCertWiz(wxWindow *parent, wxHtmlHelpController *help, const wxS
 			}
 		} else {
 			// First try with no password
-			if (!tqsl_importPKCS12File(filename.ToUTF8(), "", 0, GetNewPassword, notifyImport, GetNotifyData()) || tQSL_Error == TQSL_CERT_ERROR) {
+			if (!tqsl_importPKCS12File(filename.ToUTF8(), "", 0, setPassword ? GetNewPassword : NULL, notifyImport, GetNotifyData()) || tQSL_Error == TQSL_CERT_ERROR) {
 				_first = _final;
 				_final->SetPrev(0);
 			} else {
@@ -330,13 +338,17 @@ LCW_P12PasswordPage::TransferDataFromWindow() {
 	wxString _pw = _pwin->GetValue();
 	pw_help = Parent()->GetHelp();
 	pw_helpfile = wxT("lcf2.htm");
-	if (tqsl_importPKCS12File(_filename.ToUTF8(), _pw.ToUTF8(), 0, GetNewPassword, notifyImport,
+	bool setPassword = false;
+	wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
+	config->Read(wxT("CertPwd"), &setPassword, DEFAULT_CERTPWD);
+
+	if (tqsl_importPKCS12File(_filename.ToUTF8(), _pw.ToUTF8(), 0, setPassword ? GetNewPassword : NULL, notifyImport,
 		(reinterpret_cast<LoadCertWiz *>(_parent))->GetNotifyData())) {
 		if (tQSL_Error == TQSL_PASSWORD_ERROR) {
 			// UTF-8 password didn't work - try converting to UCS-2.
 			char unipwd[64];
 			utf8_to_ucs2(_pw.ToUTF8(), unipwd, sizeof unipwd);
-			if (!tqsl_importPKCS12File(_filename.ToUTF8(), unipwd, 0, GetNewPassword, notifyImport,
+			if (!tqsl_importPKCS12File(_filename.ToUTF8(), unipwd, 0, setPassword ? GetNewPassword : NULL, notifyImport,
 					(reinterpret_cast<LoadCertWiz *>(_parent))->GetNotifyData())) {
 				tc_status->SetLabel(wxT(""));
 				return true;

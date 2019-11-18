@@ -1,4 +1,4 @@
-for lang in pt ja it fi fr es de zh rp pl_PL hi_IN tr_TR
+for lang in de es fi fr hi_IN it ja pl_PL pt ru tr_TR zh
 do
 	msgmerge -N -U $lang/tqslapp.po ../tqslapp.pot
 done

@@ -64,6 +64,8 @@ static MyFrame *frame = 0;
 
 static bool quiet = false;
 
+CURL* curlReq = NULL;
+
 /////////// Application //////////////
 
 class QSLApp : public wxApp {
@@ -118,7 +120,7 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 
 static CURL*
 tqsl_curl_init(const char *logTitle, const char *url, bool newFile) {
-	CURL* curlReq = curl_easy_init();
+	curlReq = curl_easy_init();
 	if (!curlReq) {
 		return NULL;
 	}

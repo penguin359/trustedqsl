@@ -1,5 +1,64 @@
 TQSL changes
 ============
+2.5
+----------
+When installing a Callsign Certificate, don't display errors about expired
+root certificates.
+
+When listing DXCC entities, move the Deleted entities to the end of the list.
+This helps with the confusion between "Germany (DELETED)" and "FEDERAL
+REPUBLIC OF GERMANY", especially for persons where English is not a primary
+language. Allow the "DELETED" string in those names to be translated.
+
+Eliminate the use of the term "duplicates" when referring to already
+uploaded QSOs as that term means something else in normal usage.
+
+When editing a Station Location, do not force default values for station
+information fields. Only provide default values when a new station location is
+being created.
+
+Fix incorrect ADIF output for several modes when creating files using the
+ADIF editor built into TQSL.
+
+Use ARRL web service to validate US callsigns and pre-fill address info.
+
+Fix TQSL updates failing on Windows when the user's home directory has
+non-ASCII characters.
+
+Detect running TQSL "As Administrator" and warn the user. Allow this warning
+to be permanently overridden.
+
+Verify that the TQSL working directory is writable during startup.
+
+Disable prompting for callsign certificate password by default. Add a
+preference setting to allow this to be re-enabled if desired.
+
+Fix error that was not overriding station location details with the default
+values when editing an existing station location.
+
+Fix OSX error where the "Edit Station Location" icon was getting squashed.
+
+Update "Waiting for Callsign Certificate" icon to a clock versus the slashed
+circle. The latter was being interpreted as something broken versus something
+to wait for.
+
+Keep track of Callsign Certificate requests and reject attempts to request
+certificates for the same callsign more than 3 times in 24 hours. This limit
+will hopefully stop people from mistakenly re-requesting callsign certificates
+repeatedly for the same call because they don't realize that action needs to
+be taken by ARRL staff to complete the process.
+
+Correct defect that could cause TQSL to crash upon exit while attempting to
+back up.
+
+When requesting US 1x1 callsigns, which always require signing, don't ask for 
+a certificate type for the request. Require that the user have a valid 
+certificate for some other call to proceed. Remove the "1x1" callsign option
+from the certificate request type page.
+
+When creating callsign certificates, ask for the type of certificate first
+as that then drives the next set of questions to ask.
+
 2.4.7
 ----------
 Correct defect that keeps TQSL updates on Windows from working properly.

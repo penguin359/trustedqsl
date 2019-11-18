@@ -47,7 +47,7 @@ class TQSLWizPage;
 
 class TQSLWizard : public ExtWizard {
  public:
-	TQSLWizard(tQSL_Location locp, wxWindow *parent, wxHtmlHelpController *help = 0, const wxString& title = wxEmptyString, bool expired = false);
+	TQSLWizard(tQSL_Location locp, wxWindow *parent, wxHtmlHelpController *help = 0, const wxString& title = wxEmptyString, bool expired = false, bool _editing = false);
 
 //	TQSLWizard(tQSL_Location locp, wxWindow* parent, int id = -1, const wxString& title = wxEmptyString,
 //		const wxBitmap& bitmap = wxNullBitmap, const wxPoint& pos = wxDefaultPosition);
@@ -59,7 +59,7 @@ class TQSLWizard : public ExtWizard {
 	wxString GetLocationName() { return sl_name; }
 	wxString GetDefaultCallsign() {return sl_call; }
 	TQSLWizPage *GetFinalPage() { return (_pages.size() > 0) ? _pages[0] : 0; }
-	bool expired;
+	bool editing;
 
  private:
 	void OnPageChanged(wxWizardEvent&);
@@ -85,26 +85,30 @@ class TQSLWizPage : public ExtWizard_Page {
 
 class TQSLWizCertPage : public TQSLWizPage {
  public:
-	TQSLWizCertPage(TQSLWizard *parent, tQSL_Location locp);
+	TQSLWizCertPage(TQSLWizard *_parent, tQSL_Location locp);
 	~TQSLWizCertPage();
 	virtual bool TransferDataFromWindow();
 	void OnComboBoxEvent(wxCommandEvent&);
 	void OnCheckBoxEvent(wxCommandEvent&);
+	void OnTextEvent(wxCommandEvent&);
 	int loc_page;
 	bool invalidGrid;
 	bool allowBadGrid;
+	bool gridFromDB;
 	void UpdateFields(int noupdate_field = -1);
 	virtual const char *validate();
 	virtual TQSLWizPage *GetPrev() const;
 	virtual TQSLWizPage *GetNext() const;
 	void OnSize(wxSizeEvent&);
 	void OnPageChanging(wxWizardEvent &);
+
  private:
 	vector<void *> controls;
 	typedef map <std::string, std::string> ForcedMap;
 	ForcedMap forced;
 	wxStaticText *errlbl;
 	wxCheckBox *okEmptyCB;
+	TQSLWizard *parent;
 	DECLARE_EVENT_TABLE()
 };
 

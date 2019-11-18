@@ -92,7 +92,11 @@ class notifyData {
 
 inline bool
 LoadCertWiz::RunWizard() {
-	return wxWizard::RunWizard(_first);
+	if (_first) {
+		return wxWizard::RunWizard(_first);
+	} else {
+		return false;
+	}
 }
 
 inline void
