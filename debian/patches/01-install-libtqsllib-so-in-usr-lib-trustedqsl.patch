@@ -6,7 +6,7 @@ Since it is not a versioned .so, libtqsllib.so must not be installed in
 
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -53,7 +53,7 @@ include_directories(${OPENSSL_INCLUDE_DI
+@@ -53,7 +53,7 @@
  if(NOT APPLE AND NOT WIN32)
  set_source_files_properties(location.cpp PROPERTIES COMPILE_DEFINITIONS CONFDIR="${CMAKE_INSTALL_PREFIX}/share/TrustedQSL/")
  set(HEADERS_TO_INSTALL tqsllib.h tqslerrno.h cabrillo.h adif.h tqslconvert.h)
@@ -17,7 +17,7 @@ Since it is not a versioned .so, libtqsllib.so must not be installed in
  endif()
 --- a/apps/CMakeLists.txt
 +++ b/apps/CMakeLists.txt
-@@ -121,9 +121,9 @@ endif()
+@@ -125,9 +125,9 @@
  
  if(NOT WIN32) #rpath setup
  	SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
