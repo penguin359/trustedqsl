@@ -1,16 +1,16 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: TrustedQSL
-Source: http://sourceforge.net/projects/trustedqsl/
+Source: https://sourceforge.net/projects/trustedqsl/
 
 Files: *
-Copyright: 2001-2003 American Radio Relay League, Inc.
+Copyright: 2001-2019 American Radio Relay League, Inc.
 License: ARRL
  License Terms and Conditions
  .
- Copyright (C) 2001-2003 American Radio Relay League, Inc. All rights
+ Copyright (C) 2001-2019 American Radio Relay League, Inc. All rights
  reserved.
  .
- Portions (C) 2003-2013 The TrustedQSL Developers. Please see the AUTHORS.txt
+ Portions (C) 2003-2019 The TrustedQSL Developers. Please see the AUTHORS.txt
  file for contributors
  .
  Redistribution and use in source and binary forms, with or without
