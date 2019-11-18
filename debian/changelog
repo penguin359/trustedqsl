@@ -1,9 +1,16 @@
-trustedqsl (2.5.1-1) UNRELEASED; urgency=medium
+trustedqsl (2.5.1-1) unstable; urgency=medium
 
   * Team upload.
-  * New upstream version 2.5.1
+  * New upstream version 2.5.1 (Closes: #944994)
+  * Update to debhelper compat level 12
+  * Refresh patches against new upstream version
+  * Add a patch for typos in the source
+  * Freshen dates in debian/copyright
+  * Bump Standards-Version to 4.4.1
+  * Set "Rules-Requires-Root: no" in debian/control
+  * Set export DEB_BUILD_HARDENING=1 in debian/rules
 
- -- tony mancill <tmancill@debian.org>  Sun, 17 Nov 2019 19:54:10 -0800
+ -- tony mancill <tmancill@debian.org>  Sun, 17 Nov 2019 20:53:28 -0800
 
 trustedqsl (2.4.7-2) unstable; urgency=medium
 
@@ -286,4 +293,3 @@ trustedqsl (1.10-1) unstable; urgency=low
   * First upload
 
  -- Hamish Moffatt <hamish@debian.org>  Wed, 22 Oct 2003 00:41:54 +1000
-
