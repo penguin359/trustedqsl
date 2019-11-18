@@ -2,6 +2,8 @@
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
+export DEB_BUILD_HARDENING=1
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
 # Disable WXDEBUG assertions, which are on by default in wx3.0.
 export DEB_CXXFLAGS_MAINT_APPEND=-DNDEBUG
@@ -17,7 +19,7 @@ override_dh_install:
 
 override_dh_installman:
 	# Duplicate the tqsl.5 man page for tqsl.1 but fix its section
-       	# for dh_installman (see debian/trustedqsl.manpages).
+	# for dh_installman (see debian/trustedqsl.manpages).
 	mkdir -p debian/tmp
 	sed 's/^\.TH TQSL 5/.TH TQSL 1/' < apps/tqsl.5  \
 	    > debian/tmp/tqsl.1
