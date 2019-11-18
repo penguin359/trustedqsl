@@ -9,7 +9,7 @@ Uploaders:
  Jerry Stueve <k4int@arrl.net>,
  Colin Tuckley <colint@debian.org>,
  Christoph Berg <myon@debian.org>,
-Standards-Version: 4.3.0
+Standards-Version: 4.4.1
 Build-Depends:
  cmake,
  debhelper-compat (= 12),
