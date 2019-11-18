@@ -12,7 +12,7 @@ Uploaders:
 Standards-Version: 4.3.0
 Build-Depends:
  cmake,
- debhelper (>= 9),
+ debhelper-compat (= 12),
  libcurl4-openssl-dev,
  libdb-dev,
  libexpat1-dev,
