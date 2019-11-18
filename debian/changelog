@@ -1,3 +1,10 @@
+trustedqsl (2.5.1-1) UNRELEASED; urgency=medium
+
+  * Team upload.
+  * New upstream version 2.5.1
+
+ -- tony mancill <tmancill@debian.org>  Sun, 17 Nov 2019 19:54:10 -0800
+
 trustedqsl (2.4.7-2) unstable; urgency=medium
 
   * Rebuild against wxWidgets GTK 3. (Closes: #933437)
