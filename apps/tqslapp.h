@@ -153,7 +153,6 @@ class MyFrame : public wxFrame {
 	void FirstTime(void);
 	void BackupConfig(const wxString& event, bool quiet);
 	void SaveOldBackups(const wxString& directory, const wxString& filename, const wxString& ext);
-	int SaveAddressInfo(const char* callsign);
 
 	CertTree *cert_tree;
 	LocTree *loc_tree;
@@ -163,8 +162,6 @@ class MyFrame : public wxFrame {
 	wxMenu* file_menu;
 	wxMenu *cert_menu;
 	wxMenu* help_menu;
-	FILE *curlLogFile;
-	CURL *curlReq;
 	tQSL_Converter logConv;
 
 	DECLARE_EVENT_TABLE()
@@ -194,5 +191,7 @@ class MyFrame : public wxFrame {
 	TQSL_CERT_REQ *req;
 	bool _quiet;
 };
+
+int SaveAddressInfo(const char *callsign);
 
 #endif // __tqslapp_h

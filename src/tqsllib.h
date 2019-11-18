@@ -1192,6 +1192,10 @@ DLLEXPORT int CALLCONVENTION tqsl_getDXCCStartDate(int number, tQSL_Date *d);
   */
 DLLEXPORT int CALLCONVENTION tqsl_getDXCCEndDate(int number, tQSL_Date *d);
 
+/** Get the deleted status of a DXCC Entity by its DXCC number.
+  */
+DLLEXPORT int CALLCONVENTION tqsl_getDXCCDeleted(int number, int *deleted);
+
 /** Get the number of Band entries in the Band list */
 DLLEXPORT int CALLCONVENTION tqsl_getNumBand(int *number);
 
@@ -1285,6 +1289,10 @@ DLLEXPORT int CALLCONVENTION tqsl_setADIFMode(const char *adif_item, const char 
 /** Map an ADIF mode to its TQSL equivalent.
   */
 DLLEXPORT int CALLCONVENTION tqsl_getADIFMode(const char *adif_item, char *mode, int nmode);
+
+/** Map a GABBI mode to its mode/submode pair.
+  */
+DLLEXPORT int CALLCONVENTION tqsl_getADIFSubMode(const char *adif_item, char *mode, char *submode, int nmode);
 
 /** Get a GABBI record that contains the certificate.
   *

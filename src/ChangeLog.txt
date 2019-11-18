@@ -3,6 +3,15 @@ TQSLLIB changes
 
 2.5
 ---
+If a BAND is provided for a QSO along with a FREQ, where that frequency
+(or receive frequency) is outside the related ham band, ignore the FREQ
+setting.
+
+Move Deleted entities to the end of the DXCC list. Allow the "DELETED" text
+in the entity name to be localized.
+
+Check if TQSL is able to write to the working directory during start-up.
+
 Improve the error message for missing private keys to be more descriptive.
 
 Add the ability to map Cabrillo modes to user-specified ADIF modes

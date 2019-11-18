@@ -26,6 +26,10 @@
 #include "tqslapp.h"
 #include "winstrdefs.h"
 
+#if wxMAJOR_VERSION == 3 && wxMINOR_VERSION > 0
+#define WX31
+#endif
+
 using std::make_pair;
 
 #if defined(__APPLE__)
@@ -356,14 +360,17 @@ FilePrefs::FilePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm"))
 	dirPick->Enable(ab);
 	sizer->Add(dirPick, 0, wxEXPAND|wxLEFT|wxRIGHT, 10);
 
-	sizer->Add(new wxStaticText(this, -1, _("Number of Backups to retain:")), 0, wxTOP|wxLEFT|wxRIGHT, 10);
+	wxBoxSizer *hsizer = new wxBoxSizer(wxHORIZONTAL);
+	hsizer->Add(new wxStaticText(this, -1, _("Number of Backups to retain:")), 0, wxTOP|wxLEFT|wxRIGHT, 10);
 
 	int bver;
 	config->Read(wxT("BackupVersions"), &bver, DEFAULT_BACKUP_VERSIONS);
 
 	versions = new wxTextCtrl(this, ID_PREF_FILE_BACKUP_VERSIONS, wxString::Format(wxT("%d"), bver),
 		wxDefaultPosition, wxSize(char_width / (FILE_TEXT_WIDTH / 3), HEIGHT_ADJ(char_height)));
-	sizer->Add(versions, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
+	hsizer->Add(versions, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
+
+	sizer->Add(hsizer, 0, wxALL|wxALIGN_LEFT, 10);
 
 	badcalls = new wxCheckBox(this, ID_PREF_FILE_BADCALLS, _("Allow nonamateur call signs"));
 	bool allow;
@@ -378,14 +385,21 @@ FilePrefs::FilePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm"))
 	config->Read(wxT("AdifEdit"), &allow, DEFAULT_ADIF_EDIT);
 	adifedit->SetValue(allow);
 	sizer->Add(adifedit, 0, wxLEFT|wxRIGHT|wxTOP, 10);
-	dispdupes = new wxCheckBox(this, ID_PREF_FILE_DISPLAY_DUPES, _("Display details of duplicate QSOs when signing a log"));
+	dispdupes = new wxCheckBox(this, ID_PREF_FILE_DISPLAY_DUPES, _("Display details of already uploaded QSOs when signing a log"));
 	config->Read(wxT("DispDupes"), &allow, DEFAULT_DISP_DUPES);
 	dispdupes->SetValue(allow);
 	sizer->Add(dispdupes, 0, wxLEFT|wxRIGHT|wxTOP, 10);
+
 	logtab = new wxCheckBox(this, ID_PREF_FILE_LOG_TAB, _("Display status messages in separate tab"));
 	config->Read(wxT("LogTab"), &allow, DEFAULT_LOG_TAB);
 	logtab->SetValue(allow);
 	sizer->Add(logtab, 0, wxLEFT|wxRIGHT|wxTOP, 10);
+
+	certpwd = new wxCheckBox(this, ID_PREF_FILE_CERTPWD, _("Enable passwords for Callsign Certificates"));
+	bool cp;
+	config->Read(wxT("CertPwd"), &cp, DEFAULT_CERTPWD);
+	certpwd->SetValue(cp);
+	sizer->Add(certpwd, 0, wxLEFT|wxRIGHT|wxTOP, 10);
 	SetSizer(sizer);
 	sizer->Fit(this);
 	sizer->SetSizeHints(this);
@@ -423,6 +437,7 @@ bool FilePrefs::TransferDataFromWindow() {
 	config->Write(wxT("DateRange"), daterange->GetValue());
 	config->Write(wxT("AdifEdit"), adifedit->GetValue());
 	config->Write(wxT("DispDupes"), dispdupes->GetValue());
+	config->Write(wxT("CertPwd"), certpwd->GetValue());
 
 	bool oldLog;
 	config->Read(wxT("LogTab"), &oldLog, DEFAULT_LOG_TAB);
@@ -705,6 +720,7 @@ ContestMap::ContestMap(wxWindow *parent) : PrefsPanel(parent, wxT("pref-cab.htm"
 	grid = new wxGrid(this, -1, wxDefaultPosition, wxDefaultSize);
 
 	grid->CreateGrid(10, 3);
+#ifndef WX31
 	grid->SetLabelSize(wxHORIZONTAL, HEIGHT_ADJ(char_height));
 	grid->SetLabelSize(wxVERTICAL, 0);
 	grid->SetColumnWidth(0, char_width*15);
@@ -714,9 +730,24 @@ ContestMap::ContestMap(wxWindow *parent) : PrefsPanel(parent, wxT("pref-cab.htm"
 	grid->SetLabelValue(wxHORIZONTAL, _("Type"), 1);
 	grid->SetLabelValue(wxHORIZONTAL, _("Field"), 2);
 	grid->SetEditable(false);
-	grid->SetDividerPen(wxNullPen);
+	grid->SetDividerPen(wxNullPen);		// No replacement in wx3.1?
+#else
+	grid->SetColLabelSize(HEIGHT_ADJ(char_height));
+	grid->SetRowLabelSize(0);
+	grid->SetColSize(0, char_width*15);
+	grid->SetColSize(1, char_width*4);
+	grid->SetColSize(2, char_width*5);
+	grid->SetColLabelValue(0, _("CONTEST"));
+	grid->SetColLabelValue(1, _("Type"));
+	grid->SetColLabelValue(2, _("Field"));
+	grid->EnableEditing(false);
+#endif
 
+#ifndef WX31
 	grid->SetSize(1, grid->GetRowHeight(0) * grid->GetRows());
+#else
+	grid->SetSize(1, grid->GetRowHeight(0) * grid->GetNumberRows());
+#endif
 	subsizer->Add(grid, 1, wxLEFT|wxRIGHT|wxEXPAND, 10);
 
 	wxBoxSizer *vsizer = new wxBoxSizer(wxVERTICAL);
@@ -754,8 +785,13 @@ void ContestMap::SetContestList() {
 	long cookie;
 
 	contestmap.clear();
+#ifndef WX31
 	if (grid->GetRows() > 0)
 		grid->DeleteRows(0, grid->GetRows());
+#else
+	if (grid->GetNumberRows() > 0)
+		grid->DeleteRows(0, grid->GetNumberRows());
+#endif
 
 	config->SetPath(wxT("/cabrilloMap"));
 	bool stat = config->GetFirstEntry(key, cookie);
@@ -774,9 +810,15 @@ void ContestMap::SetContestList() {
 		grid->AppendRows(vsize);
 	int idx = 0;
 	for (ContestSet::iterator it = contestmap.begin(); it != contestmap.end(); it++) {
+#ifndef WX31
 		grid->SetCellValue(it->first, idx, 0);
 		grid->SetCellValue(it->second.first == 1 ? wxT("VHF") : wxT("HF"), idx, 1);
 		grid->SetCellValue(wxString::Format(wxT("%d"), it->second.second), idx, 2);
+#else
+		grid->SetCellValue(idx, 0, it->first);
+		grid->SetCellValue(idx, 1, it->second.first == 1 ? wxT("VHF") : wxT("HF"));
+		grid->SetCellValue(idx, 2, wxString::Format(wxT("%d"), it->second.second));
+#endif
 		++idx;
 	}
 	config->SetPath(wxT("/"));
