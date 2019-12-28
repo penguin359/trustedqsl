@@ -2,5 +2,5 @@ include:
   - https://salsa.debian.org/salsa-ci-team/pipeline/raw/master/salsa-ci.yml
   - https://salsa.debian.org/salsa-ci-team/pipeline/raw/master/pipeline-jobs.yml
 
-reprotest:
-  extends: .test-reprotest-diffoscope
+variables:
+  SALSA_CI_DISABLE_REPROTEST: 'yes' # captures build path
