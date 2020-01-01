@@ -1,0 +1,2 @@
+# file is actual JS code with embedded HTML
+source: source-is-missing src/doxygen/html/menu.js .*
