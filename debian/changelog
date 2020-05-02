@@ -1,8 +1,13 @@
-trustedqsl (2.5.1-2) UNRELEASED; urgency=medium
+trustedqsl (2.5.3-1) UNRELEASED; urgency=medium
 
+  [ Christoph Berg ]
   * Mute lintian warning for src/doxygen/html/menu.js.
 
- -- Christoph Berg <myon@debian.org>  Wed, 01 Jan 2020 15:38:42 +0100
+  [ tony mancill ]
+  * New upstream version 2.5.3
+  * Refresh patches against new upstream version
+
+ -- tony mancill <tmancill@debian.org>  Sat, 02 May 2020 10:40:04 -0700
 
 trustedqsl (2.5.1-1) unstable; urgency=medium
 

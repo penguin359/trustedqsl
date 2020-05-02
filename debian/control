@@ -1,32 +1,31 @@
 Source: trustedqsl
+Maintainer: Debian Hamradio Maintainers <debian-hams@lists.debian.org>
+Uploaders: Kamal Mostafa <kamal@whence.com>,
+           Jaime Robles <jaime@debian.org>,
+           Patrick Ouellette <pouelle@debian.org>,
+           Jerry Stueve <k4int@arrl.net>,
+           Colin Tuckley <colint@debian.org>,
+           Christoph Berg <myon@debian.org>
 Section: hamradio
 Priority: optional
-Maintainer: Debian Hamradio Maintainers <debian-hams@lists.debian.org>
-Uploaders:
- Kamal Mostafa <kamal@whence.com>,
- Jaime Robles <jaime@debian.org>,
- Patrick Ouellette <pouelle@debian.org>,
- Jerry Stueve <k4int@arrl.net>,
- Colin Tuckley <colint@debian.org>,
- Christoph Berg <myon@debian.org>,
-Standards-Version: 4.4.1
-Build-Depends:
- cmake,
- debhelper-compat (= 12),
- libcurl4-openssl-dev,
- libdb-dev,
- libexpat1-dev,
- libssl-dev,
- libwxgtk3.0-gtk3-dev,
- zlib1g-dev,
-Homepage: http://sourceforge.net/projects/trustedqsl/
-Vcs-Git: https://salsa.debian.org/debian-hamradio-team/trustedqsl.git
+Build-Depends: cmake,
+               debhelper-compat (= 12),
+               libcurl4-openssl-dev,
+               libdb-dev,
+               libexpat1-dev,
+               libssl-dev,
+               libwxgtk3.0-gtk3-dev,
+               zlib1g-dev
+Standards-Version: 4.5.0
 Vcs-Browser: https://salsa.debian.org/debian-hamradio-team/trustedqsl
+Vcs-Git: https://salsa.debian.org/debian-hamradio-team/trustedqsl.git
+Homepage: https://sourceforge.net/projects/trustedqsl/
 Rules-Requires-Root: no
 
 Package: trustedqsl
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
 Description: QSL log signing for the Logbook of the World (LoTW)
  Open source libraries and utilities to support using digital signatures
  for amateur radio QSL information.
