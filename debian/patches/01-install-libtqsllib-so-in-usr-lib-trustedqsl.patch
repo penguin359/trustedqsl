@@ -6,7 +6,7 @@ Since it is not a versioned .so, libtqsllib.so must not be installed in
 
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -53,7 +53,7 @@
+@@ -56,7 +56,7 @@
  if(NOT APPLE AND NOT WIN32)
  set_source_files_properties(location.cpp PROPERTIES COMPILE_DEFINITIONS CONFDIR="${CMAKE_INSTALL_PREFIX}/share/TrustedQSL/")
  set(HEADERS_TO_INSTALL tqsllib.h tqslerrno.h cabrillo.h adif.h tqslconvert.h)
@@ -17,13 +17,15 @@ Since it is not a versioned .so, libtqsllib.so must not be installed in
  endif()
 --- a/apps/CMakeLists.txt
 +++ b/apps/CMakeLists.txt
-@@ -125,9 +125,9 @@
+@@ -62,10 +62,10 @@
+ endif ()
  
  if(NOT WIN32) #rpath setup
- 	SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
--	SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
+-	SET(CMAKE_SKIP_BUILD_RPATH ${TQSL_RPATH})
+-	SET(CMAKE_BUILD_WITH_INSTALL_RPATH ${TQSL_RPATH}) 
 -	SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 -	SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
++	SET(CMAKE_SKIP_BUILD_RPATH FALSE)
 +	SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 +	SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 +	SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/trustedqsl")
