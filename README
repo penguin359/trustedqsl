@@ -28,7 +28,7 @@ Command Line Options
 --------------------
 The following summarizes the command line options and what they do:
 Usage: tqsl [-a <str>] [-b <date> ] [-e <date>] [-d] [-l <str>] [-s]
-            [-o <str>] [-u] [-x] [-p <str>] [-q] [-n] [-v] [-h]
+            [-f <str>] [-o <str>] [-u] [-x] [-p <str>] [-q] [-n] [-v] [-h]
             [-t <file>] [-c <call> ] [Input ADIF or Cabrillo log file to sign]
 
 
@@ -75,6 +75,28 @@ for processing QSOs. If this is used, all QSOs in the input file will be
 selected for processing. Command line tools will usually include this
 option to suppress tqsl dialogs. However, this means that the logging
 program is responsible for filtering QSOs before delivering them to tqsl.
+
+  -f <str>      Select handling option for QTH details
+
+This option instructs tqsl on how to handle the MY_ fields in an
+ADIF log file. These specify the callsign, QTH details such as zones,
+gridsquare, state/county, etc. for a QSO. If the log includes this
+detail, TQSL can read these fields and take action to use that
+information to ensure that the Station Location is corrrect. By
+default, TQSL will report any discrepancies between QTH and the
+Station Location; TQSL can also be directed to ignore the QTH
+information.
+
+  -f ignore     Directs TQSL to ignore the QTH information
+  -f report     Directs TQSL to report any differences between the
+                station location and the MY_ QTH deails
+  -f update     Directs TQSL to overwrite the Station Location
+                information with data from the log.
+
+When using "-f update", the ideal practice should be to either
+specify all QTH information (state, county, grid, zones) in the
+ADIF "MY_" fields, or use an minimal Station Location with no
+QTH data.
 
   -l <str>      Select Station Location.
 

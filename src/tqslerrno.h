@@ -52,5 +52,7 @@
 #define TQSL_FILE_SYSTEM_ERROR 42	///< There was a file system I/O error
 #define TQSL_FILE_SYNTAX_ERROR 43	///< The file format is invalid
 #define TQSL_CERT_ERROR 44	///< Callsign certificate could not be installed
+#define TQSL_CERT_MISMATCH 45	///< Callsign Certificate does not match QSO details
+#define TQSL_LOCATION_MISMATCH 46	///< Station Location does not match QSO details
 
 #endif /* __TQSLERRNO_H */

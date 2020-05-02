@@ -55,7 +55,7 @@ using std::vector;
 #define DEFAULT_BACKUP_VERSIONS 10
 #define DEFAULT_CERT_WARNING 60
 #define DEFAULT_ADIF_EDIT false
-#define DEFAULT_DISP_DUPES false
+#define DEFAULT_DISP_DUPES true
 #define DEFAULT_LOG_TAB false
 #define DEFAULT_CERTPWD false
 //online
@@ -91,6 +91,7 @@ enum {		// Window IDs
 	ID_PREF_FILE_DISPLAY_DUPES,
 	ID_PREF_FILE_LOG_TAB,
 	ID_PREF_FILE_CERTPWD,
+	ID_PREF_FILE_LOGVFY,
 	ID_PREF_MODE_MAP,
 	ID_PREF_MODE_ADIF,
 	ID_PREF_MODE_DELETE,
@@ -133,14 +134,26 @@ class FilePrefs : public PrefsPanel {
 	void OnShowHide(wxCommandEvent&) { ShowHide(); }
 	void ShowHide();
  private:
-	wxTextCtrl *cabrillo, *adif, *versions;
-	wxCheckBox *autobackup, *badcalls, *daterange, *adifedit, *dispdupes, *logtab, *certpwd;
+	wxTextCtrl *versions;
+	wxCheckBox *autobackup, *adifedit, *logtab, *certpwd;
 #if !defined(__APPLE__) && !defined(_WIN32)
 	wxTextCtrl *dirPick;
 #else
 	wxDirPickerCtrl *dirPick;
 #endif
 	DECLARE_EVENT_TABLE()
+};
+
+class LogPrefs : public PrefsPanel {
+ public:
+	explicit LogPrefs(wxWindow *parent);
+	virtual bool TransferDataFromWindow();
+	void OnShowHide(wxCommandEvent&) { ShowHide(); }
+	void ShowHide();
+ private:
+	wxTextCtrl *cabrillo, *adif;
+	wxCheckBox *badcalls, *daterange, *dispdupes;
+	wxRadioBox *handleQTH;
 };
 
 #if defined(ENABLE_ONLINE_PREFS)
@@ -223,6 +236,7 @@ class Preferences : public wxFrame {
  private:
 	wxNotebook *notebook;
 	FilePrefs *fileprefs;
+	LogPrefs *logprefs;
 	ModeMap *modemap;
 	ContestMap *contestmap;
 	ProxyPrefs *proxyPrefs;

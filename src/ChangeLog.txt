@@ -3,6 +3,34 @@ TQSLLIB changes
 
 2.5
 ---
+Ignore OWNER_CALLSIGN as that's not intended to be used as any kind of
+call used during an operation, it's who owns the station.
+
+Prioritize callsign search to try to use OPERATOR.
+
+Ignore non-calls in STATION_CALLSIGN and OWNER_CALLSIGN.
+
+Don't complain about logs providing data that is empty in the station
+location. Just use the data from the log.
+
+Fix callsign certificate selection while signing to also check for
+matching DXCC entity. This fixes the problem where the wrong callsign
+certificate is chosen for a call with callsign certificates for multiple
+DXCC entities.
+
+Allow leading zeroes in MY_CQZ and MY_ITUZ.
+
+Strip leading and trailing whitespace in ADIF field data
+
+Attempt to recover from Unicode/UTF-8 format Cabrillo files by ignoring
+the extra bytes before the "START-OF-LOG" signal.
+`
+Ensure that expired or otherwise invalid certificates in the chain
+verifying a user Callsign Certificate are properly reported. This
+fixes an issue where in some cases (TQSL on Mac) trying to install an expired
+callsign certificate (an out-of-date TQ6 file), would cause an unexpected
+error "unable to get local issuer certificate". 
+
 If a BAND is provided for a QSO along with a FREQ, where that frequency
 (or receive frequency) is outside the related ham band, ignore the FREQ
 setting.

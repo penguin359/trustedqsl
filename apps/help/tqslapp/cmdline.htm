@@ -44,6 +44,22 @@ If no <code>-a</code> switch is specified and a already uploaded or out-of-date-
 <TD>Suppress the date-range dialog; if this switch is present, the <A HREF="daterng.htm">QSO date-range dialog</A> will <i>not</i>
 be displayed before signing a log.</TD></TR>
 
+<TR><TD><code>-f</code></TD>
+<TD>This option instructs tqsl how to handle the MY_ fields in an
+ADIF log file. These specify the callsign, QTH details such as zones,
+gridsquare, state/county, etc. for a QSO. If the log includes this
+detail, TQSL can read these fields and take action to use that
+information to ensure that the Station Location is corrrect. By
+default, TQSL will report any discrepancies between QTH and the
+Station Location; TQSL can also be directed to ignore the QTH
+information.<BR>
+&nbsp;&nbsp;<code> -f ignore&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Directs TQSL to ignore the QTH information<BR>
+&nbsp;&nbsp;<code>-f report&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Directs TQSL to report any differences between the station location and the MY_ QTH details<BR>
+&nbsp;&nbsp;-f update&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Directs TQSL to overwrite the Station Location information with data from the log.
+<BR><BR>
+When using "-f update", the ideal practice should be to either specify all QTH information (state, county, grid, zones) in the ADIF "MY_" fields or to use an empty Station Location.
+</TD></TR>
+
 <TR><TD><code>-h</code></TD>
 <TD>Display command line help.</TD></TR>
 

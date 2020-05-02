@@ -1,5 +1,60 @@
 TQSL changes
 ============
+2.5.3
+----------
+Report on invalid data in ADIF fields - County misspelled, state in
+the county field is wrong, zones incorrect for the Entity/State.
+
+Ignore OPERATOR fields in an ADIF file if the value does not look like
+a callsign.
+
+Properly report callsigns where there are no callsign certificates
+available for that call versus reporting this as a date range error.
+
+Allow callsigns of up to 20 characters. Detect when a callsign is too
+long.
+
+2.5.2
+----------
+TQSL now issues an error message when an unrecognized file is loaded
+as a callsign certificate file.
+
+Do additional checks for ULS lookup failures to ensure that the data is
+not corrupt. Add the last update date for the ULS database to the message
+displayed saying that the ULS data is missing.
+
+Report when TQSL is unable to open the files needed to connect to Logbook.
+
+Allow ADIF log QTH data to override Station Location Details. Add a command
+line option and a preference field to control this behavior.
+
+Move the log signing preferences to a separate preference page to keep it
+from growing too large.
+
+When an ADIF log provides station details, detect mismatches and report
+those when signing a log. This allows improperly chosen callsign certificates
+and Station Locations to be detected.
+
+When https (Secure) connections to Logbook fail, fall back to trying http
+requests. This allows systems with anti-virus that interferes with network
+connections to recover.
+
+When fetching ULS data fails, do not reject callsign certificate requests -
+allow those to work without address data.
+
+Remove ULS check for US 1x1 callsigns.
+
+Add diagnostic log lines suggested by David, W1HKJ.
+
+Fix centering of date fields in the date range prompt dialog box.
+
+Select the current language in the language selection dialog.
+
+2.5.1
+----------
+Correct defect causing the entity name to not display properly when only
+one callsign certificate was active.
+
 2.5
 ----------
 When installing a Callsign Certificate, don't display errors about expired

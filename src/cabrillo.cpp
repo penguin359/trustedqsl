@@ -512,7 +512,7 @@ tqsl_beginCabrillo(tQSL_Cabrillo *cabp, const char *filename) {
 	while ((cp = fgets(cab->rec, sizeof cab->rec, cab->fp)) != 0) {
 		cab->line_no++;
 		if (tqsl_parse_cabrillo_record(cab->rec) != 0
-			&& !strcmp(cab->rec, "START-OF-LOG"))
+			&& strstr(cab->rec, "START-OF-LOG"))
 			break;
 	}
 	if (cp != 0) {

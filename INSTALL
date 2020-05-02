@@ -27,12 +27,15 @@ should build and install that library and its prerequisites.
 
 The TrustedQSL library depends on several other libraries:
 
-OpenSSL (http://www.openssl.org/) - OpenSSL 1.0.1j was used for TQSL 1.14.
+OpenSSL (http://www.openssl.org/) - OpenSSL 1.1.1d was used for TQSL 2.5.2.
 expat 1.x XML parser library (http://expat.sourceforge.net/) - expat 2.1.0
-zlib (http://zlib.net/) zlib 1.2.8
-Berkeley DB (http://www.oracle.com/technetwork/products/berkeleydb/downloads/index.html) - BDB 6.1.19
-wxWidgets (http://wxwidgets.org/downloads) - wxWidgets 2.8.12.
-curl - (http://curl.haxx.se/download.html) - curl 7.39.0
+zlib (http://zlib.net/) zlib 1.2.11
+One of the following:
+    LMDB (Lightning Memory-mapped DataBase) - https://lmdb.readthedocs.io/ - lmdb 0.9.23
+    or 
+    Berkeley DB (http://www.oracle.com/technetwork/products/berkeleydb/downloads/index.html) - BDB 6.1.26
+wxWidgets (http://wxwidgets.org/downloads) - wxWidgets 2.8.12 or wxWidgets 3.0.4 
+curl - (http://curl.haxx.se/download.html) - curl 7.65.3
 
 Most Unix and unix-like workstations will have these available. For
 those systems that do not, the packages are easily built. Instructions
@@ -94,14 +97,14 @@ cmake -DBDB_PREFIX=$HOME/bdb -DCMAKE_INSTALL_PREFIX=$HOME/tqsllib .
 make
 sudo make install
 
-To build a universal binary with compatibility from MacOS 10.4 upwards,
-use the following shell script:
+To build a universal binary with compatibility from MacOS 10.4 upwards through
+Mojave, use the following shell script:
 
 #!/bin/sh
 # 
 # Adjust this to where you've installed wxWidgets
 #
-PATH=$HOME/wx/bin:$PATH
+PATH=$HOME/wx3/bin:$PATH
 #
 # Adjust this to where you've installed Berkeley DB 5.x
 #
@@ -113,6 +116,7 @@ arch_flags="-arch ppc -arch i386"
 #
 sdk="/Developer/SDKs/MacOSX10.4u.sdk"
 ver_min="10.4"
+CMAKE_PREFIX_PATH="~/bdb/ ~/wx3/ ~/expat"
 
 cmake  \
     -DCMAKE_BUILD_TYPE=Debug \

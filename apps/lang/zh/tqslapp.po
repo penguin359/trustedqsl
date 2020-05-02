@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: V2.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-05 20:53-0400\n"
-"PO-Revision-Date: 2019-10-07 16:19+0800\n"
+"POT-Creation-Date: 2020-03-02 06:25-0500\n"
+"PO-Revision-Date: 2020-03-22 12:53+0800\n"
 "Last-Translator: caros <bh4txn@gmail.com>\n"
 "Language-Team: TQSL Developers\n"
 "Language: zh\n"
@@ -94,39 +94,39 @@ msgid ""
 msgstr ""
 "一旦你提供可申请信息并且创建了申请文件，你应该发送申请文件给证书提供者。"
 
-#: crqwiz.cpp:172
+#: crqwiz.cpp:170
 msgid "Certificate Issuer:"
 msgstr "证书发行者："
 
-#: crqwiz.cpp:181 crqwiz.cpp:1199 crqwiz.cpp:1318 crqwiz.cpp:1372
-#: crqwiz.cpp:1407 loadcertwiz.cpp:258 loadcertwiz.cpp:357 tqsl.cpp:2781
-#: tqsl.cpp:3213 tqsl.cpp:3228 tqsl.cpp:3284 tqsl.cpp:3299 tqsl.cpp:5193
-#: tqsl.cpp:6753 tqsl.cpp:6953 tqsl_prefs.cpp:977 tqsl_prefs.cpp:984
+#: crqwiz.cpp:179 crqwiz.cpp:1195 crqwiz.cpp:1302 crqwiz.cpp:1356
+#: crqwiz.cpp:1391 loadcertwiz.cpp:130 loadcertwiz.cpp:364 tqsl.cpp:2814
+#: tqsl.cpp:3246 tqsl.cpp:3261 tqsl.cpp:3317 tqsl.cpp:3332 tqsl.cpp:5244
+#: tqsl.cpp:6849 tqsl.cpp:7049 tqsl_prefs.cpp:1022 tqsl_prefs.cpp:1029
 #: tqslwiz.cpp:621 tqslwiz.cpp:712
 msgid "Error"
 msgstr "错误"
 
-#: crqwiz.cpp:216
+#: crqwiz.cpp:214
 msgid "Email: "
 msgstr "E-Mail："
 
-#: crqwiz.cpp:218
+#: crqwiz.cpp:216
 msgid "URL: "
 msgstr "URL："
 
-#: crqwiz.cpp:254
+#: crqwiz.cpp:252
 msgid "DXCC entity:"
 msgstr "DXCC实体："
 
-#: crqwiz.cpp:258 tqsl.cpp:1946 tqsl.cpp:4237
+#: crqwiz.cpp:256 tqsl.cpp:1947 tqsl.cpp:4288
 msgid "Call sign:"
 msgstr "呼号："
 
-#: crqwiz.cpp:315
+#: crqwiz.cpp:313
 msgid "Date of the first QSO you made or will make using this callsign:"
 msgstr "该呼号第一个QSO的日期："
 
-#: crqwiz.cpp:363
+#: crqwiz.cpp:361
 msgid ""
 "Date of the last QSO you made or will make using this callsign:\n"
 "(Leave this date blank if this is still your valid callsign.)"
@@ -134,45 +134,45 @@ msgstr ""
 "该呼号最后一个QSO的日期：\n"
 "(该日期留空如果这呼号仍然是你的有效呼号)"
 
-#: crqwiz.cpp:401 crqwiz.cpp:783
+#: crqwiz.cpp:399 crqwiz.cpp:774
 msgid "Please select a Callsign Certificate to validate your request."
 msgstr "请选择一份呼号证书来签名你的申请。"
 
-#: crqwiz.cpp:431
+#: crqwiz.cpp:429
 msgid "Zip/Postal"
 msgstr "邮政编码："
 
-#: crqwiz.cpp:436 stationdial.cpp:70
+#: crqwiz.cpp:434 stationdial.cpp:70
 msgid "Name"
 msgstr "名字"
 
-#: crqwiz.cpp:460
+#: crqwiz.cpp:458
 msgid "Address"
 msgstr "地址"
 
-#: crqwiz.cpp:486
+#: crqwiz.cpp:484
 msgid "City"
 msgstr "城市"
 
-#: crqwiz.cpp:499 stationdial.cpp:351 stationdial.cpp:362
+#: crqwiz.cpp:497 stationdial.cpp:351 stationdial.cpp:362
 msgid "State"
 msgstr "州"
 
-#: crqwiz.cpp:521 crqwiz.cpp:524
+#: crqwiz.cpp:519 crqwiz.cpp:522
 msgid "Country"
 msgstr "国家"
 
-#: crqwiz.cpp:613
+#: crqwiz.cpp:611
 msgid "Your e-mail address"
 msgstr "你的E-Mail地址"
 
-#: crqwiz.cpp:626
+#: crqwiz.cpp:624
 msgid ""
 "Note: The e-mail address you provide here is the address to which the issued "
 "Certificate will be sent. Make sure it's the correct address!"
 msgstr "注意：这里提供的Email地址将用来接收发送的证书，确认此地址正确。"
 
-#: crqwiz.cpp:671
+#: crqwiz.cpp:667
 msgid ""
 "You may protect this Callsign Certificate using a password. If you are using "
 "a computer system that is shared with others, you should specify a password "
@@ -182,70 +182,70 @@ msgstr ""
 "你可以用口令保护这份呼号证书。如果你在公用电脑上使用，你应该指定一个口令来保"
 "护呼号证书。当然，如果你在自己的私人电脑上使用， 不需要指定口令。"
 
-#: crqwiz.cpp:680 crqwiz.cpp:706
+#: crqwiz.cpp:672 crqwiz.cpp:697
 msgid ""
 "Leave the password blank and click 'Next' unless you want to use a password."
 msgstr "口令空白并点击“确定”，除非你想使用口令。"
 
-#: crqwiz.cpp:684
+#: crqwiz.cpp:676
 msgid "Password:"
 msgstr "口令："
 
-#: crqwiz.cpp:688
+#: crqwiz.cpp:680
 msgid "Enter the password again for verification:"
 msgstr "再输一遍口令用来校验："
 
-#: crqwiz.cpp:692
+#: crqwiz.cpp:684
 msgid ""
 "DO NOT lose the password you choose! You will be unable to use the "
 "Certificate without this password!"
 msgstr "不要弄丢你选择的密码！丢了你将不能使用此证书！！！"
 
-#: crqwiz.cpp:711
+#: crqwiz.cpp:702
 msgid ""
 "Leave the password blank and click 'Finish' unless you want to use a "
 "password."
 msgstr "口令空白并点击“完成”，除非你想使用口令。"
 
-#: crqwiz.cpp:757
+#: crqwiz.cpp:748
 msgid "This Callsign Certificate is for:"
 msgstr "此呼号证书为: "
 
-#: crqwiz.cpp:774 crqwiz.cpp:775 crqwiz.cpp:780
+#: crqwiz.cpp:765 crqwiz.cpp:766 crqwiz.cpp:771
 msgid ""
 "Please select the Callsign Certificate for your current personal callsign to "
 "validate your request."
 msgstr "请选择你当前的呼号证书来签名你的申请。"
 
-#: crqwiz.cpp:778
+#: crqwiz.cpp:769
 msgid ""
 "Please select your club's primary Callsign Certificate to validate your "
 "request."
 msgstr "请选择你俱乐部的主要呼号证书来签名你的申请。"
 
-#: crqwiz.cpp:913
+#: crqwiz.cpp:904
 msgid "You must enter a valid call sign."
 msgstr "你必须输入一个有效的呼号。"
 
-#: crqwiz.cpp:934
+#: crqwiz.cpp:925
 msgid "You must select a DXCC entity."
 msgstr "你必须选择一个DXCC实体。"
 
-#: crqwiz.cpp:965
+#: crqwiz.cpp:956
 msgid "QSO begin date: You must choose proper values for Year, Month and Day."
 msgstr "QSO开始日期：你必须选择正确的年月日。"
 
-#: crqwiz.cpp:969
+#: crqwiz.cpp:960
 msgid ""
 "QSO end date: You must either choose proper values for Year, Month and Day "
 "or leave all three blank."
 msgstr "QSO结束日期：你必须正确选择年月日或者全部留空。"
 
-#: crqwiz.cpp:974
+#: crqwiz.cpp:965
 msgid "QSO end date cannot be before QSO begin date."
 msgstr "QSO结束日期不能在开始日期前。"
 
-#: crqwiz.cpp:1006
+#: crqwiz.cpp:997
 #, c-format
 msgid ""
 "The date of your first QSO is before the first valid date (%hs) of the "
@@ -253,7 +253,7 @@ msgid ""
 msgstr ""
 "你的第一个QSO日期在你的第一个有效日期 (%hs) （在选定的DXCC分区 %hs ）之前"
 
-#: crqwiz.cpp:1010
+#: crqwiz.cpp:1001
 #, c-format
 msgid ""
 "The date of your first QSO is after the last valid date (%hs) of the "
@@ -261,7 +261,7 @@ msgid ""
 msgstr ""
 "你的第一个QSO日期在你的最后有效日期 (%hs) （在选定的DXCC分区 %hs ）之后"
 
-#: crqwiz.cpp:1014
+#: crqwiz.cpp:1005
 #, c-format
 msgid ""
 "The date of your last QSO is before the first valid date (%hs) of the "
@@ -269,7 +269,7 @@ msgid ""
 msgstr ""
 "你的最后一个QSO日期在你的第一个有效日期 (%hs) （在选定的DXCC分区 %hs ）之前"
 
-#: crqwiz.cpp:1018
+#: crqwiz.cpp:1009
 #, c-format
 msgid ""
 "The date of your last QSO is after the last valid date (%hs) of the selected "
@@ -278,38 +278,38 @@ msgstr ""
 "你的最后一个QSO日期在你的最后有效日期 (%hs) （在选定的DXCC分区 %hs ）之后"
 
 #. TRANSLATORS: first argument is callsign (%s), second is the related DXCC entity name (%hs)
-#: crqwiz.cpp:1064
+#: crqwiz.cpp:1055
 #, c-format
 msgid ""
 "You have an overlapping Certificate for %s (DXCC=%hs) having QSO dates: "
 msgstr "你有一份呼号为 %s (DXCC=%hs)QSO日期交叠的证书："
 
 #. TRANSLATORS: here "to" separates two dates in a date range
-#: crqwiz.cpp:1066
+#: crqwiz.cpp:1057
 msgid " to "
 msgstr "到"
 
-#: crqwiz.cpp:1075
+#: crqwiz.cpp:1066
 #, c-format
 msgid ""
 "You have already requested a Callsign Certificate for %s and can not request "
 "another until that request has been processed by LoTW Staff."
 msgstr "你已经为 %s 申请了呼号证书，在LoTW 职员处理完以前不能再申请另一个。"
 
-#: crqwiz.cpp:1079 crqwiz.cpp:1121
+#: crqwiz.cpp:1068 crqwiz.cpp:1108
 msgid ""
 "Please wait until you receive an e-mail bearing your requested Callsign "
 "Certificate."
 msgstr "请等待直到你收到带有你申请的呼号证书的电子邮件。"
 
-#: crqwiz.cpp:1081
+#: crqwiz.cpp:1070
 #, c-format
 msgid ""
 "If you are sure that the earlier request is now invalid you should delete "
 "the pending Callsign Certificate for %s."
 msgstr "如果您确信该较早的请求现在是无效的，你应该删除挂起的 %s 呼号证书。"
 
-#: crqwiz.cpp:1117
+#: crqwiz.cpp:1106
 #, c-format
 msgid ""
 "You have already requested more than three Callsign Certificates for %s in "
@@ -319,7 +319,7 @@ msgstr ""
 "您已在过去24小时内为 %s 申请过三次以上的呼号证书。 您应该只提交一次请求，然后"
 "等待LoTW职员处理该申请。 这可能需要几个工作日。"
 
-#: crqwiz.cpp:1204
+#: crqwiz.cpp:1200
 msgid ""
 "You cannot select DXCC Entity NONE as you must sign any request for entity "
 "NONE and you have no valid Callsign Certificates that you can use to sign "
@@ -328,15 +328,15 @@ msgstr ""
 "您不能选择DXCC实体为“无”，因为你必须签署实体为“无”的任何申请，而你没有有效的"
 "呼号证书来签名此申请。"
 
-#: crqwiz.cpp:1205 crqwiz.cpp:1224 crqwiz.cpp:1421 tqsl.cpp:154 tqsl.cpp:179
+#: crqwiz.cpp:1201 crqwiz.cpp:1213 crqwiz.cpp:1405 tqsl.cpp:154 tqsl.cpp:179
 msgid "TQSL Error"
 msgstr "TQSL错误"
 
-#: crqwiz.cpp:1209
+#: crqwiz.cpp:1205
 msgid "You have selected DXCC Entity NONE"
 msgstr "你选择了无DXCC实体"
 
-#: crqwiz.cpp:1211
+#: crqwiz.cpp:1207
 msgid ""
 "QSO records signed using the Certificate will not be valid for DXCC award "
 "credit (but will be valid for other applicable awards). If the Certificate "
@@ -349,11 +349,11 @@ msgstr ""
 "动、轮船或飞机上的移动操作的QSO签名是正确的选择。否则，你应该使用在点击“确"
 "认”后，按“后退”按钮返回DXCC页面"
 
-#: crqwiz.cpp:1219 stationdial.cpp:447
+#: crqwiz.cpp:1208 stationdial.cpp:447
 msgid "TQSL Warning"
 msgstr "TQSL警告"
 
-#: crqwiz.cpp:1223
+#: crqwiz.cpp:1212
 msgid ""
 "You cannot request a certificate for a 1x1 callsign as you must sign those "
 "requests, but you have no valid Callsign Certificates that you can use to "
@@ -362,7 +362,7 @@ msgstr ""
 "您无法为1x1呼号申请证书，因为您必须签署这些申请，但您没有可用于签署此申请的有"
 "效呼号证书。"
 
-#: crqwiz.cpp:1230
+#: crqwiz.cpp:1219
 msgid ""
 "You have chosen a QSO end date for this Callsign Certificate. The 'QSO end "
 "date' should ONLY be set if that date is the date when that callsign's "
@@ -371,7 +371,7 @@ msgstr ""
 "你为该呼号证书选择了一个结束日期。“结束日期”仅当该日期是该呼号执照到期日或被"
 "另一个呼号替代日期时设置。"
 
-#: crqwiz.cpp:1234
+#: crqwiz.cpp:1221
 msgid ""
 "If you set an end date, you will not be able to sign QSOs past that date, "
 "even if the Callsign Certificate itself is still valid."
@@ -379,7 +379,7 @@ msgstr ""
 "如果你设置了结束日期，那么你将不能签名这个日期之后的QSO，即使你的呼号证书是有"
 "效的。"
 
-#: crqwiz.cpp:1238
+#: crqwiz.cpp:1223
 msgid ""
 "If you still hold this callsign (or if you plan to renew the license for the "
 "callsign), you should not set a 'QSO end date'."
@@ -387,40 +387,40 @@ msgstr ""
 "如果你仍然拥有这个呼号（或者你计划更新你的呼号执照），你应该不设置QSO结束日"
 "期。"
 
-#: crqwiz.cpp:1241
+#: crqwiz.cpp:1225
 msgid "Do you really want to keep this 'QSO end date'?"
 msgstr "你确定要保留“QSO到期日期”吗？"
 
-#: crqwiz.cpp:1242 loadcertwiz.cpp:199 tqsl.cpp:1841 tqsl.cpp:5601
-#: tqsl.cpp:6354 tqsl.cpp:6482 tqsl_prefs.cpp:445
+#: crqwiz.cpp:1226 loadcertwiz.cpp:205 tqsl.cpp:1832 tqsl.cpp:5683
+#: tqsl.cpp:6435 tqsl.cpp:6563 tqsl_prefs.cpp:425
 msgid "Warning"
 msgstr "警告"
 
-#: crqwiz.cpp:1277
+#: crqwiz.cpp:1261
 msgid "You must enter your name"
 msgstr "你必须输入你的名字"
 
-#: crqwiz.cpp:1279
+#: crqwiz.cpp:1263
 msgid "You must enter your address"
 msgstr "你必须输入你的地址"
 
-#: crqwiz.cpp:1281
+#: crqwiz.cpp:1265
 msgid "You must enter your city"
 msgstr "你必须输入你的城市"
 
-#: crqwiz.cpp:1359
+#: crqwiz.cpp:1343
 msgid "You must enter a valid email address"
 msgstr "你必须输入一个有效的Email地址"
 
-#: crqwiz.cpp:1394
+#: crqwiz.cpp:1378
 msgid "The two copies of the password do not match."
 msgstr "两份口令不相同。"
 
-#: crqwiz.cpp:1435
+#: crqwiz.cpp:1419
 msgid "Click 'Finish' to complete this Callsign Certificate request."
 msgstr "要完成该证书申请，点击“完成”。"
 
-#: crqwiz.cpp:1448
+#: crqwiz.cpp:1432
 #, c-format
 msgid ""
 "You are saying that the requested Certificate for %s belongs to the same "
@@ -440,14 +440,14 @@ msgid "Help"
 msgstr "帮助"
 
 #: getpassword.cpp:48 getpassword.cpp:121 qsodatadialog.cpp:384 tqsl.cpp:420
-#: tqsl_prefs.cpp:64 tqsl_prefs.cpp:273 tqsl_prefs.cpp:950 stationdial.h:46
+#: tqsl_prefs.cpp:64 tqsl_prefs.cpp:279 tqsl_prefs.cpp:995 stationdial.h:46
 #: tqslapp.h:116
 msgid "OK"
 msgstr "确定"
 
 #: getpassword.cpp:51 getpassword.cpp:124 qsodatadialog.cpp:383
-#: stationdial.cpp:214 tqsl.cpp:293 tqsl.cpp:344 tqsl.cpp:421 tqsl.cpp:560
-#: tqsl.cpp:621 tqsl_prefs.cpp:67 tqsl_prefs.cpp:276 tqsl_prefs.cpp:953
+#: stationdial.cpp:214 tqsl.cpp:293 tqsl.cpp:344 tqsl.cpp:421 tqsl.cpp:545
+#: tqsl.cpp:605 tqsl_prefs.cpp:67 tqsl_prefs.cpp:282 tqsl_prefs.cpp:998
 msgid "Cancel"
 msgstr "取消"
 
@@ -487,11 +487,23 @@ msgstr "装入证书"
 msgid "This callsign certificate is already installed"
 msgstr "这份呼号证书已安装"
 
-#: loadcertwiz.cpp:145
+#: loadcertwiz.cpp:118
+msgid "Trusted root certificate"
+msgstr "可信的根证书"
+
+#: loadcertwiz.cpp:121
+msgid "Certificate Authority certificate"
+msgstr "证书颁发机构证书"
+
+#: loadcertwiz.cpp:124 wxutil.cpp:258
+msgid "Callsign Certificate"
+msgstr "呼号证书"
+
+#: loadcertwiz.cpp:159
 msgid "Enter a password for this callsign certificate."
 msgstr "输入一个此呼号证书的口令。"
 
-#: loadcertwiz.cpp:147
+#: loadcertwiz.cpp:161
 msgid ""
 "If you are using a computer system that is shared with others, you should "
 "specify a password to protect this certificate. However, if you are using a "
@@ -500,22 +512,22 @@ msgstr ""
 "如果你使用的是与他人共享的计算机系统，你应该设置一个口令保护你的证书。否则你"
 "不需要设置口令。"
 
-#: loadcertwiz.cpp:153
+#: loadcertwiz.cpp:163
 msgid ""
 "This password will have to be entered each time you use this callsign "
 "certificate for signing or when saving the key."
 msgstr "本口令必须在每次使用该呼号证书签名或保存钥匙时正确输入。"
 
-#: loadcertwiz.cpp:157 tqsl.cpp:6297
+#: loadcertwiz.cpp:165 tqsl.cpp:6378
 msgid ""
 "Leave the password blank and click 'OK' unless you want to use a password."
 msgstr "口令空白并点击“确定”，除非你想使用口令。"
 
-#: loadcertwiz.cpp:159
+#: loadcertwiz.cpp:167
 msgid "New Password"
 msgstr "新口令"
 
-#: loadcertwiz.cpp:194
+#: loadcertwiz.cpp:202
 msgid ""
 "You will not be able to use this tq6 file to recover your callsign "
 "certificate if it gets lost. For security purposes, you should back up your "
@@ -524,11 +536,11 @@ msgstr ""
 "如果丢失了你将不能用这个tq6文件恢复你的呼号证书。出于安全考虑，你应该备份你的"
 "证书到移动介质以便安全保存。"
 
-#: loadcertwiz.cpp:198
+#: loadcertwiz.cpp:204
 msgid "Would you like to back up your callsign certificate now?"
 msgstr "你愿意现在就备份呼号证书吗？"
 
-#: loadcertwiz.cpp:234
+#: loadcertwiz.cpp:240
 msgid ""
 "Callsign Certificate container files (*.p12;*.P12)|*.p12;*.P12|Certificate "
 "Request response files (*.tq6;*.TQ6)|*.tq6;*.TQ6"
@@ -536,37 +548,37 @@ msgstr ""
 "呼号证书保留文件 (*.p12; *. P12)|*.p12;*. P12|呼号证书申请文件 (*.tq6;*.TQ6)|"
 "*.tq6;*.TQ6"
 
-#: loadcertwiz.cpp:236
+#: loadcertwiz.cpp:242
 msgid ""
 "Callsign Certificate container files (*.p12)|*.p12|Certificate Request "
 "response files (*.tq6)|*.tq6"
 msgstr "呼号证书保留文件 (*.p12)|*.p12|呼号证书申请文件 (*.tq6)|*.tq6"
 
-#: loadcertwiz.cpp:238 tqsl.cpp:4195
+#: loadcertwiz.cpp:244 tqsl.cpp:4246
 msgid "|All files (*.*)|*.*"
 msgstr "|所有文件 (*.*)|*.*"
 
-#: loadcertwiz.cpp:242
+#: loadcertwiz.cpp:248
 msgid "Select Certificate File"
 msgstr "选择证书文件"
 
-#: loadcertwiz.cpp:298
+#: loadcertwiz.cpp:305
 msgid "Loading complete"
 msgstr "装入完成"
 
-#: loadcertwiz.cpp:313
+#: loadcertwiz.cpp:320
 msgid "No status information available"
 msgstr "无有效的状态信息"
 
-#: loadcertwiz.cpp:320
+#: loadcertwiz.cpp:327
 msgid "Enter the password to unlock the .p12 file:"
 msgstr "输入口令解锁这个.p12文件："
 
-#: loadcertwiz.cpp:354 tqsl.cpp:2116
+#: loadcertwiz.cpp:361 tqsl.cpp:2122
 msgid "Password error"
 msgstr "口令错误"
 
-#: loctree.cpp:86 tqsl.cpp:1372 tqsl.cpp:6512
+#: loctree.cpp:86 tqsl.cpp:1363 tqsl.cpp:6593
 msgid "Station Locations"
 msgstr "台站位置"
 
@@ -638,8 +650,8 @@ msgstr "到日志中最后一个QSO"
 msgid "Add QSO"
 msgstr "添加QSO"
 
-#: qsodatadialog.cpp:376 stationdial.cpp:207 tqsl_prefs.cpp:170
-#: tqsl_prefs.cpp:757
+#: qsodatadialog.cpp:376 stationdial.cpp:207 tqsl_prefs.cpp:176
+#: tqsl_prefs.cpp:802
 msgid "Delete"
 msgstr "删除"
 
@@ -694,7 +706,7 @@ msgstr "无QSO记录"
 msgid "Save File"
 msgstr "保存文件"
 
-#: qsodatadialog.cpp:602 tqsl.cpp:1833
+#: qsodatadialog.cpp:602 tqsl.cpp:1824
 msgid ""
 "ADIF files (*.adi;*.adif;*.ADI;*.ADIF)|*.adi;*.adif;*.ADI;*.ADIF|All files "
 "(*.*)|*.*"
@@ -702,7 +714,7 @@ msgstr ""
 "ADIF文件 (*.adi;*.adif;*.ADI;*.ADIF)|*.adi;*.adif;*.ADI;*.ADIF|所有文件 (*."
 "*)|*.*"
 
-#: qsodatadialog.cpp:604 tqsl.cpp:1835
+#: qsodatadialog.cpp:604 tqsl.cpp:1826
 msgid "ADIF files (*.adi;*.adif)|*.adi;*.adif|All files (*.*)|*.*"
 msgstr "ADIF 文件 (*.adi;*.adif)|*.adi;*.adif|所有文件 (*.*)|*.*."
 
@@ -720,7 +732,7 @@ msgstr "一个QSO记录"
 msgid "%d QSO Records"
 msgstr "%d 个QSO记录"
 
-#: stationdial.cpp:56 tqsl.cpp:5856
+#: stationdial.cpp:56 tqsl.cpp:5938
 msgid "&Properties"
 msgstr "属性"
 
@@ -752,7 +764,7 @@ msgstr "选定的台站位置"
 msgid "New..."
 msgstr "新..."
 
-#: stationdial.cpp:203 tqsl_prefs.cpp:755
+#: stationdial.cpp:203 tqsl_prefs.cpp:800
 msgid "Edit..."
 msgstr "编辑..."
 
@@ -880,7 +892,7 @@ msgid "Final Status: %hs (%d)"
 msgstr "最后状态： %hs (%d)"
 
 #. TRANSLATORS: this is followed by the callsign and entity name
-#: tqsl.cpp:243
+#: tqsl.cpp:244
 #, c-format
 msgid ""
 "Enter the password to unlock the callsign certificate for %hs -- %hs\n"
@@ -890,7 +902,7 @@ msgstr ""
 "输入口令解锁%hs 的呼号证书-- %hs\n"
 "(这个口令是你装入这份呼号证书时创建的。)"
 
-#: tqsl.cpp:255 tqsl.cpp:6935 getpassword.h:32 getpassword.h:33
+#: tqsl.cpp:255 tqsl.cpp:7031 getpassword.h:32 getpassword.h:33
 msgid "Enter password"
 msgstr "输入口令"
 
@@ -965,7 +977,7 @@ msgstr "这份日志有 %d 个QSO已经签名并上传到LoTW，没有新的QSO�
 msgid "Click 'Cancel' to abandon processing this log file (Recommended)."
 msgstr "点击“取消”终止处理该日志文件（建议）。"
 
-#: tqsl.cpp:496 tqsl.cpp:508 tqsl.cpp:517
+#: tqsl.cpp:496 tqsl.cpp:506 tqsl.cpp:513
 msgid ""
 "Click 'Re-Upload QSOs' to re-process this log while allowing already "
 "uploaded QSOs."
@@ -978,24 +990,24 @@ msgid ""
 "upload to LoTW, and %d QSOs which are new."
 msgstr "这份日志有 %d 个QSO已经签名并上传到LoTW，还有 %d 个QSO是新的。"
 
-#: tqsl.cpp:504 tqsl.cpp:513
+#: tqsl.cpp:502 tqsl.cpp:509
 msgid ""
 "Click 'New QSOs Only' to sign normally, without the already uploaded QSOs "
 "(Recommended)."
 msgstr "点击“仅新QSO”仅签名未上传过的QSO，剔除已上传的QSO（推荐模式）。"
 
-#: tqsl.cpp:506 tqsl.cpp:515
+#: tqsl.cpp:504 tqsl.cpp:511
 msgid "Click 'Cancel' to abandon processing this log file."
 msgstr "点击“取消”终止处理该日志文件。"
 
-#: tqsl.cpp:509
+#: tqsl.cpp:507
 #, c-format
 msgid ""
 "This log contains %d QSO(s) which appear to have already been signed for "
 "upload to LoTW, and one QSO which is new."
 msgstr "这份日志有 %d 个QSO已经签名并上传到LoTW，只有1个QSO是新的。"
 
-#: tqsl.cpp:528
+#: tqsl.cpp:524
 msgid ""
 "The log file you are uploading using your QSO Logging system consists "
 "entirely of previously uploaded QSOs that create unnecessary work for LoTW. "
@@ -1006,7 +1018,7 @@ msgstr ""
 "你的日志系统上传的文件里QSO完全与过去已有的QSO日志重复让LoTW做不必要的工作。"
 "也许有新版的日志系统可以避免这个。请检查你的日志系统提供者的更新版本。"
 
-#: tqsl.cpp:532
+#: tqsl.cpp:526
 msgid ""
 "In the meantime, please note that some loggers may exhibit strange behavior "
 "if an option other than 'Re-Upload QSOs' is clicked. Choosing 'Cancel' is "
@@ -1018,7 +1030,7 @@ msgstr ""
 "消”是安全的，但是有缺陷的日志系统不检查TrustedQSL产生的报告将导致奇怪的行为"
 "（但无害）例如试图上传一个空文件或者标记所有的QSO为“已发送”"
 
-#: tqsl.cpp:537
+#: tqsl.cpp:529
 msgid ""
 "The log file you are uploading using your QSO Logging system includes some "
 "previously uploaded QSOs that create unnecessary work for LoTW. There may be "
@@ -1029,7 +1041,7 @@ msgstr ""
 "要的工作。 您的QSO日志记录系统可能有较新的版本，可以防止这种情况。 请与QSO日"
 "志记录系统的供应商联系以获取更新版本。"
 
-#: tqsl.cpp:541
+#: tqsl.cpp:531
 msgid ""
 "In the meantime, please note that some loggers may exhibit strange behavior "
 "if an option other than 'Re-Upload QSOs' is clicked. 'New QSOs Only' is "
@@ -1045,7 +1057,7 @@ msgstr ""
 "态，它将正确地将所有选定的QSO标记为已发送-即使它们不在此状态不在本批次内但它"
 "们仍在您的帐户中"
 
-#: tqsl.cpp:547
+#: tqsl.cpp:533
 msgid ""
 "Choosing 'Cancel' is usually safe, but a defective logger not checking the "
 "status messages reported by TrustedQSL may produce strange (but harmless) "
@@ -1056,15 +1068,15 @@ msgstr ""
 "消”是安全的，但是有缺陷的日志系统不检查TrustedQSL产生的报告将导致奇怪的行为"
 "（但无害）例如试图上传一个空文件或者标记所有的QSO为“已发送”"
 
-#: tqsl.cpp:559
+#: tqsl.cpp:544
 msgid "New QSOs Only"
 msgstr "仅新QSO"
 
-#: tqsl.cpp:561
+#: tqsl.cpp:546
 msgid "Re-Upload QSOs"
 msgstr "重传QSO"
 
-#: tqsl.cpp:586
+#: tqsl.cpp:571
 msgid ""
 "The only reason to re-sign already uploaded QSOs is if a previous upload was "
 "not processed by LoTW, either because it was never uploaded, or there was a "
@@ -1073,251 +1085,251 @@ msgstr ""
 "重新签名已上传的QSO的唯一原因是LoTW还未处理先前的上传，或者是因为从未上传过，"
 "或者服务器发生了故障"
 
-#: tqsl.cpp:589
+#: tqsl.cpp:573
 msgid "Are you sure you want to proceed? Click 'No' to review the choices"
 msgstr "确定要处理吗？点击“No”回看选择项"
 
-#: tqsl.cpp:590
+#: tqsl.cpp:574
 msgid "Are you sure?"
 msgstr "确定吗？"
 
-#: tqsl.cpp:613
+#: tqsl.cpp:597
 msgid "Errors Detected"
 msgstr "检测到错误"
 
-#: tqsl.cpp:620
+#: tqsl.cpp:604
 msgid "Ignore"
 msgstr "忽略"
 
-#: tqsl.cpp:661
+#: tqsl.cpp:645
 #, c-format
 msgid ""
 "Your custom mode map %s conflicts with the standard mode definition for %hs "
 "and was deleted."
 msgstr "你的自定义模式 %s 对应与标准的 %hs 模式定义相冲突，已被删除。"
 
-#: tqsl.cpp:888
+#: tqsl.cpp:879
 #, c-format
 msgid "Error renaming backup file %s: %hs"
 msgstr "重命名备份文件 %s 错误：%hs"
 
-#: tqsl.cpp:1029 tqsl.cpp:1048
+#: tqsl.cpp:1020 tqsl.cpp:1039
 msgid "Checking for TQSL updates..."
 msgstr "正在检测TQSL更新..."
 
-#: tqsl.cpp:1095
+#: tqsl.cpp:1086
 msgid "Sign and &upload ADIF or Cabrillo File..."
 msgstr "签名并上传 ADIF 或 Cabrillo 文件..."
 
-#: tqsl.cpp:1096
+#: tqsl.cpp:1087
 msgid "&Sign and save ADIF or Cabrillo file..."
 msgstr "签名并保存ADIF或Cabrillo文件"
 
-#: tqsl.cpp:1098
+#: tqsl.cpp:1089
 msgid "&Backup Station Locations, Certificates, and Preferences..."
 msgstr "备份台站位置，证书和参数"
 
-#: tqsl.cpp:1099
+#: tqsl.cpp:1090
 msgid "&Restore Station Locations, Certificates, and Preferences..."
 msgstr "恢复台站位置，证书和参数"
 
-#: tqsl.cpp:1101
+#: tqsl.cpp:1092
 msgid "Create &New ADIF file..."
 msgstr "创建新的ADIF文件..."
 
-#: tqsl.cpp:1102
+#: tqsl.cpp:1093
 msgid "&Edit existing ADIF file..."
 msgstr "编辑已有的ADIF文件"
 
-#: tqsl.cpp:1105
+#: tqsl.cpp:1096
 msgid "&Preferences..."
 msgstr "参数"
 
-#: tqsl.cpp:1107
+#: tqsl.cpp:1098
 msgid "Display or Modify &Preferences..."
 msgstr "显示或编辑参数..."
 
-#: tqsl.cpp:1110 tqsl.cpp:6573
+#: tqsl.cpp:1101 tqsl.cpp:6663 tqsl.cpp:6665
 msgid "Language"
 msgstr "语言"
 
-#: tqsl.cpp:1112
+#: tqsl.cpp:1103
 msgid "Dia&gnostic Mode"
 msgstr "调试模式"
 
-#: tqsl.cpp:1117 tqslupdater.cpp:108
+#: tqsl.cpp:1108 tqslupdater.cpp:108
 msgid "E&xit TQSL\tAlt-X"
 msgstr "退出TQSL\tAlt-X"
 
-#: tqsl.cpp:1122
+#: tqsl.cpp:1113
 msgid "&Display Station Location Properties"
 msgstr "显示台站位置属性"
 
-#: tqsl.cpp:1124
+#: tqsl.cpp:1115
 msgid "&Edit Station Location"
 msgstr "编辑台站位置"
 
-#: tqsl.cpp:1125
+#: tqsl.cpp:1116
 msgid "&Add Station Location"
 msgstr "增加台站位置"
 
-#: tqsl.cpp:1131
+#: tqsl.cpp:1122
 msgid "&Restore a Deleted Station Location"
 msgstr "恢复已删除的台站位置"
 
-#: tqsl.cpp:1144
+#: tqsl.cpp:1135
 msgid "&Contents"
 msgstr "内容"
 
-#: tqsl.cpp:1146
+#: tqsl.cpp:1137
 msgid "Display &Documentation"
 msgstr "显示文档"
 
-#: tqsl.cpp:1151
+#: tqsl.cpp:1142
 msgid "Check for &Updates..."
 msgstr "更新检测..."
 
-#: tqsl.cpp:1153
+#: tqsl.cpp:1144
 msgid "&About"
 msgstr "关于"
 
-#: tqsl.cpp:1156 tqsl_prefs.cpp:94
+#: tqsl.cpp:1147 tqsl_prefs.cpp:98
 msgid "&File"
 msgstr "文件"
 
-#: tqsl.cpp:1157
+#: tqsl.cpp:1148
 msgid "&Station Location"
 msgstr "台站位置"
 
-#: tqsl.cpp:1158
+#: tqsl.cpp:1149
 msgid "Callsign &Certificate"
 msgstr "呼号证书"
 
-#: tqsl.cpp:1159
+#: tqsl.cpp:1150
 msgid "&Help"
 msgstr "帮助"
 
-#: tqsl.cpp:1174 tqsl.cpp:1263
+#: tqsl.cpp:1165 tqsl.cpp:1254
 msgid "Log Operations"
 msgstr "日志操作员"
 
-#: tqsl.cpp:1180 tqsl.cpp:1483
+#: tqsl.cpp:1171 tqsl.cpp:1474
 msgid "Status Log"
 msgstr "状态日志"
 
-#: tqsl.cpp:1202 tqsl.cpp:1207
+#: tqsl.cpp:1193 tqsl.cpp:1198
 msgid "Sign a log and upload it automatically to LoTW"
 msgstr "签名一份日志并自动上传到LoTW"
 
-#: tqsl.cpp:1219 tqsl.cpp:1223
+#: tqsl.cpp:1210 tqsl.cpp:1214
 msgid "Sign a log and save it for uploading later"
 msgstr "签名一份日志并保存给以后再上传"
 
-#: tqsl.cpp:1236 tqsl.cpp:1240
+#: tqsl.cpp:1227 tqsl.cpp:1231
 msgid "Create an ADIF file for signing and uploading"
 msgstr "为签名和上传创建一个新ADIF文件"
 
-#: tqsl.cpp:1252 tqsl.cpp:1256
+#: tqsl.cpp:1243 tqsl.cpp:1247
 msgid "Log in to the Logbook of the World Site"
 msgstr "登录LoTW网站"
 
-#: tqsl.cpp:1289
+#: tqsl.cpp:1280
 msgid "Select a Station Location to process      "
 msgstr "选择一个台站位置进行处理"
 
-#: tqsl.cpp:1320
+#: tqsl.cpp:1311
 msgid "Create a new Station Location"
 msgstr "创建新的台站位置"
 
-#: tqsl.cpp:1335 tqsl.cpp:6425 tqsl.cpp:6426
+#: tqsl.cpp:1326 tqsl.cpp:6506 tqsl.cpp:6507
 msgid "Edit a Station Location"
 msgstr "编辑一个台站位置"
 
-#: tqsl.cpp:1351 tqsl.cpp:6427 tqsl.cpp:6428
+#: tqsl.cpp:1342 tqsl.cpp:6508 tqsl.cpp:6509
 msgid "Delete a Station Location"
 msgstr "删除一个台站位置"
 
-#: tqsl.cpp:1367 tqsl.cpp:6429 tqsl.cpp:6430
+#: tqsl.cpp:1358 tqsl.cpp:6510 tqsl.cpp:6511
 msgid "Display Station Location Properties"
 msgstr "显示台站位置属性"
 
-#: tqsl.cpp:1393 tqsl.cpp:6195
+#: tqsl.cpp:1384 tqsl.cpp:6279
 msgid "Select a Callsign Certificate to process"
 msgstr "选择一份呼号证书进行处理"
 
-#: tqsl.cpp:1419
+#: tqsl.cpp:1410
 msgid "Load a Callsign Certificate"
 msgstr "导入一份呼号证书"
 
-#: tqsl.cpp:1436 tqsl.cpp:6187 tqsl.cpp:6188
+#: tqsl.cpp:1427 tqsl.cpp:6271 tqsl.cpp:6272
 msgid "Save a Callsign Certificate"
 msgstr "保存一份呼号证书"
 
-#: tqsl.cpp:1452 tqsl.cpp:5992 tqsl.cpp:6189 tqsl.cpp:6190 tqsl.cpp:6245
-#: tqsl.cpp:6246
+#: tqsl.cpp:1443 tqsl.cpp:6076 tqsl.cpp:6273 tqsl.cpp:6274 tqsl.cpp:6329
+#: tqsl.cpp:6330
 msgid "Renew a Callsign Certificate"
 msgstr "更新一份呼号证书"
 
-#: tqsl.cpp:1468
+#: tqsl.cpp:1459
 msgid "Display a Callsign Certificate's Properties"
 msgstr "显示一张呼号证书属性"
 
-#: tqsl.cpp:1473 tqsl.cpp:6403
+#: tqsl.cpp:1464 tqsl.cpp:6484
 msgid "Callsign Certificates"
 msgstr "呼号证书"
 
-#: tqsl.cpp:1497 tqsl.cpp:1631 tqsl.cpp:1661
+#: tqsl.cpp:1488 tqsl.cpp:1622 tqsl.cpp:1652
 msgid "Add Station Location"
 msgstr "添加台站位置"
 
-#: tqsl.cpp:1580
+#: tqsl.cpp:1571
 msgid "About"
 msgstr "关于"
 
-#: tqsl.cpp:1593
+#: tqsl.cpp:1584
 msgid "Log File"
 msgstr "日志文件"
 
-#: tqsl.cpp:1594
+#: tqsl.cpp:1585
 msgid "Log files (*.log)|*.log|All files (*.*)|*.*"
 msgstr "日志文件 (*.log)|*.log|所有文件 (*.*)|*.*"
 
-#: tqsl.cpp:1601
+#: tqsl.cpp:1592
 #, c-format
 msgid "Error opening diagnostic log %s: %hs"
 msgstr "打开调试日志 %s 错误: %hs "
 
-#: tqsl.cpp:1602
+#: tqsl.cpp:1593
 msgid "Log File Error"
 msgstr "日志文件错误"
 
 #. TRANSLATORS: uncommon error - error in a station location, followed by the ignore message that follows.
-#: tqsl.cpp:1688 tqsl.cpp:2926 tqsl.cpp:6544
+#: tqsl.cpp:1679 tqsl.cpp:2959 tqsl.cpp:6625
 msgid "The invalid data was ignored."
 msgstr "无效数据已忽略。"
 
-#: tqsl.cpp:1689
+#: tqsl.cpp:1680
 msgid "Location data error"
 msgstr "位置数据错误"
 
-#: tqsl.cpp:1693 tqsl.cpp:1719 tqsl.cpp:2931 tqsl.cpp:6549
+#: tqsl.cpp:1684 tqsl.cpp:1710 tqsl.cpp:2964 tqsl.cpp:6630
 #, c-format
 msgid "Edit Station Location : %hs - %s"
 msgstr "编辑台站位置： %hs - %s"
 
-#: tqsl.cpp:1727 tqsl.cpp:5504
+#: tqsl.cpp:1718 tqsl.cpp:5585
 msgid "Edit Station Location"
 msgstr "编辑台站位置"
 
-#: tqsl.cpp:1727 tqsl.cpp:6797 tqsl.cpp:6903 tqsl_prefs.cpp:91
+#: tqsl.cpp:1718 tqsl.cpp:6893 tqsl.cpp:6999 tqsl_prefs.cpp:95
 msgid "Close"
 msgstr "关闭"
 
-#: tqsl.cpp:1831
+#: tqsl.cpp:1822
 msgid "Open File"
 msgstr "打开文件"
 
-#: tqsl.cpp:1841 tqsl.cpp:5601
+#: tqsl.cpp:1832 tqsl.cpp:5683
 msgid ""
 "Warning: The TQSL ADIF editor only processes a limited number of ADIF "
 "fields.\n"
@@ -1328,88 +1340,88 @@ msgstr ""
 "\n"
 "在ADIF文件使用编辑器可能丢失QSO细节。"
 
-#: tqsl.cpp:1929
+#: tqsl.cpp:1930
 msgid "Please choose a callsign for this Station Location"
 msgstr "请选择这个台站地址的呼号"
 
-#: tqsl.cpp:1930
+#: tqsl.cpp:1931
 msgid "Select Callsign"
 msgstr "选择呼号"
 
 #. TRANSLATORS: filename being signed, station location and callsign added later.
-#: tqsl.cpp:1942 tqsl.cpp:4233
+#: tqsl.cpp:1943 tqsl.cpp:4284
 #, c-format
 msgid "The file (%s) will be signed using:"
 msgstr "文件 (%s) 将被签名自："
 
-#: tqsl.cpp:1944 tqsl.cpp:4235
+#: tqsl.cpp:1945 tqsl.cpp:4286
 msgid "Station Location:"
 msgstr "台站位置："
 
-#: tqsl.cpp:1948 tqsl.cpp:4239
+#: tqsl.cpp:1949 tqsl.cpp:4290
 msgid "DXCC:"
 msgstr "DXCC:"
 
-#: tqsl.cpp:1950 tqsl.cpp:4241
+#: tqsl.cpp:1951 tqsl.cpp:4292
 msgid "Is this correct?"
 msgstr "这正确吗？"
 
-#: tqsl.cpp:1956 tqsl.cpp:4243
+#: tqsl.cpp:1957 tqsl.cpp:4294
 msgid "TQSL - Confirm signing"
 msgstr "TQSL确认签名"
 
-#: tqsl.cpp:1970
+#: tqsl.cpp:1971
 msgid "There are no valid callsign certificates for callsign"
 msgstr "没有这个呼号的有效呼号证书"
 
-#: tqsl.cpp:1973
+#: tqsl.cpp:1974
 msgid "in entity"
 msgstr "在实体中"
 
-#: tqsl.cpp:1975 tqsl.cpp:1980
+#: tqsl.cpp:1976 tqsl.cpp:1981
 msgid "Signing aborted."
 msgstr "签名已退出。"
 
-#: tqsl.cpp:1988
+#: tqsl.cpp:1993
 #, c-format
 msgid "Signing using Callsign %hs, DXCC Entity %hs"
 msgstr "用呼号 %hs, DXCC实体 %hs 签名"
 
-#: tqsl.cpp:2006
+#: tqsl.cpp:2011
 msgid ""
 "TQSL must wait for other running copies of TQSL to exit before signing..."
 msgstr "TQSL 必须等待运行中的其它副本TQSL在签名前退出..."
 
-#: tqsl.cpp:2034 tqsl.cpp:2262
+#: tqsl.cpp:2039 tqsl.cpp:2268
 msgid "Cancelled"
 msgstr "取消了"
 
-#: tqsl.cpp:2083 tqsl.cpp:2093
+#: tqsl.cpp:2089 tqsl.cpp:2099
 #, c-format
 msgid "QSOs: %d"
 msgstr "QSO: %d"
 
-#: tqsl.cpp:2085
+#: tqsl.cpp:2091
 #, c-format
 msgid "Already Uploaded: %d"
 msgstr "已经上传: %d"
 
-#: tqsl.cpp:2087 tqsl.cpp:2097
+#: tqsl.cpp:2093 tqsl.cpp:2103
 #, c-format
 msgid "Errors: %d"
 msgstr "错误： %d"
 
-#: tqsl.cpp:2095
+#: tqsl.cpp:2101
 #, c-format
 msgid "Already uploaded: %d"
 msgstr "已经上传: %d"
 
-#: tqsl.cpp:2161 tqsl.cpp:2242
+#: tqsl.cpp:2167 tqsl.cpp:2248
 #, c-format
 msgid "on line %d"
 msgstr "在线 %d"
 
-#: tqsl.cpp:2171
+#: tqsl.cpp:2177
 #, c-format
 msgid ""
 "Your QTH Details changed for this QSO.\n"
@@ -1425,136 +1437,140 @@ msgstr ""
 "现在的细节如下： %s \n"
 "请校验确定你要修改这个QSO！\n"
 
-#: tqsl.cpp:2193
+#: tqsl.cpp:2199
 msgid "Click 'Ignore' to continue signing this log while ignoring errors."
 msgstr "点击“忽略”无视错误继续签名这份日志。"
 
-#: tqsl.cpp:2195
+#: tqsl.cpp:2201
 msgid "Click 'Cancel' to abandon signing this log."
 msgstr "点击“取消”终止签名该日志。"
 
-#: tqsl.cpp:2223
+#: tqsl.cpp:2229
 msgid "Signing cancelled"
 msgstr "签名已取消"
 
-#: tqsl.cpp:2226
+#: tqsl.cpp:2232
 msgid "Signing aborted"
 msgstr "签名已退出"
 
-#: tqsl.cpp:2245
+#: tqsl.cpp:2251
 msgid "Signing aborted due to errors"
 msgstr "签名因错误而终止"
 
-#: tqsl.cpp:2249
+#: tqsl.cpp:2255
 #, c-format
 msgid "%s: %d QSO records were outside the selected date range"
 msgstr "%s: %d QSOs 超出选定的日期范围"
 
-#: tqsl.cpp:2281
+#: tqsl.cpp:2287
 msgid "All QSOs are already uploaded; aborted"
 msgstr "所有QSOs都重复；已取消"
 
-#: tqsl.cpp:2288
+#: tqsl.cpp:2294
 #, c-format
 msgid "%d of %d QSOs are already uploaded; aborted"
 msgstr "有 %d （共 %d ）个QSO 已上传过; 已取消"
 
-#: tqsl.cpp:2304
+#: tqsl.cpp:2311
 #, c-format
 msgid "%s: %d QSO records were already uploaded"
 msgstr "%s: %d QSO记录已上传过"
 
-#: tqsl.cpp:2326
+#: tqsl.cpp:2339
 msgid "Invalid contact - QSO does not specify a Callsign"
 msgstr "无效的通联 - QSO未指定呼号"
 
-#: tqsl.cpp:2327
+#: tqsl.cpp:2340
 msgid "Invalid contact - QSO does not specify a band or frequency"
 msgstr "无效的通联 - QSO未指定波段或频率"
 
-#: tqsl.cpp:2328
+#: tqsl.cpp:2341
 msgid "Invalid contact - QSO does not specify a mode"
 msgstr "无效的通联 - QSO未指定模式"
 
-#: tqsl.cpp:2329
+#: tqsl.cpp:2342
 msgid "Invalid contact - QSO does not specify a date"
 msgstr "无效的通联 - QSO未指定日期"
 
-#: tqsl.cpp:2330
+#: tqsl.cpp:2343
 msgid "Invalid contact - QSO does not specify a time"
 msgstr "无效的通联 - QSO未指定时间"
 
-#: tqsl.cpp:2332
+#: tqsl.cpp:2345
 msgid "This callsign certificate is already active and cannot be restored."
 msgstr "这份呼号证书已激活，不能恢复。"
 
-#: tqsl.cpp:2367
+#: tqsl.cpp:2380
 #, c-format
 msgid "Unable to open %s for output"
 msgstr "不能为输出打开 %s"
 
-#: tqsl.cpp:2376
+#: tqsl.cpp:2389
 msgid "No records output"
 msgstr "无记录输出"
 
-#: tqsl.cpp:2433
+#: tqsl.cpp:2446
 #, c-format
 msgid "%s: wrote %d records to %s"
 msgstr "%s: 写入 %d 记录到 %s"
 
-#: tqsl.cpp:2435
+#: tqsl.cpp:2448
 #, c-format
 msgid "%s is ready to be emailed or uploaded."
 msgstr "%s 已准备好电邮或上传。"
 
-#: tqsl.cpp:2436
+#: tqsl.cpp:2449
 msgid "Note: TQSL assumes that this file will be uploaded to LoTW."
 msgstr "注意：TQSL假设这个文件将被上传到LoTW。"
 
-#: tqsl.cpp:2437
+#: tqsl.cpp:2450
 msgid ""
 "Resubmitting these QSOs will cause them to be reported as already uploaded."
 msgstr "重新提交这些QSO将导致被报告已上传过。"
 
-#: tqsl.cpp:2514
+#: tqsl.cpp:2527
 msgid "No records to upload"
 msgstr "无记录上传"
 
-#: tqsl.cpp:2529
+#: tqsl.cpp:2542
 msgid "Error compressing before upload"
 msgstr "上传前压缩错误"
 
-#: tqsl.cpp:2681
+#: tqsl.cpp:2649
+msgid "Unable to open ca-bundle.crt. Your TQSL installation is incomplete"
+msgstr "无法打开ca-bundle.crt。您的TQSL安装不完整"
+
+#: tqsl.cpp:2714
 msgid "Error: Could not upload file (CURL Init error)"
 msgstr "错误：不能上传文件 （CURL 初始化错误）"
 
-#: tqsl.cpp:2716
+#: tqsl.cpp:2749
 msgid "Attempting to upload one QSO"
 msgstr "尝试上传一个QSO"
 
-#: tqsl.cpp:2718
+#: tqsl.cpp:2751
 #, c-format
 msgid "Attempting to upload %d QSOs"
 msgstr "尝试上传 %d 个QSO"
 
-#: tqsl.cpp:2721
+#: tqsl.cpp:2754
 #, c-format
 msgid "Attempting to upload %s"
 msgstr "尝试上传 %s"
 
-#: tqsl.cpp:2728
+#: tqsl.cpp:2761
 msgid "Uploading Callsign Certificate"
 msgstr "上传呼号证书"
 
-#: tqsl.cpp:2728
+#: tqsl.cpp:2761
 msgid "Uploading Callsign Certificate Request..."
 msgstr "上传呼号证书申请..."
 
-#: tqsl.cpp:2737
+#: tqsl.cpp:2770
 msgid "Could not spawn upload thread!"
 msgstr "未能生成上传线程！"
 
-#: tqsl.cpp:2769
+#: tqsl.cpp:2802
 #, c-format
 msgid ""
 "%s: Log uploaded successfully with result:\n"
@@ -1565,11 +1581,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: tqsl.cpp:2771 tqsl.cpp:2792
+#: tqsl.cpp:2804 tqsl.cpp:2825
 msgid "After reading this message, you may close this program."
 msgstr "读到这条消息，你就可以关闭程序了。"
 
-#: tqsl.cpp:2779 tqsl.cpp:2784
+#: tqsl.cpp:2812 tqsl.cpp:2817
 #, c-format
 msgid ""
 "%s uploaded with result:\n"
@@ -1580,7 +1596,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: tqsl.cpp:2781
+#: tqsl.cpp:2814
 #, c-format
 msgid ""
 "%s Uploaded with result:\n"
@@ -1591,107 +1607,107 @@ msgstr ""
 "\n"
 "%s"
 
-#: tqsl.cpp:2791
+#: tqsl.cpp:2824
 #, c-format
 msgid "%s: Log uploaded successfully"
 msgstr "%s: 日志上传成功"
 
-#: tqsl.cpp:2794
+#: tqsl.cpp:2827
 #, c-format
 msgid "%s uploaded successfully"
 msgstr "%s 上传成功"
 
-#: tqsl.cpp:2801
+#: tqsl.cpp:2834
 #, c-format
 msgid "%s: %s upload was rejected with result \"%s\""
 msgstr "%s: %s 上传拒绝结果 \"%s\""
 
-#: tqsl.cpp:2805
+#: tqsl.cpp:2838
 #, c-format
 msgid "%s: %s upload was rejected"
 msgstr "% s: %s 上传被拒绝了"
 
-#: tqsl.cpp:2811
+#: tqsl.cpp:2844
 #, c-format
 msgid "%s: Got an unexpected response on %s upload! Maybe the site is down?"
 msgstr "%s: 在 %s 上传时未收到回应！也许服务器下线了？"
 
-#: tqsl.cpp:2823
+#: tqsl.cpp:2856
 #, c-format
 msgid ""
 "%s: Unable to upload - either your Internet connection is down or LoTW is "
 "unreachable."
 msgstr "%s: 不能上传 - 或许你的网络掉线或者LoTW网站不可访问。"
 
-#: tqsl.cpp:2824 tqsl.cpp:2828 tqsl.cpp:2832
+#: tqsl.cpp:2857 tqsl.cpp:2861 tqsl.cpp:2865
 #, c-format
 msgid "Please try uploading the %s later."
 msgstr "请在 %s 后重试上传。"
 
-#: tqsl.cpp:2827
+#: tqsl.cpp:2860
 #, c-format
 msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
 msgstr "%s: 不能上传 - 网络掉线或者LoTW网站太忙。"
 
-#: tqsl.cpp:2831
+#: tqsl.cpp:2864
 #, c-format
 msgid "%s: Unable to connect to the upload site."
 msgstr "%s: 不能连接上传网站。"
 
-#: tqsl.cpp:2835
+#: tqsl.cpp:2868
 #, c-format
 msgid "%s: Upload cancelled"
 msgstr "%s: 已取消上传"
 
-#: tqsl.cpp:2840
+#: tqsl.cpp:2873
 #, c-format
 msgid "%s: Couldn't upload the file: CURL returned \"%hs\" (%hs)"
 msgstr "%s: 不能上传文件: CURL 返回了 \"%hs\" (%hs)"
 
-#: tqsl.cpp:2853
+#: tqsl.cpp:2886
 msgid "Your upload appears to have failed. Should TQSL try again?"
 msgstr "上传失败。你想TQSL再试一次吗？"
 
-#: tqsl.cpp:2853
+#: tqsl.cpp:2886
 msgid "Retry?"
 msgstr "重试？"
 
-#: tqsl.cpp:2882
+#: tqsl.cpp:2915
 #, c-format
 msgid ""
 "There are no callsign certificates for callsign %hs. This station location "
 "cannot be edited."
 msgstr "没有 %hs 的呼号证书。这个台站位置不能编辑。"
 
-#: tqsl.cpp:2882 tqsl.cpp:2884
+#: tqsl.cpp:2915 tqsl.cpp:2917
 msgid "No Certificate"
 msgstr "无证书"
 
-#: tqsl.cpp:2884
+#: tqsl.cpp:2917
 #, c-format
 msgid ""
 "There are no current callsign certificates for callsign %hs. This station "
 "location cannot be used to sign a log file."
 msgstr "没有这个 %hs 的呼号证书。这个台站位置不能给日志签名。"
 
-#: tqsl.cpp:2927 tqsl.cpp:2947 tqsl.cpp:6545
+#: tqsl.cpp:2960 tqsl.cpp:2980 tqsl.cpp:6626
 msgid "Station Location data error"
 msgstr "台站位置数据错误"
 
-#: tqsl.cpp:2946
+#: tqsl.cpp:2979
 msgid "This should be corrected before signing a log file."
 msgstr "这应该在签名一个日志文件前改正。"
 
-#: tqsl.cpp:3117
+#: tqsl.cpp:3150
 msgid "TQSL Update Available"
 msgstr "TQSL更新可用"
 
-#: tqsl.cpp:3129
+#: tqsl.cpp:3162
 #, c-format
 msgid "A new TQSL release (V%s) is available!"
 msgstr "一个可用的新TQSL版本(V%s)发布了！"
 
-#: tqsl.cpp:3131
+#: tqsl.cpp:3164
 #, c-format
 msgid ""
 "An updated TrustedQSL configuration file (V%s) is available!\n"
@@ -1700,580 +1716,590 @@ msgstr ""
 "一个新版TrustedQSL设置文件 (V%s) 可用！\n"
 "新的设置文件装入了实体、模式等的定义。"
 
-#: tqsl.cpp:3139
+#: tqsl.cpp:3172
 msgid "Download from:"
 msgstr "从这里下载："
 
-#: tqsl.cpp:3148
+#: tqsl.cpp:3181
 msgid "More details at:"
 msgstr "更多详情："
 
-#: tqsl.cpp:3156
+#: tqsl.cpp:3189
 msgid "Click 'OK' to install the new version of TQSL, or Cancel to ignore it."
 msgstr "点击“确定”安装新版的TQSL，或者“取消”。"
 
-#: tqsl.cpp:3161
+#: tqsl.cpp:3194
 msgid ""
 "Click 'OK' to install the new configuration file, or Cancel to ignore it."
 msgstr "点击“确定”装入新的设置文件，或者“取消”。"
 
-#: tqsl.cpp:3213
+#: tqsl.cpp:3246
 #, c-format
 msgid "Can't open new configuration file %s: %hs"
 msgstr "不能打开%hs的新设置文件 %s"
 
-#: tqsl.cpp:3228 tqsl.cpp:3299
+#: tqsl.cpp:3261 tqsl.cpp:3332
 #, c-format
 msgid "Error writing new configuration file %s: %hs"
 msgstr "写入新设置文件 %s 错误：%hs"
 
-#: tqsl.cpp:3236
+#: tqsl.cpp:3269
 msgid "Configuration file successfully updated"
 msgstr "成功更新了设置文件"
 
-#: tqsl.cpp:3236
+#: tqsl.cpp:3269
 msgid "Update Completed"
 msgstr "更新完毕"
 
-#: tqsl.cpp:3249 tqsl.cpp:3316
+#: tqsl.cpp:3282 tqsl.cpp:3349
 msgid ""
 "Unable to update - either your Internet connection is down or LoTW is "
 "unreachable."
 msgstr "不能更新--或者你的网络掉线或者LoTW无法访问。"
 
-#: tqsl.cpp:3250 tqsl.cpp:3253 tqsl.cpp:3256 tqsl.cpp:3317 tqsl.cpp:3320
-#: tqsl.cpp:3323 tqsl.cpp:3785 tqsl.cpp:3791 tqsl.cpp:3797 tqsl.cpp:3820
-#: tqsl.cpp:3826 tqsl.cpp:3832
+#: tqsl.cpp:3283 tqsl.cpp:3286 tqsl.cpp:3289 tqsl.cpp:3350 tqsl.cpp:3353
+#: tqsl.cpp:3356 tqsl.cpp:3826 tqsl.cpp:3832 tqsl.cpp:3838 tqsl.cpp:3861
+#: tqsl.cpp:3867 tqsl.cpp:3873
 msgid "Please try again later."
 msgstr "请稍后再试。"
 
-#: tqsl.cpp:3252 tqsl.cpp:3319
+#: tqsl.cpp:3285 tqsl.cpp:3352
 msgid "Unable to update. The nework is down or the LoTW site is too busy."
 msgstr "不能更新--或者你的网络掉线或者LoTW网站太忙。"
 
-#: tqsl.cpp:3255 tqsl.cpp:3322 tqsl.cpp:3795 tqsl.cpp:3830
+#: tqsl.cpp:3288 tqsl.cpp:3355 tqsl.cpp:3836 tqsl.cpp:3871
 msgid "Unable to connect to the update site."
 msgstr "不能连接到更新网站。"
 
-#: tqsl.cpp:3258
+#: tqsl.cpp:3291
 msgid "Error downloading new configuration file:"
 msgstr "下载新设置文件错误："
 
-#: tqsl.cpp:3260 tqsl.cpp:3327 tqsl.cpp:3594
+#: tqsl.cpp:3293 tqsl.cpp:3360 tqsl.cpp:3630
 msgid "Update"
 msgstr "更新"
 
-#: tqsl.cpp:3284
+#: tqsl.cpp:3317
 #, c-format
 msgid "Can't open TQSL update file %s: %hs"
 msgstr "不能打开%hs的升级文件 %s"
 
-#: tqsl.cpp:3325
+#: tqsl.cpp:3358
 msgid "Error downloading new file:"
 msgstr "下载新文件错误："
 
-#: tqsl.cpp:3557
+#: tqsl.cpp:3593
 msgid "Error checking for expired callsign certificates:"
 msgstr "过期呼号证书检测错误："
 
-#: tqsl.cpp:3558
+#: tqsl.cpp:3594
 msgid "Check Error"
 msgstr "检查错误"
 
-#: tqsl.cpp:3561
+#: tqsl.cpp:3597
 #, c-format
 msgid "The certificate for %hs expires in %d days."
 msgstr "%hs 的证书将在 %d 后到期。"
 
-#: tqsl.cpp:3564
+#: tqsl.cpp:3600
 #, c-format
 msgid "The certificate for %hs expires in %d days"
 msgstr "%hs 的证书将在 %d 后到期"
 
-#: tqsl.cpp:3566
+#: tqsl.cpp:3602
 msgid "Do you want to renew it now?"
 msgstr "你想要更新这个吗？"
 
-#: tqsl.cpp:3568
+#: tqsl.cpp:3604
 msgid "Certificate Expiring"
 msgstr "证书即将到期"
 
-#: tqsl.cpp:3601
+#: tqsl.cpp:3637
 #, c-format
 msgid "A new TQSL release (V%s) is available."
 msgstr "一个可用的新TQSL版本(V%s)发布了！"
 
-#: tqsl.cpp:3618
+#: tqsl.cpp:3654
 #, c-format
 msgid "A new TrustedQSL configuration file (V%s) is available."
 msgstr "有一个可用的新TrustedQSL设置文件(V%s)！"
 
-#: tqsl.cpp:3631
+#: tqsl.cpp:3667
 msgid "Your system is up to date"
 msgstr "你的系统是最新的了"
 
-#: tqsl.cpp:3633
+#: tqsl.cpp:3669
 #, c-format
 msgid "TQSL Version %hs and Configuration Data Version %s"
 msgstr "TQSL %hs 版本设置文件 %s 版本"
 
-#: tqsl.cpp:3635
+#: tqsl.cpp:3671
 msgid "are the newest available"
 msgstr "最新可用的"
 
-#: tqsl.cpp:3636
+#: tqsl.cpp:3672
 msgid "No Updates"
 msgstr "无更新"
 
-#: tqsl.cpp:3783 tqsl.cpp:3818
+#: tqsl.cpp:3824 tqsl.cpp:3859
 msgid ""
 "Unable to check for updates - either your Internet connection is down or "
 "LoTW is unreachable."
 msgstr "不能检测更新--或者你的网络掉线或者LoTW无法访问。"
 
-#: tqsl.cpp:3789 tqsl.cpp:3824
+#: tqsl.cpp:3830 tqsl.cpp:3865
 msgid ""
 "Unable to check for updates. The nework is down or the LoTW site is too busy."
 msgstr "不能检测更新--或者你的网络掉线或者LoTW网站太忙。"
 
-#: tqsl.cpp:3800
+#: tqsl.cpp:3841
 msgid "Error downloading new version information:"
 msgstr "下载新版本信息错误："
 
-#: tqsl.cpp:3835
+#: tqsl.cpp:3876
 msgid "Error downloading update version information:"
 msgstr "下载版本更新信息错误："
 
-#: tqsl.cpp:4132
+#: tqsl.cpp:4183
 msgid "You have no callsign certificates to use to sign a log file."
 msgstr "你没有可以用来签名日志文件的呼号证书。"
 
-#: tqsl.cpp:4134
+#: tqsl.cpp:4185
 msgid "Please install a callsign certificate then try again."
 msgstr "请输入一份呼号证书然后重试。"
 
-#: tqsl.cpp:4135
+#: tqsl.cpp:4186
 msgid "No Callsign Certificates"
 msgstr "无呼号证书"
 
-#: tqsl.cpp:4160
+#: tqsl.cpp:4211
 msgid "|ADIF files ("
 msgstr "|ADIF文件 ("
 
-#: tqsl.cpp:4172
+#: tqsl.cpp:4223
 msgid "|Cabrillo files ("
 msgstr "|Cabrillo文件 ("
 
-#: tqsl.cpp:4175
+#: tqsl.cpp:4226
 msgid "Select file to Sign"
 msgstr "选择要签名的文件"
 
-#: tqsl.cpp:4191
+#: tqsl.cpp:4242
 msgid "TQSL compressed data files (*.tq8)|*.tq8"
 msgstr "TQSL 压缩数据文件(*.tq8)|*.tq8"
 
-#: tqsl.cpp:4192
+#: tqsl.cpp:4243
 msgid "TQSL data files (*.tq7)|*.tq7"
 msgstr "TQSL 数据文件 (*.tq7)|*.tq7"
 
-#: tqsl.cpp:4194
+#: tqsl.cpp:4245
 msgid "Select file to write to"
 msgstr "选择要写入的文件"
 
-#: tqsl.cpp:4209 tqsl.cpp:5619
+#: tqsl.cpp:4260 tqsl.cpp:5701
 msgid "Select Station Location for Signing"
 msgstr "选择要签名的台站位置"
 
-#: tqsl.cpp:4250
+#: tqsl.cpp:4301
 msgid "Signing abandoned"
 msgstr "签名已放弃"
 
-#: tqsl.cpp:4437
+#: tqsl.cpp:4488
 msgid ""
 "TQSL must wait for other running copies of TQSL to exit before backing up..."
 msgstr "TQSL 必须等待运行中的其它副本TQSL在备份前退出..."
 
-#: tqsl.cpp:4452 tqsl.cpp:4995
+#: tqsl.cpp:4503 tqsl.cpp:5046
 #, c-format
 msgid "Error opening save file %s: %hs"
 msgstr "打开保存文件 %s 错误: %hs "
 
-#: tqsl.cpp:4467
+#: tqsl.cpp:4518
 msgid "Saving callsign certificates"
 msgstr "保存呼号证书"
 
-#: tqsl.cpp:4511
+#: tqsl.cpp:4562
 #, c-format
 msgid "Saving callsign certificate for %hs"
 msgstr "保存呼号 %hs 的呼号证书"
 
-#: tqsl.cpp:4544
+#: tqsl.cpp:4595
 msgid "Saving Station Locations"
 msgstr "保存台站位置"
 
-#: tqsl.cpp:4560
+#: tqsl.cpp:4611
 msgid "Saving TQSL Preferences"
 msgstr "保存TQSL参数"
 
-#: tqsl.cpp:4574
+#: tqsl.cpp:4625
 msgid "Saving QSOs"
 msgstr "保存QSOs"
 
-#: tqsl.cpp:4618
+#: tqsl.cpp:4669
 msgid "Save operation complete."
 msgstr "保存操作完毕。"
 
-#: tqsl.cpp:4626
+#: tqsl.cpp:4677
 #, c-format
 msgid "Error performing automatic backup: %hs"
 msgstr "执行自动备份错误: %hs"
 
-#: tqsl.cpp:4627
+#: tqsl.cpp:4678
 msgid "Backup Error"
 msgstr "备份错误"
 
-#: tqsl.cpp:4629 tqsl.cpp:4648
+#: tqsl.cpp:4680 tqsl.cpp:4699
 #, c-format
 msgid "Backup operation failed: %hs"
 msgstr "备份操作失败： %hs"
 
-#: tqsl.cpp:4639
+#: tqsl.cpp:4690
 msgid "Enter file to save to"
 msgstr "输入要保存的文件"
 
-#: tqsl.cpp:4640
+#: tqsl.cpp:4691
 msgid "Configuration files (*.tbk)|*.tbk|All files (*.*)|*.*"
 msgstr "设置文件 (*.tbk)|*.tbk|所有文件 (*.*)|*.*"
 
-#: tqsl.cpp:4685
+#: tqsl.cpp:4736
 #, c-format
 msgid "Restoring callsign certificate for %hs"
 msgstr "正在恢复 %hs 的呼号证书"
 
-#: tqsl.cpp:4731
+#: tqsl.cpp:4782
 msgid "Restoring Preferences"
 msgstr "正在恢复参数"
 
-#: tqsl.cpp:4790
+#: tqsl.cpp:4841
 msgid "Restoring Station Locations"
 msgstr "正在恢复台站位置"
 
-#: tqsl.cpp:4811
+#: tqsl.cpp:4862
 msgid "Restoring QSO records"
 msgstr "正在恢复QSO记录"
 
-#: tqsl.cpp:4861
+#: tqsl.cpp:4912
 #, c-format
 msgid "Error importing station locations: %hs"
 msgstr "输入台站位置错误：%hs"
 
-#: tqsl.cpp:4927
+#: tqsl.cpp:4978
 msgid "Restoring Callsign Certificates"
 msgstr "正在回复呼号证书"
 
-#: tqsl.cpp:4934 tqsl.cpp:4942 tqsl.cpp:4947
+#: tqsl.cpp:4985 tqsl.cpp:4993 tqsl.cpp:4998
 #, c-format
 msgid "Error parsing saved configuration file: %hs"
 msgstr "解析保存的设置文件错误： %hs "
 
-#: tqsl.cpp:4951
+#: tqsl.cpp:5002
 msgid "Restore Complete."
 msgstr "申请已完成。"
 
-#: tqsl.cpp:4965
+#: tqsl.cpp:5016
 #, c-format
 msgid "Error parsing station location file: %hs"
 msgstr "解析台站位置文件错误： %hs "
 
-#: tqsl.cpp:4977
+#: tqsl.cpp:5028
 msgid "Select saved configuration file"
 msgstr "选择保存的设置文件"
 
-#: tqsl.cpp:4978
+#: tqsl.cpp:5029
 msgid "Saved configuration files (*.tbk)|*.tbk"
 msgstr "保存设置文件 (*.tbk)|*.tbk"
 
-#: tqsl.cpp:5008
+#: tqsl.cpp:5059
 #, c-format
 msgid "Restore operation failed: %hs"
 msgstr "恢复操作失败： %hs"
 
-#: tqsl.cpp:5166
+#: tqsl.cpp:5217
 msgid "Exit TQSL so I can re-run as a normal user"
 msgstr "退出TQSL以便重新已普通用户身份运行"
 
-#: tqsl.cpp:5167
+#: tqsl.cpp:5218
 msgid "Allow TQSL to continue this time."
 msgstr "本次允许TQSL继续运行。"
 
-#: tqsl.cpp:5168
+#: tqsl.cpp:5219
 msgid "Always allow running as Administrator."
 msgstr "总是允许以管理员身份运行。"
 
-#: tqsl.cpp:5169
+#: tqsl.cpp:5220
 msgid "TQSL must not be run 'As Administrator'"
 msgstr "TQSL不能以管理员身份运行"
 
-#: tqsl.cpp:5169
+#: tqsl.cpp:5220
 msgid "Administrator Error"
 msgstr "管理员出错"
 
-#: tqsl.cpp:5292
+#: tqsl.cpp:5345
 msgid "Specify dialog action - abort, all, compliant or ask"
 msgstr "指定对话框动作 -终止，全部，符合或询问"
 
-#: tqsl.cpp:5293
+#: tqsl.cpp:5346
 msgid "Specify start date for QSOs to sign"
 msgstr "指定要签名QSO的起始日期"
 
-#: tqsl.cpp:5294
+#: tqsl.cpp:5347
 msgid "Specify default callsign for log signing"
 msgstr "指定签名日志默认呼号"
 
-#: tqsl.cpp:5295
-msgid "Specify end date for QSOs to sign"
-msgstr "指定要签名QSO的结束日期"
-
-#: tqsl.cpp:5296
+#: tqsl.cpp:5348
 msgid "Suppress date range dialog"
 msgstr "排除日期范围对话框"
 
-#: tqsl.cpp:5297
-msgid "Import a certificate file (.p12 or .tq6)"
-msgstr "输入一份证书文件 (.p12 或者 .tq6)"
+#: tqsl.cpp:5349
+msgid "Specify end date for QSOs to sign"
+msgstr "指定要签名QSO的结束日期"
 
-#: tqsl.cpp:5298
-msgid "Selects Station Location"
-msgstr "选择台站位置"
+#: tqsl.cpp:5350
+msgid "Specify QSO verification action - ignore, report or update"
+msgstr "指定QSO验证操作-忽略、报告或更新"
 
-#: tqsl.cpp:5299
-msgid "Edit (if used with -l) or create Station Location"
-msgstr "编辑（带-l参数使用）或者创建台站位置"
-
-#: tqsl.cpp:5300
-msgid "Output file name (defaults to input name minus extension plus .tq8"
-msgstr "输出文件名 (默认输入名字加后缀 .tq8)"
-
-#: tqsl.cpp:5301
-msgid "Upload after signing instead of saving"
-msgstr "签名替代保存后上传"
-
-#: tqsl.cpp:5302
-msgid "Exit after processing log (otherwise start normally)"
-msgstr "处理日志后退出（否则正常启动）"
-
-#: tqsl.cpp:5303
-msgid "Password for the signing key"
-msgstr "签名钥匙的口令"
-
-#: tqsl.cpp:5304
-msgid "Quiet Mode - same behavior as -x"
-msgstr "安静模式 - 等同于 -x"
-
-#: tqsl.cpp:5305
-msgid "File name for diagnostic tracking log"
-msgstr "调试跟踪日志文件名"
-
-#: tqsl.cpp:5306
-msgid "Display the version information and exit"
-msgstr "显示版本信息并退出"
-
-#: tqsl.cpp:5307
-msgid "Check for updates to tqsl and the configuration file"
-msgstr "检测tqsl和设置文件的更新"
-
-#: tqsl.cpp:5308
+#: tqsl.cpp:5352
 msgid "Display command line help"
 msgstr "显示命令行帮助"
 
-#: tqsl.cpp:5309
+#: tqsl.cpp:5353
+msgid "Import a certificate file (.p12 or .tq6)"
+msgstr "输入一份证书文件 (.p12 或者 .tq6)"
+
+#: tqsl.cpp:5355
+msgid "Selects Station Location"
+msgstr "选择台站位置"
+
+#: tqsl.cpp:5357
+msgid "Check for updates to tqsl and the configuration file"
+msgstr "检测tqsl和设置文件的更新"
+
+#: tqsl.cpp:5358
+msgid "Output file name (defaults to input name minus extension plus .tq8"
+msgstr "输出文件名 (默认输入名字加后缀 .tq8)"
+
+#: tqsl.cpp:5359
+msgid "Password for the signing key"
+msgstr "签名钥匙的口令"
+
+#: tqsl.cpp:5360
+msgid "Quiet Mode - same behavior as -x"
+msgstr "安静模式 - 等同于 -x"
+
+#: tqsl.cpp:5363
+msgid "Edit (if used with -l) or create Station Location"
+msgstr "编辑（带-l参数使用）或者创建台站位置"
+
+#: tqsl.cpp:5364
+msgid "File name for diagnostic tracking log"
+msgstr "调试跟踪日志文件名"
+
+#: tqsl.cpp:5365
+msgid "Upload after signing instead of saving"
+msgstr "签名替代保存后上传"
+
+#: tqsl.cpp:5366
+msgid "Display the version information and exit"
+msgstr "显示版本信息并退出"
+
+#: tqsl.cpp:5368
+msgid "Exit after processing log (otherwise start normally)"
+msgstr "处理日志后退出（否则正常启动）"
+
+#: tqsl.cpp:5371
 msgid "Input ADIF or Cabrillo log file to sign"
 msgstr "输入要签名的ADIF或Cabrillo日志文件"
 
-#: tqsl.cpp:5448 tqsl.cpp:5451
+#: tqsl.cpp:5507 tqsl.cpp:5510
 #, c-format
 msgid "Start date of %s is invalid"
 msgstr "起始日期 %s 无效"
 
-#: tqsl.cpp:5462 tqsl.cpp:5465
+#: tqsl.cpp:5521 tqsl.cpp:5524
 #, c-format
 msgid "End date of %s is invalid"
 msgstr "%s 的结束日期无效"
 
-#: tqsl.cpp:5487
+#: tqsl.cpp:5546
 #, c-format
 msgid "The -a parameter %hs is not recognized"
 msgstr " -a 参数 '%hs' 不认识"
 
-#: tqsl.cpp:5586
+#. TRANSLATORS: -f is the command line switch for log QTH handling
+#: tqsl.cpp:5567
+#, c-format
+msgid "The -f parameter %hs is not recognized"
+msgstr "无法识别 -f 参数 %hs"
+
+#: tqsl.cpp:5667
 msgid "No logfile to sign!"
 msgstr "没有要签名的日志文件！"
 
-#: tqsl.cpp:5701
+#: tqsl.cpp:5783
 msgid "Please review the introductory documentation before using this program."
 msgstr "请在使用该程序前查看介绍文档。"
 
-#: tqsl.cpp:5702
+#: tqsl.cpp:5784
 msgid "Notice"
 msgstr "注意"
 
-#: tqsl.cpp:5707
+#: tqsl.cpp:5789
 msgid ""
 "You have no callsign certificate installed on this computer with which to "
 "sign log submissions."
 msgstr "你没有可以用来签名日志提交的呼号证书安装在这台电脑上。"
 
-#: tqsl.cpp:5709
+#: tqsl.cpp:5791
 msgid "Would you like to request a callsign certificate now?"
 msgstr "你愿意现在就申请呼号证书吗？"
 
-#: tqsl.cpp:5710
+#: tqsl.cpp:5792
 msgid "Alert"
 msgstr "警告"
 
-#: tqsl.cpp:5826
+#: tqsl.cpp:5908
 msgid "Display Callsign Certificate &Properties"
 msgstr "显示呼号证书属性"
 
-#: tqsl.cpp:5829
+#: tqsl.cpp:5911
 msgid "&Load Callsign Certificate from File"
 msgstr "从文件导入呼号证书"
 
-#: tqsl.cpp:5830
+#: tqsl.cpp:5912
 msgid "&Save Callsign Certificate to File..."
 msgstr "保存呼号证书到文件"
 
-#: tqsl.cpp:5834
+#: tqsl.cpp:5916
 msgid "Request &New Callsign Certificate..."
 msgstr "申请新呼号证书..."
 
-#: tqsl.cpp:5835
+#: tqsl.cpp:5917
 msgid "&Renew Callsign Certificate"
 msgstr "更新呼号证书"
 
-#: tqsl.cpp:5840
+#: tqsl.cpp:5922
 msgid "&Delete Callsign Certificate"
 msgstr "删除证书"
 
-#: tqsl.cpp:5846
+#: tqsl.cpp:5928
 msgid "Restore Deleted Callsign Certificate"
 msgstr "回复删除的呼号证书"
 
-#: tqsl.cpp:5859
+#: tqsl.cpp:5941
 msgid "&Edit"
 msgstr "编辑"
 
-#: tqsl.cpp:5861
+#: tqsl.cpp:5943
 msgid "&Delete"
 msgstr "删除"
 
-#: tqsl.cpp:5870
+#: tqsl.cpp:5952
 msgid "Load Certificate File"
 msgstr "导入证书文件"
 
-#: tqsl.cpp:5992 crqwiz.h:50
+#: tqsl.cpp:6076 crqwiz.h:50
 msgid "Request a new Callsign Certificate"
 msgstr "申请一份新呼号证书"
 
-#: tqsl.cpp:6025
+#: tqsl.cpp:6109
 msgid "Do you want to upload this certificate request to LoTW now?"
 msgstr "你想要现在就上传这份证书申请到LoTW吗？"
 
-#: tqsl.cpp:6028
+#: tqsl.cpp:6112
 msgid "You do not need an account on LoTW to do this."
 msgstr "做这个你不需要LoTW的账号。"
 
-#: tqsl.cpp:6030
+#: tqsl.cpp:6114
 msgid "Upload"
 msgstr "上传"
 
-#: tqsl.cpp:6040
+#: tqsl.cpp:6124
 msgid "tQSL Cert Request files (*."
 msgstr "tQSL证书申请文件 (*."
 
-#: tqsl.cpp:6042
+#: tqsl.cpp:6126
 msgid "|All files ("
 msgstr "|所有文件 ("
 
-#: tqsl.cpp:6043
+#: tqsl.cpp:6127
 msgid "Save request"
 msgstr "保存申请"
 
-#: tqsl.cpp:6046
+#: tqsl.cpp:6130
 msgid "Request cancelled"
 msgstr "申请已取消"
 
-#: tqsl.cpp:6107
+#: tqsl.cpp:6191
 #, c-format
 msgid "Error creating callsign certificate request: %hs"
 msgstr "创建呼号证书申请错误： %hs"
 
-#: tqsl.cpp:6107
+#: tqsl.cpp:6191
 msgid "Error creating Callsign Certificate Request"
 msgstr "呼号证书申请错误"
 
-#: tqsl.cpp:6120
+#: tqsl.cpp:6204
 #, c-format
 msgid "Error opening certificate request file %s: %hs"
 msgstr "打开证书申请文件 %s 错误: %hs"
 
-#: tqsl.cpp:6130
+#: tqsl.cpp:6214
 msgid "Certificate Request"
 msgstr "证书申请"
 
-#: tqsl.cpp:6134
+#: tqsl.cpp:6218
 msgid "Your certificate request did not upload properly"
 msgstr "你的证书申请没有正确上传。"
 
-#: tqsl.cpp:6135
+#: tqsl.cpp:6219
 msgid "Please try again."
 msgstr "请重试。"
 
-#: tqsl.cpp:6140
+#: tqsl.cpp:6224
 msgid "You may now send your new certificate request ("
 msgstr "你现在可以发送新证书申请 ("
 
-#: tqsl.cpp:6145
+#: tqsl.cpp:6229
 msgid "to:"
 msgstr "给："
 
-#: tqsl.cpp:6152
+#: tqsl.cpp:6236
 msgid "or "
 msgstr "或"
 
-#: tqsl.cpp:6153
+#: tqsl.cpp:6237
 msgid "see:"
 msgstr "参阅："
 
-#: tqsl.cpp:6191 tqsl.cpp:6192
+#: tqsl.cpp:6275 tqsl.cpp:6276
 msgid "Display a Callsign Certificate"
 msgstr "显示一张呼号证书"
 
-#: tqsl.cpp:6234 tqsl.cpp:6236
+#: tqsl.cpp:6318 tqsl.cpp:6320
 msgid "Save the Callsign Certificate for"
 msgstr "保存呼号证书为"
 
-#: tqsl.cpp:6237 tqsl.cpp:6239
+#: tqsl.cpp:6321 tqsl.cpp:6323
 msgid "Display the Callsign Certificate properties for"
 msgstr "显示以下呼号的呼号证书属性"
 
-#: tqsl.cpp:6241 tqsl.cpp:6243
+#: tqsl.cpp:6325 tqsl.cpp:6327
 msgid "Renew the Callsign Certificate for"
 msgstr "更新呼号证书为"
 
-#: tqsl.cpp:6282
+#: tqsl.cpp:6366
 msgid "Enter the name for the new Certificate Container file"
 msgstr "输入新呼号证书文件名"
 
-#: tqsl.cpp:6283
+#: tqsl.cpp:6367
 msgid "Certificate Container files (*.p12)|*.p12|All files (*.*)|*.*"
 msgstr "证书保留文件 (*.p12)|*.p12|所有文件 (*.*)|*.*"
 
-#: tqsl.cpp:6288
+#: tqsl.cpp:6372
 msgid "Enter the password for the certificate container file."
 msgstr "输入呼号证书文件的口令。"
 
-#: tqsl.cpp:6290
+#: tqsl.cpp:6374
 msgid ""
 "If you are using a computer system that is shared with others, you should "
 "specify a password to protect this certificate. However, if you are using a "
@@ -2282,227 +2308,227 @@ msgstr ""
 "如果你使用的是与他人共享的计算机系统，你应该设置一个口令保护你的证书。否则你"
 "不需要设置口令。"
 
-#: tqsl.cpp:6295
+#: tqsl.cpp:6376
 msgid ""
 "You will have to enter the password any time you load the file into "
 "TrustedQSL."
 msgstr "你任何时候导入TrustQSL都必须输入此口令。"
 
-#: tqsl.cpp:6299
+#: tqsl.cpp:6380
 msgid "Certificate Container Password"
 msgstr "证书有口令"
 
-#: tqsl.cpp:6330
+#: tqsl.cpp:6411
 #, c-format
 msgid "Export to %s failed: %hs"
 msgstr "输出到 %s 失败：%hs"
 
-#: tqsl.cpp:6332
+#: tqsl.cpp:6413
 #, c-format
 msgid "Certificate saved in file %s"
 msgstr "证书已存入 %s 文件"
 
-#: tqsl.cpp:6343
+#: tqsl.cpp:6424
 msgid "This will remove the selected callsign certificate from your system."
 msgstr "这将从你的系统里移除选定的呼号证书。"
 
-#: tqsl.cpp:6345
+#: tqsl.cpp:6426
 msgid "You will NOT be able to recover it by loading a .TQ6 file."
 msgstr "导入一个.TQ6文件不能覆盖它。"
 
-#: tqsl.cpp:6347
+#: tqsl.cpp:6428
 msgid "You WILL be able to recover it from a container (.p12) file,"
 msgstr "你可以从保留的（.p12）文件覆盖。"
 
-#: tqsl.cpp:6349
+#: tqsl.cpp:6430
 msgid "if you have created one via the Callsign Certificate menu's"
 msgstr "如果你通过呼号证书菜单创建了一份新的"
 
-#: tqsl.cpp:6351
+#: tqsl.cpp:6432
 msgid "'Save Callsign Certificate' command."
 msgstr "“保存呼号证书”命令。"
 
-#: tqsl.cpp:6353
+#: tqsl.cpp:6434
 msgid "Are you sure you want to delete the certificate?"
 msgstr "确定要删除证书吗？"
 
-#: tqsl.cpp:6391
+#: tqsl.cpp:6472
 msgid "There are no deleted Callsign Certificates to restore"
 msgstr "没有已删除的呼号证书可恢复"
 
-#: tqsl.cpp:6391 tqsl.cpp:6500
+#: tqsl.cpp:6472 tqsl.cpp:6581
 msgid "Undelete Error"
 msgstr "反删除错误"
 
-#: tqsl.cpp:6402
+#: tqsl.cpp:6483
 msgid "Choose a Callsign Certificate to restore"
 msgstr "选择要恢复的呼号证书"
 
-#: tqsl.cpp:6431
+#: tqsl.cpp:6512
 msgid "Select a Station Location to process"
 msgstr "选择一个台站位置进行处理"
 
-#: tqsl.cpp:6451 tqsl.cpp:6453
+#: tqsl.cpp:6532 tqsl.cpp:6534
 msgid "Edit Station Location "
 msgstr "编辑台站位置"
 
-#: tqsl.cpp:6454 tqsl.cpp:6456
+#: tqsl.cpp:6535 tqsl.cpp:6537
 msgid "Delete Station Location "
 msgstr "删除台站位置"
 
-#: tqsl.cpp:6457 tqsl.cpp:6459
+#: tqsl.cpp:6538 tqsl.cpp:6540
 msgid "Display Station Location Properties for "
 msgstr "显示以下呼号的台站位置属性"
 
-#: tqsl.cpp:6479
+#: tqsl.cpp:6560
 msgid "This will remove this station location from your system."
 msgstr "这将从你的系统里移除这个台站位置。"
 
-#: tqsl.cpp:6481
+#: tqsl.cpp:6562
 msgid "Are you sure you want to delete this station location?"
 msgstr "确定要删除这个台站位置？"
 
-#: tqsl.cpp:6500
+#: tqsl.cpp:6581
 msgid "There are no deleted Station Locations to restore"
 msgstr "没有已删除的台站位置可恢复"
 
-#: tqsl.cpp:6511
+#: tqsl.cpp:6592
 msgid "Choose a Station Location to restore"
 msgstr "选择要恢复的台站位置"
 
-#: tqsl.cpp:6572
+#: tqsl.cpp:6662 tqsl.cpp:6665
 msgid "Please choose language:"
 msgstr "请选择语言："
 
-#: tqsl.cpp:6633
+#: tqsl.cpp:6729
 msgid "Certificate Properties"
 msgstr "证书属性"
 
-#: tqsl.cpp:6636
+#: tqsl.cpp:6732
 msgid "Begins: "
 msgstr "开始于："
 
-#: tqsl.cpp:6637
+#: tqsl.cpp:6733
 msgid "Expires: "
 msgstr "过期: "
 
-#: tqsl.cpp:6638
+#: tqsl.cpp:6734
 msgid "Organization: "
 msgstr "组织："
 
-#: tqsl.cpp:6640
+#: tqsl.cpp:6736
 msgid "Serial: "
 msgstr "系列："
 
-#: tqsl.cpp:6641
+#: tqsl.cpp:6737
 msgid "Operator: "
 msgstr "操作员："
 
-#: tqsl.cpp:6642 tqsl.cpp:6832
+#: tqsl.cpp:6738 tqsl.cpp:6928
 msgid "Call sign: "
 msgstr "呼号："
 
-#: tqsl.cpp:6643 tqsl.cpp:6833
+#: tqsl.cpp:6739 tqsl.cpp:6929
 msgid "DXCC Entity: "
 msgstr "DXCC实体："
 
-#: tqsl.cpp:6644
+#: tqsl.cpp:6740
 msgid "QSO Start Date: "
 msgstr "QSO起始日期： "
 
-#: tqsl.cpp:6645
+#: tqsl.cpp:6741
 msgid "QSO End Date: "
 msgstr "QSO结束日期："
 
-#: tqsl.cpp:6646
+#: tqsl.cpp:6742
 msgid "Password: "
 msgstr "口令："
 
-#: tqsl.cpp:6738
+#: tqsl.cpp:6834
 msgid "Missing from this computer"
 msgstr "从本电脑消失"
 
-#: tqsl.cpp:6742
+#: tqsl.cpp:6838
 msgid "Private Key not found"
 msgstr "私有密钥未找到"
 
-#: tqsl.cpp:6746
+#: tqsl.cpp:6842
 msgid "Unable to read - no permission"
 msgstr "不能读取 - 未授权"
 
-#: tqsl.cpp:6754
+#: tqsl.cpp:6850
 msgid "<ERROR>"
 msgstr "<错误>"
 
-#: tqsl.cpp:6757
+#: tqsl.cpp:6853
 msgid "No Private Key"
 msgstr "无私有密钥"
 
-#: tqsl.cpp:6760
+#: tqsl.cpp:6856
 msgid "None"
 msgstr "无"
 
-#: tqsl.cpp:6763
+#: tqsl.cpp:6859
 msgid "Password protected"
 msgstr "已口令保护"
 
-#: tqsl.cpp:6769
+#: tqsl.cpp:6865
 msgid "Certificate Request:"
 msgstr "证书申请："
 
-#: tqsl.cpp:6771
+#: tqsl.cpp:6867
 msgid "Awaiting response from ARRL"
 msgstr "等待ARRL回应"
 
-#: tqsl.cpp:6786
+#: tqsl.cpp:6882
 msgid "Replaced"
 msgstr "已替换"
 
-#: tqsl.cpp:6791
+#: tqsl.cpp:6887
 msgid "Expired"
 msgstr "过期了"
 
-#: tqsl.cpp:6829
+#: tqsl.cpp:6925
 msgid "Station Location Properties"
 msgstr "台站位置属性"
 
-#: tqsl.cpp:6834
+#: tqsl.cpp:6930
 msgid "Grid Square: "
 msgstr "网格："
 
-#: tqsl.cpp:6835
+#: tqsl.cpp:6931
 msgid "ITU Zone: "
 msgstr "ITU分区："
 
-#: tqsl.cpp:6836
+#: tqsl.cpp:6932
 msgid "CQ Zone: "
 msgstr "CQ分区： "
 
-#: tqsl.cpp:6837
+#: tqsl.cpp:6933
 msgid "IOTA Locator: "
 msgstr "IOTA位置： "
 
-#: tqsl.cpp:6838 tqsl.cpp:6845
+#: tqsl.cpp:6934 tqsl.cpp:6941
 msgid "State: "
 msgstr "州： "
 
-#: tqsl.cpp:6839
+#: tqsl.cpp:6935
 msgid "County: "
 msgstr "县："
 
-#: tqsl.cpp:6840 tqsl.cpp:6842 tqsl.cpp:6846
+#: tqsl.cpp:6936 tqsl.cpp:6938 tqsl.cpp:6942
 msgid "Park: "
 msgstr "Park: "
 
-#: tqsl.cpp:6841 tqsl.cpp:6844
+#: tqsl.cpp:6937 tqsl.cpp:6940
 msgid "Province: "
 msgstr "省："
 
-#: tqsl.cpp:6843
+#: tqsl.cpp:6939
 msgid "Oblast: "
 msgstr "州："
 
-#: tqsl.cpp:6925
+#: tqsl.cpp:7021
 msgid "Enter the password to unlock the callsign certificate"
 msgstr "输入口令解锁呼号证书"
 
@@ -2514,106 +2540,114 @@ msgstr "参数"
 msgid "Options"
 msgstr "选项"
 
-#: tqsl_prefs.cpp:75
+#: tqsl_prefs.cpp:76
+msgid "Log Handling"
+msgstr "日志处理"
+
+#: tqsl_prefs.cpp:79
 msgid "ADIF Modes"
 msgstr "ADIF-模式"
 
-#: tqsl_prefs.cpp:78
+#: tqsl_prefs.cpp:82
 msgid "Cabrillo Specs"
 msgstr "Cabrillo 规格"
 
-#: tqsl_prefs.cpp:81
+#: tqsl_prefs.cpp:85
 msgid "Network Proxy"
 msgstr "网络代理"
 
-#: tqsl_prefs.cpp:160
+#: tqsl_prefs.cpp:166
 msgid "Custom ADIF mode mappings:"
 msgstr "自定义ADIF模式对照"
 
-#: tqsl_prefs.cpp:169 tqsl_prefs.cpp:754
+#: tqsl_prefs.cpp:175 tqsl_prefs.cpp:799
 msgid "Add..."
 msgstr "添加..."
 
-#: tqsl_prefs.cpp:245
+#: tqsl_prefs.cpp:251
 msgid "Add ADIF mode"
 msgstr "添加ADIF模式"
 
-#: tqsl_prefs.cpp:254
+#: tqsl_prefs.cpp:260
 msgid "Add ADIF mode mapping:"
 msgstr "添加ADIF模式对照："
 
-#: tqsl_prefs.cpp:258
+#: tqsl_prefs.cpp:264
 msgid "ADIF Mode:"
 msgstr "ADIF-模式:"
 
-#: tqsl_prefs.cpp:266
+#: tqsl_prefs.cpp:272
 msgid "Resulting TQSL mode:"
 msgstr "最终TQSL模式："
 
-#: tqsl_prefs.cpp:312
+#: tqsl_prefs.cpp:318
 #, c-format
 msgid "This mode definition conflicts with a standard mode definition for %s"
 msgstr "这个模式定义与标准模式 %s 冲突。"
 
-#: tqsl_prefs.cpp:313
+#: tqsl_prefs.cpp:319
 msgid "Mode Conflict"
 msgstr "模式冲突"
 
-#: tqsl_prefs.cpp:335
-msgid "Cabrillo file extensions:"
-msgstr "Cabrillo文件后缀："
-
-#: tqsl_prefs.cpp:340
-msgid "ADIF file extensions:"
-msgstr "ADIF-文件后缀："
-
-#: tqsl_prefs.cpp:347
+#: tqsl_prefs.cpp:343
 msgid "Allow automatic configuration backup"
 msgstr "允许自动备份设置文件"
 
-#: tqsl_prefs.cpp:351
+#: tqsl_prefs.cpp:347
 msgid "Backup File Folder:"
 msgstr "备份文件目录："
 
-#: tqsl_prefs.cpp:357
+#: tqsl_prefs.cpp:353
 msgid "Select a Folder"
 msgstr "选择文件夹"
 
-#: tqsl_prefs.cpp:364
+#: tqsl_prefs.cpp:360
 msgid "Number of Backups to retain:"
 msgstr "保留的备份数目："
 
-#: tqsl_prefs.cpp:375
-msgid "Allow nonamateur call signs"
-msgstr "允许非业余呼号"
-
-#: tqsl_prefs.cpp:380
-msgid "Prompt for QSO Date range when signing"
-msgstr "签名时提示QSO日期范围"
-
-#: tqsl_prefs.cpp:384
+#: tqsl_prefs.cpp:371
 msgid "Open ADIF files in ADIF editor"
 msgstr "在ADIF编辑器中打开ADIF文件"
 
-#: tqsl_prefs.cpp:388
-msgid "Display details of already uploaded QSOs when signing a log"
-msgstr "签名日志时显示已经上传过的日志详情"
-
-#: tqsl_prefs.cpp:393
+#: tqsl_prefs.cpp:378
 msgid "Display status messages in separate tab"
 msgstr "在分开的标签里显示状态信息"
 
-#: tqsl_prefs.cpp:398
+#: tqsl_prefs.cpp:383
 msgid "Enable passwords for Callsign Certificates"
 msgstr "启用呼号证书密码"
 
-#: tqsl_prefs.cpp:445
+#: tqsl_prefs.cpp:425
 msgid ""
 "Changes to the status message configuration will take affect when TQSL is "
 "restarted"
 msgstr "状态信息的改变设置将在下次TQSL启动后生效"
 
-#: tqsl_prefs.cpp:623
+#: tqsl_prefs.cpp:452
+msgid "Cabrillo file extensions:"
+msgstr "Cabrillo文件后缀："
+
+#: tqsl_prefs.cpp:457
+msgid "ADIF file extensions:"
+msgstr "ADIF-文件后缀："
+
+#: tqsl_prefs.cpp:463
+msgid "Allow nonamateur call signs"
+msgstr "允许非业余呼号"
+
+#: tqsl_prefs.cpp:468
+msgid "Prompt for QSO Date range when signing"
+msgstr "签名时提示QSO日期范围"
+
+#: tqsl_prefs.cpp:472
+msgid "Display details of already uploaded QSOs when signing a log"
+msgstr "签名日志时显示已经上传过的日志详情"
+
+#: tqsl_prefs.cpp:485
+msgid "Handle QTH information in ADIF logs with what action?"
+msgstr "用什么动作处理ADIF日志中的QTH信息？"
+
+#: tqsl_prefs.cpp:670
 msgid ""
 "Use these settings to configure a network proxy for Internet uploads and "
 "downloads. You should only enable a proxy if directed by your network "
@@ -2621,77 +2655,77 @@ msgid ""
 msgstr ""
 "用这些参数设置上传和下载的网络代理。你应该仅在网络管理员指导下启用代理。"
 
-#: tqsl_prefs.cpp:627
+#: tqsl_prefs.cpp:672
 msgid ""
 "Incorrect settings can cause TQSL to be unable to upload logs or check for "
 "updates."
 msgstr "不正确的设置将导致TQSL不能上传日志或检查更新。"
 
-#: tqsl_prefs.cpp:633
+#: tqsl_prefs.cpp:678
 msgid "Enable a Network Proxy"
 msgstr "启用一个网络代理"
 
-#: tqsl_prefs.cpp:637
+#: tqsl_prefs.cpp:682
 msgid "Proxy Address:"
 msgstr "代理地址："
 
-#: tqsl_prefs.cpp:645
+#: tqsl_prefs.cpp:690
 msgid "Port Number:"
 msgstr "端口号："
 
-#: tqsl_prefs.cpp:652
+#: tqsl_prefs.cpp:697
 msgid "Proxy Type:"
 msgstr "代理形式："
 
-#: tqsl_prefs.cpp:655
+#: tqsl_prefs.cpp:700
 msgid "ProxyType"
 msgstr "代理形式"
 
-#: tqsl_prefs.cpp:717
+#: tqsl_prefs.cpp:762
 msgid "Cabrillo CONTEST definitions:"
 msgstr "Cabrillo 比赛 定义："
 
-#: tqsl_prefs.cpp:729 tqsl_prefs.cpp:740
+#: tqsl_prefs.cpp:774 tqsl_prefs.cpp:785
 msgid "CONTEST"
 msgstr "比赛"
 
-#: tqsl_prefs.cpp:730 tqsl_prefs.cpp:741
+#: tqsl_prefs.cpp:775 tqsl_prefs.cpp:786
 msgid "Type"
 msgstr "形式"
 
-#: tqsl_prefs.cpp:731 tqsl_prefs.cpp:742
+#: tqsl_prefs.cpp:776 tqsl_prefs.cpp:787
 msgid "Field"
 msgstr "区域"
 
-#: tqsl_prefs.cpp:897 tqsl_prefs.h:250
+#: tqsl_prefs.cpp:942 tqsl_prefs.h:264
 msgid "Edit"
 msgstr "编辑"
 
-#: tqsl_prefs.cpp:920
+#: tqsl_prefs.cpp:965
 msgid "Contest"
 msgstr "比赛"
 
-#: tqsl_prefs.cpp:930
+#: tqsl_prefs.cpp:975
 msgid "Cabrillo CONTEST"
 msgstr "Cabrillo 比赛"
 
-#: tqsl_prefs.cpp:932
+#: tqsl_prefs.cpp:977
 msgid "CONTEST Name:"
 msgstr "比赛名称："
 
-#: tqsl_prefs.cpp:938
+#: tqsl_prefs.cpp:983
 msgid "Contest type"
 msgstr "比赛形式"
 
-#: tqsl_prefs.cpp:943
+#: tqsl_prefs.cpp:988
 msgid "Call-Worked Field Number:"
 msgstr "通联过的区域数："
 
-#: tqsl_prefs.cpp:977
+#: tqsl_prefs.cpp:1022
 msgid "Contest name cannot be blank"
 msgstr "比赛名称不能空白"
 
-#: tqsl_prefs.cpp:983
+#: tqsl_prefs.cpp:1028
 #, c-format
 msgid "Call-worked field must be %d or greater"
 msgstr "通联过的区域数必须大于等于 %d"
@@ -2887,39 +2921,47 @@ msgstr "这个文件的格式错误。"
 msgid "Callsign certificate could not be installed"
 msgstr "呼号证书不能装入"
 
-#: wxutil.cpp:172
+#: wxutil.cpp:164
+msgid "Callsign Certificate does not match QSO details"
+msgstr "呼号证书与QSO详细信息不匹配"
+
+#: wxutil.cpp:165
+msgid "Station Location does not match QSO details"
+msgstr "台站位置与QSO详细信息不匹配"
+
+#: wxutil.cpp:174
 msgid "NO ERROR"
 msgstr "无错误"
 
-#: wxutil.cpp:175
+#: wxutil.cpp:177
 msgid "Unknown custom error"
 msgstr "未知的自定义错误"
 
-#: wxutil.cpp:181
+#: wxutil.cpp:183
 #, c-format
 msgid "Database Error: %hs"
 msgstr "数据库错误：%hs"
 
-#: wxutil.cpp:186
+#: wxutil.cpp:188
 #, c-format
 msgid "System error: %hs : %hs"
 msgstr "系统错误： %hs ： %hs"
 
-#: wxutil.cpp:190
+#: wxutil.cpp:192
 #, c-format
 msgid "System error: %hs"
 msgstr "系统错误： %hs"
 
-#: wxutil.cpp:197
+#: wxutil.cpp:199
 #, c-format
 msgid "File syntax error: %hs"
 msgstr "文件同步错误： %hs"
 
-#: wxutil.cpp:201
+#: wxutil.cpp:203
 msgid "File syntax error"
 msgstr "文件同步错误"
 
-#: wxutil.cpp:237
+#: wxutil.cpp:239
 #, c-format
 msgid ""
 "The private key for callsign %hs serial %ld is not present on this computer; "
@@ -2927,10 +2969,27 @@ msgid ""
 msgstr ""
 "本电脑上没有呼号 %hs 的 %ld 系列的私钥; 您可以通过加载.tbk或.p12文件来获取它"
 
-#: wxutil.cpp:244
+#: wxutil.cpp:246
 #, c-format
 msgid "Invalid error code: %d"
 msgstr "无效的错误代码： %d"
+
+#: wxutil.cpp:260
+msgid "Station Location"
+msgstr "台站位置"
+
+#. TRANSLATORS: This message is for QSO details. For example, 'The GRIDSQUARE has value FM18ju while QSO has FM18jt'
+#: wxutil.cpp:263
+#, c-format
+msgid "The %s '%hs' has value '%hs' while QSO has '%hs'"
+msgstr "%s '%hs' 的值 '%hs' 与 QSO 中的 '%hs' 不匹配"
+
+#: wxutil.cpp:268
+#, c-format
+msgid ""
+"There is no valid callsign certificate for %hs available. This QSO cannot be "
+"signed"
+msgstr "%hs没有有效的呼号证书。此QSO无法签名"
 
 #: getpassword.h:51
 msgid "New password"

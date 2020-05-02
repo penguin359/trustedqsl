@@ -161,6 +161,8 @@ static const char *error_strings[] = {
 	__("This file can not be processed due to a system error"),	/* TQSL_FILE_SYSTEM_ERROR */
 	__("The format of this file is incorrect."),		/* TQSL_FILE_SYNTAX_ERROR */
 	__("Callsign certificate could not be installed"),	/* TQSL_CERT_ERROR */
+        __("Callsign Certificate does not match QSO details"),	/* TQSL_CERT_MISMATCH */
+        __("Station Location does not match QSO details"),	/* TQSL_LOCATION_MISMATCH */
 };
 
 static wxString
@@ -193,6 +195,7 @@ getLocalizedErrorString_v(int err) {
 		return buf;
 	}
 	if (err == TQSL_FILE_SYNTAX_ERROR) {
+		tqslTrace("SyntaxError", "File (partial) content '%s'", tQSL_CustomError);
 		if (strlen(tQSL_ErrorFile) > 0) {
 			buf = wxString::Format(_("File syntax error: %hs"),
 				tQSL_ErrorFile);
@@ -237,11 +240,43 @@ getLocalizedErrorString_v(int err) {
 			_("The private key for callsign %hs serial %ld is not present on this computer; you can obtain it by loading a .tbk or .p12 file"),
 			tQSL_ImportCall, tQSL_ImportSerial);
 	}
-	adjusted_err = err - TQSL_ERROR_ENUM_BASE;
+	adjusted_err = (err - TQSL_ERROR_ENUM_BASE) & ~0x1000;
 	if (adjusted_err < 0 ||
 	    adjusted_err >=
 		static_cast<int>(sizeof error_strings / sizeof error_strings[0])) {
 		return wxString::Format(_("Invalid error code: %d"), err);
+	}
+
+	if (err == TQSL_CERT_MISMATCH || err == TQSL_LOCATION_MISMATCH) {
+		const char *fld, *cert, *qso;
+		fld = strtok(tQSL_CustomError, "|");
+		cert = strtok(NULL, "|");
+		qso = strtok(NULL, "|");
+		if (qso == NULL) {		// Nothing in the cert
+			qso = cert;
+			cert = "none";
+		}
+		wxString tp(_("Callsign Certificate"));
+		if (err == TQSL_LOCATION_MISMATCH)
+			tp = wxString(_("Station Location"));
+	 	wxString composed = wxGetTranslation(wxString::FromUTF8(error_strings[adjusted_err]));
+		// TRANSLATORS: This message is for QSO details. For example, 'The Station Location GRIDSQUARE has value FM18ju while QSO has FM18jt'
+		composed = composed + wxT("\n") + wxString::Format(_("The %s '%hs' has value '%hs' while QSO has '%hs'"), tp.c_str(), fld, cert, qso);
+		return composed;
+	}
+	if (err == (TQSL_LOCATION_MISMATCH | 0x1000)) {
+		const char *fld, *val;
+		fld = strtok(tQSL_CustomError, "|");
+		val = strtok(NULL, "|");
+	 	wxString composed(_("This log has invalid QSO information"));
+		// TRANSLATORS: This message is for QSO details. For example, 'The log being signed has 'US County' set to Foobar which is not valid'
+		composed = composed + wxT("\n") + wxString::Format(_("The log being signed has '%hs' set to value '%hs' which is not valid"), fld, val);
+		return composed;
+	}
+	if (err == (TQSL_CERT_NOT_FOUND | 0x1000)) {
+		err = TQSL_CERT_NOT_FOUND;
+		wxString composed = wxString::Format(_("There is no valid callsign certificate for %hs available. This QSO cannot be signed"), tQSL_CustomError);
+		return composed;
 	}
 	return wxGetTranslation(wxString::FromUTF8(error_strings[adjusted_err]));
 }
@@ -518,11 +553,14 @@ getLocalizedErrorString() {
 	    { wxLANGUAGE_DEFAULT, -1}
 	};
 
+#endif // WX3
+
 wxLanguage langWX2toWX3(wxLanguage wx2) {
+#if wxMAJOR_VERSION > 2
 	for (unsigned int i = 0; i < WXSIZEOF(mapping); i++) {
 		if (mapping[i].wx2 == -1) return wx2;
 		if (mapping[i].wx2 == wx2) return mapping[i].wx3;
 	}
+#endif
 	return wx2;
 }
-#endif // WX3

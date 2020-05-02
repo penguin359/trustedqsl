@@ -11,8 +11,8 @@
 #define TQSLLIB_DEF
 
 #include "xml.h"
-#ifdef _WIN32
 #include "tqsllib.h"
+#ifdef _WIN32
 #include <fcntl.h>
 #endif
 #include <string.h>
@@ -86,6 +86,8 @@ XMLElement::parseString(const char *xmlstring) {
 	// Process the XML
 	if (XML_Parse(xp, xmlstring, strlen(xmlstring), 1) == 0) {
 		XML_ParserFree(xp);
+		strncpy(tQSL_CustomError, xmlstring, 80);
+		tQSL_CustomError[79] = '\0';
 		return XML_PARSE_SYNTAX_ERROR;
 	}
 	XML_ParserFree(xp);
@@ -120,6 +122,8 @@ XMLElement::parseFile(const char *filename) {
 		// Process the XML
 		if (XML_Parse(xp, buf, rcount, 0) == 0) {
 			gzclose(in);
+			strncpy(tQSL_CustomError, buf, 80);
+			tQSL_CustomError[79] = '\0';
 			XML_ParserFree(xp);
 			return XML_PARSE_SYNTAX_ERROR;
 		}

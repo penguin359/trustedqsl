@@ -120,7 +120,15 @@ static const char *error_strings[] = {
 	"This file can not be processed due to a system error",	/* TQSL_FILE_SYSTEM_ERROR */
 	"The format of this file is incorrect.",		/* TQSL_FILE_SYNTAX_ERROR */
 	"This Callsign Certificate could not be installed", 	/* TQSL_CERT_ERROR */
+	"Callsign Certificate does not match QSO details", 	/* TQSL_CERT_MISMATCH */
+	"Station Location does not match QSO details", 		/* TQSL_LOCATION_MISMATCH */
+	/* note - dupe table in wxutil.cpp */
 };
+
+
+#if !defined(__APPLE__) && !defined(_WIN32) && !defined(__clang__)
+        #pragma GCC diagnostic ignored "-Wformat-truncation"
+#endif
 
 const char* tqsl_openssl_error(void);
 
@@ -419,6 +427,7 @@ tqsl_getErrorString_v(int err) {
 		return buf;
 	}
 	if (err == TQSL_FILE_SYNTAX_ERROR) {
+		tqslTrace("SyntaxError", "File (partial) content '%s'", tQSL_CustomError);
 		if (strlen(tQSL_ErrorFile) > 0) {
 			snprintf(buf, sizeof buf, "File syntax error: %s",
 				tQSL_ErrorFile);
@@ -1000,7 +1009,7 @@ tqsl_openDiagFile(const char *fname) {
 const char*
 tqsl_openssl_error(void) {
 	static char buf[256];
-	int openssl_err;
+	unsigned long openssl_err;
 
 	openssl_err = ERR_peek_error();
 	if (openssl_err)
