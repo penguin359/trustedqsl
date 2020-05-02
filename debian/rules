@@ -24,3 +24,6 @@ override_dh_installman:
 	sed 's/^\.TH TQSL 5/.TH TQSL 1/' < apps/tqsl.5  \
 	    > debian/tmp/tqsl.1
 	dh_installman
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DCMAKE_INSTALL_MANDIR=/usr/share/man
