@@ -1,4 +1,4 @@
-trustedqsl (2.5.3-1) UNRELEASED; urgency=medium
+trustedqsl (2.5.3-1) unstable; urgency=medium
 
   [ Christoph Berg ]
   * Mute lintian warning for src/doxygen/html/menu.js.
@@ -6,8 +6,11 @@ trustedqsl (2.5.3-1) UNRELEASED; urgency=medium
   [ tony mancill ]
   * New upstream version 2.5.3
   * Refresh patches against new upstream version
+  * Set CMAKE_INSTALL_MANDIR during build
+  * Bump Standards-Version to 4.5.0
+  * Add myself to Uploaders
 
- -- tony mancill <tmancill@debian.org>  Sat, 02 May 2020 10:40:04 -0700
+ -- tony mancill <tmancill@debian.org>  Sat, 02 May 2020 10:43:52 -0700
 
 trustedqsl (2.5.1-1) unstable; urgency=medium
 
