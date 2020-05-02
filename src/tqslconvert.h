@@ -77,6 +77,17 @@ DLLEXPORT int CALLCONVENTION tqsl_endConverter(tQSL_Converter *conv);
   */
 DLLEXPORT int CALLCONVENTION tqsl_setConverterAllowBadCall(tQSL_Converter conv, int allow);
 
+#define TQSL_LOC_IGNORE 0 ///< Ignore MY_ ADIF fields
+#define TQSL_LOC_REPORT 1 ///< Report on MY_ ADIF fields not matching cert/location
+#define TQSL_LOC_UPDATE 2 ///< Update Cert/Loc to track MY_ ADIF fields
+
+/** Configure the converter's handing of QTH fields in an adif input file
+  *
+  * \c allow defaults to 0 when tqsl_beginADIFConverter or
+  * tqsl_beginCabrilloConverter is called.
+  */
+DLLEXPORT int CALLCONVENTION tqsl_setConverterQTHDetails(tQSL_Converter conv, int logverify);
+
 /** Configure the converter to allow (allow != 0) or disallow (allow == 0)
   * duplicate QSOs in a signed log.
   * Duplicate detection is done using QSO details, location details, and

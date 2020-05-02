@@ -38,7 +38,7 @@
 #define TQSL_MAX_PATH_LEN            256	///< Max length of a FS path
 #define TQSL_PASSWORD_MAX            80		///< Max password length
 #define TQSL_NAME_ELEMENT_MAX        256	///< Max Org name length
-#define TQSL_CALLSIGN_MAX            13		///< Max callsign length
+#define TQSL_CALLSIGN_MAX            20		///< Max callsign length
 #define TQSL_CRQ_NAME_MAX            60		///< Max length of request name
 #define TQSL_CRQ_ADDR_MAX            80		///< Max length of request addr
 #define TQSL_CRQ_CITY_MAX            80		///< Max length of request city
@@ -51,6 +51,12 @@
 #define TQSL_FREQ_MAX                20		///< Max length of a frequency
 #define TQSL_SATNAME_MAX             20		///< Max length of a sat name
 #define TQSL_PROPMODE_MAX            20		///< Max length of a prop mode
+#define TQSL_STATE_MAX		     30		///< Max length of a state name
+#define TQSL_GRID_MAX		     30		///< Max length of a grid set
+#define TQSL_CNTY_MAX		     30		///< Max length of a county name
+#define TQSL_COUNTRY_MAX	     60		///< Max length of a country name
+#define TQSL_ZONE_MAX		     5		///< Max length of a zone number
+#define TQSL_IOTA_MAX		     10		///< Max length of a IOTA identifier
 
 #define TQSL_CERT_CB_USER            0		///< Callback is for user cert
 #define TQSL_CERT_CB_CA              1		///< Callback is for CA cert
@@ -132,10 +138,26 @@ typedef struct {
 	bool band_set;				///< QSO specifies a band or frequency
 	bool date_set;				///< QSO specifies a date
 	bool time_set;				///< QSO specifies a time
+	char my_state[TQSL_STATE_MAX+1];	///< QSO specifies MY_STATE
+	char my_gridsquare[TQSL_GRID_MAX+1];	///< QSO specifies MY_GRIDSQUARE
+	char my_vucc_grids[TQSL_GRID_MAX+1];	///< QSO specifies MY_VUCC_GRIDS
+	char my_county[TQSL_CNTY_MAX+1];	///< QSO specifies MY_CNTY
+	char my_cnty_state[TQSL_STATE_MAX+1];	///< QSO specifies a state with MY_CNTY
+	char my_country[TQSL_COUNTRY_MAX+1];	///< QSO specifies MY_COUNTRY
+	char my_cq_zone[TQSL_ZONE_MAX+1];	///< QSO specifies MY_CQ_ZONE
+	char my_itu_zone[TQSL_ZONE_MAX+1];	///< QSO specifies MY_ITU_ZONE
+	int my_dxcc;				///< QSO specifies MY_DXCC
+	char my_call[TQSL_CALLSIGN_MAX+1];	///< Station Callsign
+#ifdef USE_OWNER_CALLSIGN
+	char my_owner[TQSL_CALLSIGN_MAX+1];	///< Station Owner Callsign
+#endif
+	char my_operator[TQSL_CALLSIGN_MAX+1];	///< Operator's callsign
+	char my_iota[TQSL_IOTA_MAX+1];		///< QSO specifies MY_IOTA_
 } TQSL_QSO_RECORD;
 
 /// Base directory for tQSL library working files.
 DLLEXPORTDATA extern const char *tQSL_BaseDir;
+/// Directory for resources bundled with tqsl executable
 DLLEXPORTDATA extern const char *tQSL_RsrcDir;
 
 #ifdef __cplusplus
@@ -1152,6 +1174,12 @@ DLLEXPORT int CALLCONVENTION tqsl_getLocationCallSign(tQSL_Location loc, char *b
 
 /** Set the call sign for the station location. */
 DLLEXPORT int CALLCONVENTION tqsl_setLocationCallSign(tQSL_Location loc, const char *buf);
+
+/** Get a field from the station location. */
+DLLEXPORT int CALLCONVENTION tqsl_getLocationField(tQSL_Location locp, const char *field, char *buf, int bufsiz);
+
+/** Set a field in a station location. */
+DLLEXPORT int CALLCONVENTION tqsl_setLocationField(tQSL_Location locp, const char *field, const char *buf);
 
 /** Get the DXCC entity from the station location. */
 DLLEXPORT int CALLCONVENTION tqsl_getLocationDXCCEntity(tQSL_Location loc, int *dxcc);

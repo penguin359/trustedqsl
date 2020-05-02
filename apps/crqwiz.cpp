@@ -28,7 +28,7 @@
 
 extern int SaveAddressInfo(const char *callsign);
 
-extern int GetULSInfo(const char *callsign, wxString &name, wxString &attn, wxString &street, wxString &city, wxString &state, wxString &zip);
+extern int GetULSInfo(const char *callsign, wxString &name, wxString &attn, wxString &street, wxString &city, wxString &state, wxString &zip, wxString &updateDate);
 
 using std::string;
 
@@ -115,7 +115,7 @@ CRQWiz::CRQWiz(TQSL_CERT_REQ *crq, tQSL_Cert xcert, wxWindow *parent, wxHtmlHelp
 	if (!cert)
 		wxWizardPageSimple::Chain(pwPage, signPage);
 	if (nprov == 1)
-		if (!renewal) // rhm		if (validcerts && !renewal)
+		if (!renewal) // was		if (validcerts && !renewal)
 			_first = typePage;
 		else
 			_first = callsignPage;
@@ -160,9 +160,7 @@ CRQ_ProviderPage::CRQ_ProviderPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Pa
 
 	wxString lbl = _("This will create a new Callsign Certificate request file.");
 		lbl += wxT("\n\n");
-		lbl += _("Once you supply the requested information and the "
-			L"request file has been created, you must send the "
-			L"request file to the certificate issuer.");
+		lbl += _("Once you supply the requested information and the request file has been created, you must send the request file to the certificate issuer.");
 	wxStaticText *st = new wxStaticText(this, -1, lbl);
 	st->SetSize(Parent()->maxWidth + em_w * 2, em_h * 5);
 	st->Wrap(Parent()->maxWidth + em_w * 3);
@@ -260,18 +258,19 @@ CRQ_CallsignPage::CRQ_CallsignPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Pa
 	st->SetSize(dst->GetSize());
 
 	wxBoxSizer *hsizer = new wxBoxSizer(wxHORIZONTAL);
-	hsizer->Add(st, 0, wxRIGHT, 5);
+	hsizer->Add(st, 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	wxString cs;
 	if (crq && crq->callSign[0])
 		cs = wxString::FromUTF8(crq->callSign);
 	tc_call = new wxTextCtrl(this, ID_CRQ_CALL, cs, wxDefaultPosition, wxSize(em_w*15, -1));
+	tc_call->SetMaxLength(TQSL_CALLSIGN_MAX);
 	hsizer->Add(tc_call, 0, wxEXPAND, 0);
 	sizer->Add(hsizer, 0, wxLEFT|wxRIGHT|wxTOP|wxEXPAND, 10);
 	if (crq && crq->callSign[0])
 		tc_call->Enable(false);
 
 	hsizer = new wxBoxSizer(wxHORIZONTAL);
-	hsizer->Add(dst, 0, wxRIGHT, 5);
+	hsizer->Add(dst, 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	tc_dxcc = new wxComboBox(this, ID_CRQ_DXCC, wxT(""), wxDefaultPosition,
 		wxSize(em_w*25, -1), 0, 0, wxCB_DROPDOWN|wxCB_READONLY);
 	hsizer->Add(tc_dxcc, 1, 0, 0);
@@ -317,15 +316,15 @@ CRQ_CallsignPage::CRQ_CallsignPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Pa
 		sels[i][0] = sels[i][1] = sels[i][2] = 0;
 		sizer->Add(new wxStaticText(this, -1, label), 0, wxBOTTOM, 5);
 		hsizer = new wxBoxSizer(wxHORIZONTAL);
-		hsizer->Add(new wxStaticText(this, -1, wxT("Y")), 0, wxLEFT, 20);
+		hsizer->Add(new wxStaticText(this, -1, wxT("Y")), 0, wxLEFT|wxALIGN_CENTER_VERTICAL, 20);
 		*(boxes[i][0].cb) = new wxComboBox(this, boxes[i][0].id, wxT(""), wxDefaultPosition,
 			wxSize(em_w*8, -1), 0, 0, wxCB_DROPDOWN|wxCB_READONLY);
 		hsizer->Add(*(boxes[i][0].cb), 0, wxLEFT, 5);
-		hsizer->Add(new wxStaticText(this, -1, wxT("M")), 0, wxLEFT, 10);
+		hsizer->Add(new wxStaticText(this, -1, wxT("M")), 0, wxLEFT|wxALIGN_CENTER_VERTICAL, 10);
 		*(boxes[i][1].cb) = new wxComboBox(this, boxes[i][1].id, wxT(""), wxDefaultPosition,
 			wxSize(em_w*6, -1), 0, 0, wxCB_DROPDOWN|wxCB_READONLY);
 		hsizer->Add(*(boxes[i][1].cb), 0, wxLEFT, 5);
-		hsizer->Add(new wxStaticText(this, -1, wxT("D")), 0, wxLEFT, 10);
+		hsizer->Add(new wxStaticText(this, -1, wxT("D")), 0, wxLEFT|wxALIGN_CENTER_VERTICAL, 10);
 		*(boxes[i][2].cb) = new wxComboBox(this, boxes[i][2].id, wxT(""), wxDefaultPosition,
 			wxSize(em_w*6, -1), 0, 0, wxCB_DROPDOWN|wxCB_READONLY);
 		hsizer->Add(*(boxes[i][2].cb), 0, wxLEFT, 5);
@@ -413,7 +412,7 @@ CRQ_CallsignPage::GetNext() const {
 CRQ_Page *
 CRQ_CallsignPage::GetPrev() const {
 	tqslTrace("CRQ_CallsignPage::GetPrev", NULL);
-	return _parent->callsignPage;
+	return _parent->typePage;
 }
 
 BEGIN_EVENT_TABLE(CRQ_NamePage, CRQ_Page)
@@ -440,7 +439,7 @@ CRQ_NamePage::CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(paren
 	wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
 	wxString val;
 	wxBoxSizer *hsizer = new wxBoxSizer(wxHORIZONTAL);
-	hsizer->Add(st, 0, wxRIGHT, 5);
+	hsizer->Add(st, 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	wxString s;
 	if (crq && crq->name[0])
 		s = wxString::FromUTF8(crq->name);
@@ -458,7 +457,7 @@ CRQ_NamePage::CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(paren
 		s = val;
 	hsizer = new wxBoxSizer(wxHORIZONTAL);
 	hsizer->Add(new wxStaticText(this, -1, _("Address"), wxDefaultPosition, zst->GetSize(),
-		wxST_NO_AUTORESIZE|wxALIGN_RIGHT), 0, wxRIGHT, 5);
+		wxST_NO_AUTORESIZE|wxALIGN_RIGHT), 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	tc_addr1 = new wxTextCtrl(this, ID_CRQ_ADDR1, s, wxDefaultPosition, wxSize(def_w, -1));
 	hsizer->Add(tc_addr1, 1, 0, 0);
 	sizer->Add(hsizer, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
@@ -484,7 +483,7 @@ CRQ_NamePage::CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(paren
 		s = val;
 	hsizer = new wxBoxSizer(wxHORIZONTAL);
 	hsizer->Add(new wxStaticText(this, -1, _("City"), wxDefaultPosition, zst->GetSize(),
-		wxST_NO_AUTORESIZE|wxALIGN_RIGHT), 0, wxRIGHT, 5);
+		wxST_NO_AUTORESIZE|wxALIGN_RIGHT), 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	tc_city = new wxTextCtrl(this, ID_CRQ_CITY, s, wxDefaultPosition, wxSize(def_w, -1));
 	hsizer->Add(tc_city, 1, 0, 0);
 	sizer->Add(hsizer, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
@@ -497,7 +496,7 @@ CRQ_NamePage::CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(paren
 		s = val;
 	hsizer = new wxBoxSizer(wxHORIZONTAL);
 	hsizer->Add(new wxStaticText(this, -1, _("State"), wxDefaultPosition, zst->GetSize(),
-		wxST_NO_AUTORESIZE|wxALIGN_RIGHT), 0, wxRIGHT, 5);
+		wxST_NO_AUTORESIZE|wxALIGN_RIGHT), 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	tc_state = new wxTextCtrl(this, ID_CRQ_STATE, s, wxDefaultPosition, wxSize(def_w, -1));
 	hsizer->Add(tc_state, 1, 0, 0);
 	sizer->Add(hsizer, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
@@ -509,7 +508,7 @@ CRQ_NamePage::CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(paren
 	else if (config->Read(wxT("ZIP"), &val))
 		s = val;
 	hsizer = new wxBoxSizer(wxHORIZONTAL);
-	hsizer->Add(zst, 0, wxRIGHT, 5);
+	hsizer->Add(zst, 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	tc_zip = new wxTextCtrl(this, ID_CRQ_ZIP, s, wxDefaultPosition, wxSize(def_w, -1));
 	hsizer->Add(tc_zip, 1, 0, 0);
 	sizer->Add(hsizer, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
@@ -522,7 +521,7 @@ CRQ_NamePage::CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(paren
 		s = val;
 	hsizer = new wxBoxSizer(wxHORIZONTAL);
 	hsizer->Add(new wxStaticText(this, -1, _("Country"), wxDefaultPosition, zst->GetSize(),
-		wxST_NO_AUTORESIZE|wxALIGN_RIGHT), 0, wxRIGHT, 5);
+		wxST_NO_AUTORESIZE|wxALIGN_RIGHT), 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	tc_country = new wxTextCtrl(this, ID_CRQ_COUNTRY, s, wxDefaultPosition, wxSize(def_w, -1));
 	hsizer->Add(tc_country, 1, 0, 0);
 	sizer->Add(hsizer, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
@@ -623,9 +622,7 @@ CRQ_EmailPage::CRQ_EmailPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(par
 	tc_email = new wxTextCtrl(this, ID_CRQ_EMAIL, s, wxDefaultPosition, wxSize(em_w*30, -1));
 	sizer->Add(tc_email, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
 	tc_email->SetMaxLength(TQSL_CRQ_EMAIL_MAX);
-	wxStaticText *tc_warn = new wxStaticText(this, -1, _("Note: The e-mail address you provide here is the "
-								L"address to which the issued Certificate will be sent. "
-								L"Make sure it's the correct address!"));
+	wxStaticText *tc_warn = new wxStaticText(this, -1, _("Note: The e-mail address you provide here is the address to which the issued Certificate will be sent. Make sure it's the correct address!"));
 	sizer->Add(tc_warn, 0, wxALL, 10);
 	tc_warn->Wrap(_parent->maxWidth);
 	tc_status = new wxStaticText(this, -1, wxT(""));
@@ -668,11 +665,7 @@ CRQ_PasswordPage::CRQ_PasswordPage(CRQWiz *parent) :  CRQ_Page(parent) {
 	wxSize sz = getTextSize(this);
 	em_w = sz.GetWidth();
 	em_h = sz.GetHeight();
-	wxString lbl = _("You may protect this Callsign Certificate using a password. "
-			L"If you are using a computer system that is shared with "
-			L"others, you should specify a password to protect this "
-			L"Callsign Certificate. However, if you are using a computer "
-			L"in a private residence, no password need be specified.");
+	wxString lbl = _("You may protect this Callsign Certificate using a password. If you are using a computer system that is shared with others, you should specify a password to protect this Callsign Certificate. However, if you are using a computer in a private residence, no password need be specified.");
 	wxStaticText *st = new wxStaticText(this, -1, lbl);
 	st->SetSize(_parent->maxWidth, em_h * 5);
 	st->Wrap(_parent->maxWidth);
@@ -689,8 +682,7 @@ CRQ_PasswordPage::CRQ_PasswordPage(CRQWiz *parent) :  CRQ_Page(parent) {
 		0, wxLEFT|wxRIGHT|wxTOP, 10);
 	tc_pw2 = new wxTextCtrl(this, ID_CRQ_PW2, wxT(""), wxDefaultPosition, wxSize(em_w*20, -1), wxTE_PASSWORD);
 	sizer->Add(tc_pw2, 0, wxLEFT|wxRIGHT, 10);
-	wxStaticText *tc_pwwarn = new wxStaticText(this, -1, _("DO NOT lose the password you choose! "
-							L"You will be unable to use the Certificate without this password!"));
+	wxStaticText *tc_pwwarn = new wxStaticText(this, -1, _("DO NOT lose the password you choose! You will be unable to use the Certificate without this password!"));
 	tc_pwwarn->Wrap(em_w * 40);
 	sizer->Add(tc_pwwarn, 0, wxALL, 10);
 	tc_status = new wxStaticText(this, -1, wxT(""));
@@ -872,11 +864,15 @@ CRQ_CallsignPage::validate() {
 	int USEntities[] = { 6, 9, 20, 43, 103, 105, 110, 123, 138, 166, 174, 182, 197, 202, 285, 291, 297, 515, -1 };
 	if (!initialized)
 		return 0;
-	valMsg = wxT("");
-	_parent->callsign = tc_call->GetValue().MakeUpper();
-	bool ok = true;
-	int sel;
 	const char *dxccname = NULL;
+	bool ok = true;
+	valMsg = wxT("");
+	if (tc_call->GetValue().Len() > TQSL_CALLSIGN_MAX) {
+		valMsg = wxString::Format(_("The callsign is too long. Only %d characters are allowed."), TQSL_CALLSIGN_MAX);
+		goto notok;
+	}
+	_parent->callsign = tc_call->GetValue().MakeUpper();
+	int sel;
 
 	_parent->onebyone = false;
 	if (_parent->callsign.Len() < 3)
@@ -1072,9 +1068,7 @@ CRQ_CallsignPage::validate() {
 		while (tkz.HasMoreTokens()) {
 			wxString pend = tkz.GetNextToken();
 			if (pend == _parent->callsign) {
-				wxString fmt = _("You have already requested a Callsign Certificate for %s "
-						L"and can not request another until that request has been "
-						L"processed by LoTW Staff.");
+				wxString fmt = _("You have already requested a Callsign Certificate for %s and can not request another until that request has been processed by LoTW Staff.");
 					fmt += wxT("\n\n");
 					fmt += _("Please wait until you receive an e-mail bearing your requested Callsign Certificate.");
 					fmt += wxT("\n\n");
@@ -1114,9 +1108,7 @@ CRQ_CallsignPage::validate() {
 		wxConfig::Get()->Flush();
 
 		if (numRequests > 3) {
-			wxString fmt = _("You have already requested more than three Callsign Certificates for %s "
-					L"in the past 24 hours. You should submit a request only once, then wait "
-					L"for that request to processed by LoTW Staff. This may take several business days.");
+			wxString fmt = _("You have already requested more than three Callsign Certificates for %s in the past 24 hours. You should submit a request only once, then wait for that request to processed by LoTW Staff. This may take several business days.");
 					fmt += wxT("\n\n");
 					fmt += _("Please wait until you receive an e-mail bearing your requested Callsign Certificate.");
 					fmt += wxT("\n\n");
@@ -1137,59 +1129,68 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 	validate();
 
 	// Is this in the ULS?
-	if (valMsg.Len() == 0 && _parent->usa) {
+	if (valMsg.Len() == 0 && _parent->usa && !_parent->onebyone) {
 		wxString callsign = _parent->callsign;
-		wxString name, attn, addr1, city, state, zip;
-		int stat = GetULSInfo(callsign.ToUTF8(), name, attn, addr1, city, state, zip);
-		_parent->validusa = (stat == 0);
-		if (stat) {
-			switch (_parent->certType) {
-				case CERT_CURRENT_PERSONAL:
-				case CERT_NEW_PERSONAL:
-				case CERT_PRIMARY_CLUB:
-				case CERT_DXP_MULTIOP:
-				case CERT_EVENT_MULTIOP:
-					valMsg = wxString::Format(wxT("The callsign %s is not currently registered in the FCC ULS database.\nIf this is a newly registered call, you must wait at least one business day for it to be valid. Please enter a currently valid callsign."), callsign.c_str());
+		wxString name, attn, addr1, city, state, zip, update;
+		int stat = GetULSInfo(callsign.ToUTF8(), name, attn, addr1, city, state, zip, update);
+		switch (stat) {
+			case 0:
+				_parent->validusa = true;		// Good data returned
+				if (name == wxT("null"))
+					name = wxT("");
+				_parent->name = name;
+				_parent->namePage->setName(name);
+
+				if (addr1 == wxT("null"))
+					addr1 = wxT("");
+				if (attn == wxT("null")) {
+					attn = wxT("");
+					_parent->addr1 = addr1;
+					_parent->addr2 = wxT(".");
+					_parent->namePage->setAddr1(addr1);
+					_parent->namePage->setAddr2(attn);
+				} else {
+					_parent->addr1 = attn;
+					_parent->addr2 = addr1;
+					_parent->namePage->setAddr1(attn);
+					_parent->namePage->setAddr2(addr1);
+				}
+
+				if (city == wxT("null"))
+					city = wxT("");
+				_parent->city = city;
+				_parent->namePage->setCity(city);
+
+				if (state == wxT("null"))
+					state = wxT("");
+				_parent->state = state;
+				_parent->namePage->setState(state);
+
+				if (zip == wxT("null"))
+					zip = wxT("");
+				_parent->zip = zip;
+				_parent->namePage->setZip(zip);
+
+				_parent->country = wxT("USA");
+				_parent->namePage->setCountry(_parent->country);
+				break;
+			case 1:
+				break;						// Error reading ULS info
+			case 2:
+
+				int stat2 = GetULSInfo("W1AW", name, attn, addr1, city, state, zip, update);
+				if (stat2 == 2)					// Also nothing for a good call
 					break;
-			}
-		} else {
-			if (name == wxT("null"))
-				name = wxT("");
-			_parent->name = name;
-			_parent->namePage->setName(name);
-
-			if (addr1 == wxT("null"))
-				addr1 = wxT("");
-			if (attn == wxT("null")) {
-				attn = wxT("");
-				_parent->addr1 = addr1;
-				_parent->addr2 = wxT(".");
-				_parent->namePage->setAddr1(addr1);
-				_parent->namePage->setAddr2(attn);
-			} else {
-				_parent->addr1 = attn;
-				_parent->addr2 = addr1;
-				_parent->namePage->setAddr1(attn);
-				_parent->namePage->setAddr2(addr1);
-			}
-
-			if (city == wxT("null"))
-				city = wxT("");
-			_parent->city = city;
-			_parent->namePage->setCity(city);
-
-			if (state == wxT("null"))
-				state = wxT("");
-			_parent->state = state;
-			_parent->namePage->setState(state);
-
-			if (zip == wxT("null"))
-				zip = wxT("");
-			_parent->zip = zip;
-			_parent->namePage->setZip(zip);
-
-			_parent->country = wxT("USA");
-			_parent->namePage->setCountry(_parent->country);
+				switch (_parent->certType) {			// Not found
+					case CERT_CURRENT_PERSONAL:
+					case CERT_NEW_PERSONAL:
+					case CERT_PRIMARY_CLUB:
+					case CERT_DXP_MULTIOP:
+					case CERT_EVENT_MULTIOP:
+						valMsg = wxString::Format(wxT("The callsign %s is not currently registered in the FCC ULS database as of %s.\nIf this is a newly registered call, you must wait at least one business day for it to be valid. Please enter a currently valid callsign."), callsign.c_str(), update.c_str());
+					break;
+				}
+				break;
 		}
 	}
 
@@ -1208,14 +1209,7 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 
 		wxString msg = _("You have selected DXCC Entity NONE");
 			msg += wxT("\n\n");
-			msg += _("QSO records signed using the Certificate will not "
-				L"be valid for DXCC award credit (but will be valid "
-				L"for other applicable awards). If the Certificate is "
-				L"to be used for signing QSOs from maritime/marine "
-				L"mobile, shipboard, or air mobile operations, that is "
-				L"the correct selection. Otherwise, you probably "
-				L"should use the \"Back\" button to return to the DXCC "
-				L"page after clicking \"OK\"");
+			msg += _("QSO records signed using the Certificate will not be valid for DXCC award credit (but will be valid for other applicable awards). If the Certificate is to be used for signing QSOs from maritime/marine mobile, shipboard, or air mobile operations, that is the correct selection. Otherwise, you probably should use the \"Back\" button to return to the DXCC page after clicking \"OK\"");
 		wxMessageBox(msg, _("TQSL Warning"), wxOK | wxICON_WARNING, this);
 	}
 	if (ok && _parent->onebyone) {
@@ -1227,16 +1221,11 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 	}
 
 	if (ok && !tqsl_isDateNull(&_parent->qsonotafter) && tqsl_isDateValid(&_parent->qsonotafter)) {
-		wxString msg = _("You have chosen a QSO end date for this Callsign Certificate. "
-				L"The 'QSO end date' should ONLY be set if that date is the date when that callsign's license "
-				L"expired or the license was replaced by a new callsign.");
+		wxString msg = _("You have chosen a QSO end date for this Callsign Certificate. The 'QSO end date' should ONLY be set if that date is the date when that callsign's license expired or the license was replaced by a new callsign.");
 			msg += wxT("\n\n");
-			msg += _("If you set an end date, you will not be able to sign "
-				L"QSOs past that date, even if the Callsign Certificate "
-				L"itself is still valid.");
+			msg += _("If you set an end date, you will not be able to sign QSOs past that date, even if the Callsign Certificate itself is still valid.");
 			msg += wxT("\n\n");
-			msg += _("If you still hold this callsign (or if you plan to renew the license for the "
-				L"callsign), you should not set a 'QSO end date'.");
+			msg += _("If you still hold this callsign (or if you plan to renew the license for the callsign), you should not set a 'QSO end date'.");
 			msg += wxT("\n");
 			msg += _("Do you really want to keep this 'QSO end date'?");
 		if (wxMessageBox(msg, _("Warning"), wxYES_NO|wxICON_EXCLAMATION, this) == wxNO) {
@@ -1445,9 +1434,7 @@ CRQ_SignPage::validate() {
 			tQSL_Cert cert = cert_tree->GetItemData(cert_tree->GetSelection())->getCert();
 			if (0 == tqsl_getCertificateCallSign(cert, callsign, sizeof callsign)) {
 				wxString fmt = wxT("\n\n");
-					fmt += _("You are saying that the requested Certificate for %s "
-						L"belongs to the same person as %hs and are using "
-						L"the selected Certificate to prove %hs's identity.");
+					fmt += _("You are saying that the requested Certificate for %s belongs to the same person as %hs and are using the selected Certificate to prove %hs's identity.");
 				nextprompt+=wxString::Format(fmt, _parent->callsign.c_str(), callsign, callsign);
 			}
 		}

@@ -71,6 +71,10 @@ Preferences::Preferences(wxWindow *parent, wxHtmlHelpController *help)
 
 	notebook->AddPage(fileprefs, _("Options"));
 
+	logprefs = new LogPrefs(notebook);
+
+	notebook->AddPage(logprefs, _("Log Handling"));
+
 	modemap = new ModeMap(notebook);
 	notebook->AddPage(modemap, _("ADIF Modes"));
 
@@ -109,6 +113,8 @@ void Preferences::OnOK(wxCommandEvent& WXUNUSED(event)) {
 		return;
 #endif
 	if (!proxyPrefs->TransferDataFromWindow())
+		return;
+	if (!logprefs->TransferDataFromWindow())
 		return;
 	if (!fileprefs->TransferDataFromWindow())
 		return;
@@ -255,7 +261,7 @@ AddMode::AddMode(wxWindow *parent) : wxDialog(parent, -1, wxString(_("Add ADIF m
 
 	wxBoxSizer *hsizer = new wxBoxSizer(wxHORIZONTAL);
 
-	hsizer->Add(new wxStaticText(this, -1, _("ADIF Mode:")), 0);
+	hsizer->Add(new wxStaticText(this, -1, _("ADIF Mode:")), 0, wxALIGN_CENTER_VERTICAL);
 
 	adif = new wxTextCtrl(this, ID_PREF_ADD_ADIF, wxT(""), wxPoint(0, 0),
 		wxSize(char_width, HEIGHT_ADJ(char_height)));
@@ -332,16 +338,6 @@ FilePrefs::FilePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm"))
 	dc.GetTextExtent(wxString(wxT('M'), FILE_TEXT_WIDTH), &char_width, &char_height);
 
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
-	sizer->Add(new wxStaticText(this, -1, _("Cabrillo file extensions:")), 0, wxTOP|wxLEFT|wxRIGHT, 10);
-	wxString cab = config->Read(wxT("CabrilloFiles"), DEFAULT_CABRILLO_FILES);
-	cabrillo = new wxTextCtrl(this, ID_PREF_FILE_CABRILLO, cab, wxPoint(0, 0),
-		wxSize(char_width, HEIGHT_ADJ(char_height)));
-	sizer->Add(cabrillo, 0, wxLEFT|wxRIGHT, 10);
-	sizer->Add(new wxStaticText(this, -1, _("ADIF file extensions:")), 0, wxTOP|wxLEFT|wxRIGHT, 10);
-	wxString adi = config->Read(wxT("ADIFFiles"), DEFAULT_ADIF_FILES);
-	adif = new wxTextCtrl(this, ID_PREF_FILE_ADIF, adi, wxPoint(0, 0),
-		wxSize(char_width, HEIGHT_ADJ(char_height)));
-	sizer->Add(adif, 0, wxLEFT|wxRIGHT, 10);
 	bool ab;
 	config->Read(wxT("AutoBackup"), &ab, DEFAULT_AUTO_BACKUP);
 	autobackup = new wxCheckBox(this, ID_PREF_FILE_AUTO_BACKUP, _("Allow automatic configuration backup"));
@@ -372,23 +368,12 @@ FilePrefs::FilePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm"))
 
 	sizer->Add(hsizer, 0, wxALL|wxALIGN_LEFT, 10);
 
-	badcalls = new wxCheckBox(this, ID_PREF_FILE_BADCALLS, _("Allow nonamateur call signs"));
-	bool allow;
-	config->Read(wxT("BadCalls"), &allow, false);
-	badcalls->SetValue(allow);
-	sizer->Add(badcalls, 0, wxLEFT|wxRIGHT|wxTOP, 10);
-	daterange = new wxCheckBox(this, ID_PREF_FILE_BADCALLS, _("Prompt for QSO Date range when signing"));
-	config->Read(wxT("DateRange"), &allow, true);
-	daterange->SetValue(allow);
-	sizer->Add(daterange, 0, wxLEFT|wxRIGHT|wxTOP, 10);
 	adifedit = new wxCheckBox(this, ID_PREF_FILE_EDIT_ADIF, _("Open ADIF files in ADIF editor"));
+
+	bool allow;
 	config->Read(wxT("AdifEdit"), &allow, DEFAULT_ADIF_EDIT);
 	adifedit->SetValue(allow);
 	sizer->Add(adifedit, 0, wxLEFT|wxRIGHT|wxTOP, 10);
-	dispdupes = new wxCheckBox(this, ID_PREF_FILE_DISPLAY_DUPES, _("Display details of already uploaded QSOs when signing a log"));
-	config->Read(wxT("DispDupes"), &allow, DEFAULT_DISP_DUPES);
-	dispdupes->SetValue(allow);
-	sizer->Add(dispdupes, 0, wxLEFT|wxRIGHT|wxTOP, 10);
 
 	logtab = new wxCheckBox(this, ID_PREF_FILE_LOG_TAB, _("Display status messages in separate tab"));
 	config->Read(wxT("LogTab"), &allow, DEFAULT_LOG_TAB);
@@ -431,12 +416,7 @@ bool FilePrefs::TransferDataFromWindow() {
 	tqslTrace("FilePrefs::TransferDataFromWindow", NULL);
 	wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
 	config->SetPath(wxT("/"));
-	config->Write(wxT("CabrilloFiles"), fix_ext_str(cabrillo->GetValue()));
-	config->Write(wxT("ADIFFiles"), fix_ext_str(adif->GetValue()));
-	config->Write(wxT("BadCalls"), badcalls->GetValue());
-	config->Write(wxT("DateRange"), daterange->GetValue());
 	config->Write(wxT("AdifEdit"), adifedit->GetValue());
-	config->Write(wxT("DispDupes"), dispdupes->GetValue());
 	config->Write(wxT("CertPwd"), certpwd->GetValue());
 
 	bool oldLog;
@@ -456,6 +436,73 @@ bool FilePrefs::TransferDataFromWindow() {
 	if (vers <= 0)
 		vers = DEFAULT_BACKUP_VERSIONS;
 	config->Write(wxT("BackupVersions"), vers);
+	return true;
+}
+
+LogPrefs::LogPrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm")) {
+	tqslTrace("LogPrefs::LogPrefs", "parent=0x%lx", reinterpret_cast<void *>(parent));
+	wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
+	SetAutoLayout(true);
+
+	wxClientDC dc(this);
+	wxCoord char_width, char_height;
+	dc.GetTextExtent(wxString(wxT('M'), FILE_TEXT_WIDTH), &char_width, &char_height);
+
+	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
+	sizer->Add(new wxStaticText(this, -1, _("Cabrillo file extensions:")), 0, wxTOP|wxLEFT|wxRIGHT, 10);
+	wxString cab = config->Read(wxT("CabrilloFiles"), DEFAULT_CABRILLO_FILES);
+	cabrillo = new wxTextCtrl(this, ID_PREF_FILE_CABRILLO, cab, wxPoint(0, 0),
+		wxSize(char_width, HEIGHT_ADJ(char_height)));
+	sizer->Add(cabrillo, 0, wxLEFT|wxRIGHT, 10);
+	sizer->Add(new wxStaticText(this, -1, _("ADIF file extensions:")), 0, wxTOP|wxLEFT|wxRIGHT, 10);
+	wxString adi = config->Read(wxT("ADIFFiles"), DEFAULT_ADIF_FILES);
+	adif = new wxTextCtrl(this, ID_PREF_FILE_ADIF, adi, wxPoint(0, 0),
+		wxSize(char_width, HEIGHT_ADJ(char_height)));
+	sizer->Add(adif, 0, wxLEFT|wxRIGHT, 10);
+
+	badcalls = new wxCheckBox(this, ID_PREF_FILE_BADCALLS, _("Allow nonamateur call signs"));
+	bool allow;
+	config->Read(wxT("BadCalls"), &allow, false);
+	badcalls->SetValue(allow);
+	sizer->Add(badcalls, 0, wxLEFT|wxRIGHT|wxTOP, 10);
+	daterange = new wxCheckBox(this, ID_PREF_FILE_BADCALLS, _("Prompt for QSO Date range when signing"));
+	config->Read(wxT("DateRange"), &allow, true);
+	daterange->SetValue(allow);
+	sizer->Add(daterange, 0, wxLEFT|wxRIGHT|wxTOP, 10);
+	dispdupes = new wxCheckBox(this, ID_PREF_FILE_DISPLAY_DUPES, _("Display details of already uploaded QSOs when signing a log"));
+	config->Read(wxT("DispDupes"), &allow, DEFAULT_DISP_DUPES);
+	dispdupes->SetValue(allow);
+	sizer->Add(dispdupes, 0, wxLEFT|wxRIGHT|wxTOP, 10);
+
+	int logverify;
+        config->Read(wxT("LogVerify"), &logverify, TQSL_LOC_REPORT);
+	if (logverify != TQSL_LOC_IGNORE && logverify != TQSL_LOC_REPORT && logverify != TQSL_LOC_UPDATE) {
+                        logverify = TQSL_LOC_REPORT;
+	}
+
+	static wxString choices[] = { wxT("Ignore QTH details from your log"), wxT("Report on QTH differences") , wxT("Override Station Location with QTH detals from your log") };
+
+	handleQTH = new wxRadioBox(this, -1, _("Handle QTH information in ADIF logs with what action?"), wxDefaultPosition, wxDefaultSize,
+		3, choices, 3, wxRA_SPECIFY_ROWS);
+	sizer->Add(handleQTH, 0, wxALL|wxEXPAND, 10);
+	handleQTH->SetSelection(logverify);
+
+	SetSizer(sizer);
+	sizer->Fit(this);
+	sizer->SetSizeHints(this);
+}
+
+bool LogPrefs::TransferDataFromWindow() {
+	tqslTrace("LogPrefs::TransferDataFromWindow", NULL);
+	wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
+	config->SetPath(wxT("/"));
+	config->Write(wxT("CabrilloFiles"), fix_ext_str(cabrillo->GetValue()));
+	config->Write(wxT("ADIFFiles"), fix_ext_str(adif->GetValue()));
+	config->Write(wxT("BadCalls"), badcalls->GetValue());
+	config->Write(wxT("DateRange"), daterange->GetValue());
+	config->Write(wxT("DispDupes"), dispdupes->GetValue());
+	config->Write(wxT("LogVerify"), handleQTH->GetSelection());
+
 	return true;
 }
 
@@ -620,9 +667,7 @@ ProxyPrefs::ProxyPrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm"
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
 	wxString msg = wxT("\n");
-		msg += _("Use these settings to configure a network proxy "
-			L"for Internet uploads and downloads. You should only "
-			L"enable a proxy if directed by your network administrator.");
+		msg += _("Use these settings to configure a network proxy for Internet uploads and downloads. You should only enable a proxy if directed by your network administrator.");
 		msg += wxT("\n");
 		msg += _("Incorrect settings can cause TQSL to be unable to upload logs or check for updates.");
 	wxStaticText *st = new wxStaticText(this, -1, msg, wxDefaultPosition, wxSize(char_width, char_height *8));

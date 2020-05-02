@@ -207,8 +207,12 @@ unsigned char *ASN1_seq_pack(void *safes, i2d_of_void *i2d,
 # define PKCS12_x5092certbag PKCS12_SAFEBAG_create_cert
 # define PKCS12_x509crl2certbag PKCS12_SAFEBAG_create_crl
 # define X509_STORE_CTX_trusted_stack X509_STORE_CTX_set0_trusted_stack
+#ifndef X509_get_notAfter
 # define X509_get_notAfter X509_get0_notAfter
+#endif
+#ifndef X509_get_notBefore
 # define X509_get_notBefore X509_get0_notBefore
+#endif
 # define PKCS12_MAKE_SHKEYBAG PKCS12_SAFEBAG_create_pkcs8_encrypt
 # define X509_V_FLAG_CB_ISSUER_CHECK 0x0
 #else
@@ -346,6 +350,10 @@ static tqsl_adifFieldDefinitions tqsl_cert_file_fields[] = {
 static unsigned char tqsl_static_buf[2001];
 
 static char ImportCall[256];
+
+#if !defined(__APPLE__) && !defined(_WIN32) && !defined(__clang__)
+        #pragma GCC diagnostic ignored "-Wformat-truncation"
+#endif
 
 static unsigned char *
 tqsl_static_alloc(size_t size) {
@@ -577,7 +585,8 @@ tqsl_createCertRequest(const char *filename, TQSL_CERT_REQ *userreq,
 	int libmaj, libmin, configmaj, configmin;
 	tqsl_getVersion(&libmaj, &libmin);
 	tqsl_getConfigVersion(&configmaj, &configmin);
-	snprintf(buf, sizeof buf, "Lib: V%d.%d, Config: %d, %d", libmaj, libmin, configmaj, configmin);
+	snprintf(buf, sizeof buf, "TQSL: %d.%d.%d, Lib: V%d.%d, Config: %d.%d", TQSL_VERSION_MAJOR,
+			TQSL_VERSION_MINOR, TQSL_VERSION_UPDATE, libmaj, libmin, configmaj, configmin);
 	tqsl_write_adif_field(out, "TQSL_IDENT", 0, (unsigned char *)buf, -1);
 	tqsl_write_adif_field(out, type, 0, NULL, 0);
 	tqsl_write_adif_field(out, "TQSL_CRQ_PROVIDER", 0, (unsigned char *)req->providerName, -1);
@@ -4299,7 +4308,7 @@ tqsl_handle_ca_cert(const char *pem, X509 *x, int (*cb)(int, const char *, void 
 			return 1;
 		}
 	}
-	cp = tqsl_ssl_verify_cert(x, NULL, root_sk, 0, &tqsl_expired_is_ok);
+	cp = tqsl_ssl_verify_cert(x, NULL, root_sk, 0, NULL);
 	sk_X509_free(root_sk);
 	if (cp) {
 		strncpy(tQSL_CustomError, cp, sizeof tQSL_CustomError);

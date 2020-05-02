@@ -133,6 +133,10 @@
 			<param name="Local" value="pref-opt.htm">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Setting TQSL Log Handling Options">
+			<param name="Local" value="pref-log.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="Setting a Date Range">
 			<param name="Local" value="daterng.htm">
 			</OBJECT>

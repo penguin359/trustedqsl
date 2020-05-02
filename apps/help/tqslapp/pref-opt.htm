@@ -7,31 +7,12 @@
 <P>
 To inspect or change TQSL's options, select the <B>File</B> menu's <B>Display or Modify Preferences...</B> command (on <b>OS X</b>, select the <b>Application</b> menu's <b>Preferences</b> command) to display its <B>Preferences</B> dialog; this dialog's <B>Options</B> tab provides control over several settings that govern TQSL's operation:
 <UL>
-<LI><a href="pref-opt.htm#extensions">Specify ADIF and Cabrillo File Extensions</a></li>
 <LI><a href="pref-opt.htm#backup">Enable automatic Backup File creation on termination</a></li>
-<LI><a href="pref-opt.htm#nonamateur">Allow Nonamateur Callsigns</a></li>
-<LI><a href="pref-opt.htm#daterange">Prompt for QSO Date Range</a></li>
 <LI><a href="pref-opt.htm#adifedit">Open ADIF files in ADIF editor</a></li>
-<LI><a href="pref-opt.htm#dupdetails">Display details of already uploaded QSOs when signing a log</a></li>
 <LI><a href="pref-opt.htm#statustab">Display status messages in a separate tab</a></li>
 <LI><a href="pref-opt.htm#signcert">Enable passwords for Callsign Certificates</a></li>
 </UL>
 
-<P>
-<a name="extensions"></a>
-<H5>Specify ADIF and Cabrillo File Extensions</H5>
-Because there are no standard file extensions (.XXX) consistently used
-for ADIF AND Cabrillo files, TQSL lets you specify the extensions used on your system for each
-file types. The <a href="signupload.htm">Select File to Sign and Upload</a> and
-<a href="signupload.htm">Select File to Sign and Save</a> dialogs set their <b>Files of type</b>
-selectors based on the extensions specified on this tab:
-<p>
-<img src="pref-opt.bmp" width=458 height=458 border=0>
-<P>
-In the example shown above, files whose names end in <code>.log</code> or <code>.cab</code>
-will be treated as Cabrillo files, while those with names ending in <code>.adi</code> or
-<code>.ADI</code> are ADIF files. When using an operating system like <b>Windows</b> that doesn't distinguish
-case in file names, the two ADIF entries shown in this example would be unneccessary.
 <P>
 <a name="backup"></a>
 <H5>Enable automatic Backup File creation on termination</H5>
@@ -41,38 +22,9 @@ automatically be created when terminating. The most recent <b>Backup File</b> cr
 <b>Backup Files</b> specified by the <b>Number of Backups to retain</b> setting, deleting the oldest <b>Backup Files</b> in excess of this setting. Retained <b>Backup Files</b> will include the date and time of their creation in their filename.
 
 <P>
-<a name="nonamateur"></a>
-<H5>Allow Nonamateur Callsigns</H5>
-The <B>Allow nonamateur call signs</b> checkbox lets you to choose whether TQSL
-should treat a nonamateur call-worked as an error. An amateur callsign must meet these requirements:
-<UL>
-<LI>contains only the letters A through Z, the digits 0 through 9, and the slash character</LI>
-<LI>contains at least one number and one letter</LI>
-<LI>is at least three characters in length</LI>
-<LI>does not begin or end with a slash character</LI>
-<LI>does not begin with 0</LI>
-<LI>does not begin with 1 unless it begins with 1A, 1M, or 1S</LI>
-</UL>
-<P>LoTW will not accept a QSO whose callsign does not conform to the above requirements so you should leave TQSL's <b>Allow nonamateur call signs</b> box unchecked.</P>
-<P>
-<a name="daterange"></a>
-<H5>Prompt for QSO Date Range</H5>
-This checkbox determines whether <b>TQSL</b> will display the <A HREF="daterng.htm"> QSO Date Range dialog</a>
-when <a href="signupload.htm">Submitting a Log File to LoTW via the Internet</a> or when
-<a href="signupload.htm">Submitting a Log File from a Computer without Internet Access</a>. 
-<p>
-The <b>QSO Date Range</b> dialog can be used to prevent QSOs already submitted to LoTW that haven't been subsequently modified from being submitted again,
-sparing LoTW from processing QSOs that have already been processed. 
-<P>
-
 <a name="adifedit"></a>
 <H5>Open ADIF files in ADIF editor</H5>
 If this box is checked and TQSL is started with a <a href="cmdline.htm">command line</a> that specifies a file with an <b>.ADI</b> extension but does not specify <b>-q</b> or <b>-x</b> switches, then TQSL will display the contents of the specified ADIF file in its <a HREF="qsodata.htm">ADIF Editor</a> instead of signing the contents of the ADIF file; if this box is not checked, then when started from a <a href="cmdline.htm">command line</a> that specifies an ADIF file, TQSL will always sign the files contents.
-<p>
-
-<a name="dupdetails"></a>
-<H5>Display details of already uploaded QSOs when signing a log</H5>
-If, when <a href="signupload.htm">signing and uploading a file</a> or <a href="signupload.htm">signing and saving a file</a>, TQSL encounters QSOs that have already been submitted to LoTW, then if this box is checked the details of each <i>already uploaded</i> QSO will be reported in the <b>Status Log</b>; if this box is not checked, no details will be reported.
 <p>
 
 <a name="statustab"></a>
