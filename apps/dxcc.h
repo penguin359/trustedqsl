@@ -24,6 +24,7 @@ class DXCC {
 	bool getFirst();
 	bool getNext();
 	bool getByEntity(int e);
+	void reset();
 	static bool init();
  private:
 	static bool _init;

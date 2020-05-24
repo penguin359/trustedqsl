@@ -3,6 +3,16 @@ TQSLLIB changes
 
 2.5
 ---
+Update to latest LoTW configuration file.
+
+Callsigns, counties, etc. should not be case sensitive. Upper case
+before using.
+
+Don't issue error when CA cert has expired when importing a .p12 file.
+(Or silently fail.)
+
+Fuzzy match county names to allow existing variations to work.
+
 Ignore OWNER_CALLSIGN as that's not intended to be used as any kind of
 call used during an operation, it's who owns the station.
 

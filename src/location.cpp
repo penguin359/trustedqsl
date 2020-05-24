@@ -3445,6 +3445,56 @@ tqsl_getLocationField(tQSL_Location locp, const char *field, char *buf, int bufs
 	return 1;
 }
 
+// Replaces all occurences of 'from' with 'to' in string 'str'
+
+static void replaceAll(string& str, const string& from, const string& to) {
+	if (from.empty()) {
+		return;
+	}
+	size_t start_pos = 0;
+	while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+        	str.replace(start_pos, from.length(), to);
+        	start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+	}
+}
+
+static bool fuzzy_match(string userInput, string field) {
+	// First upcase
+	string left = string_toupper(userInput);
+	string right = string_toupper(field);
+	// Strip spaces
+	replaceAll(left, " ", "");
+	replaceAll(right, " ", "");
+	// Strip apostraphes
+	replaceAll(left, "'", "");
+	replaceAll(right, "'", "");
+	// Strip hyphens
+	replaceAll(left, "-", "");
+	replaceAll(right, "-", "");
+	// Alaska fixes
+	replaceAll(left, "CITYANDBOROUGH", "");
+	replaceAll(right, "CITYANDBOROUGH", "");
+	replaceAll(left, "BOROUGH", "");
+	replaceAll(right, "BOROUGH", "");
+	replaceAll(left, "CENSUSAREA", "");
+	replaceAll(right, "CENSUSAREA", "");
+	replaceAll(left, "MUNICIPALITY", "");
+	replaceAll(right, "MUNICIPALITY", "");
+	// Normalize saints
+	replaceAll(left, "ST.", "SAINT");
+	replaceAll(right, "ST.", "SAINT");
+	replaceAll(left, "STE.", "SAINTE");
+	replaceAll(right, "STE.", "SAINTE");
+	// One-offs
+	replaceAll(left, "DOÑAANA", "DONAANA");
+	replaceAll(right, "DOÑAANA", "DONAANA");
+	replaceAll(left, "BRISTOLCITY", "BRISTOL");
+	replaceAll(right, "BRISTOLCITY", "BRISTOL");
+	replaceAll(left, "SALEMCITY", "SALEM");
+	replaceAll(right, "SALEMCITY", "SALEM");
+	return (left == right);
+}
+
 DLLEXPORT int CALLCONVENTION
 tqsl_setLocationField(tQSL_Location locp, const char *field, const char *buf) {
 	TQSL_LOCATION *loc;
@@ -3467,6 +3517,7 @@ tqsl_setLocationField(tQSL_Location locp, const char *field, const char *buf) {
 			TQSL_LOCATION_FIELD *pf = &p.fieldlist[i];
 			if (pf->gabbi_name == field) {
 				bool found = false;
+				bool adifVal = false;
 				pf->cdata = string(buf).substr(0, pf->data_len);
 				if (pf->flags & TQSL_LOCATION_FIELD_UPPER)
 					pf->cdata = string_toupper(pf->cdata);
@@ -3482,6 +3533,16 @@ tqsl_setLocationField(tQSL_Location locp, const char *field, const char *buf) {
 								pf->idx = i;
 								pf->idata = pf->items[i].ivalue;
 								found = true;
+								break;
+							}
+							// foo
+							if (fuzzy_match(pf->items[i].label, pf->cdata)) {
+								strncpy(tQSL_CustomError, pf->items[i].text.c_str(), sizeof tQSL_CustomError);
+								pf->cdata = pf->items[i].text;
+								pf->idx = i;
+								pf->idata = pf->items[i].ivalue;
+								found = true;
+								adifVal = true;
 								break;
 							}
 						}
@@ -3500,6 +3561,8 @@ tqsl_setLocationField(tQSL_Location locp, const char *field, const char *buf) {
 					pf->idata = strtol(buf, NULL, 10);
 				}
 				tqsl_setStationLocationCapturePage(loc, old_page);
+				if (adifVal)
+					return -2;
 				if (!found)
 					return -1;
 				return 0;

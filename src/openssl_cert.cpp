@@ -4308,7 +4308,7 @@ tqsl_handle_ca_cert(const char *pem, X509 *x, int (*cb)(int, const char *, void 
 			return 1;
 		}
 	}
-	cp = tqsl_ssl_verify_cert(x, NULL, root_sk, 0, NULL);
+	cp = tqsl_ssl_verify_cert(x, NULL, root_sk, 0, &tqsl_expired_is_ok);
 	sk_X509_free(root_sk);
 	if (cp) {
 		strncpy(tQSL_CustomError, cp, sizeof tQSL_CustomError);

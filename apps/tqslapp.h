@@ -192,6 +192,6 @@ class MyFrame : public wxFrame {
 	bool _quiet;
 };
 
-int SaveAddressInfo(const char *callsign);
+int SaveAddressInfo(const char *callsign, int dxcc);
 
 #endif // __tqslapp_h
