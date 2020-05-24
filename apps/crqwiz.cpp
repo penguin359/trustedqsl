@@ -26,7 +26,7 @@
 
 #include "winstrdefs.h"
 
-extern int SaveAddressInfo(const char *callsign);
+extern int SaveAddressInfo(const char *callsign, int dxcc);
 
 extern int GetULSInfo(const char *callsign, wxString &name, wxString &attn, wxString &street, wxString &city, wxString &state, wxString &zip, wxString &updateDate);
 
@@ -536,7 +536,7 @@ void
 CRQ_NamePage::Preset(CRQ_CallsignPage *ip) {
 	wxString s;
 	string t;
-	SaveAddressInfo(_parent->callsign.ToUTF8());
+	SaveAddressInfo(_parent->callsign.ToUTF8(), _parent->dxcc);
 	if (!_parent->name.IsEmpty()) {
 		tc_name->SetValue(_parent->name);
 	} else if (get_address_field(_parent->callsign.ToUTF8(), "name", t) == 0) {

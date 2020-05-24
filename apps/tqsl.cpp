@@ -171,6 +171,8 @@ static int lock_db(bool wait);
 static void unlock_db(void);
 int get_address_field(const char *callsign, const char *field, string& result);
 
+static void cert_cleanup(void);
+
 static void exitNow(int status, bool quiet) {
 	const char *errors[] = { __("Success"),
 				 __("User Cancelled"),
@@ -1552,6 +1554,7 @@ static wxString getAbout() {
 	msg+=wxString::Format(wxT("%hs"), DB_VERSION_STRING);
 #endif
 	msg+=wxT("\n\n\nTranslators:\n");
+	msg+=wxT("Catalan: Xavier, EA3W\n");
 	msg+=wxT("Chinese: Caros, BH4TXN\n");
 	msg+=wxT("Finnish: Juhani Tapaninen, OH8MXL\n");
 	msg+=wxT("French: Laurent BEUGNET, F6GOX\n");
@@ -2328,7 +2331,7 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 	unlock_db();
 	if (cancelled)
 		return TQSL_EXIT_CANCEL;
-	if (processed == 0)
+	if (n == 0)
 		return TQSL_EXIT_NO_QSOS;
 	if (aborted || duplicates > 0 || out_of_range > 0 || errors > 0)
 		return TQSL_EXIT_QSOS_SUPPRESSED;
@@ -3270,6 +3273,9 @@ void MyFrame::UpdateConfigFile() {
 		} else {
 			tqslTrace("UpdateConfigFile", "Config update success");
 			wxMessageBox(_("Configuration file successfully updated"), _("Update Completed"), wxOK | wxICON_INFORMATION, this);
+			// Reload the DXCC mapping
+			DXCC dx;
+			dx.reset();
 		}
 	} else {
 		tqslTrace("MyFrame::UpdateConfigFile", "cURL Error during config file download: %s (%s)\n", curl_easy_strerror((CURLcode)retval), errorbuf);
@@ -3512,7 +3518,12 @@ MyFrame::DoCheckExpiringCerts(bool noGUI) {
 		wxString grid;
 
 		// Get the user detail info for this callsign from the ARRL server
-		SaveAddressInfo(callsign);
+		int dxcc;
+		if (tqsl_getCertificateDXCCEntity(clist[i], &dxcc)) {
+			report_error(&ei);
+			continue;
+		}
+		SaveAddressInfo(callsign, dxcc);
 
 		int expired = 0;
 		tqsl_isCertificateExpired(clist[i], &expired);
@@ -3929,7 +3940,7 @@ wx_tokens(const wxString& str, vector<wxString> &toks) {
 }
 
 int
-SaveAddressInfo(const char *callsign) {
+SaveAddressInfo(const char *callsign, int dxcc) {
 	if (callsign == NULL) {
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
 		return 1;
@@ -3937,8 +3948,8 @@ SaveAddressInfo(const char *callsign) {
 
 	bool needToCleanUp = false;
 	char url[512];
-	strncpy(url, (wxString::Format(wxT("https://lotw.arrl.org/tqsl-setup.php?callsign=%hs"), callsign)).ToUTF8(), sizeof url);
-	tqslTrace("SaveAddressInfo", "Call = %s, url = %s", callsign, url);
+	strncpy(url, (wxString::Format(wxT("https://lotw.arrl.org/tqsl-setup.php?callsign=%hs&dxcc=%d"), callsign, dxcc)).ToUTF8(), sizeof url);
+	tqslTrace("SaveAddressInfo", "Call = %s, Entity=%d, url = %s", callsign, dxcc, url);
 	if (curlReq) {
 		curl_easy_setopt(curlReq, CURLOPT_URL, url);
 	} else {
@@ -5602,68 +5613,63 @@ QSLApp::OnInit() {
 	// Handle "-i" (import cert), or bare cert file on command line
 
 	bool tq6File = false;
+	bool p12File = false;
 	if (!wxIsEmpty(infile)) {
 		if (ext.CmpNoCase(wxT("tq6")) == 0) {
 			tq6File = true;
 		}
+		if (ext.CmpNoCase(wxT("p12")) == 0) {
+			p12File = true;
+		}
 	}
 	if (parser.Found(wxT("i"), &infile) && (!wxIsEmpty(infile))) {
-		tq6File = true;
+		wxFileName::SplitPath(infile, &path, &name, &ext);
+		if (ext.CmpNoCase(wxT("tq6")) == 0) {
+			tq6File = true;
+		}
+		if (ext.CmpNoCase(wxT("p12")) == 0) {
+			p12File = true;
+		}
 	}
 
-	if (tq6File) {
+	if (tq6File || p12File) {
 		infile.Trim(true).Trim(false);
 		notifyData nd;
-		if (tqsl_importTQSLFile(infile.ToUTF8(), notifyImport, &nd)) {
-			if (tQSL_Error != TQSL_CERT_ERROR) {
-				wxLogError(getLocalizedErrorString());
-			}
-		} else {
-			wxLogMessage(nd.Message());
-			if (tQSL_ImportSerial != 0) {
-				wxString status;
-				frame->CheckCertStatus(tQSL_ImportSerial, status);		// Update from LoTW's "CRL"
-				tqsl_setCertificateStatus(tQSL_ImportSerial, (const char *)status.ToUTF8());
-			}
-			if (tQSL_ImportCall[0] != '\0' && tQSL_ImportSerial != 0 && tqsl_getCertificateStatus(tQSL_ImportSerial) == TQSL_CERT_STATUS_OK) {
-				get_certlist(tQSL_ImportCall, 0, true, true, true);	// Get any expired/superceded ones for this call
-				for (int i = 0; i < ncerts; i++) {
-					long serial = 0;
-					int keyonly = false;
-					tqsl_getCertificateKeyOnly(certlist[i], &keyonly);
-					if (keyonly) {
-						if (tQSL_ImportSerial != 0) {		// A full cert for this was imported
-							tqsl_deleteCertificate(certlist[i]);
-						}
-						continue;
-					}
-					if (tqsl_getCertificateSerial(certlist[i], &serial)) {
-						continue;
-					}
-					if (serial == tQSL_ImportSerial) {
-						continue;
-					}
-					// This is not the one we just imported
-					int sup, exp;
-					if (tqsl_isCertificateSuperceded(certlist[i], &sup) == 0 && sup) {
-						tqsl_deleteCertificate(certlist[i]);
-					} else if (tqsl_isCertificateExpired(certlist[i], &exp) == 0 && exp) {
-						tqsl_deleteCertificate(certlist[i]);
-					}
+		if (tq6File) {
+			if (tqsl_importTQSLFile(infile.ToUTF8(), notifyImport, &nd)) {
+				if (tQSL_Error != TQSL_CERT_ERROR) {
+					if (tQSL_Error != 0) wxLogError(getLocalizedErrorString());
 				}
+			} else {
+				wxString call = wxString::FromUTF8(tQSL_ImportCall);
+				wxString pending = wxConfig::Get()->Read(wxT("RequestPending"));
+				pending.Replace(call, wxT(""), true);
+				wxString rest;
+				while (pending.StartsWith(wxT(","), &rest))
+					pending = rest;
+				while (pending.EndsWith(wxT(","), &rest))
+					pending = rest;
+				wxConfig::Get()->Write(wxT("RequestPending"), pending);
+				cert_cleanup();
+				frame->cert_tree->Build(CERTLIST_FLAGS);
 			}
+			wxLogMessage(nd.Message());
+			return(true);
+		} else if (p12File) {
+			// First try with no password
+			if (!tqsl_importPKCS12File(infile.ToUTF8(), "", 0, NULL, notifyImport, &nd) || tQSL_Error == TQSL_CERT_ERROR) {
+				if (tQSL_Error != 0) wxLogError(getLocalizedErrorString());
+			} else if (tQSL_Error == TQSL_PASSWORD_ERROR) {
+				wxLogError(_("Password protected P12 files cannot be imported on the command line"));
+			} else if (tQSL_Error == TQSL_OPENSSL_ERROR) {
+				wxLogError(_("This file is not a valid P12 file"));
+			}
+			cert_cleanup();
 			frame->cert_tree->Build(CERTLIST_FLAGS);
-			wxString call = wxString::FromUTF8(tQSL_ImportCall);
-			wxString pending = wxConfig::Get()->Read(wxT("RequestPending"));
-			pending.Replace(call, wxT(""), true);
-			wxString rest;
-			while (pending.StartsWith(wxT(","), &rest))
-				pending = rest;
-			while (pending.EndsWith(wxT(","), &rest))
-				pending = rest;
-			wxConfig::Get()->Write(wxT("RequestPending"), pending);
+			frame->CertTreeReset();
+			wxLogMessage(nd.Message());
+			return(true);
 		}
-		return(true);
 	}
 
 	// We need a logfile, else there's nothing to do.
@@ -5950,16 +5956,13 @@ makeLocationMenu(bool enable) {
 	return loc_menu;
 }
 
-/////////// Frame /////////////
-
-void MyFrame::OnLoadCertificateFile(wxCommandEvent& WXUNUSED(event)) {
-	tqslTrace("MyFrame::OnLoadCertificateFile", NULL);
-	LoadCertWiz lcw(this, help, _("Load Certificate File"));
-	lcw.RunWizard();
+// Handle clean-up after a certificate is imported
+static void
+cert_cleanup() {
 	if (tQSL_ImportCall[0] != '\0') {				// If a user cert was imported
 		if (tQSL_ImportSerial != 0) {
 			wxString status;
-			CheckCertStatus(tQSL_ImportSerial, status);		// Update from LoTW's "CRL"
+			frame->CheckCertStatus(tQSL_ImportSerial, status);	// Update from LoTW's "CRL"
 			tqsl_setCertificateStatus(tQSL_ImportSerial, (const char *)status.ToUTF8());
 		}
 		int certstat = tqsl_getCertificateStatus(tQSL_ImportSerial);
@@ -5989,6 +5992,15 @@ void MyFrame::OnLoadCertificateFile(wxCommandEvent& WXUNUSED(event)) {
 			}
 		}
 	}
+}
+
+/////////// Frame /////////////
+
+void MyFrame::OnLoadCertificateFile(wxCommandEvent& WXUNUSED(event)) {
+	tqslTrace("MyFrame::OnLoadCertificateFile", NULL);
+	LoadCertWiz lcw(this, help, _("Load Certificate File"));
+	lcw.RunWizard();
+	cert_cleanup();
 	cert_tree->Build(CERTLIST_FLAGS);
 	CertTreeReset();
 }

@@ -64,6 +64,11 @@
     </DirectoryRef>
   </Fragment>
   <Fragment>
+    <DirectoryRef Id="APPLICATIONFOLDER">
+      <Directory Id="dirE4A716247CC340B3A903F82385867288" Name="ca_ES" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
     <ComponentGroup Id="LangDirs">
       <Component Id="cmp701E9CE13EE2E668BBA72B1CA4F191D7" Directory="dirDA8577371C3B761FBCA66742F426ABDC" Guid="*">
         <File Id="fil7BCEEBA899FBBC10FDAF76776D0AD6DA" KeyPath="yes" Source="$(var.langSrc)\de\tqslapp.mo" />
@@ -137,6 +142,14 @@
       <Component Id="cmpBBEB7843204C4FEC94699E593BDE2ADA" Directory="dirD0E6D5EEDC6345B4A3A09DBAAAE899B1" Guid="*">
         <File Id="file5A6571619FB04AD58AF34552986B3017" KeyPath="yes" Source="$(var.langSrc)\tr_TR\wxstd.mo" />
       </Component>
+
+      <Component Id="cmp7344f5FA19AC4679824BEB4E3A97CA9F" Directory="dirE4A716247CC340B3A903F82385867288" Guid="*">
+        <File Id="fileAC3BBB37A8AF4E5789384B1507201AA1" KeyPath="yes" Source="$(var.langSrc)\ca_ES\tqslapp.mo" />
+      </Component>
+      <Component Id="cmpAC65D03CF06F477587703CF0469C51BB" Directory="dirE4A716247CC340B3A903F82385867288" Guid="*">
+        <File Id="file6D669932EC6E459F808921E2DC63B814" KeyPath="yes" Source="$(var.langSrc)\ca_ES\wxstd.mo" />
+      </Component>
+
     </ComponentGroup>
   </Fragment>
 </Wix>

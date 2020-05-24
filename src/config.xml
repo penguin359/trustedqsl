@@ -1,4 +1,4 @@
-<tqslconfig majorversion="11" minorversion="9">
+<tqslconfig majorversion="11" minorversion="11">
      <adifmap>
        <adifmode adif-mode="AM" mode="AM">AM</adifmode>
        <adifmode adif-mode="ARDOP" mode="ARDOP">ARDOP</adifmode>
@@ -656,7 +656,7 @@
        <entity arrlId="462" deleted="0" valid="1945-11-15 00:00:00" zonemap="57:38">REPUBLIC OF SOUTH AFRICA</entity>
        <entity arrlId="464" deleted="0" valid="1945-11-15 00:00:00" zonemap="57:38">NAMIBIA</entity>
        <entity arrlId="466" deleted="0" valid="1945-11-15 00:00:00" zonemap="47:34,48:34">SUDAN</entity>
-       <entity arrlId="468" deleted="0" valid="1945-11-15 00:00:00" zonemap="57:38">SWAZILAND</entity>
+       <entity arrlId="468" deleted="0" valid="1945-11-15 00:00:00" zonemap="57:38">KINGDOM OF ESWATINI</entity>
        <entity arrlId="470" deleted="0" valid="1945-11-15 00:00:00" zonemap="53:37">TANZANIA</entity>
        <entity arrlId="474" deleted="0" valid="1945-11-15 00:00:00" zonemap="37:33">TUNISIA</entity>
        <entity arrlId="478" deleted="0" valid="1945-11-15 00:00:00" zonemap="38:34">EGYPT</entity>
@@ -706,7 +706,7 @@
            <enum value="NT" zonemap="55:29">Northern Territory</enum>
          </enums>
        </field>
-       <field Id="CALL" flags="0" intype="2" label="Call Sign" len="13" type="C" />
+       <field Id="CALL" flags="0" intype="2" label="Call Sign" len="20" type="C" />
        <field Id="CA_PROVINCE" flags="4" intype="2" label="Province" len="2" type="C">
          <enums>
            <enum value="AB" zonemap="02:04">Alberta</enum>
@@ -758,7 +758,7 @@
            <enum value="SC" zonemap="43:24">Sichuan</enum>
            <enum value="SD" zonemap="44:24">Shandong</enum>
            <enum value="SH" zonemap="44:24">Shanghai</enum>
-           <enum value="SN" zonemap="43:23">Shaanxi</enum>
+           <enum value="SN" zonemap="43:24">Shaanxi</enum>
            <enum value="SX" zonemap="44:24">Shanxi</enum>
            <enum value="TJ" zonemap="44:24">Tianjin</enum>
            <enum value="XJ" zonemap="42:23,43:23">Xinjiang</enum>
@@ -3300,18 +3300,17 @@
            <enum value="North Slope">North Slope Borough</enum>
            <enum value="Northwest Arctic">Northwest Arctic Borough</enum>
            <enum value="Petersburg">Petersburg Census Area</enum>
-           <enum value="Prince Wales Ketchikan">Prince of Wales-Outer-Ketichikan Census Area</enum>
            <enum value="Prince of Wales-Hyder">Prince of Wales-Hyder Census Area</enum>
            <enum value="Sitka">Sitka City and Borough</enum>
            <enum value="Skagway">Skagway Municipality</enum>
-           <enum value="Skagway Hoonah Angoon">Skagway-Hoonah-Angoon Census Area</enum>
            <enum value="Southeast Fairbanks">Southeast Fairbanks Census Area</enum>
            <enum value="Valdez Cordova">Valdez-Cordova Census Area</enum>
            <enum value="Wade Hampton">Wade Hampton Census Area</enum>
            <enum value="Wrangell">Wrangell City and Borough</enum>
-           <enum value="Wrangell Petersburg">Wrangell-Petersburg Census Area</enum>
            <enum value="Yakutat">Yakutat City and Borough</enum>
            <enum value="Yukon Koyukuk">Yukon-Koyukuk Census Area</enum>
+           <enum value="Prince Wales Ketchikan">Prince of Wales-Outer-Ketichikan Census Area</enum>
+           <enum value="Skagway Hoonah Angoon">Skagway-Hoonah-Angoon Census Area</enum>
          </enums>
          <enums dependency="AL">
            <enum value="Autauga">Autauga</enum>
@@ -7722,6 +7721,7 @@
        <satellite name="FO-29" startDate="1996-07-17">Fuji-OSCAR 29</satellite>
        <satellite name="FO-99" startDate="2019-01-26">Fuji-OSCAR 99 (NEXUS)</satellite>
        <satellite name="FS-3" startDate="2017-09-24">FalconSAT 3</satellite>
+       <satellite name="HO-107" startDate="2020-05-10">HuskySat OSCAR 107</satellite>
        <satellite name="HO-68" startDate="2009-12-15">Hope-Oscar 68</satellite>
        <satellite name="IO-86" startDate="2015-09-28">Indonesia-OSCAR 86 (LAPAN-ORARI)</satellite>
        <satellite name="JO-97" startDate="2018-12-08">Jordan-OSCAR 97(JY1Sat)</satellite>
@@ -7745,6 +7745,7 @@
        <satellite endDate="2002-02-15" name="RS-13" startDate="1991-02-05">Radio Sputnik 13</satellite>
        <satellite name="RS-15" startDate="1994-12-16">Radio Sputnik 15</satellite>
        <satellite endDate="1979-02-01" name="RS-2" startDate="1978-10-26">Radio Sputnik 2</satellite>
+       <satellite name="RS-44" startDate="2020-04-30">Radio Sputnik 44 (DOSAAF-85)</satellite>
        <satellite endDate="1987-05-10" name="RS-5" startDate="1981-12-17">Radio Sputnik 5</satellite>
        <satellite endDate="1984-12-09" name="RS-6" startDate="1981-12-17">Radio Sputnik 6</satellite>
        <satellite endDate="1987-06-01" name="RS-7" startDate="1981-12-18">Radio Sputnik 7</satellite>

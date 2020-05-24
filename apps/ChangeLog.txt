@@ -1,5 +1,25 @@
 TQSL changes
 ============
+2.5.4
+----------
+Add Catalan localization provided by Xavier, EA3W.
+
+Correct the command line exit status values to properly reflect all QSOs
+suppressed and some QSOs suppressed situations.
+
+When looking up address information, use the DXCC entity number for the
+callsign certificate to ensure the right address is retrieved.
+
+Correct case sensitive callsign matches when comparing QSO data. This
+corrects a defect where OPERATOR set to 'k1mu' would issue an error.
+
+Loosen matching for US counties as there is no single source of
+"proper" county names.
+
+Fix issue where installing a new LoTW configuration file could
+corrupt the DXCC entity names.
+
+
 2.5.3
 ----------
 Report on invalid data in ADIF fields - County misspelled, state in
