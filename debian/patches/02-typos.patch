@@ -3,7 +3,7 @@ Author: tony mancill <tmancill@debian.org>
 
 --- a/src/location.cpp
 +++ b/src/location.cpp
-@@ -1113,7 +1113,7 @@
+@@ -1178,7 +1178,7 @@
  		return 1;
  	}
  	if (init_cabrillo_map()) {
@@ -11,8 +11,8 @@ Author: tony mancill <tmancill@debian.org>
 +		tqslTrace("tqsl_getCabrilloMapEntry", "init_cabrillo_map error %d", tQSL_Error);
  		return 1;
  	}
- 	map<string, pair<int, int> >::iterator it;
-@@ -2126,7 +2126,7 @@
+ 	map<string, triplet<int, int, TQSL_CABRILLO_FREQ_TYPE> >::iterator it;
+@@ -2225,7 +2225,7 @@
  	}
  	TQSL_LOCATION_FIELDLIST &fl = loc->pagelist[loc->page-1].fieldlist;
  	if (buf == NULL || field_num < 0 || field_num >= static_cast<int>(fl.size())) {
@@ -371,7 +371,7 @@ Author: tony mancill <tmancill@debian.org>
  #: tqsl.cpp:3841
 --- a/apps/tqsl.cpp
 +++ b/apps/tqsl.cpp
-@@ -2860,7 +2860,7 @@
+@@ -2867,7 +2867,7 @@
  			wxLogMessage(_("Please try uploading the %s later."), fileType.c_str());
  			retval = TQSL_EXIT_CONNECTION_FAILED;
  		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
@@ -380,7 +380,7 @@ Author: tony mancill <tmancill@debian.org>
  			wxLogMessage(_("Please try uploading the %s later."), fileType.c_str());
  			retval = TQSL_EXIT_CONNECTION_FAILED;
  		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
-@@ -3285,7 +3285,7 @@
+@@ -3295,7 +3295,7 @@
  			wxLogMessage(_("Unable to update - either your Internet connection is down or LoTW is unreachable."));
  			wxLogMessage(_("Please try again later."));
  		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
@@ -389,7 +389,7 @@ Author: tony mancill <tmancill@debian.org>
  			wxLogMessage(_("Please try again later."));
  		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
  			wxLogMessage(_("Unable to connect to the update site."));
-@@ -3352,7 +3352,7 @@
+@@ -3364,7 +3364,7 @@
  			wxLogMessage(_("Unable to update - either your Internet connection is down or LoTW is unreachable."));
  			wxLogMessage(_("Please try again later."));
  		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
@@ -398,7 +398,7 @@ Author: tony mancill <tmancill@debian.org>
  			wxLogMessage(_("Please try again later."));
  		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
  			wxLogMessage(_("Unable to connect to the update site."));
-@@ -3835,7 +3835,7 @@
+@@ -3863,7 +3863,7 @@
  			} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
  				networkError = true;
  				ri->error = true;
@@ -407,7 +407,7 @@ Author: tony mancill <tmancill@debian.org>
  				ri->errorText += wxT("\n");
  				ri->errorText += _("Please try again later.");
  			} else if (retval == CURLE_SSL_CONNECT_ERROR) {
-@@ -3870,7 +3870,7 @@
+@@ -3898,7 +3898,7 @@
  		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
  			networkError = true;
  			ri->error = true;
@@ -418,7 +418,7 @@ Author: tony mancill <tmancill@debian.org>
  		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
 --- a/apps/tqslupdater.cpp
 +++ b/apps/tqslupdater.cpp
-@@ -217,7 +217,7 @@
+@@ -216,7 +216,7 @@
  		if (retval == CURLE_COULDNT_RESOLVE_HOST || retval == CURLE_COULDNT_CONNECT) {
  			wxMessageBox(wxT("Unable to update - either your Internet connection is down or LoTW is unreachable.\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
  		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
@@ -427,7 +427,7 @@ Author: tony mancill <tmancill@debian.org>
  		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
  			wxMessageBox(wxT("Unable to connect to the update site.\nPlease try again later"), wxT("Error"), wxOK | wxICON_ERROR, this);
  		} else { // some other error
-@@ -301,7 +301,7 @@
+@@ -300,7 +300,7 @@
  		if (retval == CURLE_COULDNT_RESOLVE_HOST || retval == CURLE_COULDNT_CONNECT) {
  			wxMessageBox(wxT("Unable to check for updates - either your Internet connection is down or LoTW is unreachable.\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
  		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {

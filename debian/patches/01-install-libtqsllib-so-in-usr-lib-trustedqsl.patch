@@ -6,7 +6,7 @@ Since it is not a versioned .so, libtqsllib.so must not be installed in
 
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -56,7 +56,7 @@
+@@ -55,7 +55,7 @@
  if(NOT APPLE AND NOT WIN32)
  set_source_files_properties(location.cpp PROPERTIES COMPILE_DEFINITIONS CONFDIR="${CMAKE_INSTALL_PREFIX}/share/TrustedQSL/")
  set(HEADERS_TO_INSTALL tqsllib.h tqslerrno.h cabrillo.h adif.h tqslconvert.h)
