@@ -3,6 +3,26 @@ TQSLLIB changes
 
 2.5
 ---
+TQSL could crash if a log being signed in update mode changed the DXCC entity
+such that the zones were no longer valid. TQSL now changes those to "none" if
+there is no match.
+
+When processing a "QSO" record in a Cabrillo file that's badly formatted - no
+band or callsign, for example - TQSL would loop on the same bad record until
+terminated. TQSL now reports the error and ignores the QSO.
+
+Fix handling of "QC" where LoTW uses the older "PQ" abbreviation internally
+so that QC isn't called out as a mismatch.
+
+Allow full administrative subdivision names so that loggers that emit
+"New York" versus "NY" in a MY_STATE field will be accepted.
+
+When comparing DXCC grid sets (multiple grids due to operating on a
+boundary between gridsquares) allow the grids to be in any order and
+stil match.
+
+Allow ADIF parser to return arbitrary ADIF fields.
+
 Update to latest LoTW configuration file.
 
 Callsigns, counties, etc. should not be case sensitive. Upper case

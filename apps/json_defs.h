@@ -99,7 +99,10 @@
 // always use 32-bits integers also when the platform seems to
 // have native 64-bits support: by default the macro if not defined
 //
-// #define wxJSON_NO_64BIT_INT
+#if defined(__WIN32__) || defined(_WIN32)
+#define wxJSON_NO_64BIT_INT
+#endif
+
 //
 #if defined( wxJSON_NO_64BIT_INT ) && defined( wxJSON_64BIT_INT )
 #undef wxJSON_64BIT_INT

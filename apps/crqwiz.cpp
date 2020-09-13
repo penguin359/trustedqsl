@@ -51,7 +51,7 @@ enum  {
 static wxString callTypeChoices[] = {
 	 _("My current personal callsign"),
 	 _("My new personal callsign (I have a Callsign Certificate for my former callsign)"),
-	 _("My former personal callsign or a portable modifier for my current callsign"),
+	 _("My former personal callsign or a portable modifier for my current or former callsign"),
 	 _("A primary club callsign"),
 	 _("A secondary club callsign (I have a Callsign Certificate for the primary club callsign)"),
 	 _("A DXpedition, Portable, or holiday operation with multiple operators"),

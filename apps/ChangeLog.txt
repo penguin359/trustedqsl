@@ -1,5 +1,21 @@
 TQSL changes
 ============
+2.5.5
+----------
+when unable to find a match for a callsign certificate where the station
+location is in DXCC Entity "None" don't suppress the entity name.
+
+Fix issue on Windows systems when a TQSL update and a configuration file
+update both show up at the same time. Randomly choose one or the other
+for installation.
+
+Ensure that all ADIF modes are available in the TQSL ADIF Editor.
+
+Allow the TQSL ADIF editor to retain any ADIF field in the output. TQSL
+doesn't allow editing all fields, but it no longer discards fields that
+the editor does not handle.
+
+
 2.5.4
 ----------
 Add Catalan localization provided by Xavier, EA3W.

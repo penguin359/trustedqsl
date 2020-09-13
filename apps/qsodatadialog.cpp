@@ -154,15 +154,16 @@ init_valid_lists() {
 	if (tqsl_init())
 		return 1;
 	int count;
-	if (tqsl_getNumMode(&count))
+	if (tqsl_getNumADIFMode(&count))
 		return 1;
 	const char *cp, *cp1;
 	for (int i = 0; i < count; i++) {
-		if (tqsl_getMode(i, &cp, 0))
+		if (tqsl_getADIFModeEntry(i, &cp))
 			return 1;
 		valid_modes.push_back(choice(wxString::FromUTF8(cp)));
 	}
 	valid_rxbands.push_back(choice(wxT(""), _("NONE")));
+
 	if (tqsl_getNumBand(&count))
 		return 1;
 	for (int i = 0; i < count; i++) {
@@ -618,7 +619,7 @@ QSODataDialog::WriteQSOFile(QSORecordList& recs, const char *fname) {
 #endif
 	if (!out.is_open())
 		return false;
-	unsigned char buf[256];
+	unsigned char buf[2048];
 	int rec_cnt = 0;
 	QSORecordList::iterator it;
 	for (it = recs.begin(); it != recs.end(); it++) {
@@ -665,6 +666,14 @@ QSODataDialog::WriteQSOFile(QSORecordList& recs, const char *fname) {
 		if (it->_satellite != wxT("")) {
 			tqsl_adifMakeField("SAT_NAME", 0, (const unsigned char*)(const char *)it->_satellite.ToUTF8(), -1, buf, sizeof buf);
 			out << "   " << buf << endl;
+		}
+		map<string, string>::iterator xit;
+		for (xit = it->_extraFields.begin(); xit != it->_extraFields.end(); ++xit) {
+			const char *xtraName = xit->first.c_str();
+			const unsigned char *xtraVal = reinterpret_cast<const unsigned char*> (xit->second.c_str());
+			if (!tqsl_adifMakeField(xtraName, 0, xtraVal, -1, buf, sizeof buf)) {
+				out << "   " << buf << endl;
+			}
 		}
 		out << "<EOR>" << endl;
 	}

@@ -21,6 +21,8 @@
 #include "tqslerrno.h"
 #include <cstring>
 #include <string>
+#include <vector>
+#include <algorithm>
 #include <ctype.h>
 #include <set>
 #ifdef USE_LMDB
@@ -45,6 +47,8 @@
 
 using std::set;
 using std::string;
+using std::vector;
+using std::sort;
 
 static bool checkCallSign(const string& call);
 
@@ -195,6 +199,29 @@ inline void TQSL_CONVERTER::clearRec() {
 }	// namespace tqsllib
 
 using tqsllib::TQSL_CONVERTER;
+
+template <class Container>
+static void add_to_container(const char *str, size_t len, void *data) {
+    Container *cont = static_cast<Container*>(data);
+    cont->push_back(string(str, len));
+}
+
+typedef void(*split_fn)(const char *, size_t, void *);
+static void split(const char *str, char sep, split_fn fun, void *data) {
+    unsigned int start = 0, stop;
+    for (stop = 0; str[stop]; stop++) {
+	if (str[stop] == sep) {
+	    fun(str + start, stop - start, data);
+	    start = stop + 1;
+	}
+    }
+    fun(str + start, stop - start, data);
+}
+
+template <class Container>
+static void splitStr(const string& str, Container& cont, char delim = ' ') {
+    split(str.c_str(), delim, static_cast<split_fn>(add_to_container<Container>), &cont);
+}
 
 static char * fix_freq(const char *in) {
     static char out[128];
@@ -1260,7 +1287,19 @@ static int check_station(TQSL_CONVERTER *conv, const char *field, char *my, size
 // is propagated to the downstream values. STATE -> COUNTY and STATE->ZONES
 //
 	char val[256];
-	if (my[0] && !tqsl_getLocationField(conv->loc, field, val, sizeof val)) {
+	char label[256];
+	bool provinceFixed = false;
+	// CA_PROVINCE can be QC but TQSL lookup expects PQ
+	if (!strcasecmp(field, "CA_PROVINCE") && !strcasecmp(my, "QC")) {
+		provinceFixed = true;
+		strncpy(my, "PQ", len);
+	}
+
+	if (my[0] && !tqsl_getLocationField(conv->loc, field, val, sizeof val) &&
+		     !tqsl_getLocationFieldLabel(conv->loc, field, label, sizeof label)) {
+		if (!strcasecmp(my, label)) {			// Label is correct, ADIF is not
+			strncpy(my, val, len);		// So use the value
+		}
 		if (strcasecmp(my, val)) {
 			if (conv->location_handling == TQSL_LOC_UPDATE) {
 				int res = tqsl_setLocationField(conv->loc, field, my);
@@ -1279,6 +1318,9 @@ static int check_station(TQSL_CONVERTER *conv, const char *field, char *my, size
 				conv->newstation = true;
 			} else if (strlen(val) > 0) {
 				conv->rec_done = true;
+				if (provinceFixed) {
+					strncpy(my, "QC", len);
+				}
 				snprintf(tQSL_CustomError, sizeof tQSL_CustomError, errfmt, val, my);
 				tQSL_Error = TQSL_LOCATION_MISMATCH;
 				return 1;
@@ -1694,17 +1736,35 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 
 		tqsl_getLocationField(conv->loc, "GRIDSQUARE", val, sizeof val);
 		if (conv->rec.my_gridsquare[0] && !tqsl_getLocationField(conv->loc, "GRIDSQUARE", val, sizeof val)) {
-			bool okgrid;
+			bool okgrid = true;
 			unsigned int stnLen = strlen(val);
 			unsigned int logLen = strlen(conv->rec.my_gridsquare);
 			unsigned int compareLen = (stnLen < logLen ? stnLen : logLen);
 			if (strstr(val, ",") || strstr(conv->rec.my_gridsquare, ",")) {	// If it's a corner/edge
-				compareLen = 99;			// Compare all of it.
+				vector<string>stngrids;
+				vector<string>qsogrids;
+				splitStr(val, stngrids, ',');
+				splitStr(conv->rec.my_gridsquare, qsogrids, ',');
+				size_t nstn = stngrids.size();
+				size_t nqso = qsogrids.size();
+				if (nstn != nqso) {
+				    okgrid = false;
+				} else {
+					sort(stngrids.begin(), stngrids.end());
+					sort(qsogrids.begin(), qsogrids.end());
+					for (size_t i = 0; i < nstn; i++) {
+						if (stngrids[i] != qsogrids[i]) {
+							compareLen = 99; // Doesn't match, so error out if appropriate
+							break;
+						}
+					}
+					compareLen = 0;			// Matches.
+				}
 			}
 			if (conv->location_handling == TQSL_LOC_UPDATE) {
 				okgrid = (strcasecmp(conv->rec.my_gridsquare, val) == 0);
 			} else {
-				okgrid = (strncasecmp(conv->rec.my_gridsquare, val, compareLen) == 0);
+				okgrid = (compareLen == 0 || strncasecmp(conv->rec.my_gridsquare, val, compareLen) == 0);
 			}
 			if (!okgrid) {
 				if (conv->location_handling == TQSL_LOC_UPDATE) {

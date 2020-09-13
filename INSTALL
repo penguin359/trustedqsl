@@ -27,15 +27,18 @@ should build and install that library and its prerequisites.
 
 The TrustedQSL library depends on several other libraries:
 
-OpenSSL (http://www.openssl.org/) - OpenSSL 1.1.1d was used for TQSL 2.5.2.
-expat 1.x XML parser library (http://expat.sourceforge.net/) - expat 2.1.0
+OpenSSL (http://www.openssl.org/) - OpenSSL 1.1.1g was used for TQSL 2.5.5.
+expat 1.x XML parser library (http://expat.sourceforge.net/) - expat 2.2.9
 zlib (http://zlib.net/) zlib 1.2.11
 One of the following:
     LMDB (Lightning Memory-mapped DataBase) - https://lmdb.readthedocs.io/ - lmdb 0.9.23
     or 
-    Berkeley DB (http://www.oracle.com/technetwork/products/berkeleydb/downloads/index.html) - BDB 6.1.26
-wxWidgets (http://wxwidgets.org/downloads) - wxWidgets 2.8.12 or wxWidgets 3.0.4 
-curl - (http://curl.haxx.se/download.html) - curl 7.65.3
+    Berkeley DB (http://www.oracle.com/technetwork/products/berkeleydb/downloads/index.html) - BDB 6.2.23
+wxWidgets (http://wxwidgets.org/downloads) - wxWidgets 2.8.12 or wxWidgets 3.1.2
+curl - (http://curl.haxx.se/download.html) - curl 7.70.0
+
+You will need the "developer" versions of these. The version numbers above aren't mandatory, they're just
+what was recenty used.
 
 Most Unix and unix-like workstations will have these available. For
 those systems that do not, the packages are easily built. Instructions
@@ -50,12 +53,28 @@ document was last updated are given in parentheses.
 
 2) Building under Linux/Unix
 
+Many Linux distributions have a version of TrustedQSL already built
+and ready to use. Try installing package "TrustedQSL" using whatever
+commands your distribution uses for package instals:
+sudo yum install TrustedQSL
+sudo dnf install TrustedQSL
+sudo apt-get install TrustedQSL
+sudo pkg-add TrustedQSL
+etc.
+
+If you need to build from source, follow the directions below. This
+is not intended for casual users, as you'll need to be able to 
+install a C++ compiler and be able to search for and install the
+required development libraries.
+
 The quick answer:
 
 From the parent directory 
 cmake .
 make
 make install
+(If you're not running as root (good!) the last should be
+"sudo make install").
 
 That will install the library and applications under /usr/local. It
 also will install the needed header files under /usr/local/include.
@@ -149,7 +168,7 @@ If you want to distribute the built application:
 
 ./osx_createdmg.sh
 
-will make tqsl-2.4.1.dmg, a Mac distributable disk image
+will make tqsl-2.x.x.dmg, a Mac distributable disk image
 containing the TrustedQSL applications folder and document files.
 
 ===================================================================

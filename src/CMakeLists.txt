@@ -9,7 +9,6 @@ if(WIN32)
 endif()
 
 find_package(EXPAT REQUIRED)
-find_package(OpenSSL REQUIRED)
 find_package(ZLIB REQUIRED)
 
 set(TQSLLIB_VERSION_MAJOR 2)

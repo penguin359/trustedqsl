@@ -1178,6 +1178,9 @@ DLLEXPORT int CALLCONVENTION tqsl_setLocationCallSign(tQSL_Location loc, const c
 /** Get a field from the station location. */
 DLLEXPORT int CALLCONVENTION tqsl_getLocationField(tQSL_Location locp, const char *field, char *buf, int bufsiz);
 
+/** Get a field label from the station location. */
+DLLEXPORT int CALLCONVENTION tqsl_getLocationFieldLabel(tQSL_Location locp, const char *field, char *buf, int bufsiz);
+
 /** Set a field in a station location. */
 DLLEXPORT int CALLCONVENTION tqsl_setLocationField(tQSL_Location locp, const char *field, const char *buf);
 
@@ -1249,6 +1252,16 @@ DLLEXPORT int CALLCONVENTION tqsl_getNumMode(int *number);
   * Note: \c group may be NULL.
   */
 DLLEXPORT int CALLCONVENTION tqsl_getMode(int index, const char **mode, const char **group);
+
+/** Get the number of ADIF Mode entries in the Mode list */
+DLLEXPORT int CALLCONVENTION tqsl_getNumADIFMode(int *number);
+
+/** Get an ADIF mode by its index.
+  *
+  * \c mode - The ADIF mode name
+  *
+  */
+DLLEXPORT int CALLCONVENTION tqsl_getADIFModeEntry(int index, const char **mode);
 
 /** Get the number of Propagation Mode entries in the Propagation Mode list */
 DLLEXPORT int CALLCONVENTION tqsl_getNumPropagationMode(int *number);
