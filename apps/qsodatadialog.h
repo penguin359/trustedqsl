@@ -31,8 +31,12 @@
 #include <wx/wxhtml.h>
 
 #include <vector>
+#include <map>
+#include <string>
 
 using std::vector;
+using std::map;
+using std::string;
 
 /** Display and edit QSO data
   *
@@ -47,6 +51,7 @@ class QSORecord {
 		_band = wxT("160M");
 		tqsl_initDate(&_date, NULL);
 		tqsl_initTime(&_time, NULL);
+		_extraFields.clear();
 	}
 
 	wxString _call, _freq, _rxfreq;
@@ -54,6 +59,7 @@ class QSORecord {
 	wxString _propmode, _satellite;
 	tQSL_Date _date;
 	tQSL_Time _time;
+	map <string, string> _extraFields;
 };
 
 typedef vector<QSORecord> QSORecordList;

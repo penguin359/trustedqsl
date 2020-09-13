@@ -91,7 +91,7 @@ target_link_libraries(tqsl ${TQSLLIB_NAME}
 if(WIN32)
 	set(UPDATER_SRC tqslupdater.cpp)
 	add_executable(tqslupdater WIN32 ${UPDATER_SRC} ${TQSL_HDR})
-	target_link_libraries(tqslupdater ${wxWidgets_LIBRARIES} ${CURL_LIBRARIES})
+	target_link_libraries(tqslupdater ${wxWidgets_LIBRARIES} ${CURL_LIBRARIES} ${OPENSSL_LIBRARIES})
 endif()
 
 if(NOT APPLE AND NOT WIN32)

@@ -1,4 +1,4 @@
-<tqslconfig majorversion="11" minorversion="11">
+<tqslconfig majorversion="11" minorversion="12">
      <adifmap>
        <adifmode adif-mode="AM" mode="AM">AM</adifmode>
        <adifmode adif-mode="ARDOP" mode="ARDOP">ARDOP</adifmode>
@@ -7755,6 +7755,8 @@
        <satellite name="SO-41" startDate="2000-09-26">Saudi-OSCAR 41</satellite>
        <satellite name="SO-50" startDate="2002-12-20">Saudi-OSCAR 50</satellite>
        <satellite name="SO-67" startDate="2009-09-17">Sumbandila Oscar 67</satellite>
+       <satellite name="TAURUS" startDate="2019-09-17">Taurus-1 (Jinniuzuo-1)</satellite>
+       <satellite name="TO-108" startDate="2019-12-20">TQ-OSCAR 108 (CAS-6 / TQ-1)</satellite>
        <satellite name="UKUBE1" startDate="2016-06-01">UKube-1 (FUNcube-2)</satellite>
        <satellite name="UO-14" startDate="1990-01-22">UOSAT-OSCAR 14</satellite>
        <satellite endDate="2014-07-11" name="VO-52" startDate="2005-05-05">VUsat-OSCAR 52</satellite>

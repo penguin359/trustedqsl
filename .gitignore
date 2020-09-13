@@ -63,6 +63,9 @@ win32-msi/tqsl-install/langfragpt.wxs
 win32-msi/tqsl-install/langfragru.wxs
 win32-msi/tqsl-install/langfragzh.wxs
 win32-msi/tqsl-install/update-lang.cmd
+apps/RelWithDebInfo
+src/RelWithDebInfo
+tqsl-*.msi
 
 #linux-specific products
 Makefile

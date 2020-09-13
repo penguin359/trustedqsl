@@ -66,6 +66,7 @@
 #endif
 #include <zlib.h>
 #include <openssl/opensslv.h> // only for version info!
+
 #ifdef USE_LMDB
 #include <lmdb.h> //only for version info!
 #else
@@ -1526,7 +1527,7 @@ MyFrame::OnHelpContents(wxCommandEvent& WXUNUSED(event)) {
 // Return the "About" string
 //
 static wxString getAbout() {
-	wxString msg = wxT("TQSL V") wxT(VERSION) wxT(" build ") wxT(BUILD);
+	wxString msg = wxT("TQSL V") wxT(TQSL_VERSION) wxT(" build ") wxT(TQSL_BUILD);
 #ifdef OSX_PLATFORM
 	msg += wxT("\nBuilt for ") wxT(OSX_PLATFORM);
 #endif
@@ -1545,7 +1546,10 @@ static wxString getAbout() {
 	if (wxUSE_UNICODE)
 		msg += wxT(" (Unicode)");
 #endif
-	msg+=wxString::Format(wxT("\nlibcurl V%hs\n"), LIBCURL_VERSION);
+	XML_Expat_Version xv = XML_ExpatVersionInfo();
+
+	msg+=wxString::Format(wxT("\nexpat v%d.%d.%d\n"), xv.major, xv.minor, xv.micro);
+	msg+=wxString::Format(wxT("libcurl V%hs\n"), LIBCURL_VERSION);
 	msg+=wxString::Format(wxT("%hs\n"), OPENSSL_VERSION_TEXT);
 	msg+=wxString::Format(wxT("zlib V%hs\n"), ZLIB_VERSION);
 #ifdef USE_LMDB
@@ -1741,6 +1745,7 @@ static tqsl_adifFieldDefinitions fielddefs[] = {
 	{ "TIME_ON", "", TQSL_ADIF_RANGE_TYPE_NONE, 6, 0, 0, 0, 0 },
 	{ "SAT_NAME", "", TQSL_ADIF_RANGE_TYPE_NONE, TQSL_SATNAME_MAX, 0, 0, 0, 0 },
 	{ "PROP_MODE", "", TQSL_ADIF_RANGE_TYPE_NONE, TQSL_PROPMODE_MAX, 0, 0, 0, 0 },
+	{ "*", "", TQSL_ADIF_RANGE_TYPE_NONE, 2048, 0, 0, 0, 0 },
 	{ "EOR", "", TQSL_ADIF_RANGE_TYPE_NONE, 0, 0, 0, 0, 0 },
 	{ "", "", TQSL_ADIF_RANGE_TYPE_NONE, 0, 0, 0, 0, 0 },
 };
@@ -1808,9 +1813,17 @@ loadQSOfile(wxString& file, QSORecordList& recs) {
 					*(cp+2) = '\0';
 					rec._time.hour = strtol(cp, NULL, 10);
 				}
+			} else if (!strcasecmp(field.name, "EOH")) {
+				rec._extraFields.clear();
 			} else if (!strcasecmp(field.name, "EOR")) {
 				recs.push_back(rec);
 				rec = QSORecord();
+			} else {
+				// Not a field I recognize, add it to the extras
+				const char * val = reinterpret_cast<const char *>(field.data);
+				if (!val)
+					val = "";
+				rec._extraFields[field.name] = val;
 			}
 			delete[] field.data;
 		}
@@ -1833,7 +1846,6 @@ MyFrame::EditQSOData(wxCommandEvent& WXUNUSED(event)) {
 	if (file == wxT(""))
 		return;
 	loadQSOfile(file, recs);
-	wxMessageBox(_("Warning: The TQSL ADIF editor only processes a limited number of ADIF fields.\n\nUsing the editor on an ADIF file can cause QSO details to be lost!"), _("Warning"), wxOK | wxICON_EXCLAMATION, frame);
 	try {
 		QSODataDialog dial(this, file, help, &recs);
 		dial.ShowModal();
@@ -1857,7 +1869,7 @@ MyFrame::EnterQSOData(wxCommandEvent& WXUNUSED(event)) {
 
 int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxString& output, int& n, bool suppressdate, tQSL_Date* startdate, tQSL_Date* enddate, int action, int logverify, const char* password, const char* defcall) {
 	tqslTrace("MyFrame::ConvertLogToString", "loc = %lx, infile=%s, suppressdate=%d, startdate=0x%lx, enddate=0x%lx, action=%d, logverify=%d defcall=%s", reinterpret_cast<void *>(loc), S(infile), suppressdate, reinterpret_cast<void *>(startdate), reinterpret_cast<void *>(enddate), action, logverify, defcall ? defcall : "");
-	static const char *iam = "TQSL V" VERSION;
+	static const char *iam = "TQSL V" TQSL_VERSION;
 	const char *cp;
 	char callsign[40];
 	int dxcc = 0;
@@ -1975,19 +1987,12 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 	if (ncerts == 0) {
 		wxString msg;
 		wxString fmt = _("There are no valid callsign certificates for callsign");
-		if (dxcc != 0) {
-			fmt += wxT(" %hs ");
-			fmt += _("in entity");
-			fmt += wxT(" %hs.\n");
-			fmt += _("Signing aborted.");
-			fmt + wxT("\n");
-			msg = wxString::Format(fmt, callsign, dx.name());
-		} else {
-			fmt += wxT(" %hs.\n");
-			fmt += _("Signing aborted.");
-			fmt + wxT("\n");
-			msg = wxString::Format(fmt, callsign);
-		}
+		fmt += wxT(" %hs ");
+		fmt += _("in entity");
+		fmt += wxT(" %hs.\n");
+		fmt += _("Signing aborted.");
+		fmt + wxT("\n");
+		msg = wxString::Format(fmt, callsign, dx.name());
 		wxLogError(msg);
 		return TQSL_EXIT_TQSL_ERROR;
 	}
@@ -2625,7 +2630,7 @@ tqsl_curl_init(const char *logTitle, const char *url, FILE **curlLogFile, bool n
 	}
 	//set up options
 	curl_easy_setopt(curlReq, CURLOPT_URL, (const char *)uri.ToUTF8());
-	curl_easy_setopt(curlReq, CURLOPT_USERAGENT, "tqsl/" VERSION);
+	curl_easy_setopt(curlReq, CURLOPT_USERAGENT, "tqsl/" TQSL_VERSION);
 
 #ifdef __WXMAC__
 	DocPaths docpaths(wxT("tqsl.app"));
@@ -2637,9 +2642,8 @@ tqsl_curl_init(const char *logTitle, const char *url, FILE **curlLogFile, bool n
 	docpaths.Add(wxT(CONFDIR));
 #endif
 #ifdef _WIN32
-	wxStandardPaths sp;
 	wxString exePath;
-	wxFileName::SplitPath(sp.GetExecutablePath(), &exePath, 0, 0);
+	wxFileName::SplitPath(wxStandardPaths::Get().GetExecutablePath(), &exePath, 0, 0);
 	docpaths.Add(exePath);
 #endif
 
@@ -3343,7 +3347,9 @@ void MyFrame::UpdateTQSL(wxString& url) {
 		}
 		tqslTrace("MyFrame::UpdateTQSL", "Executing msiexec \"%s\"", filename.ToUTF8());
 		wxExecute(wxString::Format(wxT("msiexec /i \"%s\""), filename), wxEXEC_ASYNC);
+		tqslTrace("MyFrame::UpdateTQSL", "GUI Destroy");
 		wxExit();
+		exit(0);
 	} else {
 		tqslTrace("MyFrame::UpdateTQSL", "cURL Error during file download: %s (%s)\n", curl_easy_strerror((CURLcode)retval), errorbuf);
 		if ((retval == CURLE_PEER_FAILED_VERIFICATION) && verifyCA) {
@@ -3646,6 +3652,17 @@ MyFrame::OnUpdateCheckDone(wxCommandEvent& event) {
 		ri->condition->Signal();
 		return;
 	}
+	// For win32, can't have config and program updates together.
+	// randomize which gets flagged
+#ifdef _WIN32
+	if (ri->newProgram && ri->newConfig) {
+		if (time(0) & 0x1) {
+			ri->newProgram = false;
+		} else {
+			ri->newConfig = false;
+		}
+	}
+#endif
 	if (ri->newProgram) {
 		if (ri->noGUI) {
 			wxLogMessage(_("A new TQSL release (V%s) is available."), ri->newProgramRev->Value().c_str());
@@ -3683,7 +3700,7 @@ MyFrame::OnUpdateCheckDone(wxCommandEvent& event) {
 			fmt += _("TQSL Version %hs and Configuration Data Version %s");
 			fmt += wxT("\n");
 			fmt += _("are the newest available");
-			wxMessageBox(wxString::Format(fmt, VERSION, ri->configRev->Value().c_str()), _("No Updates"), wxOK | wxICON_INFORMATION, this);
+			wxMessageBox(wxString::Format(fmt, TQSL_VERSION, ri->configRev->Value().c_str()), _("No Updates"), wxOK | wxICON_INFORMATION, this);
 		}
 	}
 	// Tell the background thread that it's OK to continue
@@ -3716,7 +3733,7 @@ MyFrame::DoCheckForUpdates(bool silent, bool noGUI) {
 	revInfo* ri = new revInfo;
 	ri->noGUI = noGUI;
 	ri->silent = silent;
-	ri->programRev = new revLevel(wxT(VERSION));
+	ri->programRev = new revLevel(wxT(TQSL_VERSION));
 
 	int currentConfigMajor, currentConfigMinor;
 	tqsl_getConfigVersion(&currentConfigMajor, &currentConfigMinor);
@@ -3761,7 +3778,7 @@ MyFrame::DoCheckForUpdates(bool silent, bool noGUI) {
 		// Add the config.xml text to the result
 		wxString configURL = config->Read(wxT("ConfigFileVerURL"), DEFAULT_UPD_CONFIG_URL);
 		curl_easy_setopt(curlReq, CURLOPT_URL, (const char*)configURL.ToUTF8());
-		curl_easy_setopt(curlReq, CURLOPT_USERAGENT, "tqsl/" VERSION);
+		curl_easy_setopt(curlReq, CURLOPT_USERAGENT, "tqsl/" TQSL_VERSION);
 
 		retval = curl_easy_perform(curlReq);
 		if (retval == CURLE_OK) {
@@ -5412,7 +5429,7 @@ QSLApp::OnInit() {
 	}
 	// Always display TQSL version
 	if ((!parser.Found(wxT("n"))) || parser.Found(wxT("v"))) {
-		cerr << "TQSL Version " VERSION " " BUILD "\n";
+		cerr << "TQSL Version " TQSL_VERSION " " TQSL_BUILD "\n";
 	}
 	if (parseStatus != 0)  {
 		exitNow(TQSL_EXIT_COMMAND_ERROR, quiet);
@@ -7088,19 +7105,27 @@ lock_db(bool wait) {
 	fl.l_start = 0;
 	fl.l_len = 1;
 
+	tqslTrace("lock_db", "wait = %d", wait);
+
 	wxString lfname = wxString::FromUTF8(tQSL_BaseDir) + wxT("/dblock");
 
 	if (lockfileFD < 0) {
 		lockfileFD = open(lfname.ToUTF8(), O_RDWR| O_CREAT, 0644);
-		if (lockfileFD < 0)
+		if (lockfileFD < 0) {
+			tqslTrace("lock_db", "can't set lock: %m");
 			return 1;
+		}
 	}
 	if (wait) {
+		tqslTrace("lock_db", "waiting for lock");
 		fcntl(lockfileFD, F_SETLKW, &fl);
+		tqslTrace("lock_db", "got lock");
 		return 0;
 	}
 	int ret = fcntl(lockfileFD, F_SETLK, &fl);
+	tqslTrace("lock_db", "trying to set a lock");
 	if (ret < 0 && (errno == EACCES || errno == EAGAIN)) {
+		tqslTrace("lock_db", "Lock not taken : %m");
 		return -1;
 	}
 	return 0;
@@ -7108,9 +7133,14 @@ lock_db(bool wait) {
 
 static void
 unlock_db(void) {
-	if (lockfileFD < 0) return;
+	tqslTrace("unlock_db", "entered");
+	if (lockfileFD < 0) {
+		tqslTrace("unlock_db", "lock wasn't taken");
+		return;
+	}
 	close(lockfileFD);
 	lockfileFD = -1;
+	tqslTrace("unlock_db", "unlocked");
 	return;
 }
 #else /* _WIN32 */
@@ -7125,12 +7155,15 @@ lock_db(bool wait) {
 
 	wxString lfname = wxString::FromUTF8(tQSL_BaseDir) + wxT("\\dblock");
 
+	tqslTrace("lock_db", "wait = %d", wait);
 	if (lockfileFD < 0) {
 		wchar_t* wlfname = utf8_to_wchar(lfname.ToUTF8());
 		lockfileFD = _wopen(wlfname, O_RDWR| O_CREAT, 0644);
 		free_wchar(wlfname);
-		if (lockfileFD < 0)
+		if (lockfileFD < 0) {
+			tqslTrace("lock_db", "can't open file: %m");
 			return 1;
+		}
 		ZeroMemory(&ov, sizeof(ov));
 		ov.hEvent = NULL;
 		ov.Offset = 0;
@@ -7142,14 +7175,17 @@ lock_db(bool wait) {
 	if (!wait) {
 		locktype |= LOCKFILE_FAIL_IMMEDIATELY;
 	}
+	tqslTrace("lock_db", "trying to lock");
 	ret = LockFileEx(hFile, locktype, 0, 0, 0x80000000, &ov);
 	if (!ret) {
 		switch (GetLastError()) {
 			case ERROR_SHARING_VIOLATION:
 			case ERROR_LOCK_VIOLATION:
 			case ERROR_IO_PENDING:
+				tqslTrace("lock_db", "unable to lock");
 				return -1;
 			default:
+				tqslTrace("lock_db", "locked");
 				return 0;
 		}
 	}
@@ -7158,10 +7194,15 @@ lock_db(bool wait) {
 
 static void
 unlock_db(void) {
-	if (hFile)
+	tqslTrace("unlock_db", "hFile=%lx", hFile);
+	if (hFile) {
 		UnlockFileEx(hFile, 0, 0, 0x80000000, &ov);
-	if (lockfileFD != -1)
+		tqslTrace("unlock_db", "unlocked");
+	}
+	if (lockfileFD != -1) {
+		tqslTrace("unlock_db", "closing lock");
 		_close(lockfileFD);
+	}
 	lockfileFD = -1;
 	hFile = 0;
 }

@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 2.8 FATAL_ERROR)
 
 project(TrustedQSL)
 
+find_package(OpenSSL REQUIRED)
+
 if ( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
   ADD_COMPILE_OPTIONS("-fPIC")
 endif( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )

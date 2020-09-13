@@ -1,4 +1,4 @@
 // Define the build of TQSL
 
-#define VERSION "@TQSLVERSION@"
-#define BUILD "[@BUILD@]"
+#define TQSL_VERSION "@TQSLVERSION@"
+#define TQSL_BUILD "[@BUILD@]"

@@ -264,7 +264,8 @@ tqsl_adifGetField(tqsl_adifFieldResults *field, FILE *filehandle,
 							(0 != adifFields[iIndex].name[0]);
 							iIndex++) {
 							/* case insensitive compare */
-							if (0 == strcasecmp(field->name, adifFields[iIndex].name)) {
+							if (0 == strcasecmp(field->name, adifFields[iIndex].name) ||
+							    0 == strcasecmp(adifFields[iIndex].name, "*")) {
 								/* set name index */
 								field->adifNameIndex = iIndex;
 

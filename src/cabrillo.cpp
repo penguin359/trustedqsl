@@ -743,6 +743,7 @@ tqsl_getCabrilloField(tQSL_Cabrillo cabp, tqsl_cabrilloField *field, TQSL_CABRIL
 		*error = TQSL_CABRILLO_NO_ERROR;
 	return 0;
  err:
+	cab->datap = NULL;		// Ignore this
 	strncpy(tQSL_ErrorFile, cab->filename, sizeof tQSL_ErrorFile);
 	tQSL_ErrorFile[sizeof tQSL_ErrorFile-1] = 0;
 	return 1;
