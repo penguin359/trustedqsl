@@ -10,7 +10,7 @@ Uploaders: Kamal Mostafa <kamal@whence.com>,
 Section: hamradio
 Priority: optional
 Build-Depends: cmake,
-               debhelper-compat (= 12),
+               debhelper-compat (= 13),
                libcurl4-openssl-dev,
                libdb-dev,
                libexpat1-dev,
