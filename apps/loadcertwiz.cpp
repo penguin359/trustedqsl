@@ -156,15 +156,15 @@ static wxString pw_helpfile;
 static int
 GetNewPassword(char *buf, int bufsiz, void *) {
 	tqslTrace("GetNewPassword", NULL);
-	wxString msg = _("Enter a password for this callsign certificate.");
+	wxString msg = _("Enter a passphrase for this callsign certificate.");
 		msg += wxT("\n\n");
-		msg += _("If you are using a computer system that is shared with others, you should specify a password to protect this certificate. However, if you are using a computer in a private residence no password need be specified.");
+		msg += _("If you are using a computer system that is shared with others, you should specify a passphrase to protect this certificate. However, if you are using a computer in a private residence no passphrase need be specified.");
 		msg += wxT("\n\n");
-		msg += _("This password will have to be entered each time you use this callsign certificate for signing or when saving the key.");
+		msg += _("This passphrase will have to be entered each time you use this callsign certificate for signing or when saving the key.");
 		msg += wxT("\n\n");
-		msg += _("Leave the password blank and click 'OK' unless you want to use a password.");
+		msg += _("Leave the passphrase blank and click 'OK' unless you want to use a passphrase.");
 		msg += wxT("\n\n");
-	GetNewPasswordDialog dial(0, _("New Password"),
+	GetNewPasswordDialog dial(0, _("New Passphrase"),
 		msg, true, pw_help, pw_helpfile);
 	if (dial.ShowModal() == wxID_OK) {
 		strncpy(buf, dial.Password().ToUTF8(), bufsiz);
@@ -327,7 +327,7 @@ LCW_P12PasswordPage::LCW_P12PasswordPage(LoadCertWiz *parent) : LCW_Page(parent)
 	tqslTrace("LCW_P12PasswordPage::LCW_P12PasswordPage", "parent=0x%lx", reinterpret_cast<void *>(parent));
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
-	wxStaticText *st = new wxStaticText(this, -1, _("Enter the password to unlock the .p12 file:"));
+	wxStaticText *st = new wxStaticText(this, -1, _("Enter the passphrase to unlock the .p12 file:"));
 	sizer->Add(st, 0, wxALL, 10);
 
 	_pwin = new wxTextCtrl(this, -1, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD);
@@ -361,7 +361,7 @@ LCW_P12PasswordPage::TransferDataFromWindow() {
 			}
 		}
 		if (tQSL_Error == TQSL_PASSWORD_ERROR) {
-			tc_status->SetLabel(_("Password error"));
+			tc_status->SetLabel(_("Passphrase error"));
 			return false;
 		} else if (tQSL_Error == TQSL_OPENSSL_ERROR) {
 			wxMessageBox(_("This file is not a valid P12 file"), _("Error"), wxOK | wxICON_ERROR, _parent);

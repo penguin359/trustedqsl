@@ -84,6 +84,7 @@ typedef struct {
 	unsigned char *data;				///< data
 	unsigned int adifNameIndex;			///< Name index
 	void *userPointer;				///< User pointer
+	int line_no;					///< Input line where the tag was found
 } tqsl_adifFieldResults;
 
 

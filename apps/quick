@@ -28,10 +28,8 @@ TQSL installer. The installer makes TQSL accessible via the Windows
 Start/Programs/TrustedQSL menu unless you direct it to use a different menu. The
 installer also provides the option of creating a Desktop shortcut for TQSL.
 
-To install on Mac OS X, download and open the disk image file (.dmg). and drag
-the TrustedQSL folder to your Applications folder. If you are replacing
-an existing installation of TQSL, you should choose "Replace All" when 
-prompted.
+To install on Mac OS X, download and open the package file (.pkg) to invoke
+the OSX installer.
 
 On a Mac OS X 10.8 or later system, you may need to grant permission for
 the TQSL application to run: right-click or control-click on the application

@@ -380,7 +380,7 @@ FilePrefs::FilePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm"))
 	logtab->SetValue(allow);
 	sizer->Add(logtab, 0, wxLEFT|wxRIGHT|wxTOP, 10);
 
-	certpwd = new wxCheckBox(this, ID_PREF_FILE_CERTPWD, _("Enable passwords for Callsign Certificates"));
+	certpwd = new wxCheckBox(this, ID_PREF_FILE_CERTPWD, _("Enable passphrases for Callsign Certificates"));
 	bool cp;
 	config->Read(wxT("CertPwd"), &cp, DEFAULT_CERTPWD);
 	certpwd->SetValue(cp);

@@ -665,24 +665,24 @@ CRQ_PasswordPage::CRQ_PasswordPage(CRQWiz *parent) :  CRQ_Page(parent) {
 	wxSize sz = getTextSize(this);
 	em_w = sz.GetWidth();
 	em_h = sz.GetHeight();
-	wxString lbl = _("You may protect this Callsign Certificate using a password. If you are using a computer system that is shared with others, you should specify a password to protect this Callsign Certificate. However, if you are using a computer in a private residence, no password need be specified.");
+	wxString lbl = _("You may protect this Callsign Certificate using a passphrase. If you are using a computer system that is shared with others, you should specify a passphrase to protect this Callsign Certificate. However, if you are using a computer in a private residence, no passphrase need be specified.");
 	wxStaticText *st = new wxStaticText(this, -1, lbl);
 	st->SetSize(_parent->maxWidth, em_h * 5);
 	st->Wrap(_parent->maxWidth);
 	sizer->Add(st, 0, wxLEFT|wxRIGHT|wxTOP, 10);
-	fwdPrompt = new wxStaticText(this, -1, _("Leave the password blank and click 'Next' unless you want to use a password."));
+	fwdPrompt = new wxStaticText(this, -1, _("Leave the passphrase blank and click 'Next' unless you want to use a passphrase."));
 	fwdPrompt->SetSize(_parent->maxWidth, em_h * 5);
 	fwdPrompt->Wrap(_parent->maxWidth);
 	sizer->Add(fwdPrompt, 0, wxLEFT|wxRIGHT|wxTOP, 10);
-	sizer->Add(new wxStaticText(this, -1, _("Password:")),
+	sizer->Add(new wxStaticText(this, -1, _("Passphrase:")),
 		0, wxLEFT|wxRIGHT|wxTOP, 10);
 	tc_pw1 = new wxTextCtrl(this, ID_CRQ_PW1, wxT(""), wxDefaultPosition, wxSize(em_w*20, -1), wxTE_PASSWORD);
 	sizer->Add(tc_pw1, 0, wxLEFT|wxRIGHT, 10);
-	sizer->Add(new wxStaticText(this, -1, _("Enter the password again for verification:")),
+	sizer->Add(new wxStaticText(this, -1, _("Enter the passphrase again for verification:")),
 		0, wxLEFT|wxRIGHT|wxTOP, 10);
 	tc_pw2 = new wxTextCtrl(this, ID_CRQ_PW2, wxT(""), wxDefaultPosition, wxSize(em_w*20, -1), wxTE_PASSWORD);
 	sizer->Add(tc_pw2, 0, wxLEFT|wxRIGHT, 10);
-	wxStaticText *tc_pwwarn = new wxStaticText(this, -1, _("DO NOT lose the password you choose! You will be unable to use the Certificate without this password!"));
+	wxStaticText *tc_pwwarn = new wxStaticText(this, -1, _("DO NOT lose the passphrase you choose! You will be unable to use the Certificate without this passphrase!"));
 	tc_pwwarn->Wrap(em_w * 40);
 	sizer->Add(tc_pwwarn, 0, wxALL, 10);
 	tc_status = new wxStaticText(this, -1, wxT(""));
@@ -695,12 +695,12 @@ CRQ_Page *
 CRQ_PasswordPage::GetNext() const {
 	tqslTrace("CRQ_PasswordPage::GetNext", NULL);
 	if (_parent->signIt) {
-		fwdPrompt->SetLabel(_("Leave the password blank and click 'Next' unless you want to use a password."));
+		fwdPrompt->SetLabel(_("Leave the passphrase blank and click 'Next' unless you want to use a passphrase."));
 		fwdPrompt->SetSize(_parent->maxWidth, em_h * 5);
 		fwdPrompt->Wrap(_parent->maxWidth);
 		return _parent->signPage;
 	} else {
-		fwdPrompt->SetLabel(_("Leave the password blank and click 'Finish' unless you want to use a password."));
+		fwdPrompt->SetLabel(_("Leave the passphrase blank and click 'Finish' unless you want to use a passphrase."));
 		fwdPrompt->SetSize(_parent->maxWidth, em_h * 5);
 		fwdPrompt->Wrap(_parent->maxWidth);
 		return NULL;
@@ -1380,7 +1380,7 @@ CRQ_PasswordPage::validate() {
 	wxString pw2 = tc_pw2->GetValue();
 
 	if (pw1 != pw2)
-		valMsg = _("The two copies of the password do not match.");
+		valMsg = _("The two copies of the passphrase do not match.");
 	tc_status->SetLabel(valMsg);
 	return 0;
 }

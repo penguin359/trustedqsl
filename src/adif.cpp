@@ -235,6 +235,7 @@ tqsl_adifGetField(tqsl_adifFieldResults *field, FILE *filehandle,
 	field->data = NULL;
 	field->adifNameIndex = 0;
 	field->userPointer = NULL;
+	field->line_no = -1;
 
 	while(adifState != TQSL_ADIF_STATE_DONE) {
 		if (EOF != (currentCharacter = fgetc(filehandle))) {
@@ -256,6 +257,7 @@ tqsl_adifGetField(tqsl_adifFieldResults *field, FILE *filehandle,
 					/* add field name characters to buffer, until '>' or ':' found */
 					if (('>' == currentCharacter) || (':' == currentCharacter)) {
 						/* find if the name is a match to a LoTW supported field name */
+						field->line_no = *line_no;
 						status = TQSL_ADIF_GET_FIELD_NO_NAME_MATCH;
 						adifState = TQSL_ADIF_STATE_GET_SIZE;
 

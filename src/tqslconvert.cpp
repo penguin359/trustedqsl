@@ -22,6 +22,7 @@
 #include <cstring>
 #include <string>
 #include <vector>
+#include <map>
 #include <algorithm>
 #include <ctype.h>
 #include <set>
@@ -49,6 +50,7 @@ using std::set;
 using std::string;
 using std::vector;
 using std::sort;
+using std::map;
 
 static bool checkCallSign(const string& call);
 
@@ -103,6 +105,8 @@ class TQSL_CONVERTER {
 	char *appName;
 	int dxcc;
 	bool newstation;
+	map <string, int> taglines;
+	int err_tag_line;
 };
 
 #if !defined(__APPLE__) && !defined(_WIN32) && !defined(__clang__)
@@ -192,6 +196,7 @@ inline TQSL_CONVERTER::~TQSL_CONVERTER() {
 inline void TQSL_CONVERTER::clearRec() {
 	memset(&rec, 0, sizeof rec);
 	rec_text = "";
+	err_tag_line = 0;
 }
 
 #define CAST_TQSL_CONVERTER(x) ((tqsllib::TQSL_CONVERTER *)(x))
@@ -1144,11 +1149,23 @@ static const char* get_station_rec(TQSL_CONVERTER *conv) {
 	return tStation;
 }
 
+static bool set_tagline(TQSL_CONVERTER *conv, const char *tag) {
+	if (conv->taglines.find(tag) != conv->taglines.end()) {
+		conv->err_tag_line = conv->taglines[tag];
+		return true;
+	}
+	return false;
+}
 
 static void parse_adif_qso(TQSL_CONVERTER *conv, int *saveErr, TQSL_ADIF_GET_FIELD_ERROR *stat) {
 	int cstat = 0;
+
+	conv->taglines.clear();
+	conv->err_tag_line = 0;
 	while (1) {
 		tqsl_adifFieldResults result;
+		conv->taglines[result.name] = result.line_no;
+
 		if (tqsl_getADIFField(conv->adif, &result, stat, adif_qso_record_fields, notypes, adif_allocate))
 			break;
 		if (*stat != TQSL_ADIF_GET_FIELD_SUCCESS && *stat != TQSL_ADIF_GET_FIELD_NO_NAME_MATCH)
@@ -1289,11 +1306,19 @@ static int check_station(TQSL_CONVERTER *conv, const char *field, char *my, size
 	char val[256];
 	char label[256];
 	bool provinceFixed = false;
+	bool oblastFixed = false;
 	// CA_PROVINCE can be QC but TQSL lookup expects PQ
 	if (!strcasecmp(field, "CA_PROVINCE") && !strcasecmp(my, "QC")) {
 		provinceFixed = true;
 		strncpy(my, "PQ", len);
 	}
+
+	// RU_OBLAST can be YR but TQSL lookup expects JA
+	if (!strcasecmp(field, "RU_OBLAST") && !strcasecmp(my, "YR")) {
+		oblastFixed = true;
+		strncpy(my, "JA", len);
+	}
+
 
 	if (my[0] && !tqsl_getLocationField(conv->loc, field, val, sizeof val) &&
 		     !tqsl_getLocationFieldLabel(conv->loc, field, label, sizeof label)) {
@@ -1308,6 +1333,7 @@ static int check_station(TQSL_CONVERTER *conv, const char *field, char *my, size
 					conv->rec_done = true;
 					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, errfmt, my, val);
 					tQSL_Error = TQSL_LOCATION_MISMATCH | 0x1000;
+					set_tagline(conv, field);
 					return 1;
 				}
 				// -2 means that the label matched, so use that
@@ -1321,8 +1347,12 @@ static int check_station(TQSL_CONVERTER *conv, const char *field, char *my, size
 				if (provinceFixed) {
 					strncpy(my, "QC", len);
 				}
+				if (oblastFixed) {
+					strncpy(my, "YR", len);
+				}
 				snprintf(tQSL_CustomError, sizeof tQSL_CustomError, errfmt, val, my);
 				tQSL_Error = TQSL_LOCATION_MISMATCH;
+				set_tagline(conv, field);
 				return 1;
 			} else {
 				tqsl_setLocationField(conv->loc, field, my);
@@ -1373,6 +1403,8 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 				tQSL_Error = TQSL_ADIF_ERROR;
 				return 0;
 			}
+			conv->err_tag_line = 0;
+
 			// ADIF record is complete. See if we need to infer the BAND fields.
 			if (conv->rec.band[0] == 0)
 				strncpy(conv->rec.band, tqsl_infer_band(conv->rec.freq), sizeof conv->rec.band);
@@ -1513,11 +1545,13 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		if (tqsl_isDateValid(&(conv->start)) && tqsl_compareDates(&(conv->rec.date), &(conv->start)) < 0) {
 			conv->rec_done = true;
 			tQSL_Error = TQSL_DATE_OUT_OF_RANGE;
+			set_tagline(conv, "QSO_DATE");
 			return 0;
 		}
 		if (tqsl_isDateValid(&(conv->end)) && tqsl_compareDates(&(conv->rec.date), &(conv->end)) > 0) {
 			conv->rec_done = true;
 			tQSL_Error = TQSL_DATE_OUT_OF_RANGE;
+			set_tagline(conv, "QSO_DATE");
 			return 0;
 		}
 	}
@@ -1528,6 +1562,7 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		if (!checkCallSign(conv->rec.callsign)) {
 			conv->rec_done = true;
 			snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid amateur CALL (%s)", conv->rec.callsign);
+			set_tagline(conv, "CALL");
 			tQSL_Error = TQSL_CUSTOM_ERROR;
 			return 0;
 		}
@@ -1565,18 +1600,21 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 	if (conv->modes.find(conv->rec.mode) == conv->modes.end()) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid MODE (%s)", conv->rec.mode);
+		set_tagline(conv, "MODE");
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
 	if (conv->bands.find(conv->rec.band) == conv->bands.end()) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid BAND (%s)", conv->rec.band);
+		set_tagline(conv, "BAND");
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
 	if (conv->rec.rxband[0] && (conv->bands.find(conv->rec.rxband) == conv->bands.end())) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid RX BAND (%s)", conv->rec.rxband);
+		set_tagline(conv, "BAND_RX");
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
@@ -1593,6 +1631,7 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		&& conv->propmodes.find(conv->rec.propmode) == conv->propmodes.end()) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid PROP_MODE (%s)", conv->rec.propmode);
+		set_tagline(conv, "PROP_MODE");
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
@@ -1600,18 +1639,21 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		&& conv->satellites.find(conv->rec.satname) == conv->satellites.end()) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid SAT_NAME (%s)", conv->rec.satname);
+		set_tagline(conv, "SAT_NAME");
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
 	if (!strcmp(conv->rec.propmode, "SAT") && conv->rec.satname[0] == '\0') {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "PROP_MODE = 'SAT' but no SAT_NAME");
+		set_tagline(conv, "PROP_MODE");
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
 	if (strcmp(conv->rec.propmode, "SAT") && conv->rec.satname[0] != '\0') {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "SAT_NAME set but PROP_MODE is not 'SAT'");
+		set_tagline(conv, "SAT_NAME");
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
@@ -1637,6 +1679,8 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 			if (strcmp(conv->rec.my_call, conv->callsign)) {
 				conv->rec_done = true;
 				snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Callsign|%s|%s", conv->callsign, conv->rec.my_call);
+				if (!set_tagline(conv, "STATION_CALLSIGN"))
+					set_tagline(conv, "OPERATOR");
 				tQSL_Error = TQSL_CERT_MISMATCH;
 				return 0;
 			}
@@ -1661,6 +1705,7 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		tQSL_Error = TQSL_CERT_NOT_FOUND | 0x1000;
 		if (anyfound) {
 			tQSL_Error = TQSL_CERT_DATE_MISMATCH;
+			set_tagline(conv, "QSO_DATE");
 		}
 		if (conv->location_handling == TQSL_LOC_UPDATE) {
 			if (conv->rec.my_call[0]) {
@@ -1701,6 +1746,8 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 			if (strcmp(conv->rec.my_call, conv->callsign)) {
 				conv->rec_done = true;
 				snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Callsign|%s|%s", conv->callsign, conv->rec.my_call);
+				if (!set_tagline(conv, "STATION_CALLSIGN"))
+					set_tagline(conv, "OPERATOR");
 				tQSL_Error = TQSL_CERT_MISMATCH;
 				return 0;
 			}
@@ -1719,6 +1766,7 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 					tqsl_getDXCCEntityName(conv->rec.my_dxcc, &d2);
 
 					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "DXCC Entity|%s (%d)|%s (%d)", d1, conv->dxcc, d2, conv->rec.my_dxcc);
+					set_tagline(conv, "MY_DXCC");
 					tQSL_Error = TQSL_CERT_MISMATCH;
 					return 0;
 				}
@@ -1777,6 +1825,7 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 					} else {
 						conv->rec_done = true;
 						snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Gridsquare|%s|%s", val, conv->rec.my_gridsquare);
+						set_tagline(conv, "GRIDSQUARE");
 						tQSL_Error = TQSL_LOCATION_MISMATCH;
 						return 0;
 					}
@@ -1826,6 +1875,7 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 			if (strcasecmp(conv->rec.my_cnty_state, locstate)) {		// County does not match state
 				conv->rec_done = true;
 				snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "US County State|%s|%s", conv->rec.my_cnty_state, locstate);
+				set_tagline(conv, "US_STATE");
 				tQSL_Error = TQSL_LOCATION_MISMATCH | 0x1000;
 				return 0;
 			}
@@ -2008,6 +2058,10 @@ tqsl_getConverterLine(tQSL_Converter convp, int *lineno) {
 	if (lineno == 0) {
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
 		return 1;
+	}
+	if (conv->err_tag_line) {
+		*lineno = conv->err_tag_line;
+		return 0;
 	}
 	if (conv->cab)
 		return tqsl_getCabrilloLine(conv->cab, lineno);

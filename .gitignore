@@ -12,6 +12,7 @@ tests.txt
 linter
 cmake-notes
 cmake.sh
+cmake31.sh
 diff.ok
 gen-qsos.py
 lotw-upload.py
@@ -20,6 +21,7 @@ adding-tags
 apps/INSTALL
 apps/lang/getpo.sh
 apps/lang/putpo.sh
+apps/lang/getmo.sh
 apps/makepo.sh
 apps/tqsl.po
 apps/tqslapp.pot
@@ -77,7 +79,13 @@ MOVE-TAG.sh
 apps/key-new.icns
 apps/key-new.ico
 tqsl-*.dmg
-tqsl64-2.4.4.dmg
+tqsl-*.pkg
+makeit.sh
+check-notarization.sh
+staple.sh
+upload-for-notary.sh
+
+#Testing stuff
 tests/CMakeLists.txt
 tests/basictest.cpp
 tests/basicTest

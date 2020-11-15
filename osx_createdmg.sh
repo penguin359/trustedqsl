@@ -5,15 +5,23 @@ TQSLLIBPATH=`pwd`/src/libtqsllib.dylib
 WORKDIR=`mktemp -d /tmp/tqsl.XXXXX` || exit 1
 WINHELPFILE=$WORKDIR/TrustedQSL/$app.app/Contents/Resources/Help/tqslapp.chm
 IMGNAME="tqsl"
+KEYCHAIN="/Library/Keychains/System.keychain"
+KEYCHAIN="$HOME/Library/Keychains/Login.keychain-db"
+SIGNOPTS="--options runtime --timestamp"
+
+if [ "x$1" == "x-legacy" ]; then
+	SIGNOPTS=""			# Legacy can't have the hardened runtime
+	shift
+fi
 
 file apps/tqsl.app/Contents/MacOS/tqsl | grep -q x86_64 || IMGNAME="tqsl-legacy"
 
 /bin/echo -n "Copying files to image directory... "
 
-cp apps/ChangeLog.txt $WORKDIR/ChangeLog.txt
-cp LICENSE.txt $WORKDIR/
-cp apps/quick "$WORKDIR/Quick Start.txt"
 mkdir $WORKDIR/TrustedQSL
+cp apps/ChangeLog.txt $WORKDIR/TrustedQSL/ChangeLog.txt
+cp LICENSE.txt $WORKDIR/TrustedQSL/
+cp apps/quick "$WORKDIR/TrustedQSL/Quick Start.txt"
 cp -r apps/tqsl.app $WORKDIR/TrustedQSL
 
 /bin/echo "done"
@@ -29,7 +37,7 @@ do
     cp apps/ca-bundle.crt $WORKDIR/TrustedQSL/$app.app/Contents/Resources
     cp apps/languages.dat $WORKDIR/TrustedQSL/$app.app/Contents/Resources
     cp apps/cab_modes.dat $WORKDIR/TrustedQSL/$app.app/Contents/Resources
-    for lang in de es fi fr hi_IN it ja pl_PL pt zh ru tr_TR
+    for lang in de es fi fr hi_IN it ja pl_PL pt zh ru sv_SE tr_TR
     do
 	mkdir $WORKDIR/TrustedQSL/$app.app/Contents/Resources/$lang.lproj
 	cp apps/lang/$lang/tqslapp.mo $WORKDIR/TrustedQSL/$app.app/Contents/Resources/$lang.lproj
@@ -51,6 +59,21 @@ cp -r apps/help/tqslapp $WORKDIR/TrustedQSL/tqsl.app/Contents/Resources/Help
 
 #hdiutil uses dots to show progress
 hdiutil create -ov -srcfolder $WORKDIR -volname "TrustedQSL v$TQSLVER" "$IMGNAME-$TQSLVER.dmg"
+
+if [ "x$1" != "x" ]; then
+	echo "Codesigning as $1"
+	codesign --deep --options runtime --timestamp --verbose --sign "$1" --keychain $KEYCHAIN $WORKDIR/TrustedQSL/tqsl.app
+# Check that it signed OK
+	codesign --verify $WORKDIR/TrustedQSL/tqsl.app || exit 1
+fi
+/bin/echo "Creating a package..."
+pkgbuild --analyze --root $WORKDIR/TrustedQSL ${WORKDIR}/tqslapp.plist
+
+if [ "x$2" != "x" ]; then
+	pkgbuild --root ${WORKDIR}//TrustedQSL --component-plist ${WORKDIR}/tqslapp.plist --install-location /Applications/TrustedQSL `pwd`/${IMGNAME}-${TQSLVER}.pkg --keychain $KEYCHAIN --sign "$2"
+else
+	pkgbuild --root ${WORKDIR}//TrustedQSL --component-plist ${WORKDIR}/tqslapp.plist --install-location /Applications/TrustedQSL `pwd`/${IMGNAME}-${TQSLVER}.pkg
+fi
 
 /bin/echo -n "Cleaning up temporary files.. "
 rm -r $WORKDIR

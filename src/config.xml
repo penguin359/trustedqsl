@@ -1,4 +1,4 @@
-<tqslconfig majorversion="11" minorversion="12">
+<tqslconfig majorversion="11" minorversion="13">
      <adifmap>
        <adifmode adif-mode="AM" mode="AM">AM</adifmode>
        <adifmode adif-mode="ARDOP" mode="ARDOP">ARDOP</adifmode>
@@ -63,6 +63,7 @@
        <adifmode adif-mode="JT9" adif-submode="JT9H FAST" mode="JT9">JT9H FAST</adifmode>
        <adifmode adif-mode="JT9" mode="JT9">JT9</adifmode>
        <adifmode adif-mode="MFSK" adif-submode="FSQCALL" mode="DATA">FSQCALL</adifmode>
+       <adifmode adif-mode="MFSK" adif-submode="FST4" mode="FST4">FST4</adifmode>
        <adifmode adif-mode="MFSK" adif-submode="FT4" mode="FT4">FT4</adifmode>
        <adifmode adif-mode="MFSK" adif-submode="JS8" mode="DATA">JS8</adifmode>
        <adifmode adif-mode="MFSK" adif-submode="MFSK11" mode="DATA">MFSK11</adifmode>
@@ -7619,6 +7620,7 @@
        <mode group="PHONE">FM</mode>
        <mode group="DATA">FSK31</mode>
        <mode group="DATA">FSK441</mode>
+       <mode group="DATA">FST4</mode>
        <mode group="DATA">FT4</mode>
        <mode group="DATA">FT8</mode>
        <mode group="DATA">GTOR</mode>

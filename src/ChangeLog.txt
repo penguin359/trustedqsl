@@ -3,6 +3,10 @@ TQSLLIB changes
 
 2.5
 ---
+When reporting errors in ADIF input files, TQSL would report the line number
+of the "eor" (end-of-record) marker, not the ADIF field having the error. TQSL
+now reports the actual input line when that is possible.
+
 TQSL could crash if a log being signed in update mode changed the DXCC entity
 such that the zones were no longer valid. TQSL now changes those to "none" if
 there is no match.

@@ -121,7 +121,7 @@ class MyFrame : public wxFrame {
 	void CheckForUpdates(wxCommandEvent&);
 	void DoCheckForUpdates(bool quiet = false, bool noGUI = false);
 	void UpdateConfigFile(void);
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__APPLE__)
 	void UpdateTQSL(wxString& url);
 #endif
 	void DoCheckExpiringCerts(bool noGUI = false);

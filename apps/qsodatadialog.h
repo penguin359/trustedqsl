@@ -60,6 +60,21 @@ class QSORecord {
 	tQSL_Date _date;
 	tQSL_Time _time;
 	map <string, string> _extraFields;
+	bool operator == (const QSORecord other) {
+		if (_call == other._call && _freq == other._freq &&
+		    _rxfreq == other._rxfreq && _mode == other._mode &&
+		    _band == other._band && _rxband == other._rxband &&
+		    _propmode == other._propmode &&
+		    _date.year == other._date.year &&
+		    _date.month == other._date.month &&
+		    _date.day == other._date.day &&
+		    _time.hour == other._time.hour &&
+		    _time.minute == other._time.minute &&
+		    _time.second == other._time.second) {
+			return true;
+		}
+		return false;
+	}
 };
 
 typedef vector<QSORecord> QSORecordList;
@@ -88,6 +103,7 @@ class QSODataDialog : public wxDialog  {
 	void OnRecNew(wxCommandEvent&);
 	void OnRecDelete(wxCommandEvent&);
 	void OnFieldChanged(wxCommandEvent&);
+	void OnClose(wxCloseEvent&);
 	void SetRecno(int recno);
 	void UpdateControls();
 
@@ -108,6 +124,7 @@ class QSODataDialog : public wxDialog  {
 	wxString _filename;
 	wxHtmlHelpController *_help;
 	int _newrec;
+	bool _something_changed;
 };
 
 #endif
