@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: TQSL v2.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-03-02 06:25-0500\n"
-"PO-Revision-Date: 2020-05-04 10:28+0200\n"
+"PO-Revision-Date: 2020-09-30 20:08+0200\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.4.1\n"
 "Last-Translator: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Language: ca_ES\n"
 
 #: certtree.cpp:104
 msgid "tQSL Certificates"
-msgstr "tQSL Certificats"
+msgstr "certificats tQSL"
 
 #: certtree.cpp:107
 msgid "Error while accessing certificate store"
@@ -67,7 +67,7 @@ msgid ""
 "A secondary club callsign (I have a Callsign Certificate for the primary "
 "club callsign)"
 msgstr ""
-"Un indicatiu de ràdio club secundari (tinc un certificat de indicatiu per al "
+"Un indicatiu de ràdio club secundari (tinc un certificat d'indicatiu per al "
 "indicatiu principal del ràdio club)"
 
 #: crqwiz.cpp:57
@@ -94,8 +94,8 @@ msgstr "Un indicatiu especial amb un sol operador"
 #: crqwiz.cpp:161
 msgid "This will create a new Callsign Certificate request file."
 msgstr ""
-"D’aquesta manera es crearà un nou fitxer de sol·licitud del certificat de "
-"indicatiu."
+"D’aquesta manera es crearà un nou fitxer de sol·licitud del certificat "
+"d'indicatiu."
 
 #: crqwiz.cpp:163
 msgid ""
@@ -137,7 +137,7 @@ msgstr "Indicatiu:"
 #: crqwiz.cpp:313
 msgid "Date of the first QSO you made or will make using this callsign:"
 msgstr ""
-"Data del primer QSO que has realitzat o realitzaras mitjançant aquest "
+"Data del primer QSO que has realitzat o realitzaràs mitjançant aquest "
 "indicatiu:"
 
 #: crqwiz.cpp:361
@@ -151,7 +151,7 @@ msgstr ""
 
 #: crqwiz.cpp:399 crqwiz.cpp:774
 msgid "Please select a Callsign Certificate to validate your request."
-msgstr "Selecciona un certificat de indicatiu per validar la teva sol·licitud."
+msgstr "Selecciona un certificat d'indicatiu per validar la teva sol·licitud."
 
 #: crqwiz.cpp:429
 msgid "Zip/Postal"
@@ -196,18 +196,21 @@ msgid ""
 "to protect this Callsign Certificate. However, if you are using a computer "
 "in a private residence, no password need be specified."
 msgstr ""
-"Pots protegir aquest certificat mitjançant una contrasenya. Si utilitzes un "
-"sistema informàtic que es comparteix amb altres, has d’especificar una "
-"contrasenya per protegir aquest certificat d'indicatiu. Tanmateix, si "
-"utilitzes un ordinador en una residència privada, no cal que especifiquis "
-"cap contrasenya."
+"Pots protegir aquest certificat mitjançant una contrasenya o paraula de pas. "
+"Si utilitzes un sistema informàtic que es comparteix amb altres, has "
+"d’especificar una contrasenya per protegir aquest certificat d'indicatiu. "
+"Tanmateix, si utilitzes un ordinador en una residència privada, no cal que "
+"especifiquis cap contrasenya. Aquesta contrasenya no te relació amb la que "
+"utilitzes per accedir a LoTW."
 
 #: crqwiz.cpp:672 crqwiz.cpp:697
 msgid ""
 "Leave the password blank and click 'Next' unless you want to use a password."
 msgstr ""
 "Deixa la contrasenya en blanc i fes clic a \"Següent\" tret que vulguis "
-"utilitzar una contrasenya."
+"utilitzar una contrasenya. Aquesta contrasenya no te relació amb la que "
+"utilitzes per accedir a LoTW, es una paraula de pas per a aquest certificat "
+"d'indicatiu."
 
 #: crqwiz.cpp:676
 msgid "Password:"
@@ -222,7 +225,7 @@ msgid ""
 "DO NOT lose the password you choose! You will be unable to use the "
 "Certificate without this password!"
 msgstr ""
-"NO perdis la contrasenya que escollis! No pots utilitzar el Certificat sense "
+"NO perdis la contrasenya triada ! No pots utilitzar el Certificat sense "
 "contrasenya!"
 
 #: crqwiz.cpp:702
@@ -231,19 +234,19 @@ msgid ""
 "password."
 msgstr ""
 "Deixa la contrasenya en blanc i fes clic a \"Finalitzar\" tret que vulguis "
-"utilitzar una contrasenya."
+"utilitzar una contrasenya o paraula de pas per aquest certificat."
 
 #: crqwiz.cpp:748
 msgid "This Callsign Certificate is for:"
-msgstr "Aquest certificat de signatura és per:"
+msgstr "Aquest certificat d'indicatiu és per:"
 
 #: crqwiz.cpp:765 crqwiz.cpp:766 crqwiz.cpp:771
 msgid ""
 "Please select the Callsign Certificate for your current personal callsign to "
 "validate your request."
 msgstr ""
-"Per validar la sol·licitud, selecciona el certificat de indicatiu per a la "
-"teva sol·licitud de indicatiu personal actual."
+"Per validar la sol·licitud, selecciona el certificat d'indicatiu per a la "
+"teva sol·licitud d'indicatiu personal actual."
 
 #: crqwiz.cpp:769
 msgid ""
@@ -341,7 +344,7 @@ msgid ""
 "Please wait until you receive an e-mail bearing your requested Callsign "
 "Certificate."
 msgstr ""
-"Espera fins que rebis un correu electrònic amb el certificat de indicatiu "
+"Espera fins que rebis un correu electrònic amb el certificat d'indicatiu "
 "sol·licitat."
 
 #: crqwiz.cpp:1070
@@ -360,7 +363,7 @@ msgid ""
 "the past 24 hours. You should submit a request only once, then wait for that "
 "request to processed by LoTW Staff. This may take several business days."
 msgstr ""
-"Ja has sol·licitat més de tres certificats de indicatiu per a %s en les "
+"Ja has sol·licitat més de tres certificats d'indicatiu per a %s en les "
 "darreres 24 hores. Hauries d’enviar una sol·licitud només una vegada i "
 "esperar que el personal de LoTW la processés. Poden passar diversos dies "
 "laborables."
@@ -371,8 +374,8 @@ msgid ""
 "NONE and you have no valid Callsign Certificates that you can use to sign "
 "this request."
 msgstr ""
-"No pots seleccionar entitat DXCC NONE ja que has de signar qualsevol "
-"sol·licitud per a l'entitat NONE i no tens certificats de indicatiu vàlids "
+"No pots seleccionar entitat DXCC NONE (cap) ja que has de signar qualsevol "
+"sol·licitud per a l'entitat NONE i no tens certificats d'indicatiu vàlids "
 "que pots utilitzar per signar aquesta sol·licitud."
 
 #: crqwiz.cpp:1201 crqwiz.cpp:1213 crqwiz.cpp:1405 tqsl.cpp:154 tqsl.cpp:179
@@ -381,7 +384,7 @@ msgstr "Error TQSL"
 
 #: crqwiz.cpp:1205
 msgid "You have selected DXCC Entity NONE"
-msgstr "Has seleccionat Entitat DXCC NONE"
+msgstr "Has seleccionat Entitat DXCC NONE (Cap)"
 
 #: crqwiz.cpp:1207
 msgid ""
@@ -422,7 +425,7 @@ msgstr ""
 "Has escollit una data de finalització de QSO per a aquest certificat "
 "d'indicatiu. La \"data de finalització de QSO\" NOMÉS s'hauria de definir si "
 "aquesta data és la data en què la llicència t'ha caducat o si la llicència "
-"ha estat substituïda per una nova."
+"ha estat substituïda per una de nova."
 
 #: crqwiz.cpp:1221
 msgid ""
@@ -509,7 +512,7 @@ msgstr "Cancel·lar"
 
 #: getpassword.cpp:111
 msgid "New password:"
-msgstr "Nova contrasenya:"
+msgstr "Contrasenya nova"
 
 #: getpassword.cpp:114
 msgid "Enter again to confirm:"
@@ -549,7 +552,7 @@ msgstr "Certificat arrel de confiança"
 
 #: loadcertwiz.cpp:121
 msgid "Certificate Authority certificate"
-msgstr "Certificat de l'autoritat de certificat"
+msgstr "Certificat de l'autoritat del certificat"
 
 #: loadcertwiz.cpp:124 wxutil.cpp:258
 msgid "Callsign Certificate"
@@ -566,9 +569,9 @@ msgid ""
 "computer in a private residence no password need be specified."
 msgstr ""
 "Si utilitzes un sistema informàtic que es comparteix amb altres, has "
-"d’especificar una contrasenya per protegir aquest certificat. Tanmateix, si "
-"utilitzeu un ordinador en una residència privada no cal que especifiquis cap "
-"contrasenya."
+"d’especificar una contrasenya o paraula de pas per protegir aquest "
+"certificat. Tanmateix, si utilitzes un ordinador en una residència privada "
+"no cal que especifiquis cap contrasenya."
 
 #: loadcertwiz.cpp:163
 msgid ""
@@ -587,7 +590,7 @@ msgstr ""
 
 #: loadcertwiz.cpp:167
 msgid "New Password"
-msgstr "Nova Contrasenya"
+msgstr "Contrasenya nova"
 
 #: loadcertwiz.cpp:202
 msgid ""
@@ -816,7 +819,7 @@ msgstr "Valor"
 
 #: stationdial.cpp:171
 msgid "Select Station Data"
-msgstr "Seleccioneu dades de l'estació"
+msgstr "Selecciona dades de l'estació"
 
 #: stationdial.cpp:182
 msgid "Save Station Data"
@@ -840,11 +843,11 @@ msgstr "Edita..."
 
 #: stationdial.cpp:286
 msgid "Delete \""
-msgstr "Esborrar \""
+msgstr "Esborra \""
 
 #: stationdial.cpp:286
 msgid "TQSL Confirm"
-msgstr "TQSL Confirma"
+msgstr "Confirma TQSL"
 
 #: stationdial.cpp:352
 msgid "Call Sign"
@@ -916,7 +919,7 @@ msgstr "Usuari cancel·lat"
 
 #: tqsl.cpp:177
 msgid "Upload Rejected"
-msgstr "Carrega rebutjada"
+msgstr "Càrrega rebutjada"
 
 #: tqsl.cpp:178
 msgid "Unexpected LoTW Response"
@@ -936,11 +939,11 @@ msgstr "Error en obrir el fitxer de sortida"
 
 #: tqsl.cpp:183
 msgid "No QSOs written"
-msgstr "No hi ha QSO's escrits"
+msgstr "No hi ha QSO escrits"
 
 #: tqsl.cpp:184
 msgid "Some QSOs suppressed"
-msgstr "Alguns QSO's s'han esborrat"
+msgstr "Alguns QSO s'han esborrat"
 
 #: tqsl.cpp:185
 msgid "Command Syntax Error"
@@ -974,7 +977,7 @@ msgstr ""
 "Introdueix la contrasenya per desbloquejar el certificat d'indicatiu per a "
 "%hs -- %hs\n"
 "(Aquesta és la contrasenya que has creat al instal·lar el certificat "
-"d'indicatiu.)"
+"d'indicatiu, i no té res a veure amb la que utilitzes per accedir a LoTW)."
 
 #: tqsl.cpp:255 tqsl.cpp:7031 getpassword.h:32 getpassword.h:33
 msgid "Enter password"
@@ -994,7 +997,7 @@ msgstr "al format TQSL"
 
 #: tqsl.cpp:309
 msgid "Uploading Signed Data"
-msgstr "Carrega dades signades"
+msgstr "Càrrega dades signades"
 
 #: tqsl.cpp:309
 msgid "Uploading signed log data..."
@@ -1010,15 +1013,15 @@ msgid ""
 "from the input file."
 msgstr ""
 "Pots definir les dates d'inici i / o finalització del QSO per seleccionar "
-"QSO's del fitxer d'entrada."
+"els QSO del fitxer d'entrada."
 
 #: tqsl.cpp:398
 msgid ""
 "QSOs prior to the starting date or after the ending date will not be signed "
 "or included in the output file."
 msgstr ""
-"Els QSO's anteriors a la data d’inici o després de la data de finalització "
-"no seran signats ni inclosos al fitxer de sortida."
+"Els QSO anteriors a la data d’inici o després de la data de finalització no "
+"seran signats ni inclosos al fitxer de sortida."
 
 #: tqsl.cpp:400
 msgid "You may leave either date (or both dates) blank."
@@ -1042,7 +1045,7 @@ msgstr "La data final no és vàlida"
 
 #: tqsl.cpp:486
 msgid "Already Uploaded QSOs Detected"
-msgstr "QSO's carregats ja detectats"
+msgstr "QSO carregats ja detectats"
 
 #: tqsl.cpp:492
 #, c-format
@@ -1050,8 +1053,8 @@ msgid ""
 "This log contains %d QSO(s) which appear to have already been signed for "
 "upload to LoTW, and no new QSOs."
 msgstr ""
-"Aquest registre conté %d QSO(s) que sembla que ja s'han signat per a la "
-"càrrega a LoTW, i no hi ha QSO's nous."
+"Aquest registre conté %d QSO que sembla que ja s'han signat per a la càrrega "
+"a LoTW, i no hi ha QSO nous."
 
 #: tqsl.cpp:494
 msgid "Click 'Cancel' to abandon processing this log file (Recommended)."
@@ -1064,8 +1067,8 @@ msgid ""
 "Click 'Re-Upload QSOs' to re-process this log while allowing already "
 "uploaded QSOs."
 msgstr ""
-"Fes clic a \"Torna a carregar els QSO's\" per tornar a processar aquest "
-"registre alhora que permet que els QSO's ja s'hagin penjat."
+"Fes clic a \"Torna a carregar els QSO\" per tornar a processar aquest "
+"registre alhora que permet que els QSO ja s'hagin penjat."
 
 #: tqsl.cpp:500
 #, c-format
@@ -1073,16 +1076,16 @@ msgid ""
 "This log contains %d QSO(s) which appear to have already been signed for "
 "upload to LoTW, and %d QSOs which are new."
 msgstr ""
-"Aquest registre conté %d QSO(s) que sembla que ja s’han signat per a la "
-"càrrega a LoTW, i %d QSO's que són nous."
+"Aquest registre conté %d QSO que sembla que ja s’han signat per a la càrrega "
+"a LoTW, i %d QSO que són nous."
 
 #: tqsl.cpp:502 tqsl.cpp:509
 msgid ""
 "Click 'New QSOs Only' to sign normally, without the already uploaded QSOs "
 "(Recommended)."
 msgstr ""
-"Fes clic a \"Només QSO's nous\" per signar normalment, sense que els QSO's "
-"ja es pengin (Recomanats)."
+"Fes clic a \"Només QSO nous\" per signar normalment, sense que els QSO ja es "
+"pengin (Recomanat)."
 
 #: tqsl.cpp:504 tqsl.cpp:511
 msgid "Click 'Cancel' to abandon processing this log file."
@@ -1096,8 +1099,8 @@ msgid ""
 "This log contains %d QSO(s) which appear to have already been signed for "
 "upload to LoTW, and one QSO which is new."
 msgstr ""
-"Aquest registre conté %d QSO (s) que sembla que ja s’han signat per a la "
-"càrrega a LoTW, i un QSO que és nou."
+"Aquest registre conté %d QSO que sembla que ja s’han signat per a la càrrega "
+"a LoTW, i un QSO que és nou."
 
 #: tqsl.cpp:524
 msgid ""
@@ -1108,10 +1111,10 @@ msgid ""
 "updated version."
 msgstr ""
 "El fitxer de registre que penges mitjançant el teu llibre de guàrdia consta "
-"completament de QSO's prèviament carregats que creen treballs innecessaris "
-"per a LoTW. És possible que hi hagi una versió més recent del llibre de "
-"guàrdia que impedeixi això. Si us plau, consulta el venedor del teu llibre "
-"de guàrdia per obtenir una versió actualitzada."
+"completament de QSO prèviament carregats que creen treballs innecessaris per "
+"a LoTW. És possible que hi hagi una versió més recent del llibre de guàrdia "
+"que impedeixi això. Si us plau, consulta el venedor del teu llibre de "
+"guàrdia per obtenir una versió actualitzada."
 
 #: tqsl.cpp:526
 msgid ""
@@ -1123,10 +1126,10 @@ msgid ""
 msgstr ""
 "Mentrestant, tingues en compte que alguns registradors poden presentar un "
 "comportament estrany si es fa clic en una opció diferent a \"Tornar a "
-"carregar QSO's\". L’elecció de “Cancel·lar” sol ser segura, però un "
+"carregar QSO\". L’elecció de “Cancel·lar” sol ser segura, però un "
 "registrador defectuós que no verifica els missatges d’estat reportats per "
 "TrustedQSL pot produir un comportament estrany (però inofensiu) com intentar "
-"carregar un fitxer buit o marcar tots els QSO's escollits com a “enviats”."
+"carregar un fitxer buit o marcar tots els QSO escollits com a “enviats”."
 
 #: tqsl.cpp:529
 msgid ""
@@ -1136,7 +1139,7 @@ msgid ""
 "Please check with your QSO Logging system's vendor for an updated version."
 msgstr ""
 "El fitxer de registre que penges mitjançant el teu llibre de guàrdia inclou "
-"alguns QSO's carregats anteriorment que creen treballs innecessaris per a "
+"alguns QSO carregats anteriorment que creen treballs innecessaris per a "
 "LoTW. És possible que hi hagi una versió més recent del llibre de guàrdia "
 "que impedeixi això. Si us plau, consulta el venedor del teu llibre de "
 "guàrdia per obtenir una versió actualitzada."
@@ -1153,11 +1156,11 @@ msgid ""
 msgstr ""
 "Mentrestant, tingues en compte que alguns registradors poden presentar un "
 "comportament estrany si es fa clic en una opció diferent a \"Tornar a "
-"carregar QSO's\". Es recomana \"Només QSO's nous\", però un registrador que "
+"carregar QSO\". Es recomana \"Només QSO nous\", però un registrador que "
 "realitza el seu propi seguiment de càrregues pot establir l'estat "
 "incorrectament en aquest cas. Un registre que no fa el seguiment de les "
-"càrregues no s'hauria de veure afectat escollint \"Només QSO's nous\" i si "
-"rastreja l'estat del \"QSO enviat\", marcarà correctament tots els QSO's "
+"càrregues no s'hauria de veure afectat escollint \"Només QSO nous\" i si "
+"rastreja l'estat del \"QSO enviat\", marcarà correctament tots els QSO "
 "seleccionats com a enviats, encara que es trobin al teu compte, encara que "
 "no estiguessin en el lot específic"
 
@@ -1171,15 +1174,15 @@ msgstr ""
 "L’elecció de “Cancel·lar” sol ser segura, però un registrador defectuós que "
 "no verifica els missatges d’estat reportats per TrustedQSL pot produir un "
 "comportament estrany (però inofensiu) com intentar carregar un fitxer buit o "
-"marcar tots els QSO's escollits com a “enviats”."
+"marcar tots els QSO escollits com a “enviats”."
 
 #: tqsl.cpp:544
 msgid "New QSOs Only"
-msgstr "Només QSO's nous"
+msgstr "Només QSO nous"
 
 #: tqsl.cpp:546
 msgid "Re-Upload QSOs"
-msgstr "Torna a penjar els QSO's"
+msgstr "Torna a penjar els QSO"
 
 #: tqsl.cpp:571
 msgid ""
@@ -1187,7 +1190,7 @@ msgid ""
 "not processed by LoTW, either because it was never uploaded, or there was a "
 "server failure"
 msgstr ""
-"Els únics motius per tornar a signar QSO's ja carregats és si LoTW no ha "
+"Els únics motius per tornar a signar QSO ja carregats és si LoTW no ha "
 "processat una càrrega anterior, que mai es va penjar, o bé que hi ha hagut "
 "un error al servidor"
 
@@ -1234,12 +1237,12 @@ msgstr "Inicia la sessió i penja el fitxer ADIF o Cabrillo ..."
 
 #: tqsl.cpp:1087
 msgid "&Sign and save ADIF or Cabrillo file..."
-msgstr "&Registra i desa el fitxer ADIF o Cabrillo ..."
+msgstr "Regi&stra i desa el fitxer ADIF o Cabrillo ..."
 
 #: tqsl.cpp:1089
 msgid "&Backup Station Locations, Certificates, and Preferences..."
 msgstr ""
-"&Còpies de seguretat d'Ubicacions d'estació, certificats i preferències ..."
+"Còpies de seguretat d'U&bicacions d'estació, certificats i preferències ..."
 
 #: tqsl.cpp:1090
 msgid "&Restore Station Locations, Certificates, and Preferences..."
@@ -1259,7 +1262,7 @@ msgstr "&Preferències..."
 
 #: tqsl.cpp:1098
 msgid "Display or Modify &Preferences..."
-msgstr "Visualització o modificació i preferències ..."
+msgstr "Visualització o modificació de &Preferències ..."
 
 #: tqsl.cpp:1101 tqsl.cpp:6663 tqsl.cpp:6665
 msgid "Language"
@@ -1275,7 +1278,7 @@ msgstr "Sortir de TQSL\tAlt-X"
 
 #: tqsl.cpp:1113
 msgid "&Display Station Location Properties"
-msgstr "&Visualitza les propietats d'ubicació de l'estació"
+msgstr "&Visualitza les propietats de la ubicació de l'estació"
 
 #: tqsl.cpp:1115
 msgid "&Edit Station Location"
@@ -1295,15 +1298,15 @@ msgstr "&Continguts"
 
 #: tqsl.cpp:1137
 msgid "Display &Documentation"
-msgstr "Visualitza la &documentació"
+msgstr "Visualitza la &Documentació"
 
 #: tqsl.cpp:1142
 msgid "Check for &Updates..."
-msgstr "Buscar &Actualitzacions..."
+msgstr "Buscar act&ualitzacions..."
 
 #: tqsl.cpp:1144
 msgid "&About"
-msgstr "&Quant a"
+msgstr "Qu&ant a"
 
 #: tqsl.cpp:1147 tqsl_prefs.cpp:98
 msgid "&File"
@@ -1311,15 +1314,15 @@ msgstr "&Fitxer"
 
 #: tqsl.cpp:1148
 msgid "&Station Location"
-msgstr "& Ubicació de l'estació"
+msgstr "Ubicació de l'e&stació"
 
 #: tqsl.cpp:1149
 msgid "Callsign &Certificate"
-msgstr "Certificat &d'indicatiu"
+msgstr "&Certificat d'indicatiu"
 
 #: tqsl.cpp:1150
 msgid "&Help"
-msgstr "&Ajuda"
+msgstr "A&juda"
 
 #: tqsl.cpp:1165 tqsl.cpp:1254
 msgid "Log Operations"
@@ -1371,7 +1374,7 @@ msgstr "Selecciona un certificat d'indicatiu per processar"
 
 #: tqsl.cpp:1410
 msgid "Load a Callsign Certificate"
-msgstr "Carrega un certificat d'indicatiu"
+msgstr "Càrrega un certificat d'indicatiu"
 
 #: tqsl.cpp:1427 tqsl.cpp:6271 tqsl.cpp:6272
 msgid "Save a Callsign Certificate"
@@ -1484,7 +1487,7 @@ msgstr "TQSL - Confirmeu la signatura"
 
 #: tqsl.cpp:1971
 msgid "There are no valid callsign certificates for callsign"
-msgstr "No hi ha certificats de d'indicatiu vàlids"
+msgstr "No hi ha certificats d'indicatiu vàlids"
 
 #: tqsl.cpp:1974
 msgid "in entity"
@@ -1513,7 +1516,7 @@ msgstr "Cancel·lat"
 #: tqsl.cpp:2089 tqsl.cpp:2099
 #, c-format
 msgid "QSOs: %d"
-msgstr "QSO's: %d"
+msgstr "QSO: %d"
 
 #: tqsl.cpp:2091
 #, c-format
@@ -1583,12 +1586,12 @@ msgstr ""
 
 #: tqsl.cpp:2287
 msgid "All QSOs are already uploaded; aborted"
-msgstr "Tots els QSO's ja han penjat; avortat"
+msgstr "Tots els QSO ja han penjat; avortat"
 
 #: tqsl.cpp:2294
 #, c-format
 msgid "%d of %d QSOs are already uploaded; aborted"
-msgstr "%d de %d QSO's ja han penjat; avortat"
+msgstr "%d de %d QSO ja han penjat; avortat"
 
 #: tqsl.cpp:2311
 #, c-format
@@ -1617,7 +1620,7 @@ msgstr "Contacte no vàlid: el QSO no especifica una hora"
 
 #: tqsl.cpp:2345
 msgid "This callsign certificate is already active and cannot be restored."
-msgstr "Aquest certificat de indicatiu ja està actiu i no es pot restaurar."
+msgstr "Aquest certificat d'indicatiu ja està actiu i no es pot restaurar."
 
 #: tqsl.cpp:2380
 #, c-format
@@ -1646,7 +1649,7 @@ msgstr "Nota: TQSL assumeix que aquest fitxer es penjarà a LoTW."
 msgid ""
 "Resubmitting these QSOs will cause them to be reported as already uploaded."
 msgstr ""
-"Tornar a enviar aquests QSO's, farà que es notifiquin que ja es van penjar."
+"Tornar a enviar aquests QSO, farà que es notifiquin que ja es van penjar."
 
 #: tqsl.cpp:2527
 msgid "No records to upload"
@@ -1672,7 +1675,7 @@ msgstr "S'està intentant carregar un QSO"
 #: tqsl.cpp:2751
 #, c-format
 msgid "Attempting to upload %d QSOs"
-msgstr "S'està intentant pujar %d QSO's"
+msgstr "S'està intentant pujar %d QSO"
 
 #: tqsl.cpp:2754
 #, c-format
@@ -1704,7 +1707,7 @@ msgstr ""
 
 #: tqsl.cpp:2804 tqsl.cpp:2825
 msgid "After reading this message, you may close this program."
-msgstr "Després de llegir aquest missatge, podeu tancar aquest programa."
+msgstr "Després de llegir aquest missatge, pots tancar aquest programa."
 
 #: tqsl.cpp:2812 tqsl.cpp:2817
 #, c-format
@@ -1767,7 +1770,7 @@ msgstr ""
 #: tqsl.cpp:2857 tqsl.cpp:2861 tqsl.cpp:2865
 #, c-format
 msgid "Please try uploading the %s later."
-msgstr "Proveu a penjar la versió %s després."
+msgstr "Prova a penjar la versió %s després."
 
 #: tqsl.cpp:2860
 #, c-format
@@ -1798,7 +1801,7 @@ msgstr ""
 
 #: tqsl.cpp:2886
 msgid "Retry?"
-msgstr "Torneu-ho a provar?"
+msgstr "Torna-ho a provar?"
 
 #: tqsl.cpp:2915
 #, c-format
@@ -1819,7 +1822,7 @@ msgid ""
 "There are no current callsign certificates for callsign %hs. This station "
 "location cannot be used to sign a log file."
 msgstr ""
-"No hi ha certificats d'indicatiu actuals per a signar la trucada %hs. "
+"No hi ha certificats d'indicatiu actuals per a signar amb l'indicatiu %hs. "
 "Aquesta ubicació de l'estació no es pot utilitzar per a signar un fitxer de "
 "registre."
 
@@ -1838,7 +1841,7 @@ msgstr "Disponible l’actualització per a TQSL"
 #: tqsl.cpp:3162
 #, c-format
 msgid "A new TQSL release (V%s) is available!"
-msgstr "Una nova versió TQSL (V%s) està disponible!"
+msgstr "Hi ha una nova versió TQSL (V%s) està disponible!"
 
 #: tqsl.cpp:3164
 #, c-format
@@ -1954,7 +1957,7 @@ msgstr "Vols renovar-lo ara?"
 
 #: tqsl.cpp:3604
 msgid "Certificate Expiring"
-msgstr "Certificat que caduca"
+msgstr "Certificat Caducat"
 
 #: tqsl.cpp:3637
 #, c-format
@@ -2010,11 +2013,11 @@ msgstr ""
 
 #: tqsl.cpp:4183
 msgid "You have no callsign certificates to use to sign a log file."
-msgstr "No teniu certificats d'indicatiu per signar un fitxer de registre."
+msgstr "No tens certificats d'indicatiu per signar un fitxer de registre."
 
 #: tqsl.cpp:4185
 msgid "Please install a callsign certificate then try again."
-msgstr "Instal·leu un certificat d'indicatiu i torneu-ho a provar de nou."
+msgstr "Instal·la un certificat d'indicatiu i torna-ho a provar de nou."
 
 #: tqsl.cpp:4186
 msgid "No Callsign Certificates"
@@ -2083,7 +2086,7 @@ msgstr "Desant TQSL Preferències"
 
 #: tqsl.cpp:4625
 msgid "Saving QSOs"
-msgstr "Desant QSO's"
+msgstr "Desant QSO"
 
 #: tqsl.cpp:4669
 msgid "Save operation complete."
@@ -2122,7 +2125,7 @@ msgstr "Restaurar Preferències"
 
 #: tqsl.cpp:4841
 msgid "Restoring Station Locations"
-msgstr "Restaurar ubicacions d'estació"
+msgstr "Restaurar ubicacions de l'estació"
 
 #: tqsl.cpp:4862
 msgid "Restoring QSO records"
@@ -2186,11 +2189,11 @@ msgstr "Error d'administrador"
 
 #: tqsl.cpp:5345
 msgid "Specify dialog action - abort, all, compliant or ask"
-msgstr "Especifica l'acció de diàleg: anul·la, compleix, compleix o demana"
+msgstr "Especifica l'acció de diàleg: anul·la, compleix o demana"
 
 #: tqsl.cpp:5346
 msgid "Specify start date for QSOs to sign"
-msgstr "Especifica la data d'inici per signar QSO's"
+msgstr "Especifica la data d'inici per signar QSO"
 
 #: tqsl.cpp:5347
 msgid "Specify default callsign for log signing"
@@ -2202,7 +2205,7 @@ msgstr "Suprimeix el quadre de diàleg de l'interval de dates"
 
 #: tqsl.cpp:5349
 msgid "Specify end date for QSOs to sign"
-msgstr "Especifica la data de finalització per signar QSO's"
+msgstr "Especifica la data de finalització per signar QSO"
 
 #: tqsl.cpp:5350
 msgid "Specify QSO verification action - ignore, report or update"
@@ -2249,7 +2252,7 @@ msgstr "Nom del fitxer per al registre de seguiment de diagnòstic"
 
 #: tqsl.cpp:5365
 msgid "Upload after signing instead of saving"
-msgstr "Carrega després de signar en lloc de desar"
+msgstr "Càrrega després de signar en lloc de desar"
 
 #: tqsl.cpp:5366
 msgid "Display the version information and exit"
@@ -2293,7 +2296,7 @@ msgstr "No hi ha fitxer de registre per signar!"
 #: tqsl.cpp:5783
 msgid "Please review the introductory documentation before using this program."
 msgstr ""
-"Consulteu la documentació introductòria abans d’utilitzar aquest programa."
+"Consulta la documentació introductòria abans d’utilitzar aquest programa."
 
 #: tqsl.cpp:5784
 msgid "Notice"
@@ -2317,15 +2320,15 @@ msgstr "Alerta"
 
 #: tqsl.cpp:5908
 msgid "Display Callsign Certificate &Properties"
-msgstr "Mostrar certificat i propietats de signatura d'indicatiu"
+msgstr "Mostrar el certificat i propietats de signatura d'indicatiu"
 
 #: tqsl.cpp:5911
 msgid "&Load Callsign Certificate from File"
-msgstr "&Carregar certificat d'indicatiu des de fitxer"
+msgstr "Carregar e&l certificat d'indicatiu des de fitxer"
 
 #: tqsl.cpp:5912
 msgid "&Save Callsign Certificate to File..."
-msgstr "&Desar certificat d'indicatiu a fitxer..."
+msgstr "De&sar el certificat d'indicatiu a fitxer..."
 
 #: tqsl.cpp:5916
 msgid "Request &New Callsign Certificate..."
@@ -2333,15 +2336,15 @@ msgstr "Sol·licitar un &Nou certificat d'indicatiu..."
 
 #: tqsl.cpp:5917
 msgid "&Renew Callsign Certificate"
-msgstr "&Renovar certificat d'indicatiu"
+msgstr "&Renovar un certificat d'indicatiu"
 
 #: tqsl.cpp:5922
 msgid "&Delete Callsign Certificate"
-msgstr "&Esborrar certificat d'indicatiu"
+msgstr "Esborrar un certificat d'in&dicatiu"
 
 #: tqsl.cpp:5928
 msgid "Restore Deleted Callsign Certificate"
-msgstr "Recuperar certificat d'indicatiu esborrat"
+msgstr "Recuperar el certificat d'indicatiu esborrat"
 
 #: tqsl.cpp:5941
 msgid "&Edit"
@@ -2349,7 +2352,7 @@ msgstr "&Editar"
 
 #: tqsl.cpp:5943
 msgid "&Delete"
-msgstr "&Esborrar"
+msgstr "Es&borrar"
 
 #: tqsl.cpp:5952
 msgid "Load Certificate File"
@@ -2373,7 +2376,7 @@ msgstr "Pujar"
 
 #: tqsl.cpp:6124
 msgid "tQSL Cert Request files (*."
-msgstr "tQSL sol·licituds Cert (*."
+msgstr "fitxers de certificats tQSL sol·licitats (*."
 
 #: tqsl.cpp:6126
 msgid "|All files ("
@@ -2407,7 +2410,7 @@ msgstr "Sol·licitud de certificat"
 
 #: tqsl.cpp:6218
 msgid "Your certificate request did not upload properly"
-msgstr "La teva sol·licitud de certificat no s'ha pujat adecuadament"
+msgstr "La teva sol·licitud de certificat no s'ha pujat adequadament"
 
 #: tqsl.cpp:6219
 msgid "Please try again."
@@ -2466,7 +2469,8 @@ msgstr ""
 "Si estàs fent servir un ordinador compartit, cal que especifiquis una "
 "contrasenya per protegir aquest certificat. No obstant això, si estàs fent "
 "servir un ordinador en residència privada, no cal especificar cap "
-"contrasenya."
+"contrasenya. Aquesta contrasenya no té res a veure amb la que utilitzeu per "
+"accedir a LoTW."
 
 #: tqsl.cpp:6376
 msgid ""
@@ -2508,7 +2512,7 @@ msgstr "si has creat un, amb el comanda 'Desar certificat d'indicatiu'"
 
 #: tqsl.cpp:6432
 msgid "'Save Callsign Certificate' command."
-msgstr "(Desa el certificat de l'indicatiu) del menú Certificat d'Indicatiu."
+msgstr "Comandament \"Desa el certificat de l'indicatiu\"."
 
 #: tqsl.cpp:6434
 msgid "Are you sure you want to delete the certificate?"
@@ -2524,7 +2528,7 @@ msgstr "Error d'esborrat"
 
 #: tqsl.cpp:6483
 msgid "Choose a Callsign Certificate to restore"
-msgstr "Escull un certificat d'indicatiu a recuperar"
+msgstr "Tria un certificat d'indicatiu per recuperar"
 
 #: tqsl.cpp:6512
 msgid "Select a Station Location to process"
@@ -2556,11 +2560,11 @@ msgstr "No hi ha cap ubicació d'estació per ser recuperada"
 
 #: tqsl.cpp:6592
 msgid "Choose a Station Location to restore"
-msgstr "Escull una ubicació d'estació per ser recuperada"
+msgstr "Tria una ubicació d'estació per a ser recuperada"
 
 #: tqsl.cpp:6662 tqsl.cpp:6665
 msgid "Please choose language:"
-msgstr "Si us plau, escull idioma:"
+msgstr "Si us plau, tria un idioma:"
 
 #: tqsl.cpp:6729
 msgid "Certificate Properties"
@@ -2580,7 +2584,7 @@ msgstr "Organització: "
 
 #: tqsl.cpp:6736
 msgid "Serial: "
-msgstr "Num.sèrie: "
+msgstr "Número de sèrie: "
 
 #: tqsl.cpp:6737
 msgid "Operator: "
@@ -2596,11 +2600,11 @@ msgstr "Entitat DXCC: "
 
 #: tqsl.cpp:6740
 msgid "QSO Start Date: "
-msgstr "Data inici QSO: "
+msgstr "Data inici dels QSO: "
 
 #: tqsl.cpp:6741
 msgid "QSO End Date: "
-msgstr "Data final QSO: "
+msgstr "Data final dels QSO: "
 
 #: tqsl.cpp:6742
 msgid "Password: "
@@ -2656,7 +2660,7 @@ msgstr "Característiques de la ubicació de l'estació"
 
 #: tqsl.cpp:6930
 msgid "Grid Square: "
-msgstr "Quadrícula: "
+msgstr "Locator: "
 
 #: tqsl.cpp:6931
 msgid "ITU Zone: "
@@ -2668,7 +2672,7 @@ msgstr "Zona CQ: "
 
 #: tqsl.cpp:6933
 msgid "IOTA Locator: "
-msgstr "Locator IOTA: "
+msgstr "IOTA: "
 
 #: tqsl.cpp:6934 tqsl.cpp:6941
 msgid "State: "
@@ -2676,7 +2680,7 @@ msgstr "Estat: "
 
 #: tqsl.cpp:6935
 msgid "County: "
-msgstr "Comtat: "
+msgstr "Comarca o Comtat: "
 
 #: tqsl.cpp:6936 tqsl.cpp:6938 tqsl.cpp:6942
 msgid "Park: "
@@ -2684,11 +2688,11 @@ msgstr "Parc: "
 
 #: tqsl.cpp:6937 tqsl.cpp:6940
 msgid "Province: "
-msgstr "Provincia: "
+msgstr "Província: "
 
 #: tqsl.cpp:6939
 msgid "Oblast: "
-msgstr "Oblast: "
+msgstr "Àrea: "
 
 #: tqsl.cpp:7021
 msgid "Enter the password to unlock the callsign certificate"
@@ -2704,7 +2708,7 @@ msgstr "Opcions"
 
 #: tqsl_prefs.cpp:76
 msgid "Log Handling"
-msgstr "Gestió del log"
+msgstr "Gestió del log o registre"
 
 #: tqsl_prefs.cpp:79
 msgid "ADIF Modes"
@@ -2732,7 +2736,7 @@ msgstr "Afegir mode ADIF"
 
 #: tqsl_prefs.cpp:260
 msgid "Add ADIF mode mapping:"
-msgstr "Afegir mapeig mode ADIF:"
+msgstr "Afegir mode mapeig ADIF:"
 
 #: tqsl_prefs.cpp:264
 msgid "ADIF Mode:"
@@ -2751,11 +2755,11 @@ msgstr ""
 
 #: tqsl_prefs.cpp:319
 msgid "Mode Conflict"
-msgstr "Mode Conflicte"
+msgstr "Conflicte de Mode"
 
 #: tqsl_prefs.cpp:343
 msgid "Allow automatic configuration backup"
-msgstr "Permetre còpia de seguretat de configuració automàtica"
+msgstr "Permetre còpia de seguretat de la configuració automàtica"
 
 #: tqsl_prefs.cpp:347
 msgid "Backup File Folder:"
@@ -2807,7 +2811,7 @@ msgstr "Sol·licitar un interval de dates QSO quan es signi"
 
 #: tqsl_prefs.cpp:472
 msgid "Display details of already uploaded QSOs when signing a log"
-msgstr "Mostrar detalls de QSO ja pujats quan es signi un log"
+msgstr "Mostrar detalls de QSO ja pujats quan es signi un log o registre"
 
 #: tqsl_prefs.cpp:485
 msgid "Handle QTH information in ADIF logs with what action?"
@@ -2819,8 +2823,8 @@ msgid ""
 "downloads. You should only enable a proxy if directed by your network "
 "administrator."
 msgstr ""
-"Utilitza aquestes dades per configurar un proxy de xarxa per a puja i "
-"descarregar via Internet. Només heu d’habilitar un proxy si està sota la "
+"Utilitza aquestes dades per configurar un proxy de xarxa per a pujar i "
+"descarregar via Internet. Només has d’habilitar un proxy si està sota la "
 "direcció de l’administrador de xarxa."
 
 #: tqsl_prefs.cpp:672
@@ -2828,8 +2832,8 @@ msgid ""
 "Incorrect settings can cause TQSL to be unable to upload logs or check for "
 "updates."
 msgstr ""
-"Configuració incorrecta pot fer que el TQSL no pugui pujar els logs o buscar "
-"actualitzacions."
+"Una configuració incorrecta pot fer que el TQSL no pugui pujar els logs o "
+"buscar actualitzacions."
 
 #: tqsl_prefs.cpp:678
 msgid "Enable a Network Proxy"
@@ -2837,7 +2841,7 @@ msgstr "Habilitar un Proxy de Xarxa"
 
 #: tqsl_prefs.cpp:682
 msgid "Proxy Address:"
-msgstr "Adreça Proxy:"
+msgstr "Adreça del Proxy:"
 
 #: tqsl_prefs.cpp:690
 msgid "Port Number:"
@@ -2845,15 +2849,15 @@ msgstr "Port Número:"
 
 #: tqsl_prefs.cpp:697
 msgid "Proxy Type:"
-msgstr "Tipus Proxy:"
+msgstr "Tipus de Proxy:"
 
 #: tqsl_prefs.cpp:700
 msgid "ProxyType"
-msgstr "TipusProxy"
+msgstr "Tipus de Proxy"
 
 #: tqsl_prefs.cpp:762
 msgid "Cabrillo CONTEST definitions:"
-msgstr "Definicions Cabrillo CONCURS:"
+msgstr "Definicions de Cabrillo CONCURS:"
 
 #: tqsl_prefs.cpp:774 tqsl_prefs.cpp:785
 msgid "CONTEST"
@@ -2877,11 +2881,11 @@ msgstr "Concurs"
 
 #: tqsl_prefs.cpp:975
 msgid "Cabrillo CONTEST"
-msgstr "Cabrillo CONCURS"
+msgstr "CONCURS Cabrillo"
 
 #: tqsl_prefs.cpp:977
 msgid "CONTEST Name:"
-msgstr "Nom CONCURS:"
+msgstr "Nom del CONCURS:"
 
 #: tqsl_prefs.cpp:983
 msgid "Contest type"
@@ -2889,16 +2893,16 @@ msgstr "Tipus de concurs"
 
 #: tqsl_prefs.cpp:988
 msgid "Call-Worked Field Number:"
-msgstr "Camp Indicatius treballats numero:"
+msgstr "Camp Indicatius treballats número:"
 
 #: tqsl_prefs.cpp:1022
 msgid "Contest name cannot be blank"
-msgstr "El nom de concurs no pot estar en blanc"
+msgstr "El nom del concurs no pot estar en blanc"
 
 #: tqsl_prefs.cpp:1028
 #, c-format
 msgid "Call-worked field must be %d or greater"
-msgstr "Camp Indicatius treballats ha de ser %d o superior"
+msgstr "El camp Indicatius treballats ha de ser %d o superior"
 
 #. TRANSLATORS: Invalid date component, such as "Invalid Month: 15"
 #: tqslvalidator.cpp:76
@@ -2922,12 +2926,12 @@ msgstr "Cal que seleccionis un %hs"
 #: tqslwiz.cpp:515 tqslwiz.cpp:519
 #, c-format
 msgid "%s: Invalid Grid Square Field"
-msgstr "%s: camp quadricula no vàlida"
+msgstr "%s: camp Locator no vàlid"
 
 #: tqslwiz.cpp:523 tqslwiz.cpp:527 tqslwiz.cpp:531 tqslwiz.cpp:550
 #, c-format
 msgid "%s: Invalid Grid Square"
-msgstr "%s: quadricula no vàlida"
+msgstr "%s: Locator no vàlid"
 
 #: tqslwiz.cpp:541 tqslwiz.cpp:545
 #, c-format
@@ -2939,8 +2943,8 @@ msgstr "%s: subcasella no vàlida"
 msgid ""
 "Grid %s is not correct for your QTH. Click 'Next' again to use it anyway."
 msgstr ""
-"La quadricula %s no és correcte per al teu QTH. Clica 'Següent' de nou per "
-"usar-lo igualment."
+"El Locator %s no és correcte per al teu QTH. Clica 'Següent' de nou per usar-"
+"lo igualment."
 
 #: tqslwiz.cpp:571
 msgid "Invalid zone selections for state"
@@ -2948,11 +2952,11 @@ msgstr "Seleccions de zones no vàlides per a l'estat"
 
 #: tqslwiz.cpp:572
 msgid "Invalid zone selections for province"
-msgstr "Seleccions de zones no vàlides per a la provincia"
+msgstr "Seleccions de zones no vàlides per a la província"
 
 #: tqslwiz.cpp:573
 msgid "Invalid zone selections for oblast"
-msgstr "Seleccions de zones no vàlides per a l'oblast"
+msgstr "Seleccions de zones no vàlides per a l'àrea"
 
 #: tqslwiz.cpp:574
 msgid "Invalid zone selections for DXCC entity"
@@ -2968,11 +2972,11 @@ msgstr "Selecciona o introdueix el nom d'aquesta ubicació de l'estació"
 
 #: tqslwiz.cpp:682
 msgid "Station Location Name"
-msgstr "Nom d'ubicació estació"
+msgstr "Nom d'ubicació de l'estació"
 
 #: tqslwiz.cpp:724
 msgid "Station name must be provided"
-msgstr "Cal introduir un nom d'estació"
+msgstr "Cal introduir un nom de l'estació"
 
 #: wxutil.cpp:135
 msgid "Memory allocation failure"
@@ -3018,7 +3022,7 @@ msgstr "S'esperava un nom"
 
 #: wxutil.cpp:145
 msgid "Name exists"
-msgstr "El nom existeix"
+msgstr "El nom ja existeix"
 
 #: wxutil.cpp:146
 msgid "Data for this DXCC entity could not be found"
@@ -3037,11 +3041,11 @@ msgstr ""
 
 #: wxutil.cpp:149
 msgid "Certificate provider not found"
-msgstr "Proveïdor de certificats no trobat"
+msgstr "El proveïdor de certificats no s'ha trobat"
 
 #: wxutil.cpp:150
 msgid "No callsign certificate for key"
-msgstr "No hi ha cap certificat d'indicat per a la clau"
+msgstr "No hi ha cap certificat d'indicatiu per a la clau"
 
 #: wxutil.cpp:151
 msgid "Configuration file cannot be opened"
@@ -3061,7 +3065,7 @@ msgstr "Fitxer PKCS#12 no compatible amb TQSL"
 
 #: wxutil.cpp:154
 msgid "Callsign Certificate not TQSL compatible"
-msgstr "Certificat d'indicatiu no compatible amb TQSL"
+msgstr "El certificat d'indicatiu no compatible amb TQSL"
 
 #: wxutil.cpp:155
 msgid "Date out of range"
@@ -3093,11 +3097,11 @@ msgstr "Aquest fitxer no pot ser processat degut a un error de sistema"
 
 #: wxutil.cpp:162
 msgid "The format of this file is incorrect."
-msgstr "El fitxer d'aquest fitxer és incorrecte."
+msgstr "El format d'aquest fitxer és incorrecte."
 
 #: wxutil.cpp:163
 msgid "Callsign certificate could not be installed"
-msgstr "El certificat d'indicatiu potser no és instal·lat"
+msgstr "No s'ha pogut instal·lar el certificat d'indicatiu"
 
 #: wxutil.cpp:164
 msgid "Callsign Certificate does not match QSO details"
@@ -3145,8 +3149,8 @@ msgid ""
 "The private key for callsign %hs serial %ld is not present on this computer; "
 "you can obtain it by loading a .tbk or .p12 file"
 msgstr ""
-"La clau privada per a l'indicatiu %hs num.sèrie %ld no és present en aquest "
-"ordinador; pots aconseguir-lo carregant un fitxer .tbk o .p12"
+"La clau privada per a l'indicatiu %hs número de sèrie %ld no és present en "
+"aquest ordinador; pots aconseguir-lo carregant un fitxer .tbk o .p12"
 
 #: wxutil.cpp:246
 #, c-format
@@ -3155,13 +3159,13 @@ msgstr "Codi d'error invàlid: %d"
 
 #: wxutil.cpp:260
 msgid "Station Location"
-msgstr "Ubicació estació"
+msgstr "Ubicació de l'estació"
 
 #. TRANSLATORS: This message is for QSO details. For example, 'The GRIDSQUARE has value FM18ju while QSO has FM18jt'
 #: wxutil.cpp:263
 #, c-format
 msgid "The %s '%hs' has value '%hs' while QSO has '%hs'"
-msgstr "%s '%hs' té valor '%hs', mentre que el QSO té '%hs'"
+msgstr "El %s '%hs' té valor '%hs', mentre que el QSO té '%hs'"
 
 #: wxutil.cpp:268
 #, c-format
@@ -3169,8 +3173,8 @@ msgid ""
 "There is no valid callsign certificate for %hs available. This QSO cannot be "
 "signed"
 msgstr ""
-"Cap certificat vàlid disponible d'indicatiu per %hs. Aquest QSO no pot ser "
-"signat"
+"No hi ha cap certificat vàlid disponible d'indicatiu per %hs . No es pot "
+"signar aquest QSO"
 
 #: getpassword.h:51
 msgid "New password"
@@ -3178,11 +3182,11 @@ msgstr "Nova contrasenya"
 
 #: getpassword.h:52
 msgid "Enter new password"
-msgstr "Entra nova contrasenya"
+msgstr "Entra una nova contrasenya"
 
 #: qsodatadialog.h:64
 msgid "QSO Data"
-msgstr "Data QSO"
+msgstr "Data del QSO"
 
 #: tqslvalidator.h:58
 msgid "Date"

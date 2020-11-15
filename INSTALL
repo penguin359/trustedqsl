@@ -170,6 +170,7 @@ If you want to distribute the built application:
 
 will make tqsl-2.x.x.dmg, a Mac distributable disk image
 containing the TrustedQSL applications folder and document files.
+It will also create tqsl-2.x.x.pkg, a standard Mac install package.
 
 ===================================================================
 

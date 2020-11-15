@@ -272,7 +272,6 @@ QSLApp::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 	   				if ((rval = tqsl_beginSigning(cert, const_cast<char *>(password), 0, cert)) == 0)
 						break;
 					if (tQSL_Error == TQSL_PASSWORD_ERROR) {
-						cerr << "Password error" << endl;
 						if (password)
 							free(reinterpret_cast<void *>(password));
 						password = NULL;
@@ -414,7 +413,7 @@ QSLApp::OnInit() {
 	        { wxCMD_LINE_OPTION, wxT("l"), wxT("location"),	wxT("Selects Station Location") },
 	        { wxCMD_LINE_OPTION, wxT("o"), wxT("output"),	wxT("Output file name (defaults to input name minus extension plus .tq8") },
 	        { wxCMD_LINE_SWITCH, wxT("u"), wxT("upload"),	wxT("Upload after signing instead of saving") },
-	        { wxCMD_LINE_OPTION, wxT("p"), wxT("password"),	wxT("Password for the signing key") },
+	        { wxCMD_LINE_OPTION, wxT("p"), wxT("password"),	wxT("Passphrase for the signing key") },
 	        { wxCMD_LINE_SWITCH, wxT("v"), wxT("version"),  wxT("Display the version information and exit") },
 	        { wxCMD_LINE_SWITCH, wxT("h"), wxT("help"),	wxT("Display command line help"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
 	        { wxCMD_LINE_PARAM,  NULL,     NULL,		wxT("Input ADIF or Cabrillo log file to sign"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },

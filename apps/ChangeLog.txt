@@ -1,8 +1,29 @@
 TQSL changes
 ============
+2.5.6
+----------
+When importing a .p12 on the command line (-i call.p12), allow passing
+the related passphrase on the command line as wel (-p "passphrase").
+
+Use 'passphrase' versus 'password' when discussing protecting Callsign
+Certificates. Change help from 'Postcard Password' to 'Postcard Validation
+Code'. The only place password should appear is with reference to the Logbook
+useraccount.
+
+Add Swedish translation from Roger, SM0LTV.
+
+Fix an error with command line handling introduced in TQSL 2.5.5 that could
+cause formerly correct command lines to be rejected (specifically passing an
+empty callsign certificate passphrase as -p "" rather than dropping the 
+password option.
+
+If a user is editing an ADIF file using the TQSL ADIF editor and closes the
+editor window, TQSL would discard the file being edited. TQSL now asks the user
+if the changes should be saved before closing the editor.
+
 2.5.5
 ----------
-when unable to find a match for a callsign certificate where the station
+When unable to find a match for a callsign certificate where the station
 location is in DXCC Entity "None" don't suppress the entity name.
 
 Fix issue on Windows systems when a TQSL update and a configuration file

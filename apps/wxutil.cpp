@@ -140,7 +140,7 @@ static const char *error_strings[] = {
 	__("Buffer too small"),					/* TQSL_BUFFER_ERROR */
 	__("Invalid date format"),				/* TQSL_INVALID_DATE */
 	__("Certificate not initialized for signing"),		/* TQSL_SIGNINIT_ERROR */
-	__("Password not correct"),				/* TQSL_PASSWORD_ERROR */
+	__("Passphrase not correct"),				/* TQSL_PASSWORD_ERROR */
 	__("Expected name"),					/* TQSL_EXPECTED_NAME */
 	__("Name exists"),					/* TQSL_NAME_EXISTS */
 	__("Data for this DXCC entity could not be found"),	/* TQSL_NAME_NOT_FOUND */

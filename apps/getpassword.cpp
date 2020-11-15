@@ -108,7 +108,7 @@ GetNewPasswordDialog::GetNewPasswordDialog(wxWindow *parent, const wxString& tit
 	wxStaticText *st = new wxStaticText(this, -1, message);
 	st->Wrap(em_w * 40);
 	sizer->Add(st, 1, wxALL|wxEXPAND, 10);
-	sizer->Add(new wxStaticText(this, -1, _("New password:")), 0, wxLEFT|wxRIGHT, 10);
+	sizer->Add(new wxStaticText(this, -1, _("New passphrase:")), 0, wxLEFT|wxRIGHT, 10);
 	_pw1 = new wxTextCtrl(this, GPW_ID_PW1, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD);
 	sizer->Add(_pw1, 0, wxLEFT|wxRIGHT|wxEXPAND, 10);
 	sizer->Add(new wxStaticText(this, -1, _("Enter again to confirm:")), 0, wxLEFT|wxRIGHT, 10);
@@ -143,7 +143,7 @@ GetNewPasswordDialog::PWChange(wxCommandEvent&) {
 	wxString pw2 = _pw2->GetValue();
 
 	if (pw1 != pw2) {
-		_pwstatus->SetLabel(_("Password entries do not match"));
+		_pwstatus->SetLabel(_("Passphrase entries do not match"));
 		_okbut->Enable(false);
 		return;
 	}
@@ -154,7 +154,7 @@ GetNewPasswordDialog::PWChange(wxCommandEvent&) {
 	}
 	_password = pw1;
 	if (pw1 != wxT(""))
-		_pwstatus->SetLabel(_("Password confirmed"));
+		_pwstatus->SetLabel(_("Passphrase confirmed"));
 	_okbut->Enable(true);
 	_okbut->SetDefault();
 }

@@ -209,11 +209,11 @@ TQSLGetStationNameDialog::TQSLGetStationNameDialog(wxWindow *parent, wxHtmlHelpC
 	button_sizer->Add(delbut, 0, wxALL|wxALIGN_TOP, 3);
 	button_sizer->Add(new wxStaticText(this, -1, wxT("")), 1, wxEXPAND);
 	if (_help)
-		button_sizer->Add(new wxButton(this, GS_HELPBUT, _("Help") ), 0, wxALL|wxALIGN_BOTTOM, 3);
+		button_sizer->Add(new wxButton(this, GS_HELPBUT, _("Help") ), 0, wxALL, 3);
 	if (!editonly)
-		button_sizer->Add(new wxButton(this, GS_CANCELBUT, _("Cancel") ), 0, wxALL|wxALIGN_BOTTOM, 3);
+		button_sizer->Add(new wxButton(this, GS_CANCELBUT, _("Cancel") ), 0, wxALL, 3);
 	okbut = new wxButton(this, GS_OKBUT, okLabel);
-	button_sizer->Add(okbut, 0, wxALL|wxALIGN_BOTTOM, 3);
+	button_sizer->Add(okbut, 0, wxALL, 3);
 	topsizer->Add(button_sizer, 0, wxTOP|wxBOTTOM|wxRIGHT|wxEXPAND, 7);
 	hack = (namelist->GetCount() > 0) ? true : false;
 

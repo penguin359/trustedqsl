@@ -98,7 +98,7 @@ static const char *error_strings[] = {
 	"Buffer too small",					/* TQSL_BUFFER_ERROR */
 	"Invalid date format",					/* TQSL_INVALID_DATE */
 	"Certificate not initialized for signing",		/* TQSL_SIGNINIT_ERROR */
-	"Password not correct",					/* TQSL_PASSWORD_ERROR */
+	"Passphrase not correct",				/* TQSL_PASSWORD_ERROR */
 	"Expected name",					/* TQSL_EXPECTED_NAME */
 	"Name exists",						/* TQSL_NAME_EXISTS */
 	"Data for this DXCC entity could not be found",		/* TQSL_NAME_NOT_FOUND */
@@ -396,7 +396,7 @@ tqsl_setDirectory(const char *dir) {
 
 DLLEXPORT const char* CALLCONVENTION
 tqsl_getErrorString_v(int err) {
-	static char buf[256];
+	static char buf[512];
 	unsigned long openssl_err;
 	int adjusted_err;
 
@@ -493,11 +493,38 @@ tqsl_getErrorString_v(int err) {
 		tQSL_ImportCall[0] = '\0';
 		return buf;
 	}
-	adjusted_err = err - TQSL_ERROR_ENUM_BASE;
+	adjusted_err = (err - TQSL_ERROR_ENUM_BASE) & ~0x1000;
 	if (adjusted_err < 0 ||
 	    adjusted_err >=
 		static_cast<int>(sizeof error_strings / sizeof error_strings[0])) {
 		snprintf(buf, sizeof buf, "Invalid error code: %d", err);
+		return buf;
+	}
+	if (err == TQSL_CERT_MISMATCH || err == TQSL_LOCATION_MISMATCH) {
+		const char *fld, *cert, *qso;
+		fld = strtok(tQSL_CustomError, "|");
+		cert = strtok(NULL, "|");
+		qso = strtok(NULL, "|");
+		if (qso == NULL) {		// Nothing in the cert
+			qso = cert;
+			cert = "none";
+		}
+		snprintf(buf, sizeof buf, "%s\nThe %s '%s' has value '%s' while QSO has '%s'",
+			error_strings[adjusted_err],
+			err == TQSL_LOCATION_MISMATCH ? "Station Location" : "Callsign Certificate",
+			fld, cert, qso);
+		return buf;
+	}
+	if (err == (TQSL_LOCATION_MISMATCH | 0x1000)) {
+		const char *fld, *val;
+		fld = strtok(tQSL_CustomError, "|");
+		val = strtok(NULL, "|");
+		snprintf(buf, sizeof buf, "This log has invalid QSO information.\nThe log being signed has '%s' set to value '%s' which is not valid", fld, val);
+		return buf;
+	}
+	if (err == (TQSL_CERT_NOT_FOUND | 0x1000)) {
+		err = TQSL_CERT_NOT_FOUND;
+		snprintf(buf, sizeof buf, "There is no valid callsign certificate for %s available. This QSO cannot be signed", tQSL_CustomError);
 		return buf;
 	}
 	return error_strings[adjusted_err];

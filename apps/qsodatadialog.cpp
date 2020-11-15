@@ -230,11 +230,13 @@ BEGIN_EVENT_TABLE(QSODataDialog, wxDialog)
 	EVT_BUTTON(QD_RECTOP, QSODataDialog::OnRecTop)
 	EVT_BUTTON(QD_RECNEW, QSODataDialog::OnRecNew)
 	EVT_BUTTON(QD_RECDELETE, QSODataDialog::OnRecDelete)
+	EVT_CLOSE(QSODataDialog::OnClose)
 END_EVENT_TABLE()
 
 QSODataDialog::QSODataDialog(wxWindow *parent, wxString& filename, wxHtmlHelpController *help, QSORecordList *reclist, wxWindowID id, const wxString& title)
 	: wxDialog(parent, id, title), _reclist(reclist), _isend(false), _filename(filename), _help(help) {
 	tqslTrace("QSODataDialog::QSODataDialog", "parent=0x%lx, reclist=0x%lx, id=0x%lx, %s", reinterpret_cast<void *>(parent), reinterpret_cast<void *>(reclist), reinterpret_cast<void *>(id), S(title));
+	_something_changed = false;
 	wxBoxSizer *topsizer = new wxBoxSizer(wxVERTICAL);
 	wxFont font = GetFont();
 //	font.SetPointSize(TEXT_POINTS);
@@ -465,8 +467,11 @@ bool
 QSODataDialog::TransferDataFromWindow() {
 	tqslTrace("QSODataDialog::TransferDataFromWindow", NULL);
 	rec._call.Trim(FALSE).Trim(TRUE);
+	QSORecord old = rec;
 	if (!wxDialog::TransferDataFromWindow())
 		return false;
+	if (!(rec == old))
+		_something_changed = true;
 	if (_mode < 0 || _mode >= static_cast<int>(valid_modes.size()))
 		return false;
 	rec._mode = valid_modes[_mode].value;
@@ -711,6 +716,33 @@ QSODataDialog::OnHelp(wxCommandEvent&) {
 	tqslTrace("QSODataDialog::OnHelp", NULL);
 	if (_help)
 		_help->Display(wxT("qsodata.htm"));
+}
+
+void
+QSODataDialog::OnClose(wxCloseEvent& event) {
+	tqslTrace("QSODataDialog::OnClose", NULL);
+	_isend = true;
+	TransferDataFromWindow();
+	_isend = false;
+	if (!_something_changed) {
+		EndModal(wxID_CANCEL);
+		return;				// Nothing to save
+	}
+
+	if (rec._call == wxT("") && _recno == static_cast<int>(_reclist->size())) {
+		_reclist->erase(_reclist->begin() + _recno - 1);
+	}
+	if (_reclist->empty()) {
+		EndModal(wxID_CANCEL);
+		return;				// Nothing to save
+	}
+	if (wxMessageBox(_("The file has not been saved. Should the QSOs be saved?"), _("Confirm Close"), wxICON_QUESTION | wxYES_NO) == wxNO) {
+		EndModal(wxID_CANCEL);
+		return;				// Nothing to save
+	}
+	WriteQSOFile(*_reclist, _filename.ToUTF8());
+	EndModal(wxID_OK);
+	return;
 }
 
 void

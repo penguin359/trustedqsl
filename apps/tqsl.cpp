@@ -244,7 +244,7 @@ getCertPassword(char *buf, int bufsiz, tQSL_Cert cert) {
 	dx.getByEntity(dxcc);
 
 	// TRANSLATORS: this is followed by the callsign and entity name
-	wxString fmt = _("Enter the password to unlock the callsign certificate for %hs -- %hs\n(This is the password you made up when you installed the callsign certificate.)");
+	wxString fmt = _("Enter the passphrase to unlock the callsign certificate for %hs -- %hs\n(This is the passphrase you made up when you installed the callsign certificate.)");
 	wxString message = wxString::Format(fmt, call, dx.name());
 
 	wxWindow* top = wxGetApp().GetTopWindow();
@@ -255,7 +255,7 @@ getCertPassword(char *buf, int bufsiz, tQSL_Cert cert) {
 	top->Raise();
 
 	wxString pwd;
-	int ret = getPasswordFromUser(pwd, message, _("Enter password"), wxT(""), top);
+	int ret = getPasswordFromUser(pwd, message, _("Enter passphrase"), wxT(""), top);
 	if (ret != wxID_OK)
 		return 1;
 	strncpy(buf, pwd.ToUTF8(), bufsiz);
@@ -359,12 +359,17 @@ void UploadDialog::OnDone(wxCommandEvent&) {
 }
 
 int UploadDialog::doUpdateProgress(double dltotal, double dlnow, double ultotal, double ulnow) {
+// This logging is just noise. No reason to bother.
+#ifdef LOG_DL_PROGRESS
 	static double lastDlnow = 0.0;
 	if (dlnow != lastDlnow) {
 		tqslTrace("UploadDialog::doUpdateProgresss", "dltotal=%f, dlnow=%f, ultotal=%f, ulnow=%f", dltotal, dlnow, ultotal, ulnow);
 		lastDlnow = dlnow;
 	}
+#endif
+	wxSafeYield();
 	if (cancelled) return 1;
+	// Avoid ultotal at zero.
 	if (ultotal > 0.0000001) progress->SetValue(static_cast<int>((100*(ulnow/ultotal))));
 	return 0;
 }
@@ -718,25 +723,42 @@ get_certlist(string callsign, int dxcc, bool expired, bool superceded, bool with
 		(callsign == "") ? 0 : callsign.c_str(), dxcc, 0, 0, select);
 }
 
+#if wxMAJOR_VERSION > 2
+class SimpleLogFormatter : public wxLogFormatter {
+	virtual wxString Format(wxLogLevel level, const wxString& msg, const wxLogRecordInfo& info) const {
+		return msg;
+	}
+};
+#endif
+
 class LogList : public wxLog {
  public:
 	explicit LogList(MyFrame *frame) : wxLog(), _frame(frame) {}
+#if wxMAJOR_VERSION > 2
+	virtual void DoLogText(const wxString& msg);
+#else
 	virtual void DoLogString(const wxChar *szString, time_t t);
+#endif
  private:
 	MyFrame *_frame;
 };
 
+#if wxMAJOR_VERSION > 2
+void LogList::DoLogText(const wxString& msg) {
+	const wxChar* szString = msg.wc_str();
+#else
 void LogList::DoLogString(const wxChar *szString, time_t) {
-	wxTextCtrl *_logwin = 0;
 	static wxString msg(szString);
-
+#endif
 	static const char *smsg = msg.ToUTF8();
 
 	tqslTrace(NULL, "%s", smsg);
 
-	if (wxString(szString).StartsWith(wxT("Debug:")))
+	wxTextCtrl *_logwin = 0;
+
+	if (msg.StartsWith(wxT("Debug:")))
 		return;
-	if (wxString(szString).StartsWith(wxT("Error: Unable to open requested HTML document:")))
+	if (msg.StartsWith(wxT("Error: Unable to open requested HTML document:")))
 		return;
 	if (_frame != 0)
 		_logwin = _frame->logwin;
@@ -758,16 +780,24 @@ void LogList::DoLogString(const wxChar *szString, time_t) {
 class LogStderr : public wxLog {
  public:
 	LogStderr(void) : wxLog() {}
+#if wxMAJOR_VERSION > 2
+	virtual void DoLogText(const wxString& msg);
+#else
 	virtual void DoLogString(const wxChar *szString, time_t t);
+#endif
 };
 
+#if wxMAJOR_VERSION > 2
+void LogStderr::DoLogText(const wxString& msg) {
+	const wxChar* szString = msg.wc_str();
+#else
 void LogStderr::DoLogString(const wxChar *szString, time_t) {
 	static wxString msg(szString);
+#endif
 	static const char *smsg = msg.ToUTF8();
 
 	tqslTrace(NULL, "%s", smsg);
-
-	if (wxString(szString).StartsWith(wxT("Debug:")))
+	if (msg.StartsWith(wxT("Debug:")))
 		return;
 #ifdef _WIN32
 	fwprintf(stderr, L"%ls\n", szString);
@@ -1467,7 +1497,7 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	notebook->AddPage(certtab, _("Callsign Certificates"));
 
 	// Status Log tab (if enabled)
-	 if (logTab) {
+	if (logTab) {
 		wxPanel* logtab = new wxPanel(notebook, -1);
 		wxBoxSizer* ltsizer = new wxBoxSizer(wxHORIZONTAL);
 		logtab->SetSizer(ltsizer);
@@ -1482,6 +1512,9 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 
 	if (checkUpdates) {
 		LogList *log = new LogList(this);
+#if wxMAJOR_VERSION > 2
+		log->SetFormatter(new SimpleLogFormatter);
+#endif
 		wxLog::SetActiveTarget(log);
 	}
 }
@@ -1570,6 +1603,7 @@ static wxString getAbout() {
 	msg+=wxT("Portuguese: Nuno Lopes, CT2IRY\n");
 	msg+=wxT("Russian: Vic Goncharsky, US5WE\n");
 	msg+=wxT("Spanish: Jordi Quintero, EA3GCV\n");
+	msg+=wxT("Swedish: Roger Jonsson, SM0LTV\n");
 	msg+=wxT("Turkish: Oguzhan Kayhan, TA2NC\n");
 	return msg;
 }
@@ -2130,7 +2164,7 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 					if (tQSL_Error == TQSL_PASSWORD_ERROR) {
 						if ((rval = tqsl_beginSigning(cert, const_cast<char *>(unipwd), NULL, cert)) == 0)
 							break;
-						wxLogMessage(_("Password error"));
+						wxLogMessage(_("Passphrase error"));
 						if (password)
 							free(reinterpret_cast<void *>(const_cast<char *>(password)));
 						password = NULL;
@@ -2892,7 +2926,7 @@ int MyFrame::UploadFile(const wxString& infile, const char* filename, int numrec
 
 	// If there's a GUI and we didn't successfully upload and weren't cancelled,
 	// ask the user if we should retry the upload.
-	if (frame && retval != TQSL_EXIT_CANCEL && retval != TQSL_EXIT_SUCCESS) {
+	if ((frame && !quiet) && retval != TQSL_EXIT_CANCEL && retval != TQSL_EXIT_SUCCESS) {
 		if (wxMessageBox(_("Your upload appears to have failed. Should TQSL try again?"), _("Retry?"), wxYES_NO | wxICON_QUESTION, this) == wxYES)
 			goto retry_upload;
 	}
@@ -3308,7 +3342,7 @@ void MyFrame::UpdateConfigFile() {
 	}
 }
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__APPLE__)
 void MyFrame::UpdateTQSL(wxString& url) {
 	tqslTrace("MyFrame::UpdateTQSL", "url=%s", S(url));
  retry:
@@ -3321,10 +3355,15 @@ void MyFrame::UpdateTQSL(wxString& url) {
 	}
 
 	wxString filename = wxString::FromUTF8(tQSL_BaseDir);
+#ifdef _WIN32
 	filename = filename + wxT("\\tqslupdate.msi");
 	wchar_t* lfn = utf8_to_wchar(filename.ToUTF8());
 	FILE *updateFile = _wfopen(lfn, L"wb");
 	free_wchar(lfn);
+#else
+	filename = filename + wxT("/tqslupdate.pkg");
+	FILE *updateFile = fopen(filename.ToUTF8(), "wb");
+#endif
 	if (!updateFile) {
 		tqslTrace("UpdateTQSL", "Can't open new file %s: %s", static_cast<const char *>(filename.ToUTF8()), strerror(errno));
 		wxMessageBox(wxString::Format(_("Can't open TQSL update file %s: %hs"), filename.c_str(), strerror(errno)), _("Error"), wxOK | wxICON_ERROR, this);
@@ -3345,8 +3384,13 @@ void MyFrame::UpdateTQSL(wxString& url) {
 			wxMessageBox(wxString::Format(_("Error writing new configuration file %s: %hs"), filename.c_str(), strerror(errno)), _("Error"), wxOK | wxICON_ERROR, this);
 			return;
 		}
+#ifdef _WIN32
 		tqslTrace("MyFrame::UpdateTQSL", "Executing msiexec \"%s\"", filename.ToUTF8());
 		wxExecute(wxString::Format(wxT("msiexec /i \"%s\""), filename), wxEXEC_ASYNC);
+#else
+		tqslTrace("MyFrame::UpdateTQSL", "Executing installer");
+		wxExecute(wxString::Format(wxT("open \"%s\""), filename.c_str()), wxEXEC_ASYNC);
+#endif
 		tqslTrace("MyFrame::UpdateTQSL", "GUI Destroy");
 		wxExit();
 		exit(0);
@@ -3380,7 +3424,7 @@ void MyFrame::UpdateTQSL(wxString& url) {
 		curlReq = NULL;
 	}
 }
-#endif /* _WIN32 */
+#endif /* _WIN32  || __APPLE__ */
 
 // Check if a certificate is still valid and current at LoTW
 bool MyFrame::CheckCertStatus(long serial, wxString& result) {
@@ -3671,7 +3715,7 @@ MyFrame::OnUpdateCheckDone(wxCommandEvent& event) {
 			UpdateDialogMsgBox msg(this, true, false, ri->programRev, ri->newProgramRev,
 					ri->configRev, ri->newConfigRev, ri->url, ri->homepage);
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__APPLE__)
 			if (msg.ShowModal() == wxID_OK) {
 				UpdateTQSL(ri->url);
 			}
@@ -4290,6 +4334,7 @@ MyFrame::ProcessQSODataFile(bool upload, bool compressed) {
 		check_tqsl_error(tqsl_getNumStationLocations(loc, &n));
 		if (n != 1) {
 			check_tqsl_error(tqsl_endStationLocationCapture(&loc));
+			frame->Show(true);
 			loc = SelectStationLocation(_("Select Station Location for Signing"));
 		} else {
 			// There's only one station location. Use that and don't prompt.
@@ -5111,8 +5156,13 @@ wxLog *
 QSLApp::CreateLogTarget() {
 cerr << "called" << endl;
 	MyFrame *mf = (MyFrame *)GetTopWindow();
-	if (mf)
-		return new LogList(mf);
+	if (mf) {
+		LogList *log = new LogList(this);
+#if wxMAJOR_VERSION > 2
+		log->SetFormatter(new SimpleLogFormatter);
+#endif
+		return log;
+	}
 	return 0;
 }
 */
@@ -5373,7 +5423,7 @@ QSLApp::OnInit() {
 #define arg(x) wxT(x)
 #define i18narg(x) _(x)
 #endif
-	// arg letters used abcde..hi..lmnopq.stuvwx..
+	// arg letters used abcdef.hi..lmnopq.stuvwx..
 	static const wxCmdLineEntryDesc cmdLineDesc[] = {
 		{ wxCMD_LINE_OPTION, arg("a"), arg("action"),	i18narg("Specify dialog action - abort, all, compliant or ask") },
 		{ wxCMD_LINE_OPTION, arg("b"), arg("begindate"), i18narg("Specify start date for QSOs to sign") },
@@ -5389,7 +5439,7 @@ QSLApp::OnInit() {
 		// not used - "m"
 		{ wxCMD_LINE_SWITCH, arg("n"), arg("updates"),	i18narg("Check for updates to tqsl and the configuration file") },
 		{ wxCMD_LINE_OPTION, arg("o"), arg("output"),	i18narg("Output file name (defaults to input name minus extension plus .tq8") },
-		{ wxCMD_LINE_OPTION, arg("p"), arg("password"),	i18narg("Password for the signing key") },
+		{ wxCMD_LINE_OPTION, arg("p"), arg("password"),	i18narg("Passphrase for the signing key") },
 		{ wxCMD_LINE_SWITCH, arg("q"), arg("quiet"),	i18narg("Quiet Mode - same behavior as -x") },
 		// not used - "r"
 
@@ -5407,18 +5457,48 @@ QSLApp::OnInit() {
 
 	// Lowercase command options
 	origCommandLine = argv[0];
-	for (int i = 1; i < argc; i++) {
-		origCommandLine += wxT(" ");
-		origCommandLine += argv[i];
-#ifdef _WIN32
-		if ((const wxChar *)argv[i])
-			if (argv[i][0] == wxT('-') || argv[i][0] == wxT('/'))
-				if (wxIsalpha(argv[i][1]) && wxIsupper(argv[i][1]))
-					argv[i][1] = wxTolower(argv[i][1]);
+	char** myArgv = new char*[argc];
+	int myArgc;
+#if wxMAJOR_VERSION == 2
+	wxString av = argv[0];
+	myArgv[0] = strdup(av.ToUTF8());
+#else
+	myArgv[0] = strdup(argv[0].ToUTF8());
 #endif
+	myArgc = 1;
+	for (int i = 1; i < argc; i++) {
+		if ((i + 1) < argc) {
+			wxString av1 = argv[i+1];
+#if wxMAJOR_VERSION == 2
+			av = argv[i];
+			if (av == wxT("-p")  && av1.IsEmpty()) {		// -p with blank password
+#else
+			if (argv[i] == "-p" && av1.IsEmpty()) {			// -p with blank password
+#endif
+				i++;						// skip -p and password
+				continue;
+			}
+		}
+		origCommandLine += wxT(" ");
+#if wxMAJOR_VERSION == 2
+		myArgv[myArgc] = strdup(wxString(argv[i]).ToUTF8());
+#else
+		myArgv[myArgc] = strdup(argv[i].ToUTF8());
+#endif
+#ifdef _WIN32
+		if (myArgv[myArgc][0] == '-' || myArgv[myArgc][0] == '/')
+			if (wxIsalpha(myArgv[myArgc][1]) && wxIsupper(myArgv[myArgc][1]))
+				myArgv[myArgc][1] = wxTolower(myArgv[myArgc][1]);
+#endif
+#if wxMAJOR_VERSION == 2
+		origCommandLine += wxString::FromUTF8(myArgv[myArgc]);
+#else
+		origCommandLine += myArgv[myArgc];
+#endif
+		myArgc++;
 	}
 
-	parser.SetCmdLine(argc, argv);
+	parser.SetCmdLine(myArgc, myArgv);
 	parser.SetDesc(cmdLineDesc);
 	// only allow "-" for options, otherwise "/path/something.adif"
 	// is parsed as "-path"
@@ -5442,7 +5522,11 @@ QSLApp::OnInit() {
 
 	if (parser.Found(wxT("x")) || parser.Found(wxT("q"))) {
 		quiet = true;
-		wxLog::SetActiveTarget(new LogStderr());
+		LogStderr *logger = new LogStderr();
+#if wxMAJOR_VERSION > 2
+		logger->SetFormatter(new SimpleLogFormatter);
+#endif
+		wxLog::SetActiveTarget(logger);
 	}
 
 	if (parser.Found(wxT("t"), &diagfile)) {
@@ -5486,14 +5570,17 @@ QSLApp::OnInit() {
 		frame = GUIinit(false, true);
 		frame->Show(false);
 		// Check for updates then bail out.
-		wxLog::SetActiveTarget(new LogStderr());
+		LogStderr *logger = new LogStderr();
+#if wxMAJOR_VERSION > 2
+		logger->SetFormatter(new SimpleLogFormatter);
+#endif
+		wxLog::SetActiveTarget(logger);
 		frame->DoUpdateCheck(false, true);
 		return(false);
 	}
 
 	frame = GUIinit(!quiet, quiet);
 	if (quiet) {
-		wxLog::SetActiveTarget(new LogStderr());
 		frame->Show(false);
 	}
 
@@ -5524,6 +5611,7 @@ QSLApp::OnInit() {
 		password = strdup(pwd.ToUTF8());
 		utf8_to_ucs2(password, unipwd, sizeof unipwd);
 	}
+
 	if (parser.Found(wxT("d"))) {
 		suppressdate = true;
 	}
@@ -5677,7 +5765,8 @@ QSLApp::OnInit() {
 			if (!tqsl_importPKCS12File(infile.ToUTF8(), "", 0, NULL, notifyImport, &nd) || tQSL_Error == TQSL_CERT_ERROR) {
 				if (tQSL_Error != 0) wxLogError(getLocalizedErrorString());
 			} else if (tQSL_Error == TQSL_PASSWORD_ERROR) {
-				wxLogError(_("Password protected P12 files cannot be imported on the command line"));
+				if ((password == NULL) || !tqsl_importPKCS12File(infile.ToUTF8(), password, 0, NULL, notifyImport, &nd))
+					wxLogError(_("To import this passphrase protected P12 file, you must pass the passphrase on the command line"));
 			} else if (tQSL_Error == TQSL_OPENSSL_ERROR) {
 				wxLogError(_("This file is not a valid P12 file"));
 			}
@@ -5726,6 +5815,7 @@ QSLApp::OnInit() {
 			check_tqsl_error(tqsl_getNumStationLocations(loc, &n));
 			if (n != 1) {
 				check_tqsl_error(tqsl_endStationLocationCapture(&loc));
+				frame->Show(true);
 				loc = frame->SelectStationLocation(_("Select Station Location for Signing"));
 			} else {
 				// There's only one station location. Use that and don't prompt.
@@ -5801,7 +5891,8 @@ QSLApp::OnInit() {
 	if (quiet)
 		exitNow(TQSL_EXIT_SUCCESS, quiet);
 	return true;
-}
+} // NOLINT(readability/fn_size)
+
 
 void MyFrame::FirstTime(void) {
 	tqslTrace("MyFrame::FirstTime", NULL);
@@ -6403,15 +6494,15 @@ void MyFrame::OnCertExport(wxCommandEvent& WXUNUSED(event)) {
 	if (filename == wxT(""))
 		return;
 	wxConfig::Get()->Write(wxT("CertFilePath"), wxPathOnly(filename));
-	wxString msg = _("Enter the password for the certificate container file.");
+	wxString msg = _("Enter the passphrase for the certificate container file.");
 		msg += wxT("\n\n");
-		msg += _("If you are using a computer system that is shared with others, you should specify a password to protect this certificate. However, if you are using a computer in a private residence, no password need be specified.");
+		msg += _("If you are using a computer system that is shared with others, you should specify a passphrase to protect this certificate. However, if you are using a computer in a private residence, no passphrase need be specified.");
 		msg += wxT("\n\n");
-		msg += _("You will have to enter the password any time you load the file into TrustedQSL.");
+		msg += _("You will have to enter the passphrase any time you load the file into TrustedQSL.");
 		msg += wxT("\n\n");
-		msg += _("Leave the password blank and click 'OK' unless you want to use a password.");
+		msg += _("Leave the passphrase blank and click 'OK' unless you want to use a passphrase.");
 		msg += wxT("\n\n");
-	GetNewPasswordDialog dial(this, _("Certificate Container Password"), msg, true, help, wxT("save.htm"));
+	GetNewPasswordDialog dial(this, _("Certificate Container Passphrase"), msg, true, help, wxT("save.htm"));
 	if (dial.ShowModal() != wxID_OK)
 		return;	// Cancelled
 	int terr;
@@ -6773,7 +6864,7 @@ CertPropDial::CertPropDial(tQSL_Cert cert, wxWindow *parent)
 		__("DXCC Entity: "),
 		__("QSO Start Date: "),
 		__("QSO End Date: "),
-		__("Password: ")
+		__("Passphrase: ")
 	};
 
 	wxBoxSizer *topsizer = new wxBoxSizer(wxVERTICAL);
@@ -6890,7 +6981,7 @@ CertPropDial::CertPropDial(tQSL_Cert cert, wxWindow *parent)
 						strncpy(buf, __("None"), sizeof buf);
 						break;
 					case TQSL_PK_TYPE_ENC:
-						strncpy(buf, __("Password protected"), sizeof buf);
+						strncpy(buf, __("Passphrase protected"), sizeof buf);
 						break;
 				}
 				break;
@@ -7052,17 +7143,17 @@ displayLocProperties(LocTreeItemData *item, wxWindow *parent) {
 int
 getPassword(char *buf, int bufsiz, void *callsign) {
 	tqslTrace("getPassword", "buf=%lx, bufsiz=%d, callsign=%s", buf, bufsiz, callsign ? callsign : "NULL");
-	wxString prompt(_("Enter the password to unlock the callsign certificate"));
+	wxString prompt(_("Enter the Passphrase to unlock the callsign certificate"));
 
 	if (callsign)
-		prompt = wxString::Format(_T("Enter the password for your active %hs Callsign Certificate"),  reinterpret_cast<char *>(callsign));
+		prompt = wxString::Format(_T("Enter the Passphrase for your active %hs Callsign Certificate"),  reinterpret_cast<char *>(callsign));
 
 	tqslTrace("getPassword", "Probing for top window");
 	wxWindow* top = wxGetApp().GetTopWindow();
 	tqslTrace("getPassword", "Top window = 0x%lx", reinterpret_cast<void *>(top));
 	top->SetFocus();
 	tqslTrace("getPassword", "Focus grabbed. About to pop up password dialog");
-	GetPasswordDialog dial(top, _("Enter password"), prompt);
+	GetPasswordDialog dial(top, _("Enter passphrase"), prompt);
 	if (dial.ShowModal() != wxID_OK) {
 		tqslTrace("getPassword", "Password entry cancelled");
 		return 1;
