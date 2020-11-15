@@ -3,14 +3,14 @@ Upstream-Name: TrustedQSL
 Source: https://sourceforge.net/projects/trustedqsl/
 
 Files: *
-Copyright: 2001-2019 American Radio Relay League, Inc.
+Copyright: 2001-2020 American Radio Relay League, Inc.
 License: ARRL
  License Terms and Conditions
  .
- Copyright (C) 2001-2019 American Radio Relay League, Inc. All rights
+ Copyright (C) 2001-2020 American Radio Relay League, Inc. All rights
  reserved.
  .
- Portions (C) 2003-2019 The TrustedQSL Developers. Please see the AUTHORS.txt
+ Portions (C) 2003-2020 The TrustedQSL Developers. Please see the AUTHORS.txt
  file for contributors
  .
  Redistribution and use in source and binary forms, with or without
@@ -67,7 +67,9 @@ License: ARRL
  site at www.arrl.org.
 
 Files: debian/*
-Copyright: 2013 Kamal Mostafa <kamal@whence.com>
+Copyright: 2013-2017 Kamal Mostafa <kamal@whence.com>
+           2019-2020 Christoph Berg <myon@debian.org>
+           2019-2020 tony mancill <tmancill@debian.org>
 License: permissive
  Copying and distribution of this package, with or without modification,
  are permitted in any medium without royalty provided the copyright notice
