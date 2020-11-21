@@ -306,12 +306,15 @@ ConvertingDialog::ConvertingDialog(wxWindow *parent, const char *filename)
 
 DECLARE_EVENT_TYPE(wxEVT_LOGUPLOAD_DONE, -1)
 DEFINE_EVENT_TYPE(wxEVT_LOGUPLOAD_DONE)
+DECLARE_EVENT_TYPE(wxEVT_LOGUPLOAD_PROGRESS, -1)
+DEFINE_EVENT_TYPE(wxEVT_LOGUPLOAD_PROGRESS)
 
 class UploadDialog : public wxDialog {
  public:
 	explicit UploadDialog(wxWindow *parent, wxString title = wxString(_("Uploading Signed Data")), wxString label = wxString(_("Uploading signed log data...")));
 	void OnCancel(wxCommandEvent&);
 	void OnDone(wxCommandEvent&);
+	void OnProgress(wxCommandEvent&) { }
 	int doUpdateProgress(double dltotal, double dlnow, double ultotal, double ulnow);
 	static int UpdateProgress(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow) {
 		return (reinterpret_cast<UploadDialog*>(clientp))->doUpdateProgress(dltotal, dlnow, ultotal, ulnow);
@@ -326,6 +329,7 @@ class UploadDialog : public wxDialog {
 BEGIN_EVENT_TABLE(UploadDialog, wxDialog)
 	EVT_BUTTON(TQSL_PROG_CANBUT, UploadDialog::OnCancel)
 	EVT_COMMAND(wxID_ANY, wxEVT_LOGUPLOAD_DONE, UploadDialog::OnDone)
+	EVT_COMMAND(wxID_ANY, wxEVT_LOGUPLOAD_PROGRESS, UploadDialog::OnProgress)
 END_EVENT_TABLE()
 
 void
@@ -367,7 +371,10 @@ int UploadDialog::doUpdateProgress(double dltotal, double dlnow, double ultotal,
 		lastDlnow = dlnow;
 	}
 #endif
-	wxSafeYield();
+	// Post an event to the GUI thread
+	wxCommandEvent evt(wxEVT_LOGUPLOAD_PROGRESS, wxID_ANY);
+	GetEventHandler()->AddPendingEvent(evt);
+
 	if (cancelled) return 1;
 	// Avoid ultotal at zero.
 	if (ultotal > 0.0000001) progress->SetValue(static_cast<int>((100*(ulnow/ultotal))));
