@@ -1,5 +1,10 @@
 TQSL changes
 ============
+2.5.7
+----------
+Correct a crash when TQSL attempts to upload a file caused by a thread
+accessing the GUI incorrectly.
+
 2.5.6
 ----------
 When importing a .p12 on the command line (-i call.p12), allow passing
