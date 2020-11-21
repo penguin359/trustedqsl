@@ -1,3 +1,10 @@
+trustedqsl (2.5.7-1) unstable; urgency=medium
+
+  * New upstream version 2.5.7
+  * Refresh patches
+
+ -- tony mancill <tmancill@debian.org>  Sat, 21 Nov 2020 14:45:31 -0800
+
 trustedqsl (2.5.6-1) unstable; urgency=medium
 
   * New upstream version 2.5.6
