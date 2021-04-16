@@ -1,3 +1,9 @@
+trustedqsl (2.5.7-2) UNRELEASED; urgency=medium
+
+  * Switch to LMDB; libdb is obsolete.
+
+ -- Christoph Berg <myon@debian.org>  Fri, 16 Apr 2021 13:13:52 +0200
+
 trustedqsl (2.5.7-1) unstable; urgency=medium
 
   * New upstream version 2.5.7
