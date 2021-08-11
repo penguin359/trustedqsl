@@ -1,6 +1,7 @@
 trustedqsl (2.5.8-1) experimental; urgency=medium
 
   * New upstream version 2.5.8
+  * Bump Standards-Version to 4.5.1
 
  -- tony mancill <tmancill@debian.org>  Tue, 10 Aug 2021 21:02:17 -0700
 
