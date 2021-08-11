@@ -60,7 +60,7 @@ wrapString(wxWindow *win, wxString in, int length) {
 					if (textwidth < length && isspc(c[0]))
 						break;
 				} while (1);
-			if (out != wxT(""))
+			if (!out.IsEmpty())
 				out += wxT("\n");
 			out += str;
 			str = in.Right(index);
@@ -68,7 +68,7 @@ wrapString(wxWindow *win, wxString in, int length) {
 			break;
 		}
 	} while (1);
-	if (out != wxT(""))
+	if (!out.IsEmpty())
 		out += wxT("\n");
 	out += str;
 	return out;

@@ -267,6 +267,7 @@ TQSLWizCertPage::UpdateFields(int noupdate_field) {
 			cb->Clear();
 			int nitems;
 			tqsl_getNumLocationFieldListItems(loc, i, &nitems);
+			bool noneSeen = false;
 			for (int j = 0; j < nitems && j < 2000; j++) {
 				char item[200];
 				tqsl_getLocationFieldListItem(loc, i, j, item, sizeof(item));
@@ -275,6 +276,8 @@ TQSLWizCertPage::UpdateFields(int noupdate_field) {
 				__("[None]");
 #endif
 				wxString item_text = wxString::FromUTF8(item);
+				if (j == 0 && item_text == wxT("[None]"))
+					noneSeen = true;
 				if (item_text == old_sel || item_text == old_text)
 					new_sel = j;
 				if (j == 0)
@@ -283,10 +286,16 @@ TQSLWizCertPage::UpdateFields(int noupdate_field) {
 			}
 			if (noupdate_field < 0 && !defaulted)
 				new_sel = selected;
+			if (noneSeen && nitems == 2) { // Really only one
+				new_sel = 1;
+			}
 			tqsl_setLocationFieldIndex(loc, i, new_sel);
 			if (new_sel >= 0 && nitems > new_sel && static_cast<int>(cb->GetCount()) > new_sel)
 				cb->SetSelection(new_sel);
-			cb->Enable(nitems > 1);
+			if (noneSeen)
+				cb->Enable(nitems > 2);
+			else
+				cb->Enable(nitems > 1);
 		} else if (in_type == TQSL_LOCATION_FIELD_TEXT) {
 			int len;
 			tqsl_getLocationFieldDataLength(loc, i, &len);
@@ -564,6 +573,34 @@ TQSLWizCertPage::validate() {
 				(reinterpret_cast<wxTextCtrl *>(controls[i]))->ChangeValue(editedGrids);
 				tqsl_setLocationFieldCharData(loc, i, (reinterpret_cast<wxTextCtrl *>(controls[i]))->GetValue().ToUTF8());
 			}
+		} else if (strcmp(gabbi_name, "IOTA") == 0) {
+			wxString iotaVal = (reinterpret_cast<wxTextCtrl *>(controls[i]))->GetValue();
+			if (iotaVal.size() == 0) {
+				continue;
+			}
+			// Format of an IOTA entry
+			// AF,AN,AS,EU,NA,OC,SA-000
+			iotaVal = iotaVal.Upper();
+			if (iotaVal.size() != 6) {
+				if (valMsg.IsEmpty()) {
+					valMsg = wxString::Format(_("IOTA value %s is not valid."), iotaVal.c_str());
+					continue;
+				}
+			}
+			wxString cont = iotaVal.Left(3);
+			if (cont != wxT("AF-") && cont != wxT("AN-") && cont != wxT("AS-") && cont != wxT("EU-") &&
+			    cont != wxT("NA-") && cont != wxT("OC-") && cont != wxT("SA-")) {
+				if (valMsg.IsEmpty()) {
+					valMsg = wxString::Format(_("IOTA %s is not correct. Must start with AF-, AN-, AS-, EU-, NA-, OC- or SA-"), iotaVal.c_str());
+				}
+			}
+			wxString num = iotaVal.Right(3);
+			long iotanum;
+			if (!iotaVal.Right(3).ToLong(&iotanum)) {
+				if (valMsg.IsEmpty()) {
+					valMsg = wxString::Format(_("IOTA %s is not correct. Must have a number after the '-'"), iotaVal.c_str());
+				}
+			}
 		} else if (in_type == TQSL_LOCATION_FIELD_BADZONE) {
 // Possible errors, here for harvesting
 #ifdef tqsltranslate
@@ -720,7 +757,7 @@ TQSLWizFinalPage::validate() {
 	wxString val = newname->GetValue().Trim(true).Trim(false);
 	valMsg = wxT("");
 
-	if (val == wxT("")) {
+	if (val.IsEmpty()) {
 		valMsg = wxGetTranslation(_("Station name must be provided"));
 	}
 	if (errlbl) errlbl->SetLabel(valMsg);

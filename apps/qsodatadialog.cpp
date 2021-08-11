@@ -104,7 +104,7 @@ class choice {
  public:
 	explicit choice(const wxString& _value, const wxString& _display = wxT(""), int _low = 0, int _high = 0) {
 		value = _value;
-		display = (_display == wxT("")) ? value : _display;
+		display = (_display.IsEmpty()) ? value : _display;
 		low = _low;
 		high = _high;
 	}
@@ -453,11 +453,11 @@ QSODataDialog::OnFieldChanged(wxCommandEvent& event) {
 		}
 	}
 
-	if (_call_ctrl->GetValue() == wxT("") || _call_ctrl->GetValue() == wxT("NONE"))	// No callsign
+	if (_call_ctrl->GetValue().IsEmpty() || _call_ctrl->GetValue() == wxT("NONE"))	// No callsign
 		return;
-	if (_date_ctrl->GetValue() == wxT(""))	// No date
+	if (_date_ctrl->GetValue().IsEmpty())	// No date
 		return;
-	if (_time_ctrl->GetValue() == wxT(""))	// No time
+	if (_time_ctrl->GetValue().IsEmpty())	// No time
 		return;
 	// All is OK, allow save.
 	_recadd_ctrl->Enable(true);
@@ -539,17 +539,17 @@ QSODataDialog::TransferDataFromWindow() {
 				wxOK | wxICON_EXCLAMATION, this);
 			return false;
 		}
-		if (!_isend && rec._call == wxT("")) {
+		if (!_isend && rec._call.IsEmpty()) {
 			wxMessageBox(_("Call Sign cannot be empty"), _("QSO Data Error"),
 				wxOK | wxICON_EXCLAMATION, this);
 			return false;
 		}
-		if (rec._propmode == wxT("SAT") && rec._satellite == wxT("")) {
+		if (rec._propmode == wxT("SAT") && rec._satellite.IsEmpty()) {
 			wxMessageBox(_("'Satellite' propagation mode selected, so a Satellite must be chosen"), _("QSO Data Error"),
 				wxOK | wxICON_EXCLAMATION, this);
 			return false;
 		}
-		if (rec._propmode != wxT("SAT") && rec._satellite != wxT("")) {
+		if (rec._propmode != wxT("SAT") && !rec._satellite.IsEmpty()) {
 			wxMessageBox(_("Satellite choice requires that Propagation Mode be 'Satellite'"), _("QSO Data Error"),
 				wxOK | wxICON_EXCLAMATION, this);
 			return false;
@@ -597,11 +597,11 @@ QSODataDialog::WriteQSOFile(QSORecordList& recs, const char *fname) {
 		s_fname = wxString::FromUTF8(fname);
 	wxString path, basename, type;
 	wxFileName::SplitPath(s_fname, &path, &basename, &type);
-	if (type != wxT(""))
-		basename += wxT(".") + type;
-	else
+	if (type.IsEmpty())
 		basename += wxT(".adi");
-	if (path == wxT(""))
+	else
+		basename += wxT(".") + type;
+	if (path.IsEmpty())
 		path = wxConfig::Get()->Read(wxT("QSODataPath"), wxT(""));
 	s_fname = wxFileSelector(_("Save File"), path, basename, wxT("adi"),
 #if !defined(__APPLE__) && !defined(_WIN32)
@@ -610,7 +610,7 @@ QSODataDialog::WriteQSOFile(QSORecordList& recs, const char *fname) {
 		_("ADIF files (*.adi;*.adif)|*.adi;*.adif|All files (*.*)|*.*"),
 #endif
 		wxFD_SAVE|wxFD_OVERWRITE_PROMPT, this);
-	if (s_fname == wxT("")) { // Cancel
+	if (s_fname.IsEmpty()) { // Cancel
 		return false;
 	}
 	wxConfig::Get()->Write(wxT("QSODataPath"), wxPathOnly(s_fname));
@@ -652,23 +652,23 @@ QSODataDialog::WriteQSOFile(QSORecordList& recs, const char *fname) {
 		dtstr.Printf(wxT("%02d%02d%02d"), it->_time.hour, it->_time.minute, it->_time.second);
 		tqsl_adifMakeField("TIME_ON", 0, (const unsigned char*)(const char *)dtstr.ToUTF8(), -1, buf, sizeof buf);
 		out << "   " << buf << endl;
-		if (it->_freq != wxT("")) {
+		if (!it->_freq.IsEmpty()) {
 			tqsl_adifMakeField("FREQ", 0, (const unsigned char*)(const char *)it->_freq.ToUTF8(), -1, buf, sizeof buf);
 			out << "   " << buf << endl;
 		}
-		if (it->_rxband != wxT("")) {
+		if (!it->_rxband.IsEmpty()) {
 			tqsl_adifMakeField("BAND_RX", 0, (const unsigned char*)(const char *)it->_rxband.ToUTF8(), -1, buf, sizeof buf);
 			out << "   " << buf << endl;
 		}
-		if (it->_rxfreq != wxT("")) {
+		if (!it->_rxfreq.IsEmpty()) {
 			tqsl_adifMakeField("FREQ_RX", 0, (const unsigned char*)(const char *)it->_rxfreq.ToUTF8(), -1, buf, sizeof buf);
 			out << "   " << buf << endl;
 		}
-		if (it->_propmode != wxT("")) {
+		if (!it->_propmode.IsEmpty()) {
 			tqsl_adifMakeField("PROP_MODE", 0, (const unsigned char*)(const char *)it->_propmode.ToUTF8(), -1, buf, sizeof buf);
 			out << "   " << buf << endl;
 		}
-		if (it->_satellite != wxT("")) {
+		if (!it->_satellite.IsEmpty()) {
 			tqsl_adifMakeField("SAT_NAME", 0, (const unsigned char*)(const char *)it->_satellite.ToUTF8(), -1, buf, sizeof buf);
 			out << "   " << buf << endl;
 		}
@@ -695,7 +695,7 @@ QSODataDialog::OnOk(wxCommandEvent&) {
 	_isend = true;
 	TransferDataFromWindow();
 	_isend = false;
-	if (rec._call == wxT("") && _recno == static_cast<int>(_reclist->size())) {
+	if (rec._call.IsEmpty() && _recno == static_cast<int>(_reclist->size())) {
 		_reclist->erase(_reclist->begin() + _recno - 1);
 		if (WriteQSOFile(*_reclist, _filename.ToUTF8()))
 			EndModal(wxID_OK);
@@ -729,7 +729,7 @@ QSODataDialog::OnClose(wxCloseEvent& event) {
 		return;				// Nothing to save
 	}
 
-	if (rec._call == wxT("") && _recno == static_cast<int>(_reclist->size())) {
+	if (rec._call.IsEmpty() && _recno == static_cast<int>(_reclist->size())) {
 		_reclist->erase(_reclist->begin() + _recno - 1);
 	}
 	if (_reclist->empty()) {
@@ -776,7 +776,7 @@ QSODataDialog::OnRecDown(wxCommandEvent&) {
 	if (_reclist == 0)
 		return;
 	if (_recno == _newrec) { 		// Backing up from a record being added
-		if (rec._call == wxT("")) { 	// And the call is empty
+		if (rec._call.IsEmpty()) { 	// And the call is empty
 			rec._call = wxT("NONE");
 			_call_ctrl->SetValue(wxT("NONE"));
 		}
@@ -797,7 +797,7 @@ QSODataDialog::OnRecBottom(wxCommandEvent&) {
 	if (_reclist == 0)
 		return;
 	if (_recno == _newrec) { 		// Backing up from a record being added
-		if (rec._call == wxT("")) { 	// And the call is empty
+		if (rec._call.IsEmpty()) { 	// And the call is empty
 			rec._call = wxT("NONE");
 			_call_ctrl->SetValue(wxT("NONE"));
 			_reclist->erase(_reclist->begin() + _recno - 1);
@@ -812,7 +812,7 @@ QSODataDialog::OnRecTop(wxCommandEvent&) {
 	if (_reclist == 0)
 		return;
 	if (_recno == _newrec) { 		// Backing up from a record being added
-		if (rec._call == wxT("")) { 	// And the call is empty
+		if (rec._call.IsEmpty()) { 	// And the call is empty
 			_reclist->erase(_reclist->begin() + _recno - 1);
 			if (_reclist->empty())
 				_reclist->push_back(QSORecord());

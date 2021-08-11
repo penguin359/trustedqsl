@@ -55,6 +55,11 @@
   </Fragment>
   <Fragment>
     <DirectoryRef Id="APPLICATIONFOLDER">
+      <Directory Id="dir63EA1CA485864639A749E7071E2B735E" Name="zh_CN" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="APPLICATIONFOLDER">
       <Directory Id="dirC332EE54B19E15D0A758A1C5E6D52056" Name="ru" />
     </DirectoryRef>
   </Fragment>
@@ -143,6 +148,13 @@
       </Component>
       <Component Id="cmp5A418E0524D443FC8FC0571246632E30" Directory="dir0EB912D8DF5C474CBA0F35A3474D3F75" Guid="*">
         <File Id="filCB05CB5FC91346648832BEB9FD720083" KeyPath="yes" Source="$(var.langSrc)\zh\wxstd.mo" />
+      </Component>
+
+      <Component Id="cmpD89D453955A847CC8E921B4CF5CE8959" Directory="dir63EA1CA485864639A749E7071E2B735E" Guid="*">
+        <File Id="fil0FDBD577B1EA40A498FA8372ABBEA2A4" KeyPath="yes" Source="$(var.langSrc)\zh_CN\tqslapp.mo" />
+      </Component>
+      <Component Id="cmp3CA0324D257D472F9092828A73036811" Directory="dir63EA1CA485864639A749E7071E2B735E" Guid="*">
+        <File Id="fil9D59C5188D284E1283F5E2EB72B51C94" KeyPath="yes" Source="$(var.langSrc)\zh_CN\wxstd.mo" />
       </Component>
 
       <Component Id="cmpE50C1FDDB0557814727BFBC71334B3B1" Directory="dirC332EE54B19E15D0A758A1C5E6D52056" Guid="*">

@@ -127,7 +127,7 @@ TQSLGetStationNameDialog::OnOk(wxCommandEvent&) {
 	tqslTrace("TQSLGetStationNameDialog::OnOk", "selected = %s", S(s));
 	if (editonly) {
 		EndModal(wxID_CANCEL);
-	} else if (s != wxT("")) {
+	} else if (!s.IsEmpty()) {
 		_selected = s;
 		EndModal(wxID_OK);
 	}
@@ -176,7 +176,7 @@ TQSLGetStationNameDialog::TQSLGetStationNameDialog(wxWindow *parent, wxHtmlHelpC
 	wxSize text_size = getTextSize(this);
 	int control_width = text_size.GetWidth()*30;
 
-	if (title != wxT(""))
+	if (!title.IsEmpty())
 		SetTitle(title);
 	else if (issave)
 		SetTitle(_("Save Station Data"));
@@ -237,7 +237,7 @@ TQSLGetStationNameDialog::UpdateButtons() {
 	wxArrayInt sels;
 	namelist->GetSelections(sels);
 	if (!editonly)
-		okbut->Enable(issave ? (name_entry->GetValue().Trim() != wxT("")) : (sels.GetCount() > 0));
+		okbut->Enable(issave ? (!name_entry->GetValue().Trim().IsEmpty()) : (sels.GetCount() > 0));
 }
 
 void

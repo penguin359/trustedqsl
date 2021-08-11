@@ -234,7 +234,7 @@ QSLApp::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 		tqsl_setConverterAllowBadCall(conv, allow);
 		tqsl_setConverterAllowDuplicates(conv, allow_dupes);
 		wxSplitPath(infile, 0, &name, &ext);
-		if (ext != wxT(""))
+		if (!ext.IsEmpty())
 			name += wxT(".") + ext;
 		// Only display windows if notin batch mode -- KD6PAG
 		bool ignore_err = false;
@@ -487,7 +487,7 @@ QSLApp::OnRun() {
 	wxString path, name, ext;
 	wxSplitPath(infile, &path, &name, &ext);
 	if (outfile.IsEmpty()) {
-		if (path != wxT(""))
+		if (!path.IsEmpty())
 			path += wxT("/");
 		path += name + wxT(".tq8");
 		outfile = path;
