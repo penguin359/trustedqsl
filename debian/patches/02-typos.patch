@@ -429,7 +429,7 @@ Author: tony mancill <tmancill@debian.org>
  #: tqsl.cpp:3899
 --- a/apps/tqsl.cpp
 +++ b/apps/tqsl.cpp
-@@ -2908,7 +2908,7 @@
+@@ -2917,7 +2917,7 @@
  			wxLogMessage(_("Please try uploading the %s later."), fileType.c_str());
  			retval = TQSL_EXIT_CONNECTION_FAILED;
  		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
@@ -438,7 +438,7 @@ Author: tony mancill <tmancill@debian.org>
  			wxLogMessage(_("Please try uploading the %s later."), fileType.c_str());
  			retval = TQSL_EXIT_CONNECTION_FAILED;
  		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
-@@ -3336,7 +3336,7 @@
+@@ -3345,7 +3345,7 @@
  			wxLogMessage(_("Unable to update - either your Internet connection is down or LoTW is unreachable."));
  			wxLogMessage(_("Please try again later."));
  		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
@@ -447,7 +447,7 @@ Author: tony mancill <tmancill@debian.org>
  			wxLogMessage(_("Please try again later."));
  		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
  			wxLogMessage(_("Unable to connect to the update site."));
-@@ -3415,7 +3415,7 @@
+@@ -3424,7 +3424,7 @@
  			wxLogMessage(_("Unable to update - either your Internet connection is down or LoTW is unreachable."));
  			wxLogMessage(_("Please try again later."));
  		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
@@ -456,7 +456,7 @@ Author: tony mancill <tmancill@debian.org>
  			wxLogMessage(_("Please try again later."));
  		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
  			wxLogMessage(_("Unable to connect to the update site."));
-@@ -3914,7 +3914,7 @@
+@@ -3923,7 +3923,7 @@
  			} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
  				networkError = true;
  				ri->error = true;
@@ -465,7 +465,7 @@ Author: tony mancill <tmancill@debian.org>
  				ri->errorText += wxT("\n");
  				ri->errorText += _("Please try again later.");
  			} else if (retval == CURLE_SSL_CONNECT_ERROR) {
-@@ -3949,7 +3949,7 @@
+@@ -3958,7 +3958,7 @@
  		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
  			networkError = true;
  			ri->error = true;
