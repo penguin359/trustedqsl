@@ -152,6 +152,7 @@ class MyFrame : public wxFrame {
 	void DisplayHelp(const char *file = "main.htm") { help->Display(wxString::FromUTF8(file)); }
 	void FirstTime(void);
 	void BackupConfig(const wxString& event, bool quiet);
+	void AutoBackup(void);
 	void SaveOldBackups(const wxString& directory, const wxString& filename, const wxString& ext);
 
 	CertTree *cert_tree;

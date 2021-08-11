@@ -229,7 +229,7 @@ void ModeMap::OnAdd(wxCommandEvent &) {
 	tqslTrace("ModeMap::OnAdd", NULL);
 	AddMode add_dial(this);
 	int val = add_dial.ShowModal();
-	if (val == ID_OK_BUT && add_dial.key != wxT("") && add_dial.value != wxT("")) {
+	if (val == ID_OK_BUT && !add_dial.key.IsEmpty() && !add_dial.value.IsEmpty()) {
 		wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
 		config->SetPath(wxT("/modeMap"));
 		config->Write(add_dial.key, add_dial.value);
@@ -404,7 +404,7 @@ fix_ext_str(const wxString& oldexts) {
 	wxString exts;
 	char *tok = strtok(str, delims);
 	while (tok) {
-		if (exts != wxT(""))
+		if (!exts.IsEmpty())
 			exts += wxT(" ");
 		exts += wxString::FromUTF8(tok);
 		tok = strtok(NULL, delims);
@@ -480,7 +480,7 @@ LogPrefs::LogPrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm")) {
                         logverify = TQSL_LOC_REPORT;
 	}
 
-	static wxString choices[] = { wxT("Ignore QTH details from your log"), wxT("Report on QTH differences") , wxT("Override Station Location with QTH detals from your log") };
+	static wxString choices[] = { _("Ignore QTH details from your log"), _("Report on QTH differences") , _("Override Station Location with QTH details from your log") };
 
 	handleQTH = new wxRadioBox(this, -1, _("Handle QTH information in ADIF logs with what action?"), wxDefaultPosition, wxDefaultSize,
 		3, choices, 3, wxRA_SPECIFY_ROWS);
@@ -895,7 +895,7 @@ void ContestMap::OnDelete(wxCommandEvent &) {
 #endif
 	if (row >= 0) {
 		wxString contest = grid->GetCellValue(row, 0);
-		if (contest != wxT("")) {
+		if (!contest.IsEmpty()) {
 			wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
 			config->SetPath(wxT("/cabrilloMap"));
 			config->DeleteEntry(contest, true);
@@ -928,7 +928,7 @@ void ContestMap::OnEdit(wxCommandEvent &) {
 #endif
 	if (row >= 0) {
 		contest = grid->GetCellValue(row, 0);
-		if (contest != wxT("")) {
+		if (!contest.IsEmpty()) {
 			wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
 			config->SetPath(wxT("/cabrilloMap"));
 			wxString val;
@@ -946,7 +946,7 @@ void ContestMap::OnEdit(wxCommandEvent &) {
 		wxString val = wxString::Format(wxT("%d;%d"), dial.contest_type, dial.callsign_field);
 		config->Write(dial.contest, val);
 		config->Flush(false);
-		if (dial.contest != contest && contest != wxT("")) {
+		if (dial.contest != contest && !contest.IsEmpty()) {
 			config->SetPath(wxT("/cabrilloMap"));
 			config->DeleteEntry(contest, true);
 			config->Flush(false);
@@ -1018,7 +1018,7 @@ bool EditContest::TransferDataFromWindow() {
 	contest.Trim(false);
 	contest.Trim(true);
 	contest.MakeUpper();
-	if (contest == wxT("")) {
+	if (contest.IsEmpty()) {
 		wxMessageBox(_("Contest name cannot be blank"), _("Error"), wxOK | wxICON_ERROR, this);
 		return false;
 	}

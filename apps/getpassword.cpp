@@ -49,7 +49,7 @@ GetPasswordDialog::GetPasswordDialog(wxWindow *parent, const wxString& title,
 	butsizer->Add(okButton, 0, 0, 0);
 	okButton->SetDefault();
 	butsizer->Add(new wxButton(this, GPW_ID_CAN, _("Cancel")), 0, wxLEFT, 20);
-	if (_help && _helpfile != wxT(""))
+	if (_help && !_helpfile.IsEmpty())
 		butsizer->Add(new wxButton(this, GPW_ID_HELP, _("Help")), 0, wxLEFT, 20);
 
 	sizer->Add(butsizer, 0, wxALL|wxALIGN_CENTER, 10);
@@ -85,7 +85,7 @@ GetPasswordDialog::OnCancel(wxCommandEvent&) {
 void
 GetPasswordDialog::OnHelp(wxCommandEvent&) {
 	tqslTrace("GetPasswordDialog::OnHelp", NULL);
-	if (_help && _helpfile != wxT(""))
+	if (_help && !_helpfile.IsEmpty())
 		_help->Display(_helpfile);
 }
 
@@ -122,7 +122,7 @@ GetNewPasswordDialog::GetNewPasswordDialog(wxWindow *parent, const wxString& tit
 	_okbut->Enable(_blankok);
 	butsizer->Add(_okbut, 0, 0, 0);
 	butsizer->Add(new wxButton(this, GPW_ID_CAN, _("Cancel")), 0, wxLEFT, 20);
-	if (_help && _helpfile != wxT(""))
+	if (_help && !_helpfile.IsEmpty())
 		butsizer->Add(new wxButton(this, GPW_ID_HELP, _("Help")), 0, wxLEFT, 20);
 
 	sizer->Add(butsizer, 0, wxALL|wxALIGN_CENTER, 10);
@@ -147,13 +147,13 @@ GetNewPasswordDialog::PWChange(wxCommandEvent&) {
 		_okbut->Enable(false);
 		return;
 	}
-	if (!_blankok && pw1 == wxT("")) {
+	if (!_blankok && pw1.IsEmpty()) {
 		_pwstatus->SetLabel(wxT(""));
 		_okbut->Enable(false);
 		return;
 	}
 	_password = pw1;
-	if (pw1 != wxT(""))
+	if (!pw1.IsEmpty())
 		_pwstatus->SetLabel(_("Passphrase confirmed"));
 	_okbut->Enable(true);
 	_okbut->SetDefault();
@@ -174,6 +174,6 @@ GetNewPasswordDialog::OnCancel(wxCommandEvent&) {
 void
 GetNewPasswordDialog::OnHelp(wxCommandEvent&) {
 	tqslTrace("GetNewPasswordDialog::OnHelp", NULL);
-	if (_help && _helpfile != wxT(""))
+	if (_help && !_helpfile.IsEmpty())
 		_help->Display(_helpfile);
 }

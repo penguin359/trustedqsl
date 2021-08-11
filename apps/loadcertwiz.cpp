@@ -247,7 +247,7 @@ LoadCertWiz::LoadCertWiz(wxWindow *parent, wxHtmlHelpController *help, const wxS
 	wxString path = config->Read(wxT("CertFilePath"), wxT(""));
 	wxString filename = wxFileSelector(_("Select Certificate File"), path,
 		wxT(""), ext, wild, wxFD_OPEN|wxFD_FILE_MUST_EXIST);
-	if (filename == wxT("")) {
+	if (filename.IsEmpty()) {
 		// Cancelled!
 		_first = 0;
 	} else {

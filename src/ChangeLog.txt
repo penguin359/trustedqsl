@@ -3,6 +3,11 @@ TQSLLIB changes
 
 2.5
 ---
+Accept "AO-07" for Satellite AO-7.
+
+Fix handling of Oblast "YN" where LoTW uses an incorrect "JN" abbreviation
+internally so that "YN" isn't called out as a mismatch.
+
 When reporting errors in ADIF input files, TQSL would report the line number
 of the "eor" (end-of-record) marker, not the ADIF field having the error. TQSL
 now reports the actual input line when that is possible.

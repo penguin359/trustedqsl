@@ -447,7 +447,7 @@ DateRangeDialog::TransferDataFromWindow() {
 	tqslTrace("DateRangeDialog::TransferDataFromWindow", NULL);
 	wxString text = start_tc->GetValue();
 	tqslTrace("DateRangeDialog::TransferDataFromWindow", "start=%s", S(text));
-	if (text.Trim() == wxT("")) {
+	if (text.Trim().IsEmpty()) {
 		start.year = start.month = start.day = 0;
 	} else if (tqsl_initDate(&start, text.ToUTF8()) || !tqsl_isDateValid(&start)) {
 		msg->SetLabel(_("Start date is invalid"));
@@ -455,7 +455,7 @@ DateRangeDialog::TransferDataFromWindow() {
 	}
 	text = end_tc->GetValue();
 	tqslTrace("DateRangeDialog::TransferDataFromWindow", "end=%s", S(text));
-	if (text.Trim() == wxT("")) {
+	if (text.Trim().IsEmpty()) {
 		end.year = end.month = end.day = 0;
 	} else if (tqsl_initDate(&end, text.ToUTF8()) || !tqsl_isDateValid(&end)) {
 		msg->SetLabel(_("End date is invalid"));
@@ -872,6 +872,22 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
 END_EVENT_TABLE()
 
 void
+MyFrame::AutoBackup(void) {
+	wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
+	wxString bdir = config->Read(wxT("BackupFolder"), wxString::FromUTF8(tQSL_BaseDir));
+	if (bdir.Trim(true).Trim(false).IsEmpty())
+		bdir = wxString::FromUTF8(tQSL_BaseDir);
+	SaveOldBackups(bdir, wxT("tqslconfig"), wxT("tbk"));
+#ifdef _WIN32
+	bdir += wxT("\\tqslconfig.tbk");
+#else
+	bdir += wxT("/tqslconfig.tbk");
+#endif
+	tqslTrace("MyFrame::OnExit", "Auto Backup %s", S(bdir));
+	BackupConfig(bdir, true);
+}
+
+void
 MyFrame::SaveOldBackups(const wxString& directory, const wxString& filename, const wxString& ext) {
 #ifdef _WIN32
 	wxString bfile = directory + wxT("\\") + filename + wxT(".") + ext;
@@ -1004,17 +1020,7 @@ MyFrame::OnExit(TQ_WXCLOSEEVENT& WXUNUSED(event)) {
 	bool ab;
 	config->Read(wxT("AutoBackup"), &ab, DEFAULT_AUTO_BACKUP);
 	if (ab) {
-		wxString bdir = config->Read(wxT("BackupFolder"), wxString::FromUTF8(tQSL_BaseDir));
-		if (bdir.Trim(true).Trim(false) == wxT(""))
-			bdir = wxString::FromUTF8(tQSL_BaseDir);
-		SaveOldBackups(bdir, wxT("tqslconfig"), wxT("tbk"));
-#ifdef _WIN32
-		bdir += wxT("\\tqslconfig.tbk");
-#else
-		bdir += wxT("/tqslconfig.tbk");
-#endif
-		tqslTrace("MyFrame::OnExit", "Auto Backup %s", S(bdir));
-		BackupConfig(bdir, true);
+		AutoBackup();
 	}
 	tqslTrace("MyFrame::OnExit", "GUI Destroy");
 	Destroy();		// close the window
@@ -1169,7 +1175,7 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	help_menu = new wxMenu;
 	help->UseConfig(wxConfig::Get());
 	wxString hhp = docpaths.FindAbsoluteValidPath(wxT("tqslapp.hhp"));
-	if (wxFileNameFromPath(hhp) != wxT("")) {
+	if (!wxFileNameFromPath(hhp).IsEmpty()) {
 		if (help->AddBook(hhp))
 #ifdef __WXMAC__
 		help_menu->Append(tm_h_contents, _("&Contents"));
@@ -1299,7 +1305,6 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	// Location tab
 
 	wxPanel* loctab = new wxPanel(notebook, -1);
-
 	wxBoxSizer* locsizer = new wxBoxSizer(wxHORIZONTAL);
 	loctab->SetSizer(locsizer);
 
@@ -1599,7 +1604,8 @@ static wxString getAbout() {
 #endif
 	msg+=wxT("\n\n\nTranslators:\n");
 	msg+=wxT("Catalan: Xavier, EA3W\n");
-	msg+=wxT("Chinese: Caros, BH4TXN\n");
+	msg+=wxT("Chinese (Simplfied): Caros, BH4TXN\n");
+	msg+=wxT("Chinese (Traditional): SZE-TO Wing, VR2UPU\n");
 	msg+=wxT("Finnish: Juhani Tapaninen, OH8MXL\n");
 	msg+=wxT("French: Laurent BEUGNET, F6GOX\n");
 	msg+=wxT("German: Andreas Rehberg, DF4WC\n");
@@ -1633,7 +1639,7 @@ MyFrame::OnHelpDiagnose(wxCommandEvent& event) {
 	s_fname = wxFileSelector(_("Log File"), wxT(""), wxT("tqsldiag.log"), wxT("log"),
 			_("Log files (*.log)|*.log|All files (*.*)|*.*"),
 			wxFD_SAVE|wxFD_OVERWRITE_PROMPT, this);
-	if (s_fname == wxT("")) {
+	if (s_fname.IsEmpty()) {
 		file_menu->Check(tm_f_diag, false); //would be better to not check at all, but no, apparently that's a crazy thing to want
 		return;
 	}
@@ -1704,6 +1710,7 @@ MyFrame::AddStationLocation(wxCommandEvent& WXUNUSED(event)) {
 	}
 	loc_tree->Build();
 	LocTreeReset();
+	AutoBackup();
 }
 
 void
@@ -1734,6 +1741,7 @@ MyFrame::EditStationLocation(wxCommandEvent& event) {
 			check_tqsl_error(tqsl_endStationLocationCapture(&loc));
 			loc_tree->Build();
 			LocTreeReset();
+			AutoBackup();
 			return;
 		}
 		catch(TQSLException& x) {
@@ -1760,6 +1768,7 @@ MyFrame::EditStationLocation(wxCommandEvent& event) {
 			check_tqsl_error(tqsl_endStationLocationCapture(&loc));
 			loc_tree->Build();
 			LocTreeReset();
+			AutoBackup();
 			return;
 		}
 		// More than one location or not selected in the tree. Prompt for the location.
@@ -1884,7 +1893,7 @@ MyFrame::EditQSOData(wxCommandEvent& WXUNUSED(event)) {
 			_("ADIF files (*.adi;*.adif)|*.adi;*.adif|All files (*.*)|*.*"),
 #endif
 			wxFD_OPEN|wxFD_FILE_MUST_EXIST, this);
-	if (file == wxT(""))
+	if (file.IsEmpty())
 		return;
 	loadQSOfile(file, recs);
 	try {
@@ -2116,7 +2125,7 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 		tqsl_setConverterQTHDetails(logConv, logverify);
 
 		wxFileName::SplitPath(infile, 0, &name, &ext);
-		if (ext != wxT(""))
+		if (!ext.IsEmpty())
 			name += wxT(".") + ext;
 		// Only display windows if notin batch mode -- KD6PAG
 		if (!this->IsQuiet()) {
@@ -2982,7 +2991,7 @@ MyFrame::SelectStationLocation(const wxString& title, const wxString& okLabel, b
 	char errbuf[512];
 	do {
 		TQSLGetStationNameDialog station_dial(this, help, wxDefaultPosition, false, title, okLabel, editonly);
-		if (selname != wxT(""))
+		if (!selname.IsEmpty())
 			station_dial.SelectName(selname);
 		rval = station_dial.ShowModal();
 		switch (rval) {
@@ -3112,7 +3121,7 @@ class revLevel {
 		} else {
 			minor = -1;
 		}
-		if (patchVer != wxT("") && patchVer.IsNumber()) {
+		if (!patchVer.IsEmpty() && patchVer.IsNumber()) {
 			patchVer.ToLong(&patch);
 		} else {
 			patch = 0;
@@ -4003,7 +4012,7 @@ wx_tokens(const wxString& str, vector<wxString> &toks) {
 			idx = newidx + 1;
 		}
 	} while (newidx != wxString::npos);
-	if (str.Mid(idx) != wxT(""))
+	if (!str.Mid(idx).IsEmpty())
 		toks.push_back(str.Mid(idx));
 }
 
@@ -4145,7 +4154,7 @@ get_address_field(const char *callsign, const char *field, string& result) {
 	if (last == wxT("null")) last = wxT("");
 
 	wxString name;
-	if (middle == wxT(""))
+	if (middle.IsEmpty())
 		name = first + wxT(" ") + last;
 	else
 		name = first + wxT(" ") + middle + wxT(" ") + last;
@@ -4309,7 +4318,7 @@ MyFrame::ProcessQSODataFile(bool upload, bool compressed) {
 			defext = wxString(wxT("adi"));
 		infile = wxFileSelector(_("Select file to Sign"), path, wxT(""), defext, filter,
 			wxFD_OPEN|wxFD_FILE_MUST_EXIST, this);
-		if (infile == wxT(""))
+		if (infile.IsEmpty())
 			return;
 		wxString inPath;
 		wxString inExt;
@@ -4329,7 +4338,7 @@ MyFrame::ProcessQSODataFile(bool upload, bool compressed) {
 			outfile = wxFileSelector(_("Select file to write to"),
 				path, basename, deftype, filter + _("|All files (*.*)|*.*"),
 				wxFD_SAVE|wxFD_OVERWRITE_PROMPT, this);
-			if (outfile == wxT(""))
+			if (outfile.IsEmpty())
 				return;
 			config->Write(wxT("ExportPath"), wxPathOnly(outfile));
 		}
@@ -4398,7 +4407,7 @@ MyFrame::ProcessQSODataFile(bool upload, bool compressed) {
 		wxString s;
 		wxString err = wxString::FromUTF8(x.what());
 		if (err.Find(infile) == wxNOT_FOUND) {
-			if (infile != wxT(""))
+			if (!infile.IsEmpty())
 				s = infile + wxT(": ");
 		}
 		s += err;
@@ -4775,7 +4784,7 @@ MyFrame::OnSaveConfig(wxCommandEvent& WXUNUSED(event)) {
 		wxString filename = wxFileSelector(_("Enter file to save to"), wxT(""),
 			file_default, wxT(".tbk"), _("Configuration files (*.tbk)|*.tbk|All files (*.*)|*.*"),
 			wxFD_SAVE|wxFD_OVERWRITE_PROMPT, this);
-		if (filename == wxT(""))
+		if (filename.IsEmpty())
 			return;
 
 		BackupConfig(filename, false);
@@ -5113,7 +5122,7 @@ MyFrame::OnLoadConfig(wxCommandEvent& WXUNUSED(event)) {
 	wxString filename = wxFileSelector(_("Select saved configuration file"), wxT(""),
 					   wxT("tqslconfig.tbk"), wxT("tbk"), _("Saved configuration files (*.tbk)|*.tbk"),
 					   wxFD_OPEN|wxFD_FILE_MUST_EXIST);
-	if (filename == wxT(""))
+	if (filename.IsEmpty())
 		return;
 
 	gzFile in = 0;
@@ -5341,6 +5350,10 @@ QSLApp::OnInit() {
 
 	if (lang == wxLANGUAGE_UNKNOWN) {
 		lang = wxLANGUAGE_DEFAULT;
+	}
+
+	if (lang == wxLANGUAGE_CHINESE) {
+		lang = wxLANGUAGE_CHINESE_TRADITIONAL;
 	}
 
 	for (lng = 0; (unsigned) lng < langIds.size(); lng++) {
@@ -5628,7 +5641,7 @@ QSLApp::OnInit() {
 	tQSL_Date* enddate = NULL;
 	tQSL_Date s, e;
 	if (parser.Found(wxT("b"), &start)) {
-		if (start.Trim() == wxT("")) {
+		if (start.Trim().IsEmpty()) {
 			startdate = NULL;
 		} else if (tqsl_initDate(&s, start.ToUTF8()) || !tqsl_isDateValid(&s)) {
 			if (quiet) {
@@ -5642,7 +5655,7 @@ QSLApp::OnInit() {
 		startdate = &s;
 	}
 	if (parser.Found(wxT("e"), &end)) {
-		if (end.Trim() == wxT("")) {
+		if (end.Trim().IsEmpty()) {
 			enddate = NULL;
 		} else if (tqsl_initDate(&e, end.ToUTF8()) || !tqsl_isDateValid(&e)) {
 			if (quiet) {
@@ -5883,7 +5896,7 @@ QSLApp::OnInit() {
 			wxString s;
 			wxString err = wxString::FromUTF8(x.what());
 			if (err.Find(infile) == wxNOT_FOUND) {
-				if (infile != wxT(""))
+				if (!infile.IsEmpty())
 					s = infile + wxT(": ");
 			}
 			s += err;
@@ -5903,7 +5916,7 @@ QSLApp::OnInit() {
 
 void MyFrame::FirstTime(void) {
 	tqslTrace("MyFrame::FirstTime", NULL);
-	if (wxConfig::Get()->Read(wxT("HasRun")) == wxT("")) {
+	if (wxConfig::Get()->Read(wxT("HasRun")).IsEmpty()) {
 		wxConfig::Get()->Write(wxT("HasRun"), wxT("yes"));
 		DisplayHelp();
 		wxMessageBox(_("Please review the introductory documentation before using this program."),
@@ -5951,6 +5964,8 @@ void MyFrame::FirstTime(void) {
 		}
 	}
 
+// This check has been obsolete for decades. Remove it.
+#ifdef CHECK_FOR_BETA_CERTS
 	if (ncerts > 0) {
 		TQ_WXCOOKIE cookie;
 		wxTreeItemId it = cert_tree->GetFirstChild(cert_tree->GetRootItem(), cookie);
@@ -5964,8 +5979,10 @@ void MyFrame::FirstTime(void) {
 			it = cert_tree->GetNextChild(cert_tree->GetRootItem(), cookie);
 		}
 	}
+#endif
+
 // Copy tqslcert preferences to tqsl unless already done.
-	if (wxConfig::Get()->Read(wxT("PrefsMigrated")) == wxT("")) {
+	if (wxConfig::Get()->Read(wxT("PrefsMigrated")).IsEmpty()) {
 		wxConfig::Get()->Write(wxT("PrefsMigrated"), wxT("yes"));
 		tqslTrace("MyFrame::FirstTime", "Migrating preferences from tqslcert");
 		wxConfig* certconfig = new wxConfig(wxT("tqslcert"));
@@ -6498,7 +6515,7 @@ void MyFrame::OnCertExport(wxCommandEvent& WXUNUSED(event)) {
 	wxString filename = wxFileSelector(_("Enter the name for the new Certificate Container file"), path,
 		file_default, wxT(".p12"), _("Certificate Container files (*.p12)|*.p12|All files (*.*)|*.*"),
 		wxFD_SAVE|wxFD_OVERWRITE_PROMPT, this);
-	if (filename == wxT(""))
+	if (filename.IsEmpty())
 		return;
 	wxConfig::Get()->Write(wxT("CertFilePath"), wxPathOnly(filename));
 	wxString msg = _("Enter the passphrase for the certificate container file.");
@@ -6697,6 +6714,7 @@ void MyFrame::OnLocDelete(wxCommandEvent& WXUNUSED(event)) {
 			wxLogError(getLocalizedErrorString());
 		loc_tree->Build();
 		LocTreeReset();
+		AutoBackup();
 	}
 }
 
@@ -6736,6 +6754,7 @@ void MyFrame::OnLocUndelete(wxCommandEvent& WXUNUSED(event)) {
 	}
 	loc_tree->Build();
 	LocTreeReset();
+	AutoBackup();
 }
 
 void MyFrame::OnLocEdit(wxCommandEvent& WXUNUSED(event)) {
@@ -6768,6 +6787,7 @@ void MyFrame::OnLocEdit(wxCommandEvent& WXUNUSED(event)) {
 	}
 	loc_tree->Build();
 	LocTreeReset();
+	AutoBackup();
 }
 
 void MyFrame::OnLoginToLogbook(wxCommandEvent& WXUNUSED(event)) {
@@ -6905,6 +6925,7 @@ CertPropDial::CertPropDial(tQSL_Cert cert, wxWindow *parent)
 		}
 
 		char buf[128] = "";
+		tQSL_Date certExpDate;
 		tQSL_Date date;
 		DXCC DXCC;
 		int dxcc;
@@ -6919,8 +6940,8 @@ CertPropDial::CertPropDial(tQSL_Cert cert, wxWindow *parent)
 			case 1:
 				if (keyonly)
 					strncpy(buf, "N/A", sizeof buf);
-				else if (!tqsl_getCertificateNotAfterDate(cert, &date))
-					tqsl_convertDateToText(&date, buf, sizeof buf);
+				else if (!tqsl_getCertificateNotAfterDate(cert, &certExpDate))
+					tqsl_convertDateToText(&certExpDate, buf, sizeof buf);
 				break;
 			case 2:
 				tqsl_getCertificateIssuerOrganization(cert, buf, sizeof buf);
@@ -6956,8 +6977,20 @@ CertPropDial::CertPropDial(tQSL_Cert cert, wxWindow *parent)
 					tqsl_convertDateToText(&date, buf, sizeof buf);
 				break;
 			case 9:
-				if (!tqsl_getCertificateQSONotAfterDate(cert, &date))
-					tqsl_convertDateToText(&date, buf, sizeof buf);
+				if (!tqsl_getCertificateQSONotAfterDate(cert, &date)) {
+				// If no end-date given, the QSO End Date is one less than
+				// the expiration date
+					int delta;
+					if (!tqsl_subtractDates(&date, &certExpDate, &delta)) {
+						if (delta == 1) {
+							strncpy(buf, "N/A", sizeof buf);
+						} else {
+							tqsl_convertDateToText(&date, buf, sizeof buf);
+						}
+					} else {
+						tqsl_convertDateToText(&date, buf, sizeof buf);
+					}
+				}
 				break;
 			case 10:
 				switch (tqsl_getCertificatePrivateKeyType(cert)) {

@@ -1187,7 +1187,7 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 					case CERT_PRIMARY_CLUB:
 					case CERT_DXP_MULTIOP:
 					case CERT_EVENT_MULTIOP:
-						valMsg = wxString::Format(wxT("The callsign %s is not currently registered in the FCC ULS database as of %s.\nIf this is a newly registered call, you must wait at least one business day for it to be valid. Please enter a currently valid callsign."), callsign.c_str(), update.c_str());
+						valMsg = wxString::Format(_("The callsign %s is not currently registered in the FCC ULS database as of %s.\nIf this is a newly registered call, you must wait at least one business day for it to be valid. Please enter a currently valid callsign."), callsign.c_str(), update.c_str());
 					break;
 				}
 				break;
@@ -1276,7 +1276,7 @@ CRQ_NamePage::validate() {
 	// then this is an initial certificate and must match the FCC database. Say so.
 	//
 	if (!_parent->renewal && _parent->validusa && !_parent->validcerts) {
-		tc_status->SetLabel(wxT("This address must match the FCC ULS database.\nIf this address information is incorrect, please correct your FCC record."));
+		tc_status->SetLabel(_("This address must match the FCC ULS database.\nIf this address information is incorrect, please correct your FCC record."));
 		tc_name->Enable(false);
 		tc_addr1->Enable(false);
 		tc_addr2->Enable(false);

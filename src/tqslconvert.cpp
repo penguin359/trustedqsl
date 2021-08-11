@@ -1208,7 +1208,11 @@ static void parse_adif_qso(TQSL_CONVERTER *conv, int *saveErr, TQSL_ADIF_GET_FIE
 		} else if (!strcasecmp(result.name, "BAND_RX") && resdata) {
 			strncpy(conv->rec.rxband, resdata, sizeof conv->rec.rxband);
 		} else if (!strcasecmp(result.name, "SAT_NAME") && resdata) {
-			strncpy(conv->rec.satname, resdata, sizeof conv->rec.satname);
+			// Two-Line Elements (TLEs) call this AO-07, LoTW wants AO-7.
+			if (!strcasecmp(resdata, "AO-07"))
+				strncpy(conv->rec.satname, "AO-7", sizeof conv->rec.satname);
+			else
+				strncpy(conv->rec.satname, resdata, sizeof conv->rec.satname);
 		} else if (!strcasecmp(result.name, "PROP_MODE") && resdata) {
 			strncpy(conv->rec.propmode, resdata, sizeof conv->rec.propmode);
 		} else if (!strcasecmp(result.name, "QSO_DATE") && resdata) {
@@ -1318,7 +1322,11 @@ static int check_station(TQSL_CONVERTER *conv, const char *field, char *my, size
 		oblastFixed = true;
 		strncpy(my, "JA", len);
 	}
-
+	// RU_OBLAST can be YN but TQSL lookup expects JN
+	if (!strcasecmp(field, "RU_OBLAST") && !strcasecmp(my, "YN")) {
+		oblastFixed = true;
+		strncpy(my, "JN", len);
+	}
 
 	if (my[0] && !tqsl_getLocationField(conv->loc, field, val, sizeof val) &&
 		     !tqsl_getLocationFieldLabel(conv->loc, field, label, sizeof label)) {

@@ -1,9 +1,27 @@
 TQSL changes
 ============
+2.5.8
+----------
+Add Chinese (Simplified) translation from SZE-TO, VR2UPU.
+
+For Station Locations in places where there's only one CQ or ITU zone
+value possible, don't allow a choice.
+
+Add missed callsign certificate messages to those that can be translated.
+
+Correct last QSO date information when displaying callsign certificate
+properties. When there's no end date, report the date of the last QSO
+that can be signed.
+
+Verify the format of IOTA entries.
+
+Create a TQSL backup automatically when new Station Locations are added or edited.
+
 2.5.7
 ----------
 Correct a crash when TQSL attempts to upload a file caused by a thread
 accessing the GUI incorrectly.
+
 
 2.5.6
 ----------

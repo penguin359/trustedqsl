@@ -1,4 +1,4 @@
-<tqslconfig majorversion="11" minorversion="13">
+<tqslconfig majorversion="11" minorversion="14">
      <adifmap>
        <adifmode adif-mode="AM" mode="AM">AM</adifmode>
        <adifmode adif-mode="ARDOP" mode="ARDOP">ARDOP</adifmode>
@@ -75,6 +75,7 @@
        <adifmode adif-mode="MFSK" adif-submode="MFSK4" mode="DATA">MFSK4</adifmode>
        <adifmode adif-mode="MFSK" adif-submode="MFSK64" mode="DATA">MFSK64</adifmode>
        <adifmode adif-mode="MFSK" adif-submode="MFSK8" mode="MFSK8">MFSK8</adifmode>
+       <adifmode adif-mode="MFSK" adif-submode="Q65" mode="Q65">Q65</adifmode>
        <adifmode adif-mode="MFSK" mode="DATA">MFSK</adifmode>
        <adifmode adif-mode="MSK144" mode="MSK144">MSK144</adifmode>
        <adifmode adif-mode="MT63" mode="MT63">MT63</adifmode>
@@ -806,7 +807,7 @@
        </field>
        <field Id="FI_KUNTA" dependsOn="DXCC" flags="4" intype="2" label="Kunta" len="3" type="C">
          <enums dependency="167">
-           <enum value="6" zonemap="18:015">Hammarland</enum>
+           <enum value="6" zonemap="18:15">Hammarland</enum>
          </enums>
          <enums dependency="224">
            <enum area="1" value="100" zonemap="18:15">Somero</enum>
@@ -3243,7 +3244,7 @@
            <enum value="KS" zonemap="29:16">Kostromskaya oblast&apos; (Kostroma Oblast)</enum>
            <enum value="KU" zonemap="29:16">Kurskaya oblast&apos; (Kursk Oblast)</enum>
            <enum value="LO" zonemap="19:16,29:16">Leningradskaya oblast&apos; (Leningrad Oblast)</enum>
-           <enum value="LP" zonemap="29:16">Liptesk Oblast (Lipetskaya oblast&apos;)</enum>
+           <enum value="LP" zonemap="29:16">Lipetsk Oblast (Lipetskaya oblast&apos;)</enum>
            <enum value="MA" zonemap="29:16">Moskva (Moscow)</enum>
            <enum value="MD" zonemap="29:16">Respublika Mordoviya (Republic of Mordovia)</enum>
            <enum value="MO" zonemap="29:16">Moskovskaya oblast&apos; (Moscow Oblast)</enum>
@@ -7652,6 +7653,7 @@
        <mode group="DATA">PSKAM</mode>
        <mode group="DATA">PSKFEC31</mode>
        <mode group="DATA">Q15</mode>
+       <mode group="DATA">Q65</mode>
        <mode group="DATA">QRA64</mode>
        <mode group="DATA">ROS</mode>
        <mode group="DATA">RTTY</mode>
