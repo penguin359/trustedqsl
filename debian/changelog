@@ -1,3 +1,9 @@
+trustedqsl (2.5.8-1) experimental; urgency=medium
+
+  * New upstream version 2.5.8
+
+ -- tony mancill <tmancill@debian.org>  Tue, 10 Aug 2021 21:02:17 -0700
+
 trustedqsl (2.5.7-2) experimental; urgency=medium
 
   * Switch to LMDB; libdb is obsolete.
