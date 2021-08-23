@@ -1,3 +1,10 @@
+trustedqsl (2.5.8-3) UNRELEASED; urgency=medium
+
+  * Retire Kamal, Jaime, Patrick, Jerry, and Colin from Uploaders.
+    (Closes: #990593)
+
+ -- Christoph Berg <myon@debian.org>  Mon, 23 Aug 2021 09:08:27 +0200
+
 trustedqsl (2.5.8-2) unstable; urgency=medium
 
   * Upload to unstable.
