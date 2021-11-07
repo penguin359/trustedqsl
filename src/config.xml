@@ -1,4 +1,4 @@
-<tqslconfig majorversion="11" minorversion="14">
+<tqslconfig majorversion="11" minorversion="15">
      <adifmap>
        <adifmode adif-mode="AM" mode="AM">AM</adifmode>
        <adifmode adif-mode="ARDOP" mode="ARDOP">ARDOP</adifmode>
@@ -7695,6 +7695,7 @@
      <satellites>
        <satellite name="AISAT1" startDate="2019-04-07">AISAT-1 AMSAT India APRS Digipeater</satellite>
        <satellite name="AO-10" startDate="1983-06-16">AMSAT-OSCAR 10</satellite>
+       <satellite name="AO-109" startDate="2021-07-20">AMSAT-OSCAR 109</satellite>
        <satellite endDate="1996-12-07" name="AO-13" startDate="1988-06-15">AMSAT-OSCAR 13</satellite>
        <satellite name="AO-16" startDate="1990-01-22">AMSAT-OSCAR 16</satellite>
        <satellite endDate="1994-09-16" name="AO-21" startDate="1991-01-29">OSCAR 21/RS-14</satellite>
@@ -7763,6 +7764,7 @@
        <satellite name="TO-108" startDate="2019-12-20">TQ-OSCAR 108 (CAS-6 / TQ-1)</satellite>
        <satellite name="UKUBE1" startDate="2016-06-01">UKube-1 (FUNcube-2)</satellite>
        <satellite name="UO-14" startDate="1990-01-22">UOSAT-OSCAR 14</satellite>
+       <satellite name="UVSQ" startDate="2021-03-05">CubeSat</satellite>
        <satellite endDate="2014-07-11" name="VO-52" startDate="2005-05-05">VUsat-OSCAR 52</satellite>
        <satellite name="XW-2A" startDate="2015-09-18">Hope 2A (CAS-3A)</satellite>
        <satellite name="XW-2B" startDate="2015-09-18">Hope 2B (CAS-3B)</satellite>

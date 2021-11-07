@@ -3,6 +3,9 @@ TQSLLIB changes
 
 2.5
 ---
+Correct list of ADIF type specifiers. TQSL was expecting "C" when "S" is
+the correct specifier for a String field.
+
 Accept "AO-07" for Satellite AO-7.
 
 Fix handling of Oblast "YN" where LoTW uses an incorrect "JN" abbreviation

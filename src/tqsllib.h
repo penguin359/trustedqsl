@@ -25,6 +25,7 @@
 	#define DLLEXPORT	///< Symbol exports - Windows only
 	#define DLLEXPORTDATA	///< Symbol exports - Windows only
 	#define CALLCONVENTION	///< Symbol exports - Windows only
+	#include <limits.h>
 #endif
 
 #include "adif.h"
@@ -34,8 +35,12 @@
   * tQSL library functions.
   */
 
+#ifndef PATH_MAX				// Should be set by <limits.h>
+#define PATH_MAX 4096
+#endif
+
 /* Sizes */
-#define TQSL_MAX_PATH_LEN            256	///< Max length of a FS path
+#define TQSL_MAX_PATH_LEN            PATH_MAX 	///< Max length of a FS path
 #define TQSL_PASSWORD_MAX            80		///< Max password length
 #define TQSL_NAME_ELEMENT_MAX        256	///< Max Org name length
 #define TQSL_CALLSIGN_MAX            20		///< Max callsign length
@@ -177,7 +182,7 @@ DLLEXPORTDATA extern TQSL_ADIF_GET_FIELD_ERROR tQSL_ADIF_Error;
 /// The ADIF error code
 DLLEXPORTDATA extern TQSL_CABRILLO_ERROR_TYPE tQSL_Cabrillo_Error;
 /// File name of file giving error. (May be empty.)
-DLLEXPORTDATA extern char tQSL_ErrorFile[256];
+DLLEXPORTDATA extern char tQSL_ErrorFile[TQSL_MAX_PATH_LEN];
 /// Custom error message string
 DLLEXPORTDATA extern char tQSL_CustomError[256];
 /// System errno - stored when tQSL_Error == TQSL_SYSTEM_ERROR

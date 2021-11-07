@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?define UpgradeCode = "BA40FA93-F9D6-44E2-BB81-82B0A676E731" ?>
 <?define BadUpgradeCode = "BA40FA94-F9D6-44E2-BB81-82B0A676E741" ?>
-<?define tqslVersion = "2.5.8" ?>
+<?define tqslVersion = "2.5.9" ?>
 <?define beta = "" ?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -52,7 +52,6 @@
               <RegistryValue Name="InstallPath" Value="[APPLICATIONFOLDER]" Type="string"/>
               <RegistryValue Name="HelpDir" Value="[APPLICATIONFOLDER]help" Type="string"/>
             </RegistryKey>
-            <RegistryValue Root="HKLM" Key="Software\TrustedQSL\TQSL" Name="InstallPath" Value="[APPLICATIONFOLDER]" Type="string"/>
           </Component>
 
 	  <Component Id="QuickStartComp" Guid="B3A4DC55-D157-4700-9282-A62330091566">
