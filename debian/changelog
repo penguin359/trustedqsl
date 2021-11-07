@@ -1,9 +1,15 @@
-trustedqsl (2.5.8-3) UNRELEASED; urgency=medium
+trustedqsl (2.5.9-1) unstable; urgency=medium
 
+  [ Christoph Berg ]
   * Retire Kamal, Jaime, Patrick, Jerry, and Colin from Uploaders.
     (Closes: #990593)
 
- -- Christoph Berg <myon@debian.org>  Mon, 23 Aug 2021 09:08:27 +0200
+  [ tony mancill ]
+  * New upstream version 2.5.9
+  * Bump Standards-Version to 4.6.0
+  * Update patches for new upstream release.
+
+ -- tony mancill <tmancill@debian.org>  Sun, 07 Nov 2021 15:41:26 -0800
 
 trustedqsl (2.5.8-2) unstable; urgency=medium
 
