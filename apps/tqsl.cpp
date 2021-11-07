@@ -650,6 +650,7 @@ init_modes() {
 	bool stat = config->GetFirstEntry(key, cookie);
 	while (stat) {
 		value = config->Read(key, wxT(""));
+		key.Replace(wxT("!SLASH!"), wxT("/"), true);	// Fix slashes in modes
 		bool newMode = true;
 		int numModes;
 		if (tqsl_getNumMode(&numModes) == 0) {
@@ -1210,7 +1211,8 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 
 	notebook = new wxNotebook(topPanel, -1, wxDefaultPosition, wxSize(400, 300), wxNB_TOP /* | wxNB_FIXEDWIDTH*/, _("Log Operations"));
 
-	notebook->SetBackgroundColour(wxColour(255, 255, 255));
+	wxColor defBkg = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW);
+	notebook->SetBackgroundColour(defBkg);
 	topSizer->Add(notebook, 1, wxEXPAND | wxALL, 1);
 
 	if (!logTab) {
@@ -1222,13 +1224,13 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	}
 
 	wxPanel* buttons = new wxPanel(notebook, -1);
-	buttons->SetBackgroundColour(wxColour(255, 255, 255));
+	buttons->SetBackgroundColour(defBkg);
 
 	wxBoxSizer* bsizer = new wxBoxSizer(wxVERTICAL);
 	buttons->SetSizer(bsizer);
 
 	wxPanel* b1Panel = new wxPanel(buttons);
-	b1Panel->SetBackgroundColour(wxColour(255, 255, 255));
+	b1Panel->SetBackgroundColour(defBkg);
 	wxBoxSizer* b1sizer = new wxBoxSizer(wxHORIZONTAL);
 	b1Panel->SetSizer(b1sizer);
 
@@ -1249,8 +1251,8 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	bsizer->Add(b1Panel, 0, wxALL, 1);
 
 	wxPanel* b2Panel = new wxPanel(buttons);
+	b2Panel->SetBackgroundColour(defBkg);
 	wxBoxSizer* b2sizer = new wxBoxSizer(wxHORIZONTAL);
-	b2Panel->SetBackgroundColour(wxColour(255, 255, 255));
 	b2Panel->SetSizer(b2sizer);
 	wxBitmapButton *signsave = new wxBitmapButton(b2Panel, tl_Save, savebm);
 	signsave->SetLabel(_("Sign a log and save it for uploading later"));
@@ -1265,8 +1267,8 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	bsizer->Add(b2Panel, 0, wxALL, 1);
 
 	wxPanel* b3Panel = new wxPanel(buttons);
+	b3Panel->SetBackgroundColour(defBkg);
 	wxBoxSizer* b3sizer = new wxBoxSizer(wxHORIZONTAL);
-	b3Panel->SetBackgroundColour(wxColour(255, 255, 255));
 	b3Panel->SetSizer(b3sizer);
 	wxBitmapButton *fed = new wxBitmapButton(b3Panel, tl_Edit, file_editbm);
 	fed->SetBitmapDisabled(file_edit_disbm);
@@ -1282,8 +1284,8 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	bsizer->Add(b3Panel, 0, wxALL, 1);
 
 	wxPanel* b4Panel = new wxPanel(buttons);
+	b4Panel->SetBackgroundColour(defBkg);
 	wxBoxSizer* b4sizer = new wxBoxSizer(wxHORIZONTAL);
-	b4Panel->SetBackgroundColour(wxColour(255, 255, 255));
 	b4Panel->SetSizer(b4sizer);
 	wxBitmapButton *lotw = new wxBitmapButton(b4Panel, tl_Login, lotwbm);
 	lotw->SetLabel(_("Log in to the Logbook of the World Site"));
@@ -1309,14 +1311,14 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	loctab->SetSizer(locsizer);
 
 	wxPanel* locgrid = new wxPanel(loctab, -1);
-	locgrid->SetBackgroundColour(wxColour(255, 255, 255));
+	locgrid->SetBackgroundColour(defBkg);
 	wxBoxSizer* lgsizer = new wxBoxSizer(wxVERTICAL);
 	locgrid->SetSizer(lgsizer);
 
 	loc_tree = new LocTree(locgrid, tc_LocTree, wxDefaultPosition,
 		wxDefaultSize, wxTR_DEFAULT_STYLE | wxBORDER_NONE);
 
-	loc_tree->SetBackgroundColour(wxColour(255, 255, 255));
+	loc_tree->SetBackgroundColour(defBkg);
 	loc_tree->Build();
 	LocTreeReset();
 	lgsizer->Add(loc_tree, 1, wxEXPAND);
@@ -1332,13 +1334,13 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	locsizer->Add(locsep, 0, wxEXPAND);
 
 	wxPanel* lbuttons = new wxPanel(loctab, -1);
-	lbuttons->SetBackgroundColour(wxColour(255, 255, 255));
+	lbuttons->SetBackgroundColour(defBkg);
 	locsizer->Add(lbuttons, 50, wxEXPAND);
 	wxBoxSizer* lbsizer = new wxBoxSizer(wxVERTICAL);
 	lbuttons->SetSizer(lbsizer);
 
 	wxPanel* lb1Panel = new wxPanel(lbuttons);
-	lb1Panel->SetBackgroundColour(wxColour(255, 255, 255));
+	lb1Panel->SetBackgroundColour(defBkg);
 	wxBoxSizer* lb1sizer = new wxBoxSizer(wxHORIZONTAL);
 	lb1Panel->SetSizer(lb1sizer);
 
@@ -1358,7 +1360,7 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	loc_add_button->SetLabel(lal);
 
 	wxPanel* lb2Panel = new wxPanel(lbuttons);
-	lb2Panel->SetBackgroundColour(wxColour(255, 255, 255));
+	lb2Panel->SetBackgroundColour(defBkg);
 	wxBoxSizer* lb2sizer = new wxBoxSizer(wxHORIZONTAL);
 	lb2Panel->SetSizer(lb2sizer);
 
@@ -1374,7 +1376,7 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	lbsizer->Add(lb2Panel, 0, wxALL, 1);
 
 	wxPanel* lb3Panel = new wxPanel(lbuttons);
-	lb3Panel->SetBackgroundColour(wxColour(255, 255, 255));
+	lb3Panel->SetBackgroundColour(defBkg);
 	wxBoxSizer* lb3sizer = new wxBoxSizer(wxHORIZONTAL);
 	lb3Panel->SetSizer(lb3sizer);
 
@@ -1390,7 +1392,7 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	lbsizer->Add(lb3Panel, 0, wxALL, 1);
 
 	wxPanel* lb4Panel = new wxPanel(lbuttons);
-	lb4Panel->SetBackgroundColour(wxColour(255, 255, 255));
+	lb4Panel->SetBackgroundColour(defBkg);
 	wxBoxSizer* lb4sizer = new wxBoxSizer(wxHORIZONTAL);
 	lb4Panel->SetSizer(lb4sizer);
 
@@ -1415,14 +1417,14 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	certtab->SetSizer(certsizer);
 
 	wxPanel* certgrid = new wxPanel(certtab, -1);
-	certgrid->SetBackgroundColour(wxColour(255, 255, 255));
+	certgrid->SetBackgroundColour(defBkg);
 	wxBoxSizer* cgsizer = new wxBoxSizer(wxVERTICAL);
 	certgrid->SetSizer(cgsizer);
 
 	cert_tree = new CertTree(certgrid, tc_CertTree, wxDefaultPosition,
 		wxDefaultSize, wxTR_DEFAULT_STYLE | wxBORDER_NONE); //wxTR_HAS_BUTTONS | wxSUNKEN_BORDER);
 
-	cert_tree->SetBackgroundColour(wxColour(255, 255, 255));
+	cert_tree->SetBackgroundColour(defBkg);
 	cgsizer->Add(cert_tree, 1, wxEXPAND);
 
 	wxString csq = wxT("\n");
@@ -1436,14 +1438,14 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	certsizer->Add(certsep, 0, wxEXPAND);
 
 	wxPanel* cbuttons = new wxPanel(certtab, -1);
-	cbuttons->SetBackgroundColour(wxColour(255, 255, 255));
+	cbuttons->SetBackgroundColour(defBkg);
 	certsizer->Add(cbuttons, 50, wxEXPAND, 0);
 
 	wxBoxSizer* cbsizer = new wxBoxSizer(wxVERTICAL);
 	cbuttons->SetSizer(cbsizer);
 
 	wxPanel* cb1Panel = new wxPanel(cbuttons);
-	cb1Panel->SetBackgroundColour(wxColour(255, 255, 255));
+	cb1Panel->SetBackgroundColour(defBkg);
 	wxBoxSizer* cb1sizer = new wxBoxSizer(wxHORIZONTAL);
 	cb1Panel->SetSizer(cb1sizer);
 
@@ -1459,7 +1461,7 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	cbsizer->Add(cb1Panel, 0, wxALL, 1);
 
 	wxPanel* cb2Panel = new wxPanel(cbuttons);
-	cb2Panel->SetBackgroundColour(wxColour(255, 255, 255));
+	cb2Panel->SetBackgroundColour(defBkg);
 	wxBoxSizer* cb2sizer = new wxBoxSizer(wxHORIZONTAL);
 	cb2Panel->SetSizer(cb2sizer);
 
@@ -1475,7 +1477,7 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	cbsizer->Add(cb2Panel, 0, wxALL, 1);
 
 	wxPanel* cb3Panel = new wxPanel(cbuttons);
-	cb3Panel->SetBackgroundColour(wxColour(255, 255, 255));
+	cb3Panel->SetBackgroundColour(defBkg);
 	wxBoxSizer* cb3sizer = new wxBoxSizer(wxHORIZONTAL);
 	cb3Panel->SetSizer(cb3sizer);
 
@@ -1491,7 +1493,7 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	cbsizer->Add(cb3Panel, 0, wxALL, 1);
 
 	wxPanel* cb4Panel = new wxPanel(cbuttons);
-	cb4Panel->SetBackgroundColour(wxColour(255, 255, 255));
+	cb4Panel->SetBackgroundColour(defBkg);
 	wxBoxSizer* cb4sizer = new wxBoxSizer(wxHORIZONTAL);
 	cb4Panel->SetSizer(cb4sizer);
 
@@ -1576,7 +1578,7 @@ static wxString getAbout() {
 #ifdef OSX_PLATFORM
 	msg += wxT("\nBuilt for ") wxT(OSX_PLATFORM);
 #endif
-	msg += wxT("\n(c) 2001-2020 American Radio Relay League\n\n");
+	msg += wxT("\n(c) 2001-2021 American Radio Relay League\n\n");
 	int major, minor;
 	if (tqsl_getVersion(&major, &minor))
 		wxLogError(getLocalizedErrorString());
@@ -1604,7 +1606,7 @@ static wxString getAbout() {
 #endif
 	msg+=wxT("\n\n\nTranslators:\n");
 	msg+=wxT("Catalan: Xavier, EA3W\n");
-	msg+=wxT("Chinese (Simplfied): Caros, BH4TXN\n");
+	msg+=wxT("Chinese (Simplified): Caros, BH4TXN\n");
 	msg+=wxT("Chinese (Traditional): SZE-TO Wing, VR2UPU\n");
 	msg+=wxT("Finnish: Juhani Tapaninen, OH8MXL\n");
 	msg+=wxT("French: Laurent BEUGNET, F6GOX\n");
@@ -2615,7 +2617,7 @@ int MyFrame::UploadLogFile(tQSL_Location loc, const wxString& infile, bool compr
 		// and the curl form expects it to still be there during perform() so
 		// we have to do all this copying around to please the unicode gods
 
-		char filename[1024];
+		char filename[TQSL_MAX_PATH_LEN];
 		strncpy(filename, wxString::Format(wxT("<TQSLUpl %s-%s> %s"),
 			now.Format(wxT("%Y%m%d")).c_str(),
 			now.Format(wxT("%H%M")).c_str(),
@@ -2699,7 +2701,7 @@ tqsl_curl_init(const char *logTitle, const char *url, FILE **curlLogFile, bool n
 
 	wxString caBundlePath = docpaths.FindAbsoluteValidPath(wxT("ca-bundle.crt"));
 	if (!caBundlePath.IsEmpty()) {
-		char caBundle[256];
+		char caBundle[TQSL_MAX_PATH_LEN];
 		strncpy(caBundle, caBundlePath.ToUTF8(), sizeof caBundle);
 		curl_easy_setopt(curlReq, CURLOPT_CAINFO, caBundle);
 #if defined(_WIN32)
@@ -4595,6 +4597,7 @@ MyFrame::BackupConfig(const wxString& filename, bool quiet) {
 #endif
 		if (!out) {
 			wxLogError(_("Error opening save file %s: %hs"), filename.c_str(), strerror(errno));
+			unlock_db();
 			return;
 		}
 		TQSLConfig* conf = new TQSLConfig();
@@ -4766,6 +4769,7 @@ MyFrame::BackupConfig(const wxString& filename, bool quiet) {
 		}
 	}
 	catch(TQSLException& x) {
+		unlock_db();
 		if (out) gzclose(out);
 		if (quiet) {
 			wxString errmsg = wxString::Format(_("Error performing automatic backup: %hs"), x.what());
@@ -5237,7 +5241,7 @@ static wxArrayString langNames;
 static void
 initLang() {
 	if (langIds.size() == 0) {
-		char langfile[1024];
+		char langfile[TQSL_MAX_PATH_LEN];
 		FILE *lfp;
 #ifdef _WIN32
 		snprintf(langfile, sizeof langfile, "%s\\languages.dat", tQSL_RsrcDir);
@@ -5305,9 +5309,10 @@ QSLApp::OnInit() {
 	frame = 0;
 	long lng = -1;
 
+        wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
 #ifdef _WIN32
 	bool disa;
-	wxConfig::Get()->Read(wxT("DisableAdminCheck"), &disa, false);
+	config->Read(wxT("DisableAdminCheck"), &disa, false);
 	if (!disa && IsElevated(NULL) == S_OK) {
 		TOKEN_ELEVATION_TYPE tet = TokenElevationTypeDefault;
 		GetElevationType(&tet);
@@ -5330,7 +5335,7 @@ QSLApp::OnInit() {
 					case 1:
 						break;
 					case 2:
-						wxConfig::Get()->Write(wxT("DisableAdminCheck"), true);
+						config->Write(wxT("DisableAdminCheck"), true);
 						break;
 				}
 				break;
@@ -5345,15 +5350,16 @@ QSLApp::OnInit() {
 	}
 
 	initLang();
-	wxConfig::Get()->Read(wxT("Language"), &lng, wxLANGUAGE_UNKNOWN);
+	config->Read(wxT("Language"), &lng, wxLANGUAGE_UNKNOWN);
 	lang = (wxLanguage) lng;
 
 	if (lang == wxLANGUAGE_UNKNOWN) {
 		lang = wxLANGUAGE_DEFAULT;
 	}
 
-	if (lang == wxLANGUAGE_CHINESE) {
-		lang = wxLANGUAGE_CHINESE_TRADITIONAL;
+	// If this is (wx2) Chinese, map to Simplified
+	if (lang == 43) {			// wxLANGUAGE_CHINESE
+		lang = (wxLanguage) 44;		// wxLANGUAGE_CHINESE_SIMPLIFIED
 	}
 
 	for (lng = 0; (unsigned) lng < langIds.size(); lng++) {
@@ -5425,7 +5431,7 @@ QSLApp::OnInit() {
 	wxString locname;
 	bool suppressdate = false;
 	int action = TQSL_ACTION_UNSPEC;
-	int logverify = TQSL_LOC_REPORT;
+	int logverify;
 	bool upload = false;
 	char *password = NULL;
 	char *defcall = NULL;
@@ -5434,6 +5440,7 @@ QSLApp::OnInit() {
 	wxString importfile(wxT(""));
 	wxString diagfile(wxT(""));
 
+	config->Read(wxT("LogVerify"), &logverify, TQSL_LOC_REPORT);
 	wxCmdLineParser parser;
 
 #if wxMAJOR_VERSION > 2 || (wxMAJOR_VERSION == 2 && wxMINOR_VERSION == 9)
@@ -5767,14 +5774,14 @@ QSLApp::OnInit() {
 				}
 			} else {
 				wxString call = wxString::FromUTF8(tQSL_ImportCall);
-				wxString pending = wxConfig::Get()->Read(wxT("RequestPending"));
+				wxString pending = config->Read(wxT("RequestPending"));
 				pending.Replace(call, wxT(""), true);
 				wxString rest;
 				while (pending.StartsWith(wxT(","), &rest))
 					pending = rest;
 				while (pending.EndsWith(wxT(","), &rest))
 					pending = rest;
-				wxConfig::Get()->Write(wxT("RequestPending"), pending);
+				config->Write(wxT("RequestPending"), pending);
 				cert_cleanup();
 				frame->cert_tree->Build(CERTLIST_FLAGS);
 			}
@@ -5810,7 +5817,7 @@ QSLApp::OnInit() {
 	}
 
 	bool editAdif = DEFAULT_ADIF_EDIT;
-	wxConfig::Get()->Read(wxT("AdifEdit"), &editAdif, DEFAULT_ADIF_EDIT);
+	config->Read(wxT("AdifEdit"), &editAdif, DEFAULT_ADIF_EDIT);
 
 	// If it's an ADIF file, invoke the editor if that's the only argument
 	// unless we're running in batch mode
@@ -6924,12 +6931,13 @@ CertPropDial::CertPropDial(tQSL_Cert cert, wxWindow *parent)
 			lbl += wxT(" ");
 		}
 
-		char buf[128] = "";
+		char buf[128];
 		tQSL_Date certExpDate;
 		tQSL_Date date;
 		DXCC DXCC;
 		int dxcc;
 		long serial;
+		buf[0] = '\0';
 		switch (i) {
 			case 0:
 				if (keyonly)

@@ -462,7 +462,7 @@ find_matching_cert(TQSL_CONVERTER *conv, int targetdxcc, bool *anyfound) {
 	return -1;
 }
 
-static const char *notypes[] = { "D", "T", "M", "N", "C", "" };
+static const char *notypes[] = { "D", "T", "M", "C", "N", "S", "B", "E", "L", "" };	// "C" is ADIF 1.0 for "S"; also "I" and "G" in ADIX
 
 static const char *
 tqsl_infer_band(const char* infreq) {

@@ -198,6 +198,7 @@ void ModeMap::SetModeList() {
 	bool stat = config->GetFirstEntry(key, cookie);
 	while (stat) {
 		value = config->Read(key, wxT(""));
+		key.Replace(wxT("!SLASH!"), wxT("/"), true); // Fix slashes in modes
 		modemap.insert(make_pair(key, value));
 		stat = config->GetNextEntry(key, cookie);
 	}
@@ -215,6 +216,7 @@ void ModeMap::OnDelete(wxCommandEvent &) {
 	int sel = map->GetSelection();
 	if (sel >= 0) {
 		wxString* keystr = reinterpret_cast<wxString*>(map->GetClientData(sel));
+		keystr->Replace(wxT("/"), wxT("!SLASH!"), true); // Fix slashes in modes
 		if (!keystr->IsEmpty()) {
 			wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
 			config->SetPath(wxT("/modeMap"));
@@ -232,7 +234,9 @@ void ModeMap::OnAdd(wxCommandEvent &) {
 	if (val == ID_OK_BUT && !add_dial.key.IsEmpty() && !add_dial.value.IsEmpty()) {
 		wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
 		config->SetPath(wxT("/modeMap"));
-		config->Write(add_dial.key, add_dial.value);
+		wxString key(add_dial.key);
+		key.Replace(wxT("/"), wxT("!SLASH!"), true); // Fix slashes in modes
+		config->Write(key, add_dial.value);
 		config->Flush(false);
 		SetModeList();
 	}

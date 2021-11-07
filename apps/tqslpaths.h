@@ -24,6 +24,8 @@
 	#include <windows.h>
 #endif
 
+#include "tqsllib.h"
+
 class DocPaths : public wxPathList {
  public:
 	explicit DocPaths(wxString subdir) : wxPathList() {
@@ -37,7 +39,7 @@ class DocPaths : public wxPathList {
 		if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"Software\\TrustedQSL",
 			0, KEY_READ, &hkey) == ERROR_SUCCESS) {
 			DWORD dtype;
-			char path[256];
+			char path[TQSL_MAX_PATH_LEN];
 			DWORD bsize = sizeof path;
 			if (RegQueryValueEx(hkey, L"HelpDir", 0, &dtype, (LPBYTE)path, &bsize)
 				== ERROR_SUCCESS) {

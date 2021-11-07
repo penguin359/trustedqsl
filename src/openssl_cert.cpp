@@ -466,7 +466,7 @@ tqsl_createCertRequest(const char *filename, TQSL_CERT_REQ *userreq,
 	BIO *bio = NULL;
 	const EVP_MD *digest = NULL;
 	char buf[200];
-	char path[256];
+	char path[TQSL_MAX_PATH_LEN];
 	char *cp;
 	const EVP_CIPHER *cipher = NULL;
 	char *password;
@@ -857,7 +857,7 @@ tqsl_isCertificateExpired(tQSL_Cert cert, int *status) {
 static TQSL_X509_STACK *xcerts = NULL;
 DLLEXPORT int CALLCONVENTION
 tqsl_isCertificateSuperceded(tQSL_Cert cert, int *status) {
-	char path[256];
+	char path[TQSL_MAX_PATH_LEN];
 	int i;
 	X509 *x = NULL;
 	char *cp;
@@ -947,7 +947,7 @@ tqsl_selectCertificates(tQSL_Cert **certlist, int *ncerts,
 	const char *callsign, int dxcc, const tQSL_Date *date, const TQSL_PROVIDER *issuer, int flags) {
 	int withkeys = flags & TQSL_SELECT_CERT_WITHKEYS;
 	TQSL_X509_STACK *selcerts = NULL;
-	char path[256];
+	char path[TQSL_MAX_PATH_LEN];
 	int i;
 	X509 *x;
 	int rval = 1;
@@ -1152,7 +1152,7 @@ DLLEXPORT int CALLCONVENTION
 tqsl_selectCACertificates(tQSL_Cert **certlist, int *ncerts, const char *type) {
 	TQSL_X509_STACK *cacerts = NULL;
 	int rval = 1;
-	char path[256];
+	char path[TQSL_MAX_PATH_LEN];
 	int i;
 	X509 *x;
 	tqsl_cert *cp;
@@ -2298,7 +2298,7 @@ static int
 tqsl_exportPKCS12(tQSL_Cert cert, bool returnB64, const char *filename, char *base64, int b64len, const char *p12password) {
 	STACK_OF(X509) *root_sk = 0, *ca_sk = 0, *chain = 0;
 	const char *cp;
-	char rootpath[256], capath[256];
+	char rootpath[TQSL_MAX_PATH_LEN], capath[TQSL_MAX_PATH_LEN];
 	char buf[256];
 	unsigned char keyid[EVP_MAX_MD_SIZE];
 	unsigned int keyidlen = 0;
@@ -2685,7 +2685,7 @@ tqsl_importPKCS12(bool importB64, const char *filename, const char *base64, cons
 	map<string, string> key_attr;
 	map<string, string> newrecord;
 	map<string, string>::iterator mit;
-	char path[256], pw[256];
+	char path[TQSL_MAX_PATH_LEN], pw[256];
 	int rval = 1;
 
 	tqslTrace("tqsl_importPKCS12", NULL);
@@ -3026,7 +3026,7 @@ tqsl_importPKCS12(bool importB64, const char *filename, const char *base64, cons
 				rval = 1;		// Remember failure to import
 				continue;
 			}
-			char savepath[1024], badpath[1024];
+			char savepath[TQSL_MAX_PATH_LEN], badpath[TQSL_MAX_PATH_LEN];
 			strncpy(badpath, path, sizeof(badpath));
 			strncat(badpath, ".bad", sizeof(badpath)-strlen(badpath)-1);
 			badpath[sizeof(badpath)-1] = '\0';
@@ -3121,10 +3121,7 @@ tqsl_backup_cert(tQSL_Cert cert) {
 		tqsl_getCertificateSerial(cert, &serial);
 	tqsl_getCertificateDXCCEntity(cert, &dxcc);
 
-#ifndef PATH_MAX
-#define PATH_MAX 1024
-#endif
-	char backupPath[PATH_MAX];
+	char backupPath[TQSL_MAX_PATH_LEN];
 	tqsl_make_backup_path(callsign, backupPath, sizeof backupPath);
 
 	FILE* out = NULL;
@@ -3268,7 +3265,7 @@ tqsl_deleteCertificate(tQSL_Cert cert) {
 	}
 
 	tqsl_backup_cert(cert);
-	char callsign[256], path[256], newpath[256];
+	char callsign[256], path[TQSL_MAX_PATH_LEN], newpath[TQSL_MAX_PATH_LEN];
 	if (tqsl_getCertificateCallSign(cert, callsign, sizeof callsign)) {
 		tqslTrace("tqsl_deleteCertificate", "no callsign %d", tQSL_Error);
 		return 1;
@@ -3431,7 +3428,7 @@ tqsl_freeDeletedCertificateList(char **list, int nloc) {
 DLLEXPORT int CALLCONVENTION
 tqsl_restoreCallsignCertificate(const char *callsign) {
 	tqslTrace("tqsl_restoreCallsignCertificate", "callsign = %s", callsign);
-	char backupPath[PATH_MAX];
+	char backupPath[TQSL_MAX_PATH_LEN];
 	tqsl_make_backup_path(callsign, backupPath, sizeof backupPath);
 
 	XMLElement xel;
@@ -4001,7 +3998,7 @@ tqsl_cert_get_subject_name_entry(X509 *cert, const char *obj_name, TQSL_X509_NAM
  */
 CLIENT_STATIC int
 tqsl_init_random() {
-	char fname[256];
+	char fname[TQSL_MAX_PATH_LEN];
 	static int initialized = 0;
 
 	if (initialized)
@@ -4298,7 +4295,7 @@ tqsl_ssl_error_is_nofile() {
 static int
 tqsl_handle_ca_cert(const char *pem, X509 *x, int (*cb)(int, const char *, void *), void *userdata) {
 	STACK_OF(X509) *root_sk;
-	char rootpath[256];
+	char rootpath[TQSL_MAX_PATH_LEN];
 	const char *cp;
 
 	tqsl_make_cert_path("root", rootpath, sizeof rootpath);
@@ -4322,7 +4319,7 @@ tqsl_handle_ca_cert(const char *pem, X509 *x, int (*cb)(int, const char *, void 
 static int
 tqsl_handle_user_cert(const char *cpem, X509 *x, int (*cb)(int, const char *, void *), void *userdata) {
 	STACK_OF(X509) *root_sk, *ca_sk;
-	char rootpath[256], capath[256];
+	char rootpath[TQSL_MAX_PATH_LEN], capath[TQSL_MAX_PATH_LEN];
 	char pem[sizeof tqsl_static_buf];
 	const char *cp;
 
@@ -4370,7 +4367,7 @@ CLIENT_STATIC int
 tqsl_store_cert(const char *pem, X509 *cert, const char *certfile, int type, bool force,
 	int (*cb)(int, const char *, void *), void *userdata) {
 	STACK_OF(X509) *sk;
-	char path[256];
+	char path[TQSL_MAX_PATH_LEN];
 	char issuer[256];
 	char name[256];
 	char value[256];
@@ -4666,8 +4663,8 @@ tqsl_close_key_file(void) {
 
 static int
 tqsl_replace_key(const char *callsign, const char *path, map<string, string>& newfields, int (*cb)(int, const char *, void *), void *userdata) {
-	char newpath[300];
-	char savepath[300];
+	char newpath[TQSL_MAX_PATH_LEN];
+	char savepath[TQSL_MAX_PATH_LEN];
 #ifdef _WIN32
 	wchar_t* wnewpath = NULL;
 #endif
@@ -4888,7 +4885,7 @@ tqsl_unlock_key(const char *pem, EVP_PKEY **keyp, const char *password, int (*cb
 
 static int
 tqsl_find_matching_key(X509 *cert, EVP_PKEY **keyp, TQSL_CERT_REQ **crq, const char *password, int (*cb)(char *, int, void *), void *userdata) {
-	char path[256];
+	char path[TQSL_MAX_PATH_LEN];
 	char aro[256];
 	TQSL_X509_NAME_ITEM item = { path, sizeof path, aro, sizeof aro };
 	EVP_PKEY *cert_key = NULL;
@@ -5430,8 +5427,8 @@ tqsl_setCertificateStatus(long serial, const char *status) {
 
 static int
 tqsl_clear_deleted(const char *callsign, const char *path, EVP_PKEY *cert_key) {
-	char newpath[300];
-	char savepath[300];
+	char newpath[TQSL_MAX_PATH_LEN];
+	char savepath[TQSL_MAX_PATH_LEN];
 #ifdef _WIN32
 	wchar_t* wnewpath = NULL;
 #endif
@@ -5576,7 +5573,7 @@ tqsl_key_exists(const char *callsign, EVP_PKEY *cert_key) {
 	EVP_PKEY *key = NULL;
 	BIO *bio = 0;
 	int rval = 0;
-	char path[256];
+	char path[TQSL_MAX_PATH_LEN];
 
 	if (!tqsl_make_key_path(callsign, path, sizeof path)) {
 		tqslTrace("tqsl_createCertRequest", "make_key_path error %d", errno);
@@ -5622,7 +5619,7 @@ tqsl_saveCallsignLocationInfo(const char *callsign, const char *json) {
 		return 1;
 	}
 	char fixcall[256];
-	char path[PATH_MAX];
+	char path[TQSL_MAX_PATH_LEN];
 	size_t size = sizeof path;
 
 	tqsl_clean_call(callsign, fixcall, sizeof fixcall);
@@ -5686,7 +5683,7 @@ tqsl_getCallsignLocationInfo(const char *callsign, char **buf) {
 		return 1;
 	}
 	char fixcall[256];
-	char path[PATH_MAX];
+	char path[TQSL_MAX_PATH_LEN];
 	size_t size = sizeof path;
 
 	tqsl_clean_call(callsign, fixcall, sizeof fixcall);

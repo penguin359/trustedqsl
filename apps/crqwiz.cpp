@@ -815,7 +815,7 @@ CRQ_SignPage::CRQ_SignPage(CRQWiz *parent, TQSL_CERT_REQ *crq)
 	cert_tree = new CertTree(this, ID_CRQ_CERT, wxDefaultPosition,
 		wxSize(em_w*30, em_h*10), wxTR_HAS_BUTTONS | wxSUNKEN_BORDER);
 	sizer->Add(cert_tree, 0, wxLEFT|wxRIGHT|wxBOTTOM|wxEXPAND);
-	cert_tree->SetBackgroundColour(wxColour(255, 255, 255));
+	cert_tree->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
 	sizer->Add(tc_status, 0, wxALL|wxEXPAND, 10);
 	// Default to 'signed' unless there's no valid certificates to use for signing.
 	if (cert_tree->Build(0, &(_parent->provider)) > 0) {

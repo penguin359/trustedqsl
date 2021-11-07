@@ -1,8 +1,21 @@
 TQSL changes
 ============
+2.5.9
+----------
+Fix problem that caused the TQSL preference for log handling to be ignored for
+command-line operations and forced to "Report" handling.
+
+Allow slashes in ADIF mode maps.
+
+Remove forced background settings, allowing colors to default to system
+settings.
+
+Correct Chinese translation variants so Traditional and Simplified use the
+right files.
+
 2.5.8
 ----------
-Add Chinese (Simplified) translation from SZE-TO, VR2UPU.
+Add Chinese (Traditional) translation from SZE-TO, VR2UPU.
 
 For Station Locations in places where there's only one CQ or ITU zone
 value possible, don't allow a choice.
