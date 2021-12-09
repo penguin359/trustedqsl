@@ -1,2 +1,3 @@
 01-install-libtqsllib-so-in-usr-lib-trustedqsl.patch
 02-typos.patch
+openssl3.patch
