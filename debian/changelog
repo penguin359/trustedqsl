@@ -1,3 +1,9 @@
+trustedqsl (2.5.9-2) unstable; urgency=medium
+
+  * Add patch for compatibility with OpenSSL 3 (Closes: #1001358)
+
+ -- tony mancill <tmancill@debian.org>  Wed, 08 Dec 2021 18:56:31 -0800
+
 trustedqsl (2.5.9-1) unstable; urgency=medium
 
   [ Christoph Berg ]
