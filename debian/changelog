@@ -1,7 +1,8 @@
-trustedqsl (2.6.2-1) UNRELEASED; urgency=medium
+trustedqsl (2.6.2-1) unstable; urgency=medium
 
   * New upstream version 2.6.2.
   * Use proper CMake variable for installing into libdir.
+  * Drop OpenSSL 3 patch, fixed upstream.
 
  -- Christoph Berg <myon@debian.org>  Tue, 24 May 2022 20:16:01 +0200
 
