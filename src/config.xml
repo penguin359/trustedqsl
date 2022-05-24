@@ -1,4 +1,4 @@
-<tqslconfig majorversion="11" minorversion="15">
+<tqslconfig majorversion="11" minorversion="19">
      <adifmap>
        <adifmode adif-mode="AM" mode="AM">AM</adifmode>
        <adifmode adif-mode="ARDOP" mode="ARDOP">ARDOP</adifmode>
@@ -528,7 +528,7 @@
        <entity arrlId="240" deleted="0" valid="1945-11-15 00:00:00" zonemap="73:13">SOUTH SANDWICH ISLANDS</entity>
        <entity arrlId="241" deleted="0" valid="1945-11-15 00:00:00" zonemap="73:13">SOUTH SHETLAND ISLANDS</entity>
        <entity arrlId="242" deleted="0" valid="1945-11-15 00:00:00" zonemap="17:40">ICELAND</entity>
-       <entity arrlId="243" deleted="1" invalid="1990-05-23 00:00:00" valid="1945-11-15 00:00:00" zonemap="39:21">PEOPLE&apos;S DEM REP OF YEMEN (DELETED)</entity>
+       <entity arrlId="243" deleted="1" invalid="1990-05-23 00:00:00" valid="1945-11-15 00:00:00" zonemap="39:21,48:37">PEOPLE&apos;S DEM REP OF YEMEN (DELETED)</entity>
        <entity arrlId="244" deleted="1" invalid="1995-01-01 00:00:00" valid="1972-05-05 00:00:00" zonemap="47:34,48:34">SOUTHERN SUDAN (DELETED)</entity>
        <entity arrlId="245" deleted="0" valid="1945-11-15 00:00:00" zonemap="27:14">IRELAND</entity>
        <entity arrlId="246" deleted="0" valid="1945-11-15 00:00:00" zonemap="28:15">SOVEREIGN MILITARY ORDER OF MALTA</entity>
@@ -1314,7 +1314,7 @@
        </field>
        <field Id="GRIDSQUARE" flags="0" intype="1" label="Grid Square" len="27" type="C" />
        <field Id="IOTA" flags="1" intype="1" label="IOTA ID" len="10" type="C" />
-       <field Id="ITUZ" flags="0" intype="2" label="ITU Zone" len="10" lower="1" type="I" upper="75" />
+       <field Id="ITUZ" flags="0" intype="2" label="ITU Zone" len="10" lower="1" type="I" upper="90" />
        <field Id="JA_CITY_GUN_KU" dependsOn="JA_PREFECTURE" flags="0" intype="2" label="City / Gun / Ku" len="6" type="C">
          <enums dependency="01">
            <enum value="0101" zonemap="45:25">Sapporo-shi</enum>
@@ -7549,7 +7549,7 @@
          <pageField>RU_OBLAST</pageField>
          <pageField>ZERR</pageField>
        </page>
-       <page Id="9" dependency="125" dependsOn="DXCC" follows="1">
+       <page Id="9" dependency="126" dependsOn="DXCC" follows="1">
          <pageField>RU_OBLAST</pageField>
          <pageField>ZERR</pageField>
        </page>
@@ -7727,6 +7727,7 @@
        <satellite name="FO-99" startDate="2019-01-26">Fuji-OSCAR 99 (NEXUS)</satellite>
        <satellite name="FS-3" startDate="2017-09-24">FalconSAT 3</satellite>
        <satellite name="HO-107" startDate="2020-05-10">HuskySat OSCAR 107</satellite>
+       <satellite name="HO-113" startDate="2021-12-26">HO-113</satellite>
        <satellite name="HO-68" startDate="2009-12-15">Hope-Oscar 68</satellite>
        <satellite name="IO-86" startDate="2015-09-28">Indonesia-OSCAR 86 (LAPAN-ORARI)</satellite>
        <satellite name="JO-97" startDate="2018-12-08">Jordan-OSCAR 97(JY1Sat)</satellite>
@@ -7735,7 +7736,10 @@
        <satellite endDate="2014-07-28" name="LO-78" startDate="2014-04-22">LituanicaSAT-1</satellite>
        <satellite name="LO-87" startDate="2016-05-30">LUSEX-OSCAR 87</satellite>
        <satellite name="LO-90" startDate="2017-05-25">LilacSat-OSCAR 90 (LilacSat-1)</satellite>
+       <satellite name="MAYA-3" startDate="2021-10-10">Cubesat</satellite>
+       <satellite name="MAYA-4" startDate="2021-10-10">Cubesat</satellite>
        <satellite endDate="2000-06-16" name="MIREX" startDate="1991-02-01">MIR Packet Digipeater</satellite>
+       <satellite name="MO-112" startDate="2021-06-22">Mirsat-1</satellite>
        <satellite name="NO-103" startDate="2019-06-25">Navy-OSCAR 103 (BRICSAT 2)</satellite>
        <satellite name="NO-104" startDate="2019-06-25">Navy-OSCAR 104 (PSAT 2)</satellite>
        <satellite name="NO-44" startDate="2001-09-30">Navy-OSCAR 44</satellite>

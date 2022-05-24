@@ -33,6 +33,8 @@ class DocPaths : public wxPathList {
 		Add(wxGetHomeDir() + wxT("\\help\\") + subdir);
 #else
 		Add(wxGetHomeDir() + wxT("/help/") + subdir);
+		Add(wxString::FromUTF8(tQSL_RsrcDir) + wxT("/help/"));
+		Add(wxString::FromUTF8(tQSL_RsrcDir) + wxT("/help/") + subdir);
 #endif
 #if defined(_WIN32)
 		HKEY hkey;

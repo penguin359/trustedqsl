@@ -175,7 +175,7 @@ GetNewPassword(char *buf, int bufsiz, void *) {
 }
 
 static void
-export_new_cert(ExtWizard *_parent, const char *filename) {
+export_new_cert(ExtWizard *_parent, const char *filename, wxString path, wxString basename) {
 	tqslTrace("export_new_cert", "_parent=0x%lx, filename=%s", _parent, filename);
 	long newserial;
 	if (!tqsl_getSerialFromTQSLFile(filename, &newserial)) {
@@ -199,6 +199,10 @@ export_new_cert(ExtWizard *_parent, const char *filename) {
 				if (!tqsl_getCertificateSerial(cert, &serial)) {
 					if (serial == newserial) {
 						wxCommandEvent e;
+						id->path = path;
+						id->basename = basename;
+						frame->OnCertExport(e);
+						id->path = id->basename = wxEmptyString;
 						wxString msg = _("You will not be able to use this tq6 file to recover your callsign certificate if it gets lost. For security purposes, you should back up your certificate on removable media for safe-keeping.");
 							msg += wxT("\n\n");
 							msg += _("Would you like to back up your callsign certificate now?");
@@ -237,9 +241,9 @@ LoadCertWiz::LoadCertWiz(wxWindow *parent, wxHtmlHelpController *help, const wxS
 	config->Read(wxT("CertPwd"), &setPassword, DEFAULT_CERTPWD);
 
 #if !defined(__APPLE__) && !defined(_WIN32)
-	wxString wild(_("Callsign Certificate container files (*.p12;*.P12)|*.p12;*.P12|Certificate Request response files (*.tq6;*.TQ6)|*.tq6;*.TQ6"));
+	wxString wild(_("Callsign Certificate container files (*.p12,*.P12;*.tq6;*.TQ6)|*.p12;*.P12;*.tq6;*.TQ6"));
 #else
-	wxString wild(_("Callsign Certificate container files (*.p12)|*.p12|Certificate Request response files (*.tq6)|*.tq6"));
+	wxString wild(_("Callsign Certificate container files (*.p12,*.tq6))|*.p12;*.tq6"));
 #endif
 	wild += _("|All files (*.*)|*.*");
 
@@ -276,7 +280,7 @@ LoadCertWiz::LoadCertWiz(wxWindow *parent, wxHtmlHelpController *help, const wxS
 						pending = rest;
 					config->Write(wxT("RequestPending"), pending);
 				}
-				export_new_cert(this, filename.ToUTF8());
+				export_new_cert(this, filename.ToUTF8(), path, basename);
 			}
 		} else {
 			// First try with no password

@@ -104,32 +104,11 @@ CLIENT_STATIC TQSL_X509_STACK *tqsl_ssl_load_certs_from_file(const char *filenam
 CLIENT_STATIC const char *tqsl_ssl_verify_cert(X509 *cert, TQSL_X509_STACK *cacerts, TQSL_X509_STACK *rootcerts, int purpose,
 	int (*cb)(int ok, X509_STORE_CTX *ctx), TQSL_X509_STACK **chain = 0);
 
-#if 0	/* unused */
-/// Get the number of name entries in an X509 name object
-CLIENT_STATIC int tqsl_get_name_count(X509_NAME *name);
-
-/// Retrieve a name entry from an X509 name object by index
-CLIENT_STATIC int tqsl_get_name_index(X509_NAME *name, int index, TQSL_X509_NAME_ITEM *name_item);
-#endif
-
 /// Retrieve a name entry from an X509 name object by name
 CLIENT_STATIC int tqsl_get_name_entry(X509_NAME *name, const char *obj_name, TQSL_X509_NAME_ITEM *name_item);
 
-#if 0 	/* unused */
-/// Get the number of name entries in an X509 cert's subject name
-CLIENT_STATIC int tqsl_cert_get_subject_name_count(X509 *cert);
-
-/// Retrieve a name entry from an X509 cert's subject name by index
-CLIENT_STATIC int tqsl_cert_get_subject_name_index(X509 *cert, int index, TQSL_X509_NAME_ITEM *name_item);
-#endif
-
 /// Retrieve a name entry from an X509 cert's subject name by name
 CLIENT_STATIC int tqsl_cert_get_subject_name_entry(X509 *cert, const char *obj_name, TQSL_X509_NAME_ITEM *name_item);
-
-#if 0	/* unused */
-/// Retrieve a name entry date from an X509 cert's subject name by name
-CLIENT_STATIC int tqsl_cert_get_subject_date(X509 *cert, const char *obj_name, tQSL_Date *date);
-#endif
 
 /// Convert an ASN date
 CLIENT_STATIC int tqsl_get_asn1_date(const ASN1_TIME *tm, tQSL_Date *date);

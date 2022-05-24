@@ -83,10 +83,10 @@ class TQSLWizPage : public ExtWizard_Page {
 	wxString valMsg;
 };
 
-class TQSLWizCertPage : public TQSLWizPage {
+class TQSLWizLocPage : public TQSLWizPage {
  public:
-	TQSLWizCertPage(TQSLWizard *_parent, tQSL_Location locp);
-	~TQSLWizCertPage();
+	TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp);
+	~TQSLWizLocPage();
 	virtual bool TransferDataFromWindow();
 	void OnComboBoxEvent(wxCommandEvent&);
 	void OnCheckBoxEvent(wxCommandEvent&);
@@ -95,6 +95,7 @@ class TQSLWizCertPage : public TQSLWizPage {
 	bool invalidGrid;
 	bool allowBadGrid;
 	bool gridFromDB;
+	wxBoxSizer* sizer;
 	void UpdateFields(int noupdate_field = -1);
 	virtual const char *validate();
 	virtual TQSLWizPage *GetPrev() const;
@@ -103,12 +104,42 @@ class TQSLWizCertPage : public TQSLWizPage {
 	void OnPageChanging(wxWizardEvent &);
 
  private:
-	vector<void *> controls;
+	vector<void *> p1_controls;	// First page
+	vector<void *> p2_controls;	// Second page
+// location controls
+	wxStaticText *callLabel;	// Top label
+	wxComboBox *ctlCallSign;	// Callsign
+	wxComboBox *ctlEntity;		// DXCC
+	wxComboBox *ctlCQZ;		// CQ Zone
+	wxComboBox *ctlITUZ;		// ITU Zone
+	wxTextCtrl *ctlGrid;		// Gridsquare
+	wxTextCtrl *ctlIOTA;		// IOTA
+	wxBoxSizer *boxITUZ;
+	wxBoxSizer *boxCQZ;
+	wxBoxSizer *boxIOTA;
+// Secondary Pages
+	wxBoxSizer *boxPAS;		// Primary Administrative Subdivision (STATE)
+	wxStaticText *lblPAS;
+	wxComboBox *ctlPAS;
+	bool PASexists;			// Is there a PAS?
+	wxBoxSizer *boxSAS;		// Secondary AS - County
+	wxStaticText *lblSAS;
+	wxComboBox *ctlSAS;
+	bool SASexists;			// Is there a SAS?
+	wxBoxSizer *boxPark;		// US/DX Park
+	wxStaticText *lblPark;
+	wxComboBox *ctlPark;
+	bool Parkexists;		// Is there a Park?
+
 	typedef map <std::string, std::string> ForcedMap;
 	ForcedMap forced;
+	ForcedMap userSet;
 	wxStaticText *errlbl;
-	wxCheckBox *okEmptyCB;
 	TQSLWizard *parent;
+	int total_fields;
+	int page_2_offset;
+	int first_page;
+	int second_page;
 	DECLARE_EVENT_TABLE()
 };
 
@@ -134,4 +165,17 @@ class TQSLWizFinalPage : public TQSLWizPage {
 	DECLARE_EVENT_TABLE()
 };
 
+// ID values for the GUI controls
+enum {
+	CTL_CALL = TQSL_ID_LOW + 1,
+	CTL_DXCC,
+	CTL_GRID,
+	CTL_ITU,
+	CTL_CQ,
+	CTL_IOTA,
+	CTL_PAS,
+	CTL_SAS,
+	CTL_PARK,
+	CTL_ZERR
+};
 #endif	// __tqslwiz_h

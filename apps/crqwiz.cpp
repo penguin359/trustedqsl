@@ -34,49 +34,6 @@ using std::string;
 
 extern int get_address_field(const char *callsign, const char *field, string& result);
 
-enum  {
-	CERT_TYPE_INVALID = -1,
-	CERT_CURRENT_PERSONAL = 0,
-	CERT_NEW_PERSONAL,
-	CERT_FORMER_PERSONAL,
-	CERT_PRIMARY_CLUB,
-	CERT_SECONDARY_CLUB,
-	CERT_DXP_MULTIOP,
-	CERT_DXP_ONEOP,
-	CERT_QSLMGR,
-	CERT_EVENT_MULTIOP,
-	CERT_EVENT_SINGLEOP
-};
-
-static wxString callTypeChoices[] = {
-	 _("My current personal callsign"),
-	 _("My new personal callsign (I have a Callsign Certificate for my former callsign)"),
-	 _("My former personal callsign or a portable modifier for my current or former callsign"),
-	 _("A primary club callsign"),
-	 _("A secondary club callsign (I have a Callsign Certificate for the primary club callsign)"),
-	 _("A DXpedition, Portable, or holiday operation with multiple operators"),
-	 _("A DXpedition, Portable, or holiday operation where I am the only operator"),
-	 _("An operator that uses me as a QSL manager"),
-	 _("A special event callsign with multiple operators"),
-	 _("A special event callsign where I am the only operator")
-};
-
-static bool signThisType[] = {
-	false,	// Current personal
-	true,	// new call
-	true,	// former personal
-	false,	// Primary club
-	true,	// Secondary club
-	false,	// dxpedition multi-op
-	true,	// dxpedition single-op
-	false,	// QSL Manager
-	false,	// spec event multi-op
-	true	// spec event single-op
-};
-
-wxCOMPILE_TIME_ASSERT(WXSIZEOF(callTypeChoices) == WXSIZEOF(signThisType),
-                       CertTypesArraysMismatch);
-
 CRQWiz::CRQWiz(TQSL_CERT_REQ *crq, tQSL_Cert xcert, wxWindow *parent, wxHtmlHelpController *help,
 	const wxString& title)
 	: ExtWizard(parent, help, title), cert(xcert), _crq(crq)  {
@@ -87,7 +44,6 @@ CRQWiz::CRQWiz(TQSL_CERT_REQ *crq, tQSL_Cert xcert, wxWindow *parent, wxHtmlHelp
 	onebyone = false;
 	renewal = (_crq != NULL);	// It's a renewal if there's a CRQ provided
 	usa = validusa = false;		// Not usa
-	certType = CERT_TYPE_INVALID;	// Not yet set
 	// Get count of valid certificates
 	int ncerts = 0;
 	tqsl_selectCertificates(NULL, &ncerts, NULL, 0, NULL, NULL, 0);
@@ -102,23 +58,15 @@ CRQWiz::CRQWiz(TQSL_CERT_REQ *crq, tQSL_Cert xcert, wxWindow *parent, wxHtmlHelp
 	wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
 	config->Read(wxT("CertPwd"), &CertPwd, DEFAULT_CERTPWD);
 	pwPage = new CRQ_PasswordPage(this);
-	typePage = new CRQ_TypePage(this);
 	if (nprov != 1)
-		wxWizardPageSimple::Chain(providerPage, typePage);
-	wxWizardPageSimple::Chain(typePage, callsignPage);
+		wxWizardPageSimple::Chain(providerPage, callsignPage);
 	wxWizardPageSimple::Chain(callsignPage, namePage);
 	wxWizardPageSimple::Chain(namePage, emailPage);
 	wxWizardPageSimple::Chain(emailPage, pwPage);
-	signIt = true;
-	if (cert || ncerts == 0)
-		signIt = false;
 	if (!cert)
 		wxWizardPageSimple::Chain(pwPage, signPage);
 	if (nprov == 1)
-		if (!renewal) // was		if (validcerts && !renewal)
-			_first = typePage;
-		else
-			_first = callsignPage;
+		_first = callsignPage;
 	else
 		_first = providerPage;
 	AdjustSize();
@@ -143,14 +91,7 @@ CRQ_ProviderPage::CRQ_ProviderPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Pa
 
 	wxWindowDC dc(this);
 	dc.SetFont(this->GetFont());
-	wxCoord textwidth, textheight;
 	Parent()->maxWidth = 0;
-
-	// Find the width of the longest string
-	for (unsigned int i = 0; i < sizeof callTypeChoices / sizeof callTypeChoices[0]; i++) {
-	dc.GetTextExtent(wxGetTranslation(callTypeChoices[i]), &textwidth, &textheight);
-		Parent()->maxWidth = textwidth > Parent()->maxWidth ? textwidth: Parent()->maxWidth;
-	}
 
 	wxCoord em_w, em_h;
 	dc.GetTextExtent(wxString(wxT("M")), &em_w, &em_h);
@@ -412,7 +353,9 @@ CRQ_CallsignPage::GetNext() const {
 CRQ_Page *
 CRQ_CallsignPage::GetPrev() const {
 	tqslTrace("CRQ_CallsignPage::GetPrev", NULL);
-	return _parent->typePage;
+	if (_parent->nprov > 1)
+		return _parent->providerPage;
+	return _parent->callsignPage;
 }
 
 BEGIN_EVENT_TABLE(CRQ_NamePage, CRQ_Page)
@@ -715,6 +658,7 @@ CRQ_PasswordPage::GetPrev() const {
 
 BEGIN_EVENT_TABLE(CRQ_SignPage, CRQ_Page)
 	EVT_TREE_SEL_CHANGED(ID_CRQ_CERT, CRQ_SignPage::CertSelChanged)
+	EVT_RADIOBOX(ID_CRQ_SIGN, CRQ_Page::check_valid)
 	EVT_WIZARD_PAGE_CHANGING(wxID_ANY, CRQ_SignPage::OnPageChanging)
 END_EVENT_TABLE()
 
@@ -727,79 +671,6 @@ void CRQ_SignPage::CertSelChanged(wxTreeEvent& event) {
 	check_valid(dummy);
 }
 
-BEGIN_EVENT_TABLE(CRQ_TypePage, CRQ_Page)
-	EVT_RADIOBOX(ID_CRQ_TYPE, CRQ_Page::check_valid)
-END_EVENT_TABLE()
-
-CRQ_TypePage::CRQ_TypePage(CRQWiz *parent)
-	:  CRQ_Page(parent) {
-	tqslTrace("CRQ_TypePage::CRQ_TypePage", "parent=%lx", reinterpret_cast<void *>(parent));
-
-	initialized = false;
-	_parent = parent;
-
-	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
-
-	wxArrayString ch;
-	for (unsigned int i = 0; i < sizeof callTypeChoices / sizeof callTypeChoices[0]; i++) {
-		wxString wtf = wxGetTranslation(callTypeChoices[i]);
-		ch.Add(wxGetTranslation(callTypeChoices[i]));
-	}
-
-	certType = new wxRadioBox(this, ID_CRQ_TYPE, _("This Callsign Certificate is for:"), wxDefaultPosition,
-		wxDefaultSize, ch, 1, wxRA_SPECIFY_COLS);
-	for (unsigned int i = 0; i < sizeof signThisType / sizeof signThisType[0]; i++) {
-		if (signThisType[i]) {
-			if (!_parent->validcerts) {
-				certType->Enable(i, false);
-			}
-		}
-	}
-
-	sizer->Add(certType, 0, wxALL|wxEXPAND, 10);
-}
-
-bool
-CRQ_TypePage::TransferDataFromWindow() {
-	wxString signPrompts[] = {
-				wxT("sign error"),	// Current personal
-				_("Please select the Callsign Certificate for your current personal callsign to validate your request."),	// New personal
-				_("Please select the Callsign Certificate for your current personal callsign to validate your request."),	// Former personal
-				wxT("sign error"),	// Primary Club
-
-				_("Please select your club's primary Callsign Certificate to validate your request."),	// Secondary club
-				wxT("sign error"),	// dxpedition multi-op
-				_("Please select the Callsign Certificate for your current personal callsign to validate your request."),	// dxpedition single op
-				wxT("sign error"),	// QSL Manager
-				wxT("sign error"),	// spec event multi-op
-				_("Please select a Callsign Certificate to validate your request.")	// spec event single-op
-				};
-
-	wxCOMPILE_TIME_ASSERT(WXSIZEOF(callTypeChoices) == WXSIZEOF(signPrompts),
-                       CertTypesArraysMismatch);
-
-	tqslTrace("CRQ_TypePage::TransferDataFromWindow", NULL);
-	int selected = certType->GetSelection();
-	if (selected  == wxNOT_FOUND || selected > static_cast<int>(sizeof signThisType / sizeof signThisType[0]))
-		return false;
-	_parent->signIt = signThisType[selected];
-	_parent->signPrompt = signPrompts[selected];
-	_parent->certType = selected;
-	if (_parent->dxcc == 0)
-		_parent->signIt = true;
-	return true;
-}
-
-CRQ_Page *
-CRQ_TypePage::GetPrev() const {
-	tqslTrace("CRQ_TypePage::GetPrev", NULL);
-
-	if (_parent->nprov > 1)
-		return _parent->callsignPage;
-	else
-		return _parent->typePage;
-}
-
 CRQ_SignPage::CRQ_SignPage(CRQWiz *parent, TQSL_CERT_REQ *crq)
 	:  CRQ_Page(parent) {
 	tqslTrace("CRQ_SignPage::CRQ_SignPage", "parent=%lx", reinterpret_cast<void *>(parent));
@@ -807,23 +678,48 @@ CRQ_SignPage::CRQ_SignPage(CRQWiz *parent, TQSL_CERT_REQ *crq)
 	initialized = false;
 	_parent = parent;
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
+
+	wxString itext;
+	itext = wxString(_("Is this new certificate for a callsign where you already have a "
+		"LoTW account, and you want the QSOs for this call to be added to an existing LoTW account? "));
+        itext += wxT("\n\n");
+	itext += _("If so, choose a callsign below for the primary LoTW account. If not, choose 'No', and a new LoTW account will be set up for these QSOs.");
+
+	itext += wxT("\n\n");
+	itext += _("CAUTION: Mixing QSOs for unrelated callsigns into one LoTW account can cause issues with handling awards.");
+	introText = new wxStaticText(this, -1, itext);
+	sizer->Add(introText);
+
 	wxSize sz = getTextSize(this);
 	int em_h = sz.GetHeight();
 	em_w = sz.GetWidth();
 	tc_status = new wxStaticText(this, -1, wxT(""), wxDefaultPosition, wxSize(_parent->maxWidth, em_h*3));
 
+	wxString choices[] = { _("This is a Club call, I'm the QSL manager for this call, or this is a DXpedition call"), _("No, Create a new LoTW account for this call"), _("Yes, Save these QSOs into an existing LoTW account") };
+
+	choice = new wxRadioBox(this, ID_CRQ_SIGN, _("Add QSOs for the new callsign to an existing LoTW account?"), wxDefaultPosition,
+		wxSize(em_w*30, -1), 3, choices, 1, wxRA_SPECIFY_COLS);
+	sizer->Add(choice, 0, wxALL|wxEXPAND, 10);
+
 	cert_tree = new CertTree(this, ID_CRQ_CERT, wxDefaultPosition,
-		wxSize(em_w*30, em_h*10), wxTR_HAS_BUTTONS | wxSUNKEN_BORDER);
+		wxSize(em_w*30, em_h*8), wxTR_HAS_BUTTONS | wxSUNKEN_BORDER);
 	sizer->Add(cert_tree, 0, wxLEFT|wxRIGHT|wxBOTTOM|wxEXPAND);
 	cert_tree->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
 	sizer->Add(tc_status, 0, wxALL|wxEXPAND, 10);
 	// Default to 'signed' unless there's no valid certificates to use for signing.
 	if (cert_tree->Build(0, &(_parent->provider)) > 0) {
+		choice->SetSelection(2);
 		_parent->signIt = true;
 	} else {
+		choice->SetSelection(1);
 		_parent->signIt = false;
-		cert_tree->Enable(false);
+		cert_tree->Show(false);
+		introText->SetLabel(_("Since you have no callsign certificates, you must "
+					"submit an 'Unsigned' certificate request. This will allow you to "
+					"create your initial callsign certificate for LoTW use. "
+					"Click 'Finish' to complete this callsign certificate request."));
 	}
+	introText->Wrap(em_w * 50);
 	AdjustPage(sizer, wxT("crq4.htm"));
 	initialized = true;
 }
@@ -831,10 +727,13 @@ CRQ_SignPage::CRQ_SignPage(CRQWiz *parent, TQSL_CERT_REQ *crq)
 void
 CRQ_SignPage::refresh() {
 	tqslTrace("CRQ_SignPage::refresh", NULL);
-	if (cert_tree->Build(0, &(_parent->provider)) > 0)
+	if (cert_tree->Build(0, &(_parent->provider)) > 0) {
+		choice->SetSelection(2);
 		_parent->signIt = true;
-	else
+	} else {
+		choice->SetSelection(1);
 		_parent->signIt = false;
+	}
 }
 
 CRQ_Page *
@@ -1128,9 +1027,14 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 
 	validate();
 
+	// First check if there's a slash. If so, it's a portable. Use the base callsign
+	wxString callsign = _parent->callsign;
+	int slashpos = callsign.Find('/', true);
+	if (slashpos != wxNOT_FOUND)
+		callsign = callsign.Left(slashpos);
+
 	// Is this in the ULS?
 	if (valMsg.Len() == 0 && _parent->usa && !_parent->onebyone) {
-		wxString callsign = _parent->callsign;
 		wxString name, attn, addr1, city, state, zip, update;
 		int stat = GetULSInfo(callsign.ToUTF8(), name, attn, addr1, city, state, zip, update);
 		switch (stat) {
@@ -1181,15 +1085,7 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 				int stat2 = GetULSInfo("W1AW", name, attn, addr1, city, state, zip, update);
 				if (stat2 == 2)					// Also nothing for a good call
 					break;
-				switch (_parent->certType) {			// Not found
-					case CERT_CURRENT_PERSONAL:
-					case CERT_NEW_PERSONAL:
-					case CERT_PRIMARY_CLUB:
-					case CERT_DXP_MULTIOP:
-					case CERT_EVENT_MULTIOP:
-						valMsg = wxString::Format(_("The callsign %s is not currently registered in the FCC ULS database as of %s.\nIf this is a newly registered call, you must wait at least one business day for it to be valid. Please enter a currently valid callsign."), callsign.c_str(), update.c_str());
-					break;
-				}
+				valMsg = wxString::Format(_("The callsign %s is not currently registered in the FCC ULS database as of %s.\nIf this is a newly registered call, you must wait at least one business day for it to be valid. Please enter a currently valid callsign."), callsign.c_str(), update.c_str());
 				break;
 		}
 	}
@@ -1423,19 +1319,21 @@ CRQ_SignPage::validate() {
 	valMsg = wxT("");
 	wxString nextprompt = _("Click 'Finish' to complete this Callsign Certificate request.");
 
-	cert_tree->Enable(_parent->signIt);
+	bool doSigned = (choice->GetSelection() == 2);
 
-	if (_parent->signIt) {
+	cert_tree->Show(doSigned);
+
+	if (doSigned) {
 		if (!cert_tree->GetSelection().IsOk() || cert_tree->GetItemData(cert_tree->GetSelection()) == NULL) {
 			error = true;
-			valMsg = _parent->signPrompt;
+			valMsg = _("Please select a callsign certificate for the account where you would like the QSOs to be stored");
 		} else {
 			char callsign[512];
 			tQSL_Cert cert = cert_tree->GetItemData(cert_tree->GetSelection())->getCert();
 			if (0 == tqsl_getCertificateCallSign(cert, callsign, sizeof callsign)) {
 				wxString fmt = wxT("\n\n");
-					fmt += _("You are saying that the requested Certificate for %s belongs to the same person as %hs and are using the selected Certificate to prove %hs's identity.");
-				nextprompt+=wxString::Format(fmt, _parent->callsign.c_str(), callsign, callsign);
+					fmt += _("QSOs for %hs will be stored in the LoTW account for %s.");
+				nextprompt+=wxString::Format(fmt, _parent->callsign.c_str(), callsign);
 			}
 		}
 	}

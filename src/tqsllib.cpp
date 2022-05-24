@@ -33,6 +33,9 @@ using std::string;
 #include <openssl/err.h>
 #include <openssl/objects.h>
 #include <openssl/evp.h>
+#if OPENSSL_VERSION_MAJOR >= 3
+#include <openssl/provider.h>
+#endif
 
 #include "tqslerrno.h"
 #include "adif.h"
@@ -238,10 +241,33 @@ tqsl_get_rsrc_dir() {
 		}
 	}
 #else
+	// Get the base directory
 	string p = CONFDIR;
+	// Strip trailing "/"
 	if (p[p.length() - 1] == '/')
 		p = p.substr(0, p.length() - 1);
-	tQSL_RsrcDir = strdup(p.c_str());
+
+	// Check if running as an AppImage
+	char *appdir = getenv("APPDIR");
+	if (appdir == NULL) {
+		tQSL_RsrcDir = strdup(p.c_str());
+	} else {
+		string p1 = appdir;
+		// Strip trailing "/"
+		if (p1[p1.length() - 1] == '/')
+			p1 = p1.substr(0, p1.length() - 1);
+		p1 = p1 + p;
+
+		// Assume APPDIR is probably not an AppImage root
+		tQSL_RsrcDir = strdup(p.c_str());
+		// See if it's likely to be an AppImage
+		struct stat s;
+                if (stat(p1.c_str(), &s) == 0) {
+                        if (S_ISDIR(s.st_mode)) {
+				tQSL_RsrcDir = strdup(p1.c_str());
+			}
+		}
+	}
 #endif
 	tqslTrace("tqsl_get_rsrc_dir", "rsrc_path=%s", tQSL_RsrcDir);
 }
@@ -250,14 +276,19 @@ DLLEXPORT int CALLCONVENTION
 tqsl_init() {
 	static char semaphore = 0;
 	unsigned int i;
+
+	ERR_clear_error();
+	tqsl_getErrorString();	/* Clear the error status */
+	if (semaphore)
+		return 0;
 #ifdef _WIN32
 	static wchar_t path[TQSL_MAX_PATH_LEN * 2];
 	// lets cin/out/err work in windows
 	// AllocConsole();
 	// freopen("CONIN$", "r", stdin);
-// freopen("CONOUT$", "w", stdout);
-// freopen("CONOUT$", "w", stderr);
-	DWORD bsize = sizeof path;
+	// freopen("CONOUT$", "w", stdout);
+	// freopen("CONOUT$", "w", stderr);
+	// not used DWORD bsize = sizeof path;
 	int wval;
 #else
 	static char path[TQSL_MAX_PATH_LEN];
@@ -288,10 +319,26 @@ tqsl_init() {
 		tQSL_Error = TQSL_OPENSSL_VERSION_ERROR;
 		return 1;
 	}
-	ERR_clear_error();
-	tqsl_getErrorString();	/* Clear the error status */
-	if (semaphore)
-		return 0;
+#if OPENSSL_VERSION_MAJOR >= 3
+//
+//	OpenSSL 3.x moved several algorithms to "legacy" status and doesn't
+//	enable them by default.  Initialize the legacy provider to enable these.
+//	Then enable the default provider.
+//
+	OSSL_PROVIDER *def;
+	OSSL_PROVIDER *legacy;
+
+	legacy = OSSL_PROVIDER_load(NULL, "legacy");
+	if (legacy == NULL) {
+		tQSL_Error = TQSL_OPENSSL_ERROR;
+		return 1;
+	}
+	def = OSSL_PROVIDER_load(NULL, "default");
+	if (def == NULL) {
+		tQSL_Error = TQSL_OPENSSL_ERROR;
+		return 1;
+	}
+#endif
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
 	ERR_load_crypto_strings();
 	OpenSSL_add_all_algorithms();
@@ -523,8 +570,11 @@ tqsl_getErrorString_v(int err) {
 		return buf;
 	}
 	if (err == (TQSL_CERT_NOT_FOUND | 0x1000)) {
+		const char *call, *ent;
 		err = TQSL_CERT_NOT_FOUND;
-		snprintf(buf, sizeof buf, "There is no valid callsign certificate for %s available. This QSO cannot be signed", tQSL_CustomError);
+		call = strtok(tQSL_CustomError, "|");
+		ent = strtok(NULL, "|");
+		snprintf(buf, sizeof buf, "There is no valid callsign certificate for %s in entity %s available. This QSO cannot be signed", call, ent);
 		return buf;
 	}
 	return error_strings[adjusted_err];

@@ -233,9 +233,12 @@ freq_to_band(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp) {
 	else if (!strcasecmp(fp->value, "75G") || !strcasecmp(fp->value, "75") ||
 		 !strcasecmp(fp->value, "76G") || !strcasecmp(fp->value, "76"))
 		band = "4MM";
-	else if (!strcasecmp(fp->value, "119G") || !strcasecmp(fp->value, "119"))
+	else if (!strcasecmp(fp->value, "119G") || !strcasecmp(fp->value, "119") ||
+		 !strcasecmp(fp->value, "122G") || !strcasecmp(fp->value, "122") ||
+		 !strcasecmp(fp->value, "123G") || !strcasecmp(fp->value, "123"))
 		band = "2.5MM";
-	else if (!strcasecmp(fp->value, "142G") || !strcasecmp(fp->value, "142"))
+	else if (!strcasecmp(fp->value, "142G") || !strcasecmp(fp->value, "142") ||
+		 !strcasecmp(fp->value, "134G") || !strcasecmp(fp->value, "134"))
 		band = "2MM";
 	else if (!strcasecmp(fp->value, "241G")  || !strcasecmp(fp->value, "241")||
 		 !strcasecmp(fp->value, "242G") || !strcasecmp(fp->value, "242"))

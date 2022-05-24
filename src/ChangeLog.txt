@@ -3,6 +3,18 @@ TQSLLIB changes
 
 2.5
 ---
+Add initialization for legacy crypto provider for OpenSSL to allow
+TQSL certificate algorithms to work.
+
+Update Cabrillo values for 2mm and 2.5mm bands to accept various
+band names (119G, etc.)
+
+Update tqsllib docs, new jquery.js to avoid ClamAV warning
+
+When handling a log in update mode, and the callsign changes, don't 
+default to the first DXCC entity for that call - use the selected
+DXCC entity from the log.
+
 Correct list of ADIF type specifiers. TQSL was expecting "C" when "S" is
 the correct specifier for a String field.
 

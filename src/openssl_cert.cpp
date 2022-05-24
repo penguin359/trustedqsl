@@ -147,6 +147,9 @@
 	#include <unistd.h>
     #include <dirent.h>
 #endif
+
+#define OPENSSL_SUPPRESS_DEPRECATED		// Suppress warnings for deprecated functions
+
 #include <openssl/err.h>
 #include <openssl/pem.h>
 #include <openssl/rand.h>
@@ -194,27 +197,57 @@ unsigned char *ASN1_seq_pack(void *safes, i2d_of_void *i2d,
 #endif	// OpenSSL v1.0
 //  Work with OpenSSL 1.1.0 and later
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
+#ifndef M_PKCS12_bag_type
 # define M_PKCS12_bag_type PKCS12_bag_type
+#endif
+#ifndef M_PKCS12_cert_bag_type
 # define M_PKCS12_cert_bag_type PKCS12_cert_bag_type
+#endif
+#ifndef M_PKCS12_crl_bag_type
 # define M_PKCS12_crl_bag_type PKCS12_cert_bag_type
+#endif
+#ifndef M_PKCS12_certbag2x509
 # define M_PKCS12_certbag2x509 PKCS12_SAFEBAG_get1_cert
+#endif
+#ifndef M_PKCS12_decrypt_skey
 # define M_PKCS12_decrypt_skey PKCS12_decrypt_skey
+#endif
+#ifndef M_PKCS12_unpack_authsafes
 # define M_PKCS12_unpack_authsafes PKCS12_unpack_authsafes
+#endif
+#ifndef M_PKCS12_pack_authsafes
 # define M_PKCS12_pack_authsafes PKCS12_pack_authsafes
+#endif
+#ifndef PKCS12_get_attr
 # define PKCS12_get_attr PKCS12_SAFEBAG_get0_attr
+#endif
+#ifndef PKCS12_bag_type
 # define PKCS12_bag_type PKCS12_SAFEBAG_get_nid
+#endif
+#ifndef PKCS12_cert_bag_type
 # define PKCS12_cert_bag_type PKCS12_SAFEBAG_get_bag_nid
+#endif
+#if !defined(PKCS12_x5092certbag) && !defined(LIBRESSL_VERSION_NUMBER)
 # define PKCS12_x5092certbag PKCS12_SAFEBAG_create_cert
+#endif
+#ifndef PKCS12_x509crl2certbag
 # define PKCS12_x509crl2certbag PKCS12_SAFEBAG_create_crl
+#endif
+#ifndef  X509_STORE_CTX_trusted_stack
 # define X509_STORE_CTX_trusted_stack X509_STORE_CTX_set0_trusted_stack
+#endif
 #ifndef X509_get_notAfter
 # define X509_get_notAfter X509_get0_notAfter
 #endif
 #ifndef X509_get_notBefore
 # define X509_get_notBefore X509_get0_notBefore
 #endif
+#if !defined (PKCS12_MAKE_SHKEYBAG) && !defined(LIBRESSL_VERSION_NUMBER)
 # define PKCS12_MAKE_SHKEYBAG PKCS12_SAFEBAG_create_pkcs8_encrypt
+#endif
+#ifndef X509_V_FLAG_CB_ISSUER_CHECK
 # define X509_V_FLAG_CB_ISSUER_CHECK 0x0
+#endif
 #else
 # define ASN1_STRING_get0_data ASN1_STRING_data
 #endif
@@ -2261,7 +2294,7 @@ tqsl_add_bag_attribute(PKCS12_SAFEBAG *bag, const char *oidname, const string& v
     #endif
   #endif
 #endif
-#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
 					STACK_OF(X509_ATTRIBUTE) *sk;
 					sk = (STACK_OF(X509_ATTRIBUTE)*)PKCS12_SAFEBAG_get0_attrs(bag);
 					if (sk) {
@@ -4283,10 +4316,6 @@ tqsl_handle_root_cert(const char *pem, X509 *x, int (*cb)(int, const char *, voi
 
 static int
 tqsl_ssl_error_is_nofile() {
-	unsigned long l = ERR_peek_error();
-	if (tQSL_Error == TQSL_OPENSSL_ERROR &&
-		ERR_GET_LIB(l) == ERR_LIB_SYS && ERR_GET_FUNC(l) == SYS_F_FOPEN)
-		return 1;
 	if (tQSL_Error == TQSL_SYSTEM_ERROR && tQSL_Errno == ENOENT)
 		return 1;
 	return 0;

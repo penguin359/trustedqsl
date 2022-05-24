@@ -101,7 +101,7 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 	issmap issuers;
 
 	DeleteAllItems();
-	wxTreeItemId rootId = AddRoot(_("tQSL Certificates"), FOLDER_ICON);
+	wxTreeItemId rootId = AddRoot(_("Callsign Certificates"), FOLDER_ICON);
 	if (tqsl_selectCertificates(&_certs, &_ncerts, 0, 0, 0, provider, flags)) {
 		if (tQSL_Error != TQSL_SYSTEM_ERROR || tQSL_Errno != ENOENT)
 			displayTQSLError(__("Error while accessing certificate store"));
@@ -136,7 +136,12 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 	}
 	// Sort each issuer's list and add items to tree
 	issmap::iterator iss_it;
-	wxTreeItemId id;
+	wxTreeItemId id = NULL;
+	wxTreeItemId valid = NULL;
+	wxTreeItemId replaced = NULL;
+	wxTreeItemId invalid = NULL;
+	wxTreeItemId pending = NULL;
+	wxTreeItemId expired = NULL;
 	_nissuers = issuers.size();
 	for (iss_it = issuers.begin(); iss_it != issuers.end(); iss_it++) {
 		if (_nissuers > 1) {
@@ -144,6 +149,7 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 		}
 		certlist& list = iss_it->second;
 		sort(list.begin(), list.end(), cl_cmp);
+		valid = AppendItem(_nissuers > 1 ? id : rootId, _("Active, usable certificates"), FOLDER_ICON);
 		for (int i = 0; i < static_cast<int>(list.size()); i++) {
 			CertTreeItemData *cert = new CertTreeItemData(_certs[list[i].second]);
 			int keyonly = 1;
@@ -153,21 +159,37 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 			tqsl_isCertificateExpired(_certs[list[i].second], &exp);
 			tqsl_isCertificateSuperceded(_certs[list[i].second], &sup);
 			tqsl_getCertificateKeyOnly(_certs[list[i].second], &keyonly);
-			if (keytype == TQSL_PK_TYPE_ERR)
+			if (keytype == TQSL_PK_TYPE_ERR) {
 				icon_type = BROKEN_ICON;
-			else if (keyonly)
+				if (!invalid)
+					invalid = AppendItem(_nissuers > 1 ? id : rootId, _("Invalid, unusable"), FOLDER_ICON);
+				AppendItem(invalid, list[i].first, icon_type, -1, cert);
+			} else if (keyonly) {
 				icon_type = NOCERT_ICON;
-			else if (sup)
+				if (!pending)
+					pending = AppendItem(_nissuers > 1 ? id : rootId, _("Certificates that are awaiting ARRL approval"), FOLDER_ICON);
+				AppendItem(pending, list[i].first, icon_type, -1, cert);
+			} else if (sup) {
 				icon_type = REPLACED_ICON;
-			else if (exp)
+				if (!replaced)
+					replaced = AppendItem(_nissuers > 1 ? id : rootId, _("Certificates replaced with a newer one"), FOLDER_ICON);
+				AppendItem(replaced, list[i].first, icon_type, -1, cert);
+			} else if (exp) {
 				icon_type = EXPIRED_ICON;
-			else
+				if (!expired)
+					expired = AppendItem(_nissuers > 1 ? id : rootId, _("Certificates that have expired"), FOLDER_ICON);
+				AppendItem(expired, list[i].first, icon_type, -1, cert);
+			} else {
 				icon_type = CERT_ICON;
-			AppendItem(_nissuers > 1 ? id : rootId, list[i].first, icon_type, -1, cert);
+				AppendItem(valid, list[i].first, icon_type, -1, cert);
+			}
 		}
 		if (id)
 			Expand(id);
 	}
+	if (!valid)		// Handle the no certificates case
+		valid = AppendItem(_nissuers > 1 ? id : rootId, _("Active, usable certificates"), FOLDER_ICON);
+	Expand(valid);
 	Expand(rootId);
 	return _ncerts;
 }
@@ -225,17 +247,25 @@ CertTree::OnRightDown(wxMouseEvent& event) {
 		SelectItem(id);
 		tQSL_Cert cert = GetItemData(id)->getCert();
 		int keyonly = 1;
+		int superseded = 1;
+		int expired = 1;
+		int enable = 1;
 		wxMenu *cm;
 		if (cert) {
 			tqsl_getCertificateKeyOnly(cert, &keyonly);
+                	tqsl_isCertificateSuperceded(cert, &superseded);
+                	tqsl_isCertificateExpired(cert, &expired);
+			if (expired || superseded) {
+				enable = 0;
+			}
 			char callsign[129];
 			if (tqsl_getCertificateCallSign(cert, callsign, sizeof callsign)) {
-				cm = makeCertificateMenu(true, (keyonly != 0), NULL);
+				cm = makeCertificateMenu((enable != 0), (keyonly != 0), NULL);
 			} else {
-				cm = makeCertificateMenu(true, (keyonly != 0), callsign);
+				cm = makeCertificateMenu((enable != 0), (keyonly != 0), callsign);
 			}
 		} else {
-			cm = makeCertificateMenu(true, (keyonly != 0), NULL);
+			cm = makeCertificateMenu((enable != 0), (keyonly != 0), NULL);
 		}
 		PopupMenu(cm, event.GetPosition());
 		delete cm;

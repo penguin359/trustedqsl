@@ -2,7 +2,7 @@
                                   tqsl.cpp
                              -------------------
     begin                : Mon Nov 4 2002
-    copyright            : (C) 2002-2020 by ARRL and the TrustedQSL Developers
+    copyright            : (C) 2002-2022 by ARRL and the TrustedQSL Developers
     author               : Jon Bloom
     email                : jbloom@arrl.org
  ***************************************************************************/
@@ -1544,7 +1544,7 @@ run_station_wizard(wxWindow *parent, tQSL_Location loc, wxHtmlHelpController *he
 	TQSLWizard *wiz = new TQSLWizard(loc, parent, help, title, expired);
 	wiz->SetDefaultCallsign(callsign);
 	wiz->GetPage(true);
-	TQSLWizCertPage *cpage = reinterpret_cast<TQSLWizCertPage*>(wiz->GetPage());
+	TQSLWizLocPage *cpage = reinterpret_cast<TQSLWizLocPage*>(wiz->GetPage());
 	if (cpage && !callsign.IsEmpty())
 		cpage->UpdateFields(0);
 	TQSLWizPage *page = wiz->GetPage();
@@ -1578,7 +1578,7 @@ static wxString getAbout() {
 #ifdef OSX_PLATFORM
 	msg += wxT("\nBuilt for ") wxT(OSX_PLATFORM);
 #endif
-	msg += wxT("\n(c) 2001-2021 American Radio Relay League\n\n");
+	msg += wxT("\n(c) 2001-2022 American Radio Relay League\n\n");
 	int major, minor;
 	if (tqsl_getVersion(&major, &minor))
 		wxLogError(getLocalizedErrorString());
@@ -1605,11 +1605,11 @@ static wxString getAbout() {
 	msg+=wxString::Format(wxT("%hs"), DB_VERSION_STRING);
 #endif
 	msg+=wxT("\n\n\nTranslators:\n");
-	msg+=wxT("Catalan: Xavier, EA3W\n");
+	msg+=wxT("Catalan: Xavi, EA3W and Salva, EB3MA\n");
 	msg+=wxT("Chinese (Simplified): Caros, BH4TXN\n");
 	msg+=wxT("Chinese (Traditional): SZE-TO Wing, VR2UPU\n");
 	msg+=wxT("Finnish: Juhani Tapaninen, OH8MXL\n");
-	msg+=wxT("French: Laurent BEUGNET, F6GOX\n");
+	msg+=wxT("French: Laurent Beugnet, F6GOX\n");
 	msg+=wxT("German: Andreas Rehberg, DF4WC\n");
 	msg+=wxT("Hindi: Manmohan Bhagat, VU3YBH\n");
 	msg+=wxT("Italian: Salvatore Besso, I4FYV\n");
@@ -1919,7 +1919,7 @@ MyFrame::EnterQSOData(wxCommandEvent& WXUNUSED(event)) {
 	}
 }
 
-int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxString& output, int& n, bool suppressdate, tQSL_Date* startdate, tQSL_Date* enddate, int action, int logverify, const char* password, const char* defcall) {
+int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxString& output, int& numrecs, bool suppressdate, tQSL_Date* startdate, tQSL_Date* enddate, int action, int logverify, const char* password, const char* defcall) {
 	tqslTrace("MyFrame::ConvertLogToString", "loc = %lx, infile=%s, suppressdate=%d, startdate=0x%lx, enddate=0x%lx, action=%d, logverify=%d defcall=%s", reinterpret_cast<void *>(loc), S(infile), suppressdate, reinterpret_cast<void *>(startdate), reinterpret_cast<void *>(enddate), action, logverify, defcall ? defcall : "");
 	static const char *iam = "TQSL V" TQSL_VERSION;
 	const char *cp;
@@ -1931,6 +1931,8 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 	bool ignore_err = false;
 	bool show_dupes = false;
 	int tmp;
+	DXCC dx;
+	wxString msg;
 
 	wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
 	config->Read(wxT("DispDupes"), &show_dupes, DEFAULT_DISP_DUPES);
@@ -1944,12 +1946,19 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 		}
 	} else {			// Command line
 		show_dupes = true;	// So always display dupe details
+		if (logverify == TQSL_LOC_UPDATE) {
+			tqsl_getLocationCallSign(loc, callsign, sizeof callsign);
+			if (strcmp(callsign, "[None]") == 0) {
+				get_certlist("", 0, false, false, true);	// any call, any DXCC, not expired or superceded
+				goto skip_call;
+			}
+		}
 	}
 
 	try {
 		if (defcall) {
 			strncpy(callsign, defcall, sizeof callsign);
-			check_tqsl_error(tqsl_setLocationCallSign(loc, callsign));
+			check_tqsl_error(tqsl_setLocationCallSign(loc, callsign, -1));
 		} else {
 			check_tqsl_error(tqsl_getLocationCallSign(loc, callsign, sizeof callsign));
 		}
@@ -1958,7 +1967,6 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 		return TQSL_EXIT_LIB_ERROR;
 	}
 	tqsl_getLocationDXCCEntity(loc, &dxcc);
-	DXCC dx;
 	dx.getByEntity(dxcc);
 
 	get_certlist(callsign, dxcc, false, false, false);
@@ -1972,7 +1980,7 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 			// If only one callsign matches the dxcc entity, just use that
 			if (ncerts == 1) {
 				tqsl_getCertificateCallSign(certlist[0], callsign, sizeof callsign);
-				tqsl_setLocationCallSign(loc, callsign);
+				tqsl_setLocationCallSign(loc, callsign, -1);
 			} else if (ncerts > 1) {
 				wxString *choices = new wxString[ncerts];
 				// Get today's date
@@ -2007,24 +2015,16 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 					return TQSL_EXIT_CANCEL;
 				tqsl_getCertificateCallSign(certlist[idx], callsign, sizeof callsign);
 				get_certlist(callsign, dxcc, false, false, false);
-				tqsl_setLocationCallSign(loc, callsign);
+				tqsl_setLocationCallSign(loc, callsign, -1);
 			}
-			// TRANSLATORS: filename being signed, station location and callsign added later.
-			wxString fmt = _("The file (%s) will be signed using:");
-				 fmt += wxT("\n");
-				 fmt += _("Station Location:");
-				 fmt += wxT(" %hs\n");
-				 fmt += _("Call sign:");
-				 fmt += wxT(" %hs\n");
-				 fmt += _("DXCC:");
-				 fmt += wxT(" %hs\n");
-				 fmt += _("Is this correct?");
+
 			char loc_name[128];
 			if (tqsl_getStationLocationCaptureName(loc, loc_name, sizeof loc_name)) {
 				strncpy(loc_name, "Unknown", sizeof loc_name);
 			}
-			if (wxMessageBox(wxString::Format(fmt, infile.c_str(), loc_name,
-				callsign, dx.name()), _("TQSL - Confirm signing"), wxYES_NO | wxICON_QUESTION, this) != wxYES) {
+			LocPropDial dial(wxString::FromUTF8(loc_name), false, this);
+			int locnOK = dial.ShowModal();
+			if (locnOK != wxID_OK)  {
 				return TQSL_EXIT_CANCEL;
 			}
 		}
@@ -2033,11 +2033,10 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 		// for this DXCC location. If we used the default call, set that
 		// for the location
 		if (defcall) {
-			tqsl_setLocationCallSign(loc, defcall);
+			tqsl_setLocationCallSign(loc, defcall, -1);
 		}
 	}
 	if (ncerts == 0) {
-		wxString msg;
 		wxString fmt = _("There are no valid callsign certificates for callsign");
 		fmt += wxT(" %hs ");
 		fmt += _("in entity");
@@ -2053,9 +2052,11 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 	free_certlist();
 	get_certlist("", 0, false, false, false);
 
-	wxString msg = _("Signing using Callsign %hs, DXCC Entity %hs");
+	msg = _("Signing using Callsign %hs, DXCC Entity %hs");
 	msg += wxT("\n");
 	wxLogMessage(msg, callsign, dx.name());
+
+ skip_call:
 
 	init_modes();
 	init_contests();
@@ -2079,7 +2080,7 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
  restart:
 
 	ConvertingDialog *conv_dial = new ConvertingDialog(this, infile.ToUTF8());
-	n = 0;
+	numrecs = 0;
 	bool cancelled = false;
 	bool aborted = false;
 	int lineno = 0;
@@ -2123,6 +2124,8 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 		config->Read(wxT("BadCalls"), &allow);
 		tqsl_setConverterAllowBadCall(logConv, allow);
 		tqsl_setConverterAllowDuplicates(logConv, allow_dupes);
+		config->Read(wxT("IgnoreSeconds"), &allow, DEFAULT_IGNORE_SECONDS);
+		tqsl_setConverterIgnoreSeconds(logConv, allow);
 		tqsl_setConverterAppName(logConv, iam);
 		tqsl_setConverterQTHDetails(logConv, logverify);
 
@@ -2145,12 +2148,12 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 					break;
 				// Only count QSO records
 				if (strstr(cp, "tCONTACT")) {
-					++n;
+					++numrecs;
 					++processed;
 				}
 				if ((processed % 10) == 0) {
 					wxString progress = wxString::Format(_("QSOs: %d"), processed);
-					if (duplicates > 0)
+					if (!allow_dupes && duplicates > 0)
 						progress += wxT(" ") + wxString::Format(_("Already Uploaded: %d"), duplicates);
 					if (errors > 0 || out_of_range > 0)
 						progress += wxT(" ") + wxString::Format(_("Errors: %d"), errors + out_of_range);
@@ -2160,11 +2163,19 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 			}
 			if ((processed % 10) == 0) {
 				wxString progress = wxString::Format(_("QSOs: %d"), processed);
-				if (duplicates > 0)
+				if (!allow_dupes && duplicates > 0)
 					progress += wxT(" ") + wxString::Format(_("Already uploaded: %d"), duplicates);
 				if (errors > 0 || out_of_range > 0)
 					progress += wxT(" ") + wxString::Format(_("Errors: %d"), errors + out_of_range);
 				conv_dial->msg->SetLabel(progress);
+			}
+			// Handle large logs already uploaded.
+			// More than 50,000 QSOs. 80% dupes or more (40,000 Qs).
+			// Running with all QSOs allowed
+			if (processed > 50000 && duplicates > 40000 && allow_dupes) {
+				wxLogError(_("This log has too many previously uploaded QSOs. Please only upload new QSOs or break the log into smaller pieces (50,000 QSOs or less)."));
+				aborted = true;
+				break;
 			}
 			if (cp == 0) {
 				if (!this->IsQuiet())
@@ -2290,10 +2301,10 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 
 		if (cancelled) {
 			wxLogWarning(_("Signing cancelled"));
-			n = 0;
+			numrecs = 0;
 		} else if (aborted) {
 			wxLogWarning(_("Signing aborted"));
-			n = 0;
+			numrecs = 0;
 		} else if (tQSL_Error != TQSL_NO_ERROR) {
 			check_tqsl_error(1);
 		}
@@ -2318,7 +2329,7 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 		wxLogMessage(_("%s: %d QSO records were outside the selected date range"),
 			infile.c_str(), out_of_range);
 	if (duplicates > 0) {
-		if (cancelled) {
+		if (cancelled || aborted) {
 			tqsl_converterRollBack(logConv);
 			tqsl_endConverter(&logConv);
 			unlock_db();
@@ -2351,14 +2362,14 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 					tqsl_converterRollBack(logConv);
 					tqsl_endConverter(&logConv);
 					unlock_db();
-					n = 0;
+					numrecs = 0;
 					return TQSL_EXIT_NO_QSOS;
 				} else {
 					wxLogMessage(_("%d of %d QSOs are already uploaded; aborted"), duplicates, processed);
 					tqsl_converterRollBack(logConv);
 					tqsl_endConverter(&logConv);
 					unlock_db();
-					n = 0;
+					numrecs = 0;
 					return TQSL_EXIT_NO_QSOS;
 				}
 		} else if (action == TQSL_ACTION_ALL) {
@@ -2388,7 +2399,7 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 	unlock_db();
 	if (cancelled)
 		return TQSL_EXIT_CANCEL;
-	if (n == 0)
+	if (numrecs == 0)
 		return TQSL_EXIT_NO_QSOS;
 	if (aborted || duplicates > 0 || out_of_range > 0 || errors > 0)
 		return TQSL_EXIT_QSOS_SUPPRESSED;
@@ -2511,6 +2522,14 @@ MyFrame::ConvertLogFile(tQSL_Location loc, const wxString& infile, const wxStrin
 		wxLogMessage(_("%s is ready to be emailed or uploaded."), outfile.c_str());
 		wxLogMessage(_("Note: TQSL assumes that this file will be uploaded to LoTW."));
 		wxLogMessage(_("Resubmitting these QSOs will cause them to be reported as already uploaded."));
+		wxLogMessage(wxT(""));
+		wxLogMessage(_("To submit the signed log file to LoTW:\n"
+			     "1. Move the signed log file to a computer with internet access\n"
+   		             "2. Log in to your LoTW Web Account\n"
+			     "3. Select the Upload File tab\n"
+			     "4. Click the Choose File button, and select the signed log file you created (%s)\n"
+			     "5. Click the Upload file button\n\n"
+			     "Alternatively, you can attach the signed log file to an email message, and send the message to lotw-logs@arrl.org"), outfile.c_str());
 	}
 
 	return status;
@@ -2980,8 +2999,32 @@ static bool verify_cert(tQSL_Location loc, bool editing) {
 		}
 		return false;
 	}
+	if (editing) {
+		tqsl_freeCertificateList(certlist, ncerts);
+		return true;
+	}
+// check if there's a good cert right now for this call
+	bool goodCert = false;
+	long serial = 0;
+	wxString status;
+	for (int i = 0; i < ncerts; i++) {
+		tqsl_getCertificateSerial(certlist[i], &serial);
+		frame->CheckCertStatus(serial, status);
+		if (status == wxT("Bad serial")) {
+			wxMessageBox(wxString::Format(_("There are no current callsign certificates for callsign %hs. This station location cannot be used to sign a log file."), call), _("No Certificate"), wxOK | wxICON_EXCLAMATION);
+			return false;
+		} else if (status == wxT("Superceded")) {
+			wxMessageBox(wxString::Format(_("There is a newer callsign certificate for callsign %hs. This station location cannot be used to sign a log file until the new certificate is installed."), call), _("No Certificate"), wxOK | wxICON_EXCLAMATION);
+		} else if (status == wxT("Expired")) {
+			wxMessageBox(wxString::Format(_("The callsign certificate for callsign %hs has expired. This station location cannot be used to sign a log file until a valid callsign certificate is installed."), call), _("No Certificate"), wxOK | wxICON_EXCLAMATION);
+		} else if (status == wxT("Unrevoked")) {
+			goodCert = true;
+		} else {			// Can't tell - no network?
+			goodCert = true;
+		}
+	}
 	tqsl_freeCertificateList(certlist, ncerts);
-	return true;
+	return goodCert;
 }
 
 tQSL_Location
@@ -4273,7 +4316,7 @@ MyFrame::ProcessQSODataFile(bool upload, bool compressed) {
 	wxString outfile;
 
 	// Does the user have any certificates?
-	get_certlist("", 0, false, false, true);
+	get_certlist("", 0, false, false, true);	// any call, any DXCC, not expired or superceded
 	if (ncerts == 0) {
 		wxString msg = _("You have no callsign certificates to use to sign a log file.");
 			msg += wxT("\n");
@@ -4377,17 +4420,9 @@ MyFrame::ProcessQSODataFile(bool upload, bool compressed) {
 		tqslTrace("MyFrame::ProcessQSODataFile", "file=%s location %hs, call %hs dxcc %hs",
 				S(infile), loc_name, callsign, dxcc.name());
 		if (strcmp(callsign, "[None]")) {
-			wxString fmt = _("The file (%s) will be signed using:");
-				 fmt += wxT("\n");
-				 fmt += _("Station Location:");
-				 fmt += wxT(" %hs\n");
-				 fmt += _("Call sign:");
-				 fmt += wxT(" %hs\n");
-				 fmt += _("DXCC:");
-				 fmt += wxT(" %hs\n");
-				 fmt += _("Is this correct?");
-			if (wxMessageBox(wxString::Format(fmt, infile.c_str(), loc_name,
-				callsign, dxcc.name()), _("TQSL - Confirm signing"), wxYES_NO | wxICON_QUESTION, this) == wxYES) {
+			LocPropDial dial(wxString::FromUTF8(loc_name), false, this);
+			int locnOK = dial.ShowModal();
+			if (locnOK == wxID_OK) {
 				if (upload) {
 					UploadLogFile(loc, infile);
 				} else {
@@ -4415,7 +4450,6 @@ MyFrame::ProcessQSODataFile(bool upload, bool compressed) {
 		s += err;
 		wxLogError(wxT("%s"), (const char *)s.c_str());
 	}
-	free_certlist();
 	return;
 }
 
@@ -5835,6 +5869,16 @@ QSLApp::OnInit() {
 	}
 
 	// Assume that it's a log to sign
+
+	if (logverify == TQSL_LOC_UPDATE && loc == NULL) {			// Update mode, use fake empty location.
+		if (tqsl_getStationLocation(&loc, ".empty")) {			// Already exists?
+			tqsl_initStationLocationCapture(&loc);			// No, make a new one.
+			tqsl_setStationLocationCaptureName(loc, ".empty");
+			tqsl_saveStationLocationCapture(loc, 1);
+			tqsl_getStationLocation(&loc, ".empty");
+		}
+	}
+
 	if (loc == 0) {
 		try {
 			int n;
@@ -6056,7 +6100,6 @@ makeCertificateMenu(bool enable, bool keyonly, const char *callsign) {
 	tqslTrace("makeCertificateMenu", "enable=%d, keyonly=%d", enable, keyonly);
 	wxMenu *c_menu = new wxMenu;
 	c_menu->Append(tc_c_Properties, _("Display Callsign Certificate &Properties"));
-	c_menu->Enable(tc_c_Properties, enable);
 	c_menu->AppendSeparator();
 	c_menu->Append(tc_c_Load, _("&Load Callsign Certificate from File"));
 	c_menu->Append(tc_c_Export, _("&Save Callsign Certificate to File..."));
@@ -6070,7 +6113,7 @@ makeCertificateMenu(bool enable, bool keyonly, const char *callsign) {
 		c_menu->AppendSeparator();
 	}
 	c_menu->Append(tc_c_Delete, _("&Delete Callsign Certificate"));
-	c_menu->Enable(tc_c_Delete, enable);
+	c_menu->Enable(tc_c_Delete, (callsign != NULL));
 	c_menu->AppendSeparator();
 
 	int ncalls = 0;
@@ -6511,19 +6554,26 @@ void MyFrame::OnCertExport(wxCommandEvent& WXUNUSED(event)) {
 		wxLogError(getLocalizedErrorString());
 		return;
 	}
-	tqslTrace("MyFrame::OnCertExport", "call=%s", call);
-	wxString file_default = flattenCallSign(wxString::FromUTF8(call));
-	int ko = 0;
-	tqsl_getCertificateKeyOnly(data->getCert(), &ko);
-	if (ko)
-		file_default += wxT("-key-only");
-	file_default += wxT(".p12");
-	wxString path = wxConfig::Get()->Read(wxT("CertFilePath"), wxT(""));
-	wxString filename = wxFileSelector(_("Enter the name for the new Certificate Container file"), path,
-		file_default, wxT(".p12"), _("Certificate Container files (*.p12)|*.p12|All files (*.*)|*.*"),
-		wxFD_SAVE|wxFD_OVERWRITE_PROMPT, this);
-	if (filename.IsEmpty())
-		return;
+	wxString filename;
+	if (!data->path.IsEmpty() && !data->basename.IsEmpty()) {
+		filename = data->path + data->basename + wxT(".p12");
+
+	} else {
+		tqslTrace("MyFrame::OnCertExport", "call=%s", call);
+		wxString file_default = flattenCallSign(wxString::FromUTF8(call));
+		int ko = 0;
+		tqsl_getCertificateKeyOnly(data->getCert(), &ko);
+		if (ko)
+			file_default += wxT("-key-only");
+		file_default += wxT(".p12");
+		wxString path = wxConfig::Get()->Read(wxT("CertFilePath"), wxT(""));
+		filename = wxFileSelector(_("Enter the name for the new Certificate Container file"), path,
+			file_default, wxT(".p12"), _("Certificate Container files (*.p12)|*.p12|All files (*.*)|*.*"),
+			wxFD_SAVE|wxFD_OVERWRITE_PROMPT, this);
+		if (filename.IsEmpty())
+			return;
+	}
+
 	wxConfig::Get()->Write(wxT("CertFilePath"), wxPathOnly(filename));
 	wxString msg = _("Enter the passphrase for the certificate container file.");
 		msg += wxT("\n\n");
@@ -6904,23 +6954,34 @@ CertPropDial::CertPropDial(tQSL_Cert cert, wxWindow *parent)
 	wxBoxSizer *topsizer = new wxBoxSizer(wxVERTICAL);
 
 	int label_width = 0;
+	int label_height = 0;
 
-	wxStaticText* mst = new wxStaticText(this, -1, wxT("M"));
+	wxStaticText* mst = new wxStaticText(this, -1, wxT("I"));
 	int char_width = mst->GetSize().GetWidth();
-	// Measure the widest label
+
+	// Measure the widest label - starting with the one that isn't there by default
+	wxString lab = wxGetTranslation(_("Certificate Request"));
+	lab = lab + wxT(":");
+	mst->SetLabel(lab);
+	int em_w = mst->GetSize().GetWidth();
+
+	// Only start with that label if it's going to appear
+	int keyonly;
+	tqsl_getCertificateKeyOnly(cert, &keyonly);
+	if (!keyonly) em_w = 0;
+
+	// Find the widest label
 	for (int i = 0; i < static_cast<int>(sizeof labels / sizeof labels[0]); i++) {
-		int em_w;
 		wxString lab = wxGetTranslation(wxString::FromUTF8(labels[i]));
 		mst->SetLabel(lab);
 		em_w = mst->GetSize().GetWidth();
 		if (em_w > label_width) label_width = em_w;
 	}
 
-	int keyonly;
 	char callsign[40];
 
-	tqsl_getCertificateKeyOnly(cert, &keyonly);
 	wxString blob = wxT("");
+	wxString prefix = wxT("");
 	for (int i = 0; i < static_cast<int>(sizeof labels / sizeof labels[0]); i++) {
 		wxString lbl = wxGetTranslation(wxString::FromUTF8(labels[i]));
 		while (1) {
@@ -6930,7 +6991,9 @@ CertPropDial::CertPropDial(tQSL_Cert cert, wxWindow *parent)
 			if (delta < char_width) break;
 			lbl += wxT(" ");
 		}
-
+		// Store the "empty" label for later
+		if (strlen(labels[i]) == 0)
+			prefix = lbl;
 		char buf[128];
 		tQSL_Date certExpDate;
 		tQSL_Date date;
@@ -6989,7 +7052,9 @@ CertPropDial::CertPropDial(tQSL_Cert cert, wxWindow *parent)
 				// If no end-date given, the QSO End Date is one less than
 				// the expiration date
 					int delta;
-					if (!tqsl_subtractDates(&date, &certExpDate, &delta)) {
+					if (keyonly) {
+						strncpy(buf, "N/A", sizeof buf);
+					} else if (!tqsl_subtractDates(&date, &certExpDate, &delta)) {
 						if (delta == 1) {
 							strncpy(buf, "N/A", sizeof buf);
 						} else {
@@ -7035,8 +7100,8 @@ CertPropDial::CertPropDial(tQSL_Cert cert, wxWindow *parent)
 				break;
 		}
 		if (keyonly && i == 0) {
-			blob += _("Certificate Request:");
-			blob += wxT("\t");
+			blob += _("Certificate Request");
+			blob += wxT(":\t");
 			blob += _("Awaiting response from ARRL");
 			blob += wxT("\n");
 		}
@@ -7047,21 +7112,25 @@ CertPropDial::CertPropDial(tQSL_Cert cert, wxWindow *parent)
 			blob += wxT("\n");
 		}
 	}
-	delete mst;
 
 	int sup, exp;
 	if (tqsl_isCertificateSuperceded(cert, &sup) == 0 && sup) {
-		blob += wxT("\t\t\t\t");
+		blob += prefix + wxT("\t");
 		blob += _("Replaced");
 		blob += wxT("\n");
 	}
 	if (tqsl_isCertificateExpired(cert, &exp) == 0 && exp) {
-		blob += wxT("\t\t\t\t");
+		blob += prefix + wxT("\t");
 		blob += _("Expired");
 		blob += wxT("\n");
 	}
 
-	topsizer->Add(new wxStaticText(this, -1, blob));
+	mst->SetLabel(blob);
+	label_width = mst->GetSize().GetWidth();
+	label_height = mst->GetSize().GetHeight();
+	delete mst;
+
+	topsizer->Add(new wxStaticText(this, -1, blob, wxDefaultPosition, wxSize(label_width + 20, label_height + 5)));
 	topsizer->Add(
 		new wxButton(this, wxID_OK, _("Close")),
 		0, wxALIGN_CENTER | wxALL, 10
@@ -7082,19 +7151,11 @@ displayCertProperties(CertTreeItemData *item, wxWindow *parent) {
 	}
 }
 
-
-class LocPropDial : public wxDialog {
- public:
-	explicit LocPropDial(wxString locname, wxWindow *parent = 0);
-	void closeMe(wxCommandEvent&) { EndModal(wxID_OK); }
-	DECLARE_EVENT_TABLE()
-};
-
 BEGIN_EVENT_TABLE(LocPropDial, wxDialog)
 	EVT_BUTTON(wxID_OK, LocPropDial::closeMe)
 END_EVENT_TABLE()
 
-LocPropDial::LocPropDial(wxString locname, wxWindow *parent)
+LocPropDial::LocPropDial(wxString locname, bool display, wxWindow *parent)
 		: wxDialog(parent, -1, _("Station Location Properties"), wxDefaultPosition, wxSize(1000, 15 * LABEL_HEIGHT)) {
 	tqslTrace("LocPropDial", "locname=%s", S(locname));
 
@@ -7114,6 +7175,10 @@ LocPropDial::LocPropDial(wxString locname, wxWindow *parent)
 				 "AU_STATE", __("State: "),
 				 "DX_US_PARK", __("Park: ") };
 
+	if (!display) {
+		SetTitle(_("Verify QTH details: ") + locname);
+	}
+
 	tQSL_Location loc;
 	try {
 		check_tqsl_error(tqsl_getStationLocation(&loc, locname.ToUTF8()));
@@ -7127,51 +7192,65 @@ LocPropDial::LocPropDial(wxString locname, wxWindow *parent)
 
 	int label_width = 0;
 
-	wxStaticText* mst = new wxStaticText(this, -1, wxT("M"));
-	int char_width = mst->GetSize().GetWidth();
+	wxStaticText* mst = new wxStaticText(this, -1, wxT("I"));
 	// Measure the widest label
-	for (int i = 0; i < static_cast<int>(sizeof fields / sizeof fields[0]); i++) {
+	for (int i = 0; i < static_cast<int>(sizeof fields / sizeof fields[0]); i += 2) {
 		int em_w;
-		mst->SetLabel(wxGetTranslation(wxString::FromUTF8(fields[i])));
+		mst->SetLabel(wxString::FromUTF8(fields[i+1]));
 		em_w = mst->GetSize().GetWidth();
 		if (em_w > label_width) label_width = em_w;
 	}
 
-	wxString blob = wxT("");
+
+	wxFont callSignFont(32, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+	wxFont dxccFont(24, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+
 	char fieldbuf[512];
-	for (int i = 0; i < static_cast<int>(sizeof fields / sizeof fields[0]); i+=2) {
+	for (int i = 0; i < static_cast<int>(sizeof fields / sizeof fields[0]); i += 2) {
 		if (tqsl_getStationLocationField(loc, fields[i], fieldbuf, sizeof fieldbuf) == 0) {
 			if (strlen(fieldbuf) > 0 && strcmp(fieldbuf, "[None]") != 0) {
-				wxString lbl = wxGetTranslation(wxString::FromUTF8(fields[i+1]));
-				while(1) {
-					mst->SetLabel(lbl);
-					int cur_size = mst->GetSize().GetWidth();
-					int delta = label_width - cur_size;
-					if (delta < char_width) break;
-					lbl += wxT(" ");
-				}
-				blob += lbl;
-				blob += wxT("\t");
-				if (!strcmp(fields[i], "DXCC")) {
+				if (!strcmp(fields[i], "CALL")) {
+				        wxStaticText* callLabel = new wxStaticText(this, -1, wxString::FromUTF8(fieldbuf), wxDefaultPosition, wxSize(label_width*8, -1), wxALIGN_CENTRE_HORIZONTAL|wxST_NO_AUTORESIZE);
+        				callLabel->SetFont(callSignFont);
+					topsizer->Add(callLabel);
+				}  else if (!strcmp(fields[i], "DXCC")) {
 					int dxcc = strtol(fieldbuf, NULL, 10);
 					const char *dxccname = NULL;
 					if (tqsl_getDXCCEntityName(dxcc, &dxccname))
 						strncpy(fieldbuf, "Unknown", sizeof fieldbuf);
 					else
 						strncpy(fieldbuf, dxccname, sizeof fieldbuf);
+				        wxStaticText* dxccLabel = new wxStaticText(this, -1, wxString::FromUTF8(fieldbuf), wxDefaultPosition, wxSize(label_width*8, -1), wxALIGN_CENTRE_HORIZONTAL|wxST_NO_AUTORESIZE);
+        				dxccLabel->SetFont(dxccFont);
+					topsizer->Add(dxccLabel);
+				} else {
+					wxString lbl = wxGetTranslation(wxString::FromUTF8(fields[i+1]));
+					wxString det = lbl + wxT(" ") + wxString::FromUTF8(fieldbuf);
+				        wxStaticText* detailsLabel = new wxStaticText(this, -1, det, wxDefaultPosition, wxSize(label_width*8, -1), wxALIGN_CENTRE_HORIZONTAL|wxST_NO_AUTORESIZE);
+					topsizer->Add(detailsLabel);
 				}
-				blob += wxString::FromUTF8(fieldbuf);
-				blob += wxT("\n");
 			}
 		}
 	}
 	delete mst;
+	if (display) {
+		topsizer->Add(new wxButton(this, wxID_OK, _("Close")),
+				0, wxALIGN_CENTER | wxALL, 10);
+	} else {
+		int fontSize = wxNORMAL_FONT->GetPointSize();
+		wxFont fnt(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+		wxStaticText* m1 = new wxStaticText(this, -1, _("Please verify that this is the correct Station Location for the QSOs being signed."));
+		m1->SetFont(fnt);
+		topsizer->Add(m1, 0, wxALL | wxALIGN_CENTER, 10);
+		wxStaticText* m2 = new wxStaticText(this, -1, _("Click 'Cancel' if this is not the correct Station Location."));
+		m2->SetFont(fnt);
+		topsizer->Add(m2, 0, wxALL | wxALIGN_CENTER, 10);
+		wxBoxSizer *butSizer = new wxBoxSizer(wxHORIZONTAL);
+		butSizer->Add(CreateButtonSizer(wxOK|wxCANCEL), 0, wxALL | wxALIGN_CENTER, 10);
+		topsizer->Add(butSizer, 0, wxALIGN_CENTER |wxALL, 10);
+	}
 
-	topsizer->Add(new wxStaticText(this, -1, blob));
-	topsizer->Add(
-		new wxButton(this, wxID_OK, _("Close")),
-				0, wxALIGN_CENTER | wxALL, 10
-	);
+	topsizer->AddSpacer(50);
 	SetAutoLayout(TRUE);
 	SetSizer(topsizer);
 	topsizer->Fit(this);
@@ -7183,7 +7262,7 @@ void
 displayLocProperties(LocTreeItemData *item, wxWindow *parent) {
 	tqslTrace("displayLocProperties", "item=%lx", item);
 	if (item != NULL) {
-		LocPropDial dial(item->getLocname(), parent);
+		LocPropDial dial(item->getLocname(), true, parent);
 		dial.ShowModal();
 	}
 }
