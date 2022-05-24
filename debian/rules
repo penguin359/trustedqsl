@@ -27,5 +27,6 @@ override_dh_installman:
 
 override_dh_auto_configure:
 	dh_auto_configure -- \
+		-DTQSL_RPATH=TRUE \
 		-DCMAKE_INSTALL_LIBDIR=lib/trustedqsl \
 		-DCMAKE_INSTALL_MANDIR=/usr/share/man
