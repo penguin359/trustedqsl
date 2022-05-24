@@ -367,6 +367,9 @@
       <Component Id="cmp25B46676F6ABF6C4521D0F97545C42FA" Directory="dir6F17F3A9FB839342385010C1698DDB65" Guid="*">
         <File Id="fil8272CA3094B0DDE0CEFDEB7B5CDD3336" KeyPath="yes" Source="$(var.helpSrc)\tqslapp\update2.bmp" />
       </Component>
+      <Component Id="cmpE4A6F21788CA4C08921195A2374B80B4" Directory="dir6F17F3A9FB839342385010C1698DDB65" Guid="*">
+        <File Id="filF301F1A09CC041E3904CCBF4AABA9809" KeyPath="yes" Source="$(var.helpSrc)\tqslapp\stnprop.bmp" />
+      </Component>
     </ComponentGroup>
   </Fragment>
   <Fragment>

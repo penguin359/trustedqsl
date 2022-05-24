@@ -101,6 +101,7 @@ class TQSL_CONVERTER {
 	char serial[512];
 	char callsign[64];
 	bool allow_dupes;
+	bool ignore_secs;
 	bool need_ident_rec;
 	char *appName;
 	int dxcc;
@@ -128,6 +129,7 @@ inline TQSL_CONVERTER::TQSL_CONVERTER()  : sentinel(0x4445) {
 	allow_bad_calls = false;
 	location_handling = TQSL_LOC_UPDATE;
 	allow_dupes = true; //by default, don't change existing behavior (also helps with commit)
+	ignore_secs = false;	// Use full time
 	memset(&rec, 0, sizeof rec);
 	memset(&start, 0, sizeof start);
 	memset(&end, 0, sizeof end);
@@ -1225,6 +1227,8 @@ static void parse_adif_qso(TQSL_CONVERTER *conv, int *saveErr, TQSL_ADIF_GET_FIE
 			cstat = tqsl_initTime(&(conv->rec.time), resdata);
 			if (cstat)
 				*saveErr = tQSL_Error;
+			if (conv->ignore_secs)
+				conv->rec.time.second = 0;
 		} else if (!strcasecmp(result.name, "MY_CNTY") && resdata) {
 			char *p = strstr(resdata, ",");			// Find the comma in "VA,Fairfax"
 			if (p) {
@@ -1492,6 +1496,8 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 					} else if (!strcasecmp(field.name, "TIME_ON")) {
 						conv->rec.time_set = true;
 						cstat = tqsl_initTime(&(conv->rec.time), field.value);
+						if (conv->ignore_secs)
+							conv->rec.time.second = 0;
 						if (cstat)
 							saveErr = tQSL_Error;
 					} else if (!strcasecmp(field.name, "MYCALL")) {
@@ -1667,7 +1673,7 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 	}
 
 	// Check cert
-	if (conv->ncerts <= 0) {
+	if (conv->location_handling != TQSL_LOC_UPDATE && conv->ncerts <= 0) {
 		conv->rec_done = true;
 		tQSL_Error = TQSL_CERT_NOT_FOUND;
 		return 0;
@@ -1709,7 +1715,9 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 	int cidx = find_matching_cert(conv, targetdxcc, &anyfound);
 	if (cidx < 0) {
 		conv->rec_done = true;
-		strncpy(tQSL_CustomError, conv->callsign, sizeof tQSL_CustomError);
+		const char *entName;
+		tqsl_getDXCCEntityName(targetdxcc, &entName);
+		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "%s|%s", conv->callsign, entName);
 		tQSL_Error = TQSL_CERT_NOT_FOUND | 0x1000;
 		if (anyfound) {
 			tQSL_Error = TQSL_CERT_DATE_MISMATCH;
@@ -1717,7 +1725,7 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		}
 		if (conv->location_handling == TQSL_LOC_UPDATE) {
 			if (conv->rec.my_call[0]) {
-				strncpy(tQSL_CustomError, conv->rec.my_call, sizeof tQSL_CustomError);
+				snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "%s|%s", conv->rec.my_call, entName);
 			}
 		}
 		return 0;
@@ -1725,7 +1733,8 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 	if (cidx != conv->cert_idx) {
 		// Switching certs
 		if (conv->dxcc != -1) {
-			tqsl_setLocationCallSign(conv->loc, conv->callsign);	// Set callsign
+			conv->dxcc = targetdxcc;
+			tqsl_setLocationCallSign(conv->loc, conv->callsign, conv->dxcc);	// Set callsign and DXCC
         		tqsl_setStationLocationCapturePage(conv->loc, 1);	// Update to relevant fields
 			tqsl_updateStationLocationCapture(conv->loc);
 		}
@@ -2102,6 +2111,15 @@ tqsl_setConverterAllowDuplicates(tQSL_Converter convp, int allow) {
 	if (!(conv = check_conv(convp)))
 		return 1;
 	conv->allow_dupes = (allow != 0);
+	return 0;
+}
+
+DLLEXPORT int CALLCONVENTION
+tqsl_setConverterIgnoreSeconds(tQSL_Converter convp, int ignore) {
+	TQSL_CONVERTER *conv;
+	if (!(conv = check_conv(convp)))
+		return 1;
+	conv->ignore_secs = (ignore != 0);
 	return 0;
 }
 

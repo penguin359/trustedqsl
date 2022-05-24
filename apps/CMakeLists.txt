@@ -50,7 +50,7 @@ if(APPLE)
 	set(MACOSX_BUNDLE_GUI_IDENTIFIER "org.arrl.tqsl")
 	set(MACOSX_BUNDLE_LONG_VERSION_STRING "TQSL V ${TQSLVERSION} build ${BUILD}")
 	set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${TQSLVERSION}")
-	set(MACOSX_BUNDLE_COPYRIGHT "Copyright 2001-2021 American Radio Relay League")
+	set(MACOSX_BUNDLE_COPYRIGHT "Copyright 2001-2022 American Radio Relay League")
 
 	set(MACOSX_BUNDLE_ICON_FILE ${OSX_ICONFILE})
 	SET_SOURCE_FILES_PROPERTIES(${OSX_ICONFILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
@@ -61,11 +61,20 @@ if (NOT DEFINED TQSL_RPATH)
 	SET (TQSL_RPATH FALSE)
 endif ()
 
-if(NOT WIN32) #rpath setup
-	SET(CMAKE_SKIP_BUILD_RPATH ${TQSL_RPATH})
-	SET(CMAKE_BUILD_WITH_INSTALL_RPATH ${TQSL_RPATH}) 
+# Setting rpath is a workaround that shouldn't be in a
+# product designed for multiple distributions. 
+# However, users doing their own build from source need
+# to sometimes set this. If your install can't find libtqsllib.so
+# then add "-DTQSL_RPATH" to the cmake command line and try
+# a reinstall.
+#
+# Some other possible RPATH hacks commented out. YMMV.
+if(TQSL_RPATH) #rpath setup
+#	SET(CMAKE_SKIP_BUILD_RPATH ${TQSL_RPATH})
+#	SET(CMAKE_BUILD_WITH_INSTALL_RPATH ${TQSL_RPATH}) 
 	SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-	SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+	LIST(APPEND CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR})
+#	SET(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_LIBDIR})
 endif()
 
 
@@ -95,22 +104,22 @@ if(WIN32)
 endif()
 
 if(NOT APPLE AND NOT WIN32)
-	install(TARGETS tqsl DESTINATION bin)
-	install(DIRECTORY help DESTINATION share/TrustedQSL)
+	install(TARGETS tqsl DESTINATION ${CMAKE_INSTALL_BINDIR})
+	install(DIRECTORY help DESTINATION ${CMAKE_INSTALL_DATADIR}/TrustedQSL)
 	install(FILES tqsl.5 DESTINATION ${CMAKE_INSTALL_MANDIR}/man5)
-	install(FILES icons/key48.png DESTINATION share/pixmaps RENAME TrustedQSL.png)
-	install(FILES lang/de/tqslapp.mo DESTINATION share/locale/de/LC_MESSAGES)
-	install(FILES lang/es/tqslapp.mo DESTINATION share/locale/es/LC_MESSAGES)
-	install(FILES lang/fi/tqslapp.mo DESTINATION share/locale/fi/LC_MESSAGES)
-	install(FILES lang/fr/tqslapp.mo DESTINATION share/locale/fr/LC_MESSAGES)
-	install(FILES lang/hi_IN/tqslapp.mo DESTINATION share/locale/hi_IN/LC_MESSAGES)
-	install(FILES lang/it/tqslapp.mo DESTINATION share/locale/it/LC_MESSAGES)
-	install(FILES lang/ja/tqslapp.mo DESTINATION share/locale/ja/LC_MESSAGES)
-	install(FILES lang/pt/tqslapp.mo DESTINATION share/locale/pt/LC_MESSAGES)
-	install(FILES lang/zh_TW/tqslapp.mo DESTINATION share/locale/zh_TW/LC_MESSAGES)
-	install(FILES lang/zh_CN/tqslapp.mo DESTINATION share/locale/zh_CN/LC_MESSAGES)
-	install(FILES lang/ru/tqslapp.mo DESTINATION share/locale/ru/LC_MESSAGES)
-	install(FILES languages.dat DESTINATION share/TrustedQSL)
-	install(FILES cab_modes.dat DESTINATION share/TrustedQSL)
+	install(FILES icons/key48.png DESTINATION ${CMAKE_INSTALL_DATADIR}/pixmaps RENAME TrustedQSL.png)
+	install(FILES lang/de/tqslapp.mo DESTINATION ${CMAKE_INSTALL_DATADIR}/locale/de/LC_MESSAGES)
+	install(FILES lang/es/tqslapp.mo DESTINATION ${CMAKE_INSTALL_DATADIR}/locale/es/LC_MESSAGES)
+	install(FILES lang/fi/tqslapp.mo DESTINATION ${CMAKE_INSTALL_DATADIR}/locale/fi/LC_MESSAGES)
+	install(FILES lang/fr/tqslapp.mo DESTINATION ${CMAKE_INSTALL_DATADIR}/locale/fr/LC_MESSAGES)
+	install(FILES lang/hi_IN/tqslapp.mo DESTINATION ${CMAKE_INSTALL_DATADIR}/locale/hi_IN/LC_MESSAGES)
+	install(FILES lang/it/tqslapp.mo DESTINATION ${CMAKE_INSTALL_DATADIR}/locale/it/LC_MESSAGES)
+	install(FILES lang/ja/tqslapp.mo DESTINATION ${CMAKE_INSTALL_DATADIR}/locale/ja/LC_MESSAGES)
+	install(FILES lang/pt/tqslapp.mo DESTINATION ${CMAKE_INSTALL_DATADIR}/locale/pt/LC_MESSAGES)
+	install(FILES lang/zh_TW/tqslapp.mo DESTINATION ${CMAKE_INSTALL_DATADIR}/locale/zh_TW/LC_MESSAGES)
+	install(FILES lang/zh_CN/tqslapp.mo DESTINATION ${CMAKE_INSTALL_DATADIR}/locale/zh_CN/LC_MESSAGES)
+	install(FILES lang/ru/tqslapp.mo DESTINATION ${CMAKE_INSTALL_DATADIR}/locale/ru/LC_MESSAGES)
+	install(FILES languages.dat DESTINATION ${CMAKE_INSTALL_DATADIR}/TrustedQSL)
+	install(FILES cab_modes.dat DESTINATION ${CMAKE_INSTALL_DATADIR}/TrustedQSL)
 
 endif()

@@ -994,8 +994,17 @@ DLLEXPORT int CALLCONVENTION tqsl_setStationLocationCertFlags(tQSL_Location loc,
 /** Advance the page to the next one in the page sequence */
 DLLEXPORT int CALLCONVENTION tqsl_nextStationLocationCapture(tQSL_Location loc);
 
+/** Return the next page to in the page sequence */
+DLLEXPORT int CALLCONVENTION tqsl_getNextStationLocationCapturePage(tQSL_Location loc, int *page);
+
 /** Return the page to the previous one in the page sequence. */
 DLLEXPORT int CALLCONVENTION tqsl_prevStationLocationCapture(tQSL_Location loc);
+
+/** Return the previous page in the page sequence. */
+DLLEXPORT int CALLCONVENTION tqsl_getPrevStationLocationCapturePage(tQSL_Location loc, int *page);
+
+/** Return the current page in the page sequence. */
+DLLEXPORT int CALLCONVENTION tqsl_getCurrentStationLocationCapturePage(tQSL_Location loc, int *page);
 
 /** Returns 1 (in rval) if there is a next page */
 DLLEXPORT int CALLCONVENTION tqsl_hasNextStationLocationCapture(tQSL_Location loc, int *rval);
@@ -1178,7 +1187,7 @@ DLLEXPORT int CALLCONVENTION tqsl_getLocationFieldChanged(tQSL_Location loc, int
 DLLEXPORT int CALLCONVENTION tqsl_getLocationCallSign(tQSL_Location loc, char *buf, int bufsiz);
 
 /** Set the call sign for the station location. */
-DLLEXPORT int CALLCONVENTION tqsl_setLocationCallSign(tQSL_Location loc, const char *buf);
+DLLEXPORT int CALLCONVENTION tqsl_setLocationCallSign(tQSL_Location loc, const char *buf, int dxcc);
 
 /** Get a field from the station location. */
 DLLEXPORT int CALLCONVENTION tqsl_getLocationField(tQSL_Location locp, const char *field, char *buf, int bufsiz);
@@ -1204,7 +1213,7 @@ DLLEXPORT int CALLCONVENTION tqsl_saveCallsignLocationInfo(const char *callsign,
 /** Retrieve the json results for a given callsign location Detail. */
 DLLEXPORT int CALLCONVENTION tqsl_getCallsignLocationInfo(const char *callsign, char **buf);
 
-/** Get the number of DXCC entities in the master DXCC list.
+/** Get the number of DXCC entities in the primary DXCC list.
   */
 DLLEXPORT int CALLCONVENTION tqsl_getNumDXCCEntity(int *number);
 

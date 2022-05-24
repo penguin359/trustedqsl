@@ -195,4 +195,11 @@ class MyFrame : public wxFrame {
 
 int SaveAddressInfo(const char *callsign, int dxcc);
 
+class LocPropDial : public wxDialog {
+ public:
+        explicit LocPropDial(wxString locname, bool display, wxWindow *parent = 0);
+        void closeMe(wxCommandEvent&) { EndModal(wxID_OK); }
+        DECLARE_EVENT_TABLE()
+};
+
 #endif // __tqslapp_h

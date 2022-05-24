@@ -9,7 +9,7 @@
  ***************************************************************************/
 
 
-#define DXCC_TEST
+// #define DXCC_TEST
 
 #define TQSLLIB_DEF
 
@@ -53,6 +53,7 @@ using std::endl;
 using std::exception;
 
 static int init_adif_map(void);
+
 
 namespace tqsllib {
 
@@ -117,7 +118,7 @@ class TQSL_NAME {
 
 class TQSL_LOCATION {
  public:
-	TQSL_LOCATION() : sentinel(0x5445), page(0), cansave(false), sign_clean(false), cert_flags(TQSL_SELECT_CERT_WITHKEYS | TQSL_SELECT_CERT_EXPIRED), newflags(false) {}
+	TQSL_LOCATION() : sentinel(0x5445), page(0), cansave(false), sign_clean(false), cert_flags(TQSL_SELECT_CERT_WITHKEYS | TQSL_SELECT_CERT_EXPIRED), newflags(false), newDXCC(-1) {}
 
 	~TQSL_LOCATION() { sentinel = 0; }
 	int sentinel;
@@ -136,6 +137,7 @@ class TQSL_LOCATION {
 	char data_errors[512];
 	int cert_flags;
 	bool newflags;
+	int newDXCC;
 };
 
 class Band {
@@ -326,13 +328,21 @@ static inline int isspc(int c) {
 
 // trim from start
 static inline std::string &ltrim(std::string &s) {
+#if __cplusplus > 199711L
+	s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int c) {return !std::isspace(c);}));
+#else
 	s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(isspc))));
+#endif
 	return s;
 }
 
 // trim from end
 static inline std::string &rtrim(std::string &s) {
+#if __cplusplus > 199711L
+	s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !std::isspace(ch);}).base(), s.end());
+#else
 	s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(isspc))).base(), s.end());
+#endif
 	return s;
 }
 
@@ -634,24 +644,27 @@ init_dxcc() {
 			if (deleted.second) {
 				DeletedMap[num] = (deleted.first == "1");
 			}
-			if (zval.second)
+			if (zval.second) {
 				DXCCZoneMap[num] = zval.first;
+			}
 			tQSL_Date d;
 			d.year = 1945;
 			d.month = 11;
 			d.day = 15;
 			DXCCStartMap[num] = d;
 			if (strdate.second) {
-				if (!tqsl_initDate(&d, strdate.first.c_str()))
+				if (!tqsl_initDate(&d, strdate.first.c_str())) {
 					DXCCStartMap[num] = d;
+				}
 			}
 			d.year = 0;
 			d.month = 0;
 			d.day = 0;
 			DXCCEndMap[num] = d;
 			if (enddate.second) {
-				if (!tqsl_initDate(&d, enddate.first.c_str()))
+				if (!tqsl_initDate(&d, enddate.first.c_str())) {
 					DXCCEndMap[num] = d;
+				}
 			}
 			DXCCList.push_back(make_pair(num, dxcc_entity.getText()));
 		}
@@ -967,10 +980,11 @@ tqsl_getDXCCZoneMap(int number, const char **zonemap) {
 		return 1;
 	}
 	const char *map = it->second.c_str();
-	if (!map || map[0] == '\0')
+	if (!map || map[0] == '\0') {
 		*zonemap = NULL;
-	else
+	} else {
 		*zonemap = map;
+	}
 	return 0;
 }
 
@@ -1438,19 +1452,51 @@ _ent_cmp(const void *a, const void *b) {
 }
 
 static TQSL_LOCATION_FIELD *
-get_location_field(int page, const string& gabbi, TQSL_LOCATION *loc) {
-	if (page == 0)
-		page = loc->page;
-	for (; page > 0; page = loc->pagelist[page-1].prev) {
-		TQSL_LOCATION_FIELDLIST& fl = loc->pagelist[page-1].fieldlist;
+get_location_field_page(const string& gabbi, TQSL_LOCATION *loc, int* page = NULL) {
+	for (int mypage = 1; mypage > 0; mypage = loc->pagelist[mypage-1].next) {
+		TQSL_LOCATION_FIELDLIST& fl = loc->pagelist[mypage-1].fieldlist;
 		for (int j = 0; j < static_cast<int>(fl.size()); j++) {
-			if (fl[j].gabbi_name == gabbi)
+			if (fl[j].gabbi_name == gabbi) {
+				if (page) {
+					*page = mypage;
+				}
 				return &(fl[j]);
+			}
 		}
 	}
 	return 0;
 }
 
+struct sasMap {
+	const char *gabbi;
+	const char *errstr;
+};
+
+static struct sasMap sasMapping[] = {
+	{ "US_STATE", "Invalid zone selections for state" },
+	{ "CA_PROVINCE", "Invalid zone selections for province" },
+	{ "RU_OBLAST", "Invalid zone selections for oblast" },
+	{ "CN_PROVINCE", "Invalid zone selections for province" },
+	{ "AU_STATE", "Invalid zone selections for state" },
+	{ "JA_PREFECTURE", "Invalid zone selections for prefecture" },
+	{ "FI_KUNTA", "Invalid zone selections for kunta" },
+	{ NULL, NULL }
+};
+
+static TQSL_LOCATION_FIELD*
+get_primary_sub(TQSL_LOCATION* loc, string* errstr) {
+	for (int i = 0; sasMapping[i].gabbi; i++) {
+		TQSL_LOCATION_FIELD* temp = get_location_field_page(sasMapping[i].gabbi, loc);
+		if (temp) {
+			if (errstr)
+				*errstr = sasMapping[i].errstr;
+			return temp;
+		}
+	}
+	return NULL;
+}
+
+static int find_next_page(TQSL_LOCATION *loc);
 
 static int
 update_page(int page, TQSL_LOCATION *loc) {
@@ -1479,6 +1525,7 @@ update_page(int page, TQSL_LOCATION *loc) {
 					char callsign[40];
 					tqsl_getCertificateCallSign(certlist[i], callsign, sizeof callsign);
 					tqsl_getCertificateDXCCEntity(certlist[i], &dxcc);
+
 					char ibuf[10];
 					snprintf(ibuf, sizeof ibuf, "%d", dxcc);
 					bool found = false;
@@ -1523,6 +1570,11 @@ update_page(int page, TQSL_LOCATION *loc) {
 				field.changed = true;
 				init_dxcc();
 				int olddxcc = strtol(field.cdata.c_str(), NULL, 10);
+				if (loc->newDXCC != -1) {
+					olddxcc = loc->newDXCC;
+					loc->newDXCC = -1;
+				}
+
 				field.items.clear();
 				field.idx = 0;
 #ifdef DXCC_TEST
@@ -1563,17 +1615,24 @@ update_page(int page, TQSL_LOCATION *loc) {
 						item.text = buf;
 						item.label = entity_list[i].name;
 						item.zonemap = entity_list[i].zonemap;
-						if (item.ivalue == olddxcc)
+						if (item.ivalue == olddxcc) {
 							field.idx = field.items.size();
+						}
 						field.items.push_back(item);
 					}
 					field.idx = 0;
 				} else {
 					vector<string>::iterator ip;
+					// Always have the "-NONE-" entity.
+					TQSL_LOCATION_ITEM item;
+					item.label = "-NONE-";
+					item.zonemap = "";
 					// This iterator walks the list of DXCC entities associated
 					// with this callsign
+					field.items.push_back(item);
+					bool setIndex = false;
+
 					for (ip = p.hash[call].begin(); ip != p.hash[call].end(); ip++) {
-						TQSL_LOCATION_ITEM item;
 						item.text = *ip;
 						item.ivalue = strtol(ip->c_str(), NULL, 10);
 						IntMap::iterator dxcc_it = DXCCMap.find(item.ivalue);
@@ -1581,13 +1640,19 @@ update_page(int page, TQSL_LOCATION *loc) {
 							item.label = dxcc_it->second;
 							item.zonemap = DXCCZoneMap[item.ivalue];
 						}
-						if (item.ivalue == olddxcc)
+						if (item.ivalue == olddxcc) {
 							field.idx = field.items.size();
+							setIndex = true;
+						}
 						field.items.push_back(item);
 					}
+					if (!setIndex) {
+						field.idx = field.items.size()-1;
+					}
 				}
-				if (field.items.size() > 0)
+				if (field.items.size() > 0) {
 					field.cdata = field.items[field.idx].text;
+				}
 				field.dependency = call;
 			} // rebuild list
 		} else {
@@ -1603,7 +1668,7 @@ update_page(int page, TQSL_LOCATION *loc) {
 			pair<string, bool> attr = config_field.getAttribute("dependsOn");
 			if (attr.first != "") {
 				// Items list depends on other field
-				TQSL_LOCATION_FIELD *fp = get_location_field(page, attr.first, loc);
+				TQSL_LOCATION_FIELD *fp = get_location_field_page(attr.first, loc);
 				if (fp) {
 					// Found the dependency field. Now find the enums to use
 					string val = fp->cdata;
@@ -1651,7 +1716,7 @@ update_page(int page, TQSL_LOCATION *loc) {
 				}
 			} else {
 				// No dependencies
-				TQSL_LOCATION_FIELD *ent = get_location_field(page, "DXCC", loc);
+				TQSL_LOCATION_FIELD *ent = get_location_field_page("DXCC", loc);
 				current_entity = strtol(ent->cdata.c_str(), NULL, 10);
 				bool cqz = field.gabbi_name == "CQZ";
 				bool ituz = field.gabbi_name == "ITUZ";
@@ -1692,6 +1757,14 @@ update_page(int page, TQSL_LOCATION *loc) {
 							if (tqsl_getDXCCZoneMap(current_entity, &zoneMap)) {
 								zoneMap = NULL;
 							}
+							// Try for a zonemap from the primary subdivision
+							TQSL_LOCATION_FIELD* pas = NULL;
+
+							if (find_next_page(loc)) {
+								pas = get_primary_sub(loc, NULL);
+							}
+							if (pas != NULL && pas->items.size() > 0 && (unsigned int) pas->idx < pas->items.size() && pas->items[pas->idx].zonemap != "")
+								zoneMap = pas->items[pas->idx].zonemap.c_str();
 							if (upper < lower) {
 								tQSL_Error = TQSL_CUSTOM_ERROR;
 								strncpy(tQSL_CustomError, "TQSL Configuration file invalid - field range order incorrect.",
@@ -1734,46 +1807,40 @@ update_page(int page, TQSL_LOCATION *loc) {
 
 	/* Sanity check zones */
 	bool zonesok = true;
-	// Try for subdivision info first
 	string zone_error = "";
-	TQSL_LOCATION_FIELD *state = get_location_field(page, "US_STATE", loc);
-	if (state) {
-		zone_error = "Invalid zone selections for state";
-	} else {
-		state = get_location_field(page, "CA_PROVINCE", loc);
-		if (state) {
-			zone_error = "Invalid zone selections for province";
-		} else {
-			state = get_location_field(page, "RU_OBLAST", loc);
-			if (state) {
-				zone_error = "Invalid zone selections for oblast";
-			} else {
-				// If no subdivision, use entity.
-				state = get_location_field(page, "DXCC", loc);
-				zone_error = "Invalid zone selections for DXCC entity";
+
+	TQSL_LOCATION_FIELD *cqz = get_location_field_page("CQZ", loc);
+	TQSL_LOCATION_FIELD *ituz = get_location_field_page("ITUZ", loc);
+	int currentCQ = cqz->idata;
+	int currentITU = ituz->idata;
+	// Check each division, start from entity, then division
+	TQSL_LOCATION_FIELD *entity = get_location_field_page("DXCC", loc);
+	if (entity) {
+		zone_error = "Invalid zone selections for DXCC entity";
+		if (entity && entity->idx >=0 && entity->items.size() > 0) {
+			string dxzm = entity->items[entity->idx].zonemap;
+			const char* dxccZoneMap = dxzm.c_str();
+			if (!inMap(currentCQ, currentITU, true, true, dxccZoneMap)) {
+				zonesok = false;
 			}
 		}
 	}
 
+	// Entity is OK, try for the state/province/oblast
+	TQSL_LOCATION_FIELD *state = get_primary_sub(loc, &zone_error);
+
 	if (state && state->idx >=0 && state->items.size() > 0) {
-		TQSL_LOCATION_FIELD *cqz = get_location_field(page, "CQZ", loc);
-		TQSL_LOCATION_FIELD *ituz = get_location_field(page, "ITUZ", loc);
 		string szm = state->items[state->idx].zonemap;
 		const char* stateZoneMap = szm.c_str();
-		int currentCQ = cqz->idata;
-		int currentITU = ituz->idata;
 
 		if (!inMap(currentCQ, currentITU, true, true, stateZoneMap)) {
 			zonesok = false;
 		}
-		TQSL_LOCATION_FIELD *zerr = get_location_field(page, "ZERR", loc);
-		if (zerr) {
-			if(!zonesok) {
-				zerr->cdata = zone_error;
-			} else {
-				zerr->cdata = "";
-			}
-		}
+	}
+	if (zonesok) {
+		tQSL_CustomError[0] = '\0';
+	} else {
+		strncpy(tQSL_CustomError, zone_error.c_str(), sizeof tQSL_CustomError);
 	}
 	p.complete = true;
 	return 0;
@@ -1964,15 +2031,12 @@ find_next_page(TQSL_LOCATION *loc) {
 			string dependency = pit->second.getAttribute("dependency").first;
 			if (dependsOn == "") {
 				p.next = pit->first;
-				break;
+				return 1;	// Found next page
 			}
-			TQSL_LOCATION_FIELD *fp = get_location_field(0, dependsOn, loc);
-			//if (fp->idx>=fp->items.size()) { cerr<<"!! " __FILE__ "(" << __LINE__ << "): Was going to index out of fp->items"<<endl; }
-			//else {
+			TQSL_LOCATION_FIELD *fp = get_location_field_page(dependsOn, loc);
 			if (static_cast<int>(fp->items.size()) > fp->idx && fp->idx >= 0 && fp->items[fp->idx].text == dependency) {
 				p.next = pit->first;
-				break;	// Found next page
-			//}
+				return 1;	// Found next page
 			}
 		}
 	}
@@ -1986,13 +2050,30 @@ tqsl_nextStationLocationCapture(tQSL_Location locp) {
 		tqslTrace("tqsl_nextStationLocationCapture", "check_loc error %d", tQSL_Error);
 		return 1;
 	}
-	if (find_next_page(loc))
+	if (!find_next_page(loc))
 		return 0;
 	TQSL_LOCATION_PAGE &p = loc->pagelist[loc->page-1];
 	if (p.next > 0)
 		loc->page = p.next;
 	update_page(loc->page, loc);
 	return 0;
+}
+
+DLLEXPORT int CALLCONVENTION
+tqsl_getNextStationLocationCapturePage(tQSL_Location locp, int *page) {
+	TQSL_LOCATION *loc;
+	if (!(loc = check_loc(locp)) || page == NULL) {
+		tqslTrace("tqsl_nextStationLocationCapture", "check_loc error %d", tQSL_Error);
+		return 1;
+	}
+	if (!find_next_page(loc))
+		return 1;
+	TQSL_LOCATION_PAGE &p = loc->pagelist[loc->page-1];
+	if (p.next > 0) {
+		*page = p.next;
+		return 0;
+	}
+	return 1;
 }
 
 DLLEXPORT int CALLCONVENTION
@@ -2009,6 +2090,32 @@ tqsl_prevStationLocationCapture(tQSL_Location locp) {
 }
 
 DLLEXPORT int CALLCONVENTION
+tqsl_getPrevStationLocationCapturePage(tQSL_Location locp, int *page) {
+	TQSL_LOCATION *loc;
+	if (!(loc = check_loc(locp)) || page == NULL) {
+		tqslTrace("tqsl_getPrevStationLocationCapture", "check_loc error %d", tQSL_Error);
+		return 1;
+	}
+	TQSL_LOCATION_PAGE &p = loc->pagelist[loc->page-1];
+	if (p.prev > 0) {
+		*page = p.prev;
+		return 0;
+	}
+	return 1;
+}
+
+DLLEXPORT int CALLCONVENTION
+tqsl_getCurrentStationLocationCapturePage(tQSL_Location locp, int *page) {
+	TQSL_LOCATION *loc;
+	if (!(loc = check_loc(locp)) || page == NULL) {
+		tqslTrace("tqsl_getPrevStationLocationCapture", "check_loc error %d", tQSL_Error);
+		return 1;
+	}
+	*page = loc->page;
+	return 0;
+}
+
+DLLEXPORT int CALLCONVENTION
 tqsl_hasNextStationLocationCapture(tQSL_Location locp, int *rval) {
 	TQSL_LOCATION *loc;
 	if (!(loc = check_loc(locp))) {
@@ -2020,7 +2127,7 @@ tqsl_hasNextStationLocationCapture(tQSL_Location locp, int *rval) {
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
 		return 1;
 	}
-	if (find_next_page(loc)) {
+	if (!find_next_page(loc)) {
 		tqslTrace("tqsl_hasNextStationLocationCapture", "find_next_page error %d", tQSL_Error);
 		return 1;
 	}
@@ -2398,6 +2505,11 @@ tqsl_getLocationFieldListItem(tQSL_Location locp, int field_num, int item_idx, c
 		tqslTrace("tqsl_getLocationFieldListItem", "check_loc error %d", tQSL_Error);
 		return 1;
 	}
+	bool findKey = false;
+	if (item_idx & 0x10000) {
+		findKey = true;
+		item_idx &= 0xffff;
+	}
 	TQSL_LOCATION_FIELDLIST &fl = loc->pagelist[loc->page-1].fieldlist;
 	if (buf == NULL || field_num < 0 || field_num >= static_cast<int>(fl.size())
 		|| (fl[field_num].input_type != TQSL_LOCATION_FIELD_LIST
@@ -2411,10 +2523,14 @@ tqsl_getLocationFieldListItem(tQSL_Location locp, int field_num, int item_idx, c
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
 		return 1;
 	}
-	string& str = (fl[field_num].items[item_idx].label == "")
-		? fl[field_num].items[item_idx].text
-		: fl[field_num].items[item_idx].label;
-	strncpy(buf, str.c_str(), bufsiz);
+	if (findKey) {
+		strncpy(buf, fl[field_num].items[item_idx].text.c_str(), bufsiz);
+	} else {
+		string& str = (fl[field_num].items[item_idx].label == "")
+			? fl[field_num].items[item_idx].text
+			: fl[field_num].items[item_idx].label;
+		strncpy(buf, str.c_str(), bufsiz);
+	}
 	buf[bufsiz - 1] = '\0';
 	return 0;
 }
@@ -3469,7 +3585,7 @@ tqsl_getLocationCallSign(tQSL_Location locp, char *buf, int bufsiz) {
 }
 
 DLLEXPORT int CALLCONVENTION
-tqsl_setLocationCallSign(tQSL_Location locp, const char *buf) {
+tqsl_setLocationCallSign(tQSL_Location locp, const char *buf, int dxcc) {
 	TQSL_LOCATION *loc;
 	if (!(loc = check_loc(locp, false))) {
 		tqslTrace("tqsl_setLocationCallSign", "loc error %d", tQSL_Error);
@@ -3488,6 +3604,8 @@ tqsl_setLocationCallSign(tQSL_Location locp, const char *buf) {
 				if (f.items[j].text == buf) {
 					loc->pagelist[0].fieldlist[i].idx = j;
 					loc->pagelist[0].fieldlist[i].cdata = buf;
+					loc->newflags = true;
+					loc->newDXCC = dxcc;
 					break;
 				}
 			}

@@ -58,6 +58,7 @@ and ready to use. Try installing package "TrustedQSL" using whatever
 commands your distribution uses for package instals:
 sudo yum install TrustedQSL
 sudo dnf install TrustedQSL
+sudo dnf install trustedqsl
 sudo apt-get install TrustedQSL
 sudo pkg-add TrustedQSL
 etc.
@@ -166,7 +167,7 @@ system's Applications folder or the location of your choice, then launch
 the application from Finder.
 If you want to distribute the built application:
 
-./osx_createdmg.sh
+./macos_createdmg.sh
 
 will make tqsl-2.x.x.dmg, a Mac distributable disk image
 containing the TrustedQSL applications folder and document files.

@@ -76,6 +76,7 @@ enum {		// Window IDs
 	ID_CRQ_CERT,
 	ID_CRQ_PW1,
 	ID_CRQ_PW2,
+	ID_CRQ_SIGN,
 	ID_LCW_P12,
 	ID_LCW_TQ6,
 	ID_PREF_ROOT_CB,

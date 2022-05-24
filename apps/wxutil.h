@@ -28,7 +28,8 @@
 
 #include <wx/intl.h>
 
-// String extract for translation
+// This macro marks a c-string to be extracted for translation. xgettext is directed to look for _() and __().
+
 #define __(x) (x)
 
 #if wxCHECK_VERSION(2, 5, 0)

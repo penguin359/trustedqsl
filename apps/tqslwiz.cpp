@@ -31,17 +31,50 @@ BEGIN_EVENT_TABLE(TQSLWizard, wxWizard)
 	EVT_WIZARD_PAGE_CHANGED(-1, TQSLWizard::OnPageChanged)
 END_EVENT_TABLE()
 
-BEGIN_EVENT_TABLE(TQSLWizCertPage, TQSLWizPage)
-	EVT_COMBOBOX(-1, TQSLWizCertPage::OnComboBoxEvent)
-	EVT_CHECKBOX(-1, TQSLWizCertPage::OnCheckBoxEvent)
-	EVT_WIZARD_PAGE_CHANGING(wxID_ANY, TQSLWizCertPage::OnPageChanging)
-	EVT_TEXT(wxID_ANY, TQSLWizCertPage::OnTextEvent)
+BEGIN_EVENT_TABLE(TQSLWizLocPage, TQSLWizPage)
+	EVT_COMBOBOX(-1, TQSLWizLocPage::OnComboBoxEvent)
+	EVT_CHECKBOX(-1, TQSLWizLocPage::OnCheckBoxEvent)
+	EVT_WIZARD_PAGE_CHANGING(wxID_ANY, TQSLWizLocPage::OnPageChanging)
+	EVT_TEXT(wxID_ANY, TQSLWizLocPage::OnTextEvent)
 #if wxMAJOR_VERSION < 3 && (wxMAJOR_VERSION != 2 && wxMINOR_VERSION != 9)
-	EVT_SIZE(TQSLWizCertPage::OnSize)
+	EVT_SIZE(TQSLWizLocPage::OnSize)
 #endif
 END_EVENT_TABLE()
 
 static char callsign[TQSL_CALLSIGN_MAX+1];
+
+// Returns true if the gabbi name is a Primary Administrative Subdivision
+static bool
+isPAS(const char *gabbi) {
+	if (!strcmp(gabbi, "US_STATE") ||
+	    !strcmp(gabbi, "CA_PROVINCE") ||
+	    !strcmp(gabbi, "RU_OBLAST") ||
+	    !strcmp(gabbi, "CN_PROVINCE") ||
+	    !strcmp(gabbi, "AU_STATE") ||
+	    !strcmp(gabbi, "JA_PREFECTURE") ||
+	    !strcmp(gabbi, "FI_KUNTA"))
+		return true;
+	return false;
+}
+
+// Return true if it's a secondary (county)
+static bool
+isSAS(const char *gabbi) {
+	if (!strcmp(gabbi, "US_COUNTY") ||
+	    !strcmp(gabbi, "JA_CITY_GUN_KU"))
+		return true;
+	return false;
+}
+
+// Return true if it's a park
+static bool
+isPark(const char *gabbi) {
+	if (!strcmp(gabbi, "US_PARK") ||
+	    !strcmp(gabbi, "DX_US_PARK") ||
+	    !strcmp(gabbi, "CA_US_PARK"))
+		return true;
+	return false;
+}
 
 void
 TQSLWizard::OnPageChanged(wxWizardEvent& ev) {
@@ -83,14 +116,14 @@ TQSLWizard::GetPage(bool final) {
 	if (page_num == 0)
 		_pages[page_num] = new TQSLWizFinalPage(this, loc, GetCurrentTQSLPage());
 	else
-		_pages[page_num] = new TQSLWizCertPage(this, loc);
+		_pages[page_num] = new TQSLWizLocPage(this, loc);
 	_curpage = page_num;
 	if (page_num == 0)
 		(reinterpret_cast<TQSLWizFinalPage *>(_pages[0]))->prev = GetCurrentTQSLPage();
 	return _pages[page_num];
 }
 
-void TQSLWizCertPage::OnSize(wxSizeEvent& ev) {
+void TQSLWizLocPage::OnSize(wxSizeEvent& ev) {
 #if wxMAJOR_VERSION < 3 && (wxMAJOR_VERSION != 2 && wxMINOR_VERSION != 9)
 	TQSLWizPage::OnSize(ev);
 #endif
@@ -98,8 +131,8 @@ void TQSLWizCertPage::OnSize(wxSizeEvent& ev) {
 }
 
 TQSLWizPage *
-TQSLWizCertPage::GetPrev() const {
-	tqslTrace("TQSLWizCertPage::GetPrev", NULL);
+TQSLWizLocPage::GetPrev() const {
+	tqslTrace("TQSLWizLocPage::GetPrev", NULL);
 	int rval;
 
 	tqsl_setStationLocationCapturePage(loc, loc_page);
@@ -111,43 +144,46 @@ TQSLWizCertPage::GetPrev() const {
 }
 
 TQSLWizPage *
-TQSLWizCertPage::GetNext() const {
-	tqslTrace("TQSLWizCertPage::GetNext", NULL);
+TQSLWizLocPage::GetNext() const {
+	tqslTrace("TQSLWizLocPage::GetNext", NULL);
 	TQSLWizPage *newp;
-	bool final = false;
-	int rval;
+	bool final = true;
 
 	tqsl_setStationLocationCapturePage(loc, loc_page);
-	if (!tqsl_hasNextStationLocationCapture(loc, &rval) && rval) {
-		tqsl_nextStationLocationCapture(loc);
-	} else {
-		final = true;
-	}
+
 	newp = GetParent()->GetPage(final);
-	if (!final) {
-		reinterpret_cast<TQSLWizCertPage*>(newp)->UpdateFields();
-	}
 	return newp;
 }
 
 void
-TQSLWizCertPage::UpdateFields(int noupdate_field) {
-	tqslTrace("TQSLWizCertPage::UpdateFields", "noupdate_field=%d", noupdate_field);
+TQSLWizLocPage::UpdateFields(int noupdate_field) {
+	tqslTrace("TQSLWizLocPage::UpdateFields", "noupdate_field=%d", noupdate_field);
 	wxSize text_size = getTextSize(this);
 
-	validate();
-	if (noupdate_field >= 0)
+	if (noupdate_field >= 0) {
 		tqsl_updateStationLocationCapture(loc);
-	for (int i = noupdate_field+1; i < static_cast<int>(controls.size()); i++) {
+		errlbl->SetLabel(wxString::FromUTF8(tQSL_CustomError));
+	}
+
+	int cur_page;
+	if (tqsl_getCurrentStationLocationCapturePage(loc, &cur_page)) cur_page = 1;
+
+        tqsl_setStationLocationCapturePage(loc, 1);		// Always start with page 1
+	tqslTrace("TQSLWizLocPage::UpdateFields", "Current page = %d, next_page=%d", cur_page, second_page);
+
+	validate();
+
+	for (int i = noupdate_field+1; i < static_cast<int>(p1_controls.size()-1); i++) {
 		int changed;
 		int in_type;
 		char gabbi_name[40];
+
+		wxComboBox* cb = reinterpret_cast<wxComboBox *>(p1_controls[i]);
+		wxTextCtrl* tx = reinterpret_cast<wxTextCtrl *>(p1_controls[i]);
+		wxStaticText* st = reinterpret_cast<wxStaticText *>(p1_controls[i]);
 		tqsl_getLocationFieldChanged(loc, i, &changed);
 		tqsl_getLocationFieldInputType(loc, i, &in_type);
 		tqsl_getLocationFieldDataGABBI(loc, i, gabbi_name, sizeof gabbi_name);
-		wxComboBox* cb = reinterpret_cast<wxComboBox *>(controls[i]);
-		wxTextCtrl* tx = reinterpret_cast<wxTextCtrl *>(controls[i]);
-		wxStaticText* st = reinterpret_cast<wxStaticText *>(controls[i]);
 
 		/*
 		 * Code below is used to revert fields that have had defaults set based on callsign
@@ -173,7 +209,9 @@ TQSLWizCertPage::UpdateFields(int noupdate_field) {
 		string s;
 		tqsl_getLocationFieldCharData(loc, i, buf, sizeof buf);
 
-		if (!parent->editing && strlen(buf) == 0) { // Empty, so set to default
+		// Has this been set?
+		bool wasUserSet = (userSet[gabbi_name] == gabbi_name);
+		if (!wasUserSet && !parent->editing && strlen(buf) == 0) { // Empty, so set to default
 			if (strcmp(gabbi_name, "GRIDSQUARE") == 0) {
 				if (get_address_field(callsign, "grid", s) == 0) {	// Got something
 					tqsl_setLocationFieldCharData(loc, i, s.c_str());
@@ -188,46 +226,14 @@ TQSLWizCertPage::UpdateFields(int noupdate_field) {
 					tqsl_getLocationFieldIndex(loc, i, &new_sel);
 					if (new_sel >= 0 && new_sel < static_cast<int>(cb->GetCount()))
 						cb->SetSelection(new_sel);
-					forced[gabbi_name] = callsign;
+					if (strlen(callsign) != 0) {
+						forced[gabbi_name] = callsign;
+					}
+					UpdateFields(i);
 				}
 			}
 			if (strcmp(gabbi_name, "CQZ") == 0) {
 				if (get_address_field(callsign, "cqzone", s) == 0) {
-					tqsl_setLocationFieldCharData(loc, i, s.c_str());
-					int new_sel;
-					tqsl_getLocationFieldIndex(loc, i, &new_sel);
-					if (new_sel >= 0 && new_sel < static_cast<int>(cb->GetCount()))
-						cb->SetSelection(new_sel);
-					if (strlen(callsign) != 0) {
-						forced[gabbi_name] = callsign;
-					}
-					UpdateFields(i);
-				}
-			}
-
-			if (strcmp(gabbi_name, "US_STATE") == 0 ||
-			    strcmp(gabbi_name, "JA_PREFECTURE") == 0 ||
-			    strcmp(gabbi_name, "RU_OBAST") == 0 ||
-			    strcmp(gabbi_name, "CA_PROVINCE") == 0 ||
-			    strcmp(gabbi_name, "CN_PROVINCE") == 0 ||
-			    strcmp(gabbi_name, "FI_KUNTA") == 0 ||
-			    strcmp(gabbi_name, "AU_STATE") == 0) {
-				if (get_address_field(callsign, "state", s) == 0 || get_address_field(callsign, "pas", s) == 0) {
-					tqsl_setLocationFieldCharData(loc, i, s.c_str());
-					int new_sel;
-					tqsl_getLocationFieldIndex(loc, i, &new_sel);
-					if (new_sel >= 0 && new_sel < static_cast<int>(cb->GetCount()))
-						cb->SetSelection(new_sel);
-					if (strlen(callsign) != 0) {
-						forced[gabbi_name] = callsign;
-					}
-					UpdateFields(i);
-				}
-			}
-
-			if (strcmp(gabbi_name, "US_COUNTY") == 0 ||
-			    strcmp(gabbi_name, "JA_CITY_GUN_KU") == 0) {
-				if (get_address_field(callsign, "county", s) == 0 || get_address_field(callsign, "sas", s) == 0) {
 					tqsl_setLocationFieldCharData(loc, i, s.c_str());
 					int new_sel;
 					tqsl_getLocationFieldIndex(loc, i, &new_sel);
@@ -282,6 +288,9 @@ TQSLWizCertPage::UpdateFields(int noupdate_field) {
 					new_sel = j;
 				if (j == 0)
 					item_text = wxGetTranslation(item_text);
+				if ((strcmp(gabbi_name, "CALL") == 0) && new_sel == j) {
+					callLabel->SetLabel(item_text);
+				}
 				cb->Append(item_text);
 			}
 			if (noupdate_field < 0 && !defaulted)
@@ -292,10 +301,11 @@ TQSLWizCertPage::UpdateFields(int noupdate_field) {
 			tqsl_setLocationFieldIndex(loc, i, new_sel);
 			if (new_sel >= 0 && nitems > new_sel && static_cast<int>(cb->GetCount()) > new_sel)
 				cb->SetSelection(new_sel);
-			if (noneSeen)
-				cb->Enable(nitems > 2);
-			else
+			if (noneSeen) {				// If 2 with "none"
+				cb->Enable(nitems > 2);		// Then it's locked.
+			} else {
 				cb->Enable(nitems > 1);
+			}
 		} else if (in_type == TQSL_LOCATION_FIELD_TEXT) {
 			int len;
 			tqsl_getLocationFieldDataLength(loc, i, &len);
@@ -314,6 +324,7 @@ TQSLWizCertPage::UpdateFields(int noupdate_field) {
 			int len;
 			tqsl_getLocationFieldDataLength(loc, i, &len);
 			int w, h;
+			st = errlbl;
 			st->GetSize(&w, &h);
 			st->SetSize((len+1)*text_size.GetWidth(), h);
 			char buf[256];
@@ -325,61 +336,295 @@ TQSLWizCertPage::UpdateFields(int noupdate_field) {
 			st->SetLabel(valMsg);
 		}
 	}
-	if (noupdate_field >= 0)
+
+	tqsl_updateStationLocationCapture(loc);
+	errlbl->SetLabel(wxString::FromUTF8(tQSL_CustomError));
+
+	if (tqsl_getNextStationLocationCapturePage(loc, &second_page)) second_page = 0;
+	if (second_page > 0) {
+		tqslTrace("TQSLWizLocPage::UpdateFields", "Flipping to page %d", second_page);
+		errlbl->SetLabel(wxString::FromUTF8(tQSL_CustomError));
+		tqsl_setStationLocationCapturePage(loc, second_page);
+	}
+
+	// Do page 2
+	// Assumption: second page is all dropdown lists
+	PASexists = SASexists = Parkexists = false;
+	// Start page 2 - if we're updating past the end of the first page
+	// then start at the offset
+	int p2start = 0;
+	if (noupdate_field > static_cast<int>(p1_controls.size())) {
+		p2start = noupdate_field - static_cast<int>(p1_controls.size());
+	} else {
 		tqsl_updateStationLocationCapture(loc);
+	}
+	bool relayout = false;
+	for (int i = p2start; second_page > 0 && i < static_cast<int>(p2_controls.size()); i++) {
+		int changed;
+		int in_type;
+		char gabbi_name[40];
+		char label[128];
+
+		tqsl_getLocationFieldDataLabel(loc, i, label, sizeof label);
+		tqsl_getLocationFieldDataGABBI(loc, i, gabbi_name, sizeof gabbi_name);
+		wxComboBox* cb;
+		if (isPAS(gabbi_name)) {
+			if (!boxITUZ->IsShown(boxPAS))
+				relayout = true;
+			boxPAS->Show(true);
+			cb = ctlPAS;
+			lblPAS->SetLabel(wxString::FromUTF8(label));
+			PASexists = true;
+		}
+		if (isSAS(gabbi_name)) {
+			if (!boxCQZ->IsShown(boxSAS))
+				relayout = true;
+			boxSAS->Show(true);
+			cb = ctlSAS;
+			lblSAS->SetLabel(wxString::FromUTF8(label));
+			SASexists = true;
+		}
+		if (isPark(gabbi_name)) {
+			if (!boxIOTA->IsShown(boxPark))
+				relayout = true;
+			boxPark->Show(true);
+			cb = ctlPark;
+			lblPark->SetLabel(wxString::FromUTF8(label));
+			Parkexists = true;
+		}
+
+		tqsl_getLocationFieldInputType(loc, i, &in_type);
+		tqsl_getLocationFieldChanged(loc, i, &changed);
+
+		/*
+		 * Code below is used to revert fields that have had defaults set based on callsign
+		 */
+		ForcedMap::iterator it;
+		it = forced.find(gabbi_name);
+		if (it != forced.end()) {		// Something set
+			if (it->second == "") {
+				forced.erase(it);
+			} else if (it->second != callsign) {	// For a different call
+				if (in_type == TQSL_LOCATION_FIELD_DDLIST || in_type == TQSL_LOCATION_FIELD_LIST) {
+					tqsl_setLocationFieldIndex(loc, i, 0);
+					cb->SetSelection(wxNOT_FOUND);
+				}
+				forced.erase(it);
+			}
+		}
+
+		char buf[256];
+		string s;
+		tqsl_getLocationFieldCharData(loc, i, buf, sizeof buf);
+
+		// Has this been set?
+		bool wasUserSet = (userSet[gabbi_name] == gabbi_name);
+		if (!wasUserSet && !parent->editing && strlen(buf) == 0) { // Empty, so set to default
+			if (isPAS(gabbi_name)) {
+				if (get_address_field(callsign, "state", s) == 0 || get_address_field(callsign, "pas", s) == 0) {
+					tqsl_setLocationFieldCharData(loc, i, s.c_str());
+					int new_sel;
+					tqsl_getLocationFieldIndex(loc, i, &new_sel);
+					if (new_sel >= 0 && new_sel < static_cast<int>(cb->GetCount()))
+						cb->SetSelection(new_sel);
+					if (strlen(callsign) != 0) {
+						forced[gabbi_name] = callsign;
+					}
+				}
+			}
+
+			if (isSAS(gabbi_name)) {
+				if (get_address_field(callsign, "county", s) == 0 || get_address_field(callsign, "sas", s) == 0) {
+					tqsl_setLocationFieldCharData(loc, i, s.c_str());
+					int new_sel;
+					tqsl_getLocationFieldIndex(loc, i, &new_sel);
+					if (new_sel >= 0 && new_sel < static_cast<int>(cb->GetCount()))
+						cb->SetSelection(new_sel);
+					if (strlen(callsign) != 0) {
+						forced[gabbi_name] = callsign;
+					}
+				}
+			}
+		}
+
+		if (noupdate_field >= 0 && !changed && in_type != TQSL_LOCATION_FIELD_BADZONE)
+			continue;
+		if (in_type == TQSL_LOCATION_FIELD_DDLIST || in_type == TQSL_LOCATION_FIELD_LIST) {
+			// Update this list
+			char gabbi_name[40];
+			tqsl_getLocationFieldDataGABBI(loc, i, gabbi_name, sizeof gabbi_name);
+			int selected;
+			bool defaulted = false;
+			tqsl_getLocationFieldIndex(loc, i, &selected);
+			int new_sel = 0;
+			wxString old_sel = cb->GetStringSelection();
+			wxString old_text = old_sel;
+			if (strlen(callsign) >0 && forced[gabbi_name] == callsign) {
+				char buf[256];
+				tqsl_getLocationFieldCharData(loc, i, buf, sizeof buf);
+				old_text = wxString::FromUTF8(buf);
+				defaulted = true;
+			}
+			cb->Clear();
+			int nitems;
+			tqsl_getNumLocationFieldListItems(loc, i, &nitems);
+			bool noneSeen = false;
+			for (int j = 0; j < nitems && j < 2000; j++) {
+				char item[200];
+				char itemkey[200];
+				tqsl_getLocationFieldListItem(loc, i, j, item, sizeof(item));
+				wxString item_text = wxString::FromUTF8(item);
+				tqsl_getLocationFieldListItem(loc, i, j | 0x10000, itemkey, sizeof(itemkey));
+				wxString item_label = wxString::FromUTF8(itemkey);
+				// Translate the first [None] entry if it exists
+#ifdef tqsltranslate
+				__("[None]");
+#endif
+				if (j == 0 && item_text == wxT("[None]"))
+					noneSeen = true;
+				if (item_text == old_sel || item_text == old_text || item_label == old_text)
+					new_sel = j;
+				if (j == 0)
+					item_text = wxGetTranslation(item_text);
+				cb->Append(item_text);
+			}
+			if (noupdate_field < 0 && !defaulted)
+				new_sel = selected;
+			if (noneSeen && (nitems == 2) && !isPark(gabbi_name)) { // Really only one
+				new_sel = 1;
+			}
+			tqsl_setLocationFieldIndex(loc, i, new_sel);
+			if (new_sel >= 0 && nitems > new_sel && static_cast<int>(cb->GetCount()) > new_sel)
+				cb->SetSelection(new_sel);
+			if (noneSeen)
+				cb->Enable(nitems > 2 || isPark(gabbi_name));
+			else
+				cb->Enable(nitems > 1);
+		} else if (in_type == TQSL_LOCATION_FIELD_BADZONE) {
+			// Ignore BADZONE on first page
+		}
+	}
+	if (PASexists != boxITUZ->IsShown(boxPAS) ||
+	    SASexists != boxCQZ->IsShown(boxSAS) ||
+	    Parkexists != boxIOTA->IsShown(boxPark)) {
+		relayout = true;
+	}
+	boxPAS->Show(PASexists);
+	boxSAS->Show(SASexists);
+	boxPark->Show(Parkexists);
+
+	if (relayout) {
+		Layout();
+	}
+
+	// Back to initial page
+        tqsl_setStationLocationCapturePage(loc, cur_page);
+	if (noupdate_field >= 0) {
+		tqsl_updateStationLocationCapture(loc);
+		errlbl->SetLabel(wxString::FromUTF8(tQSL_CustomError));
+	}
 }
 
 void
-TQSLWizCertPage::OnComboBoxEvent(wxCommandEvent& event) {
-	tqslTrace("TQSLWizCertPage::OnComboBoxEvent", NULL);
+TQSLWizLocPage::OnComboBoxEvent(wxCommandEvent& event) {
+	tqslTrace("TQSLWizLocPage::OnComboBoxEvent", NULL);
 	int control_idx = event.GetId() - TQSL_ID_LOW;
-	if (control_idx < 0 || control_idx >= static_cast<int>(controls.size()))
+	if (control_idx < 0 || control_idx >= static_cast<int>(p1_controls.size()) + static_cast<int>(p2_controls.size()))
 		return;
+	int cur_page;
+	tqsl_getStationLocationCapturePage(loc, &cur_page);
+
+	int cidx = control_idx;
+	if (cidx >= page_2_offset) {
+		cidx = control_idx - page_2_offset;
+		if (cur_page != second_page) {
+        		tqsl_setStationLocationCapturePage(loc, second_page);
+		}
+	} else {
+		if (cur_page != first_page) {
+        		tqsl_setStationLocationCapturePage(loc, first_page);
+		}
+	}
+
 	int in_type;
-	tqsl_getLocationFieldInputType(loc, control_idx, &in_type);
+	tqsl_getLocationFieldInputType(loc, cidx, &in_type);
 	switch (in_type) {
 		case TQSL_LOCATION_FIELD_DDLIST:
 		case TQSL_LOCATION_FIELD_LIST:
 			char gabbi_name[40];
-			tqsl_getLocationFieldDataGABBI(loc, control_idx, gabbi_name, sizeof gabbi_name);
-			tqsl_setLocationFieldIndex(loc, control_idx, event.GetInt());
+			tqsl_getLocationFieldDataGABBI(loc, cidx, gabbi_name, sizeof gabbi_name);
+			tqsl_setLocationFieldIndex(loc, cidx, event.GetInt());
 			if (strcmp(gabbi_name, "CALL") == 0) {
-				tqsl_getLocationFieldCharData(loc, control_idx, callsign, sizeof callsign);
+				tqsl_getLocationFieldCharData(loc, cidx, callsign, sizeof callsign);
 			}
+			if (strcmp(gabbi_name, "DXCC") == 0) {
+				ForcedMap::iterator it;
+				it = forced.find("ITUZ");
+				if (it != forced.end()) {
+					if (it->second == callsign) {
+						forced.erase(it);
+					}
+				}
+				it = forced.find("CQZ");
+				if (it != forced.end()) {
+					if (it->second == callsign) {
+						forced.erase(it);
+					}
+				}
+			}
+			userSet[gabbi_name] = gabbi_name;
 			UpdateFields(control_idx);
+			UpdateFields();
 			break;
 	}
+        tqsl_setStationLocationCapturePage(loc, cur_page);
 }
 
 void
-TQSLWizCertPage::OnTextEvent(wxCommandEvent& event) {
-	tqslTrace("TQSLWizCertPage::OnTextEvent", NULL);
+TQSLWizLocPage::OnTextEvent(wxCommandEvent& event) {
+	tqslTrace("TQSLWizLocPage::OnTextEvent", NULL);
 	int control_idx = event.GetId() - TQSL_ID_LOW;
-	if (control_idx < 0 || control_idx >= static_cast<int>(controls.size()))
+	if (control_idx < 0 || control_idx >= static_cast<int>(p1_controls.size()) + static_cast<int>(p2_controls.size()))
 		return;
+	int cur_page;
+	tqsl_getStationLocationCapturePage(loc, &cur_page);
+
+	int cidx = control_idx;
+	if (cidx >= page_2_offset) {
+		cidx = control_idx - page_2_offset;
+		if (cur_page != second_page) {
+        		tqsl_setStationLocationCapturePage(loc, second_page);
+		}
+	} else {
+		if (cur_page != first_page) {
+        		tqsl_setStationLocationCapturePage(loc, first_page);
+		}
+	}
+
 	int in_type;
-	tqsl_getLocationFieldInputType(loc, control_idx, &in_type);
+	tqsl_getLocationFieldInputType(loc, cidx, &in_type);
 	if (in_type == TQSL_LOCATION_FIELD_TEXT) {
 		char gabbi_name[40];
-		tqsl_getLocationFieldDataGABBI(loc, control_idx, gabbi_name, sizeof gabbi_name);
+		tqsl_getLocationFieldDataGABBI(loc, cidx, gabbi_name, sizeof gabbi_name);
 		if (strcmp(gabbi_name, "GRIDSQUARE") == 0) {
 			gridFromDB = false;  // User set the grid
 		}
 	}
+        tqsl_setStationLocationCapturePage(loc, cur_page);
 }
 
 
 void
-TQSLWizCertPage::OnCheckBoxEvent(wxCommandEvent& event) {
+TQSLWizLocPage::OnCheckBoxEvent(wxCommandEvent& event) {
 	UpdateFields(-1);
 }
 
-TQSLWizCertPage::TQSLWizCertPage(TQSLWizard *_parent, tQSL_Location locp)
+TQSLWizLocPage::TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp)
 	: TQSLWizPage(_parent, locp) {
-	tqslTrace("TQSLWizCertPage::TQSLWizCertPage", "parent=0x%lx, locp=0x%lx", reinterpret_cast<void *>(parent), reinterpret_cast<void *>(locp));
+	tqslTrace("TQSLWizLocPage::TQSLWizLocPage", "parent=0x%lx, locp=0x%lx", reinterpret_cast<void *>(parent), reinterpret_cast<void *>(locp));
 	initialized = false;
 	errlbl = NULL;
-	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
+	sizer = new wxBoxSizer(wxVERTICAL);
 	int control_width = getTextSize(this).GetWidth() * 40;
 
 	parent = _parent;
@@ -390,21 +635,61 @@ TQSLWizCertPage::TQSLWizCertPage(TQSLWizard *_parent, tQSL_Location locp)
 	tqsl_getStationLocationCapturePage(loc, &loc_page);
 	wxScreenDC sdc;
 	int label_w = 0;
+	total_fields = 0;
+	page_2_offset = 0;
 	int numf;
-	tqsl_getNumLocationField(loc, &numf);
-	for (int i = 0; i < numf; i++) {
-		wxCoord w, h;
-		char label[256];
-		tqsl_getLocationFieldDataLabel(loc, i, label, sizeof label);
-		wxString lbl = wxGetTranslation(wxString::FromUTF8(label));
-		sdc.GetTextExtent(lbl, &w, &h);
-		if (w > label_w)
-			label_w = w;
+
+	// Walk all of the pages to find the width of the largest label
+
+	int numPages;
+	tqsl_getNumStationLocationCapturePages(loc, &numPages);
+
+	for (int p = 1; p <= numPages; p++) {
+		tqsl_setStationLocationCapturePage(loc, p);
+		tqsl_getNumLocationField(loc, &numf);
+		for (int i = 0; i < numf; i++) {
+			wxCoord w, h;
+			char label[256];
+			tqsl_getLocationFieldDataLabel(loc, i, label, sizeof label);
+			wxString lbl = wxGetTranslation(wxString::FromUTF8(label));
+			sdc.GetTextExtent(lbl, &w, &h);
+			if (w > label_w) {
+				label_w = w;
+			}
+		}
 	}
 	label_w += 10;
 
-	bool addCheckbox = false;
-	wxString cbLabel;
+	/*
+	 * Assumptions here, which are more strict than the way the page layouts
+	 * are defined:
+	 * 1. The first page is always page 1.
+	 * 2. The order on that page is call,dxcc,grid,itu,cq,iota
+	 * 3. There's either only one page (no administrative division, etc.) or
+	 *    there's at most two pages (no dependencies of dependencies)
+	 */
+
+	first_page = 1;
+	tqsl_setStationLocationCapturePage(loc, first_page);
+	if (tqsl_getNextStationLocationCapturePage(loc, &second_page)) second_page = 0;
+
+        wxFont callSignFont(48, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+        wxFont dxccFont(24, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+        wxFont labelFont(6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+
+	wxBoxSizer *hsizer;
+	hsizer = new wxBoxSizer(wxHORIZONTAL);
+	hsizer->Add(new wxStaticText(this, -1, wxT("Confirming QSOs with Station"), wxDefaultPosition, wxSize(label_w*9, -1), wxALIGN_CENTRE_HORIZONTAL|wxST_NO_AUTORESIZE), 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5);
+	sizer->Add(hsizer, 1);
+	sizer->AddStretchSpacer(1);
+	hsizer = new wxBoxSizer(wxHORIZONTAL);
+	callLabel = new wxStaticText(this, -1, wxT(""), wxDefaultPosition,
+			wxSize(label_w*9, -1), wxALIGN_CENTRE_HORIZONTAL|wxST_NO_AUTORESIZE);
+	callLabel->SetFont(callSignFont);
+	hsizer->Add(callLabel, 0, wxALIGN_CENTRE_VERTICAL, 5);
+	sizer->Add(hsizer, 0, wxALIGN_CENTRE_VERTICAL, 5);
+	// Process the first page
+	tqsl_getNumLocationField(loc, &numf);
 	for (int i = 0; i < numf; i++) {
 		char label[256];
 		int in_type, flags;
@@ -412,98 +697,210 @@ TQSLWizCertPage::TQSLWizCertPage(TQSLWizard *_parent, tQSL_Location locp)
 		tqsl_getLocationFieldDataLabel(loc, i, label, sizeof label);
 		wxString lbl = wxGetTranslation(wxString::FromUTF8(label));
 		tqsl_getLocationFieldInputType(loc, i, &in_type);
-		if (in_type != TQSL_LOCATION_FIELD_BADZONE) {
-			hsizer = new wxBoxSizer(wxHORIZONTAL);
-			hsizer->Add(new wxStaticText(this, -1, lbl, wxDefaultPosition,
-				wxSize(label_w, -1), wxALIGN_RIGHT/*|wxST_NO_AUTORESIZE*/), 0, wxTOP|wxALIGN_CENTER_VERTICAL, 5);
+		if (in_type == TQSL_LOCATION_FIELD_BADZONE) {
+			continue;
 		}
-		wxWindow *control_p = 0;
+		hsizer = new wxBoxSizer(wxHORIZONTAL);
+		wxStaticText* fieldLabel = new wxStaticText(this, -1, lbl, wxDefaultPosition,
+			wxSize(label_w, -1), wxALIGN_RIGHT/*|wxST_NO_AUTORESIZE*/);
+		fieldLabel->SetFont(labelFont);
+		hsizer->Add(fieldLabel, 0, wxTOP|wxALIGN_CENTER_VERTICAL, 5);
+
+		wxWindow *control_p = NULL;
+		char gabbi_name[256];
+		int data_length;
+		tqsl_getLocationFieldDataGABBI(loc, i, gabbi_name, sizeof gabbi_name);
+		tqsl_getLocationFieldFlags(loc, i, &flags);
+		tqsl_getLocationFieldDataLength(loc, i, &data_length);
+		if (!strcmp(gabbi_name, "DXCC")) {
+			data_length *= 6;			// Wider font, DXCC set to 10 chs when 45 is right.
+		} else if (!strcmp(gabbi_name, "GRIDSQUARE")) {
+			data_length = 17;			// Logbook allows 27?
+		} else if (strcmp(gabbi_name, "CQZ") == 0 || strcmp(gabbi_name, "ITUZ") == 0) {
+			data_length = 8;			// Logbook 10, need "[NONE]".
+		}
+		control_width = getTextSize(this).GetWidth() * data_length;
+		switch(in_type) {
+			case TQSL_LOCATION_FIELD_DDLIST:
+			case TQSL_LOCATION_FIELD_LIST:
+				control_p = new wxComboBox(this, TQSL_ID_LOW+total_fields, wxT(""), wxDefaultPosition, wxSize(control_width, -1),
+				0, 0, wxCB_DROPDOWN|wxCB_READONLY);
+				hsizer->Add(control_p, 0, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
+				if(!strcmp(gabbi_name, "CALL")) {
+					ctlCallSign = static_cast<wxComboBox*>(control_p);
+					sizer->Add(hsizer, 0, wxLEFT|wxRIGHT, 5);
+				}
+				if(!strcmp(gabbi_name, "DXCC")) {
+					ctlEntity = static_cast<wxComboBox*>(control_p);
+					ctlEntity->SetFont(dxccFont);
+					sizer->Add(hsizer, 0, wxLEFT|wxRIGHT, 5);
+				}
+				if(!strcmp(gabbi_name, "ITUZ")) {
+					ctlITUZ = static_cast<wxComboBox*>(control_p);
+					boxITUZ = hsizer;
+				}
+				if(!strcmp(gabbi_name, "CQZ")) {
+					ctlCQZ = static_cast<wxComboBox*>(control_p);
+					boxCQZ = hsizer;
+				}
+				break;
+			case TQSL_LOCATION_FIELD_TEXT:
+				control_p = new wxTextCtrl(this, TQSL_ID_LOW+total_fields, wxT(""), wxDefaultPosition, wxSize(control_width, -1));
+				hsizer->Add(control_p, 0, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
+				if(!strcmp(gabbi_name, "GRIDSQUARE")) {
+					ctlGrid = static_cast<wxTextCtrl*>(control_p);
+					sizer->Add(hsizer, 0, wxLEFT|wxRIGHT, 5);
+				}
+				if(!strcmp(gabbi_name, "IOTA")) {
+					ctlIOTA = static_cast<wxTextCtrl*>(control_p);
+					boxIOTA = hsizer;
+				}
+				break;
+			case TQSL_LOCATION_FIELD_BADZONE:
+				break;
+		}
+		p1_controls.push_back(control_p);
+		total_fields++;
+	}
+
+	// Process the second page
+	// Always use page #2 (USA) as it has the maximum number of fields
+
+	page_2_offset = total_fields;
+	tqsl_setStationLocationCapturePage(loc, 2);	// Always page 2 so the fields all created
+	tqsl_getNumLocationField(loc, &numf);
+	for (int i = 0; i < numf; i++) {
+		char label[256];
+		int in_type, flags, data_length;
+		tqsl_getLocationFieldDataLabel(loc, i, label, sizeof label);
+		wxString lbl = wxGetTranslation(wxString::FromUTF8(label));
+		tqsl_getLocationFieldInputType(loc, i, &in_type);
+		tqsl_getLocationFieldDataLength(loc, i, &data_length);
 		char gabbi_name[256];
 		tqsl_getLocationFieldDataGABBI(loc, i, gabbi_name, sizeof gabbi_name);
+		if (in_type != TQSL_LOCATION_FIELD_BADZONE) {
+			switch (i) {
+			    case 0:		// US_STATE
+				control_width = getTextSize(this).GetWidth() * 30;
+				boxPAS = new wxBoxSizer(wxHORIZONTAL);
+				lblPAS = new wxStaticText(this, -1, lbl, wxDefaultPosition,
+						wxSize(label_w, -1), wxALIGN_RIGHT/*|wxST_NO_AUTORESIZE*/);
+				lblPAS->SetFont(labelFont);
+				boxPAS->Add(lblPAS, 0, wxTOP|wxALIGN_CENTER_VERTICAL, 5);
+				break;
+			    case 1:		// US_COUNTY
+				control_width = getTextSize(this).GetWidth() * 20;
+				boxSAS = new wxBoxSizer(wxHORIZONTAL);
+				lblSAS = new wxStaticText(this, -1, lbl, wxDefaultPosition,
+						wxSize(label_w, -1), wxALIGN_RIGHT/*|wxST_NO_AUTORESIZE*/);
+				lblSAS->SetFont(labelFont);
+				boxSAS->Add(lblSAS, 0, wxTOP|wxALIGN_CENTER_VERTICAL, 5);
+				break;
+			    case 2:		// US_PARK
+				control_width = getTextSize(this).GetWidth() * data_length;
+				boxPark = new wxBoxSizer(wxHORIZONTAL);
+				lblPark = new wxStaticText(this, -1, lbl, wxDefaultPosition,
+						wxSize(label_w, -1), wxALIGN_RIGHT/*|wxST_NO_AUTORESIZE*/);
+				lblPark->SetFont(labelFont);
+				boxPark->Add(lblPark, 0, wxTOP|wxALIGN_CENTER_VERTICAL, 5);
+				break;
+			}
+		}
+		wxWindow *control_p = NULL;
 		tqsl_getLocationFieldFlags(loc, i, &flags);
 		switch(in_type) {
 			case TQSL_LOCATION_FIELD_DDLIST:
 			case TQSL_LOCATION_FIELD_LIST:
-				control_p = new wxComboBox(this, TQSL_ID_LOW+i, wxT(""), wxDefaultPosition, wxSize(control_width, -1),
-					0, 0, wxCB_DROPDOWN|wxCB_READONLY);
-				if (flags & TQSL_LOCATION_FIELD_SELNXT) {
-					addCheckbox = true;
-					cbLabel = lbl;
-				}
+				control_p = new wxComboBox(this, TQSL_ID_LOW+total_fields, wxT(""), wxDefaultPosition, wxSize(control_width, -1),
+				0, 0, wxCB_DROPDOWN|wxCB_READONLY);
 				break;
 			case TQSL_LOCATION_FIELD_TEXT:
-				control_p = new wxTextCtrl(this, TQSL_ID_LOW+i, wxT(""), wxDefaultPosition, wxSize(control_width, -1));
+				control_p = new wxTextCtrl(this, TQSL_ID_LOW+total_fields, wxT(""), wxDefaultPosition, wxSize(control_width, -1));
 				break;
 			case TQSL_LOCATION_FIELD_BADZONE:
-				wxCoord w, h;
-				int tsize;
-				tqsl_getLocationFieldDataLength(loc, i, &tsize);
-				tsize /= 2;
-				sdc.GetTextExtent(wxString::FromUTF8("X"), &w, &h);
-				errlbl = new wxStaticText(this, -1, wxT(""), wxDefaultPosition,
-					wxSize(w*tsize, -1), wxALIGN_LEFT|wxST_NO_AUTORESIZE);
-				control_p = errlbl;
-				break;
+				continue;
 		}
-		controls.push_back(control_p);
-		if (in_type != TQSL_LOCATION_FIELD_BADZONE) {
-			hsizer->Add(control_p, 0, wxLEFT | wxTOP, 5);
-			sizer->Add(hsizer, 0, wxLEFT|wxRIGHT, 10);
-		} else {
-			sizer->Add(control_p, 0, wxEXPAND | wxLEFT| wxRIGHT, 10);
+		p2_controls.push_back(control_p);
+		switch (i) {
+		    case 0:	// US_STATE
+			ctlPAS = static_cast<wxComboBox*>(control_p);
+			boxPAS->Add(control_p, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
+			boxITUZ->Add(boxPAS, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
+			sizer->Add(boxITUZ, 0, wxLEFT|wxRIGHT, 5);
+			break;
+		    case 1:	// US_COUNTY
+			ctlSAS = static_cast<wxComboBox*>(control_p);
+			boxSAS->Add(control_p, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
+			boxCQZ->Add(boxSAS, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
+			sizer->Add(boxCQZ, 0, wxLEFT|wxRIGHT, 5);
+			break;
+		    case 2:	// US_PARK
+			ctlPark = static_cast<wxComboBox*>(control_p);
+			boxPark->Add(control_p, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
+			boxIOTA->Add(boxPark, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
+			sizer->Add(boxIOTA, 0, wxLEFT|wxRIGHT, 5);
+			break;
 		}
+		total_fields++;
 	}
 
-	if (addCheckbox) {
-		wxBoxSizer *hsizer = new wxBoxSizer(wxHORIZONTAL);
-		okEmptyCB = new wxCheckBox(this, TQSL_ID_LOW+numf, _("Allow 'None' for ") + cbLabel, wxDefaultPosition, wxDefaultSize);
+	// Add the error label
+	wxCoord w, h;
+	int tsize = 80;
+	sdc.GetTextExtent(wxString::FromUTF8("X"), &w, &h);
+	errlbl = new wxStaticText(this, -1, wxT(""), wxDefaultPosition,
+			wxSize(w*tsize, h), wxALIGN_LEFT|wxST_NO_AUTORESIZE);
+	sizer->AddStretchSpacer(1);
+	sizer->Add(errlbl, 0);
+	sizer->AddStretchSpacer(1);
 
-		hsizer->Add(new wxStaticText(this, -1, wxT(""),
-			wxDefaultPosition, wxSize(label_w, -1), wxALIGN_RIGHT|wxST_NO_AUTORESIZE), 0, wxTOP, 5);
-		hsizer->Add(okEmptyCB, 0, wxLEFT|wxTOP, 5);
-		sizer->Add(hsizer, 0, wxLEFT|wxRight, 10);
-	} else {
-		okEmptyCB = 0;
-	}
+	//  Back to initial page
+	tqsl_setStationLocationCapturePage(loc, loc_page);
 	initialized = true;
+
 	UpdateFields();
+	UpdateFields();		// Twice thru to make sure state propagates
 	AdjustPage(sizer, wxT("stnloc1.htm"));
 }
 
-TQSLWizCertPage::~TQSLWizCertPage() {
+TQSLWizLocPage::~TQSLWizLocPage() {
 }
 
 const char *
-TQSLWizCertPage::validate() {
-	tqslTrace("TQSLWizCertPage::validate", NULL);
+TQSLWizLocPage::validate() {
+	tqslTrace("TQSLWizLocPage::validate", NULL);
 
 	if (!initialized) return 0;
 	valMsg = wxT("");
-	tqsl_setStationLocationCapturePage(loc, loc_page);
-	for (int i = 0; i < static_cast<int>(controls.size()); i++) {
+	int initial_page;
+
+	tqsl_getStationLocationCapturePage(loc, &initial_page);
+	tqsl_setStationLocationCapturePage(loc, first_page);
+	for (int i = 0; i < static_cast<int>(p1_controls.size()); i++) {
 		char gabbi_name[40];
 		int in_type;
 		int flags;
-		tqsl_getLocationFieldDataGABBI(loc, i, gabbi_name, sizeof gabbi_name);
-		tqsl_getLocationFieldInputType(loc, i, &in_type);
-		tqsl_getLocationFieldFlags(loc, i, &flags);
+		int field = i;
+		if (i >= page_2_offset) {
+        		tqsl_setStationLocationCapturePage(loc, 2);
+			field = i - page_2_offset;
+		}
+		tqsl_getLocationFieldDataGABBI(loc, field, gabbi_name, sizeof gabbi_name);
+		tqsl_getLocationFieldInputType(loc, field, &in_type);
+		tqsl_getLocationFieldFlags(loc, field, &flags);
 		if (flags == TQSL_LOCATION_FIELD_SELNXT) {
 			int index;
-			tqsl_getLocationFieldIndex(loc, i, &index);
-			if (index <= 0 && (okEmptyCB && !okEmptyCB->IsChecked())) {
+			tqsl_getLocationFieldIndex(loc, field, &index);
+			// Less than zero, no match
+			// equal zero, "None" - allow None for call.
+			if (index < 0 || (index == 0 && strcmp(gabbi_name, "CALL"))) {
 				char label[256];
-				tqsl_getLocationFieldDataLabel(loc, i, label, sizeof label);
+				tqsl_getLocationFieldDataLabel(loc, field, label, sizeof label);
 				valMsg = wxString::Format(_("You must select a %hs"), label);
-			}
-			if (okEmptyCB) {
-				if (index <= 0)
-					okEmptyCB->Enable(true);
-				else
-					okEmptyCB->Enable(false);
 			}
 		} else if (strcmp(gabbi_name, "GRIDSQUARE") == 0) {
 			tqsl_getLocationFieldCharData(loc, 0, callsign, sizeof callsign);
-			wxString gridVal = (reinterpret_cast<wxTextCtrl *>(controls[i]))->GetValue();
+			wxString gridVal = (reinterpret_cast<wxTextCtrl *>(p1_controls[i]))->GetValue();
 			if (gridVal.size() == 0) {
 				continue;
 			}
@@ -570,11 +967,11 @@ TQSLWizCertPage::validate() {
 				if (!editedGrids.IsEmpty())
 					editedGrids += wxT(",");
 				editedGrids += grid;
-				(reinterpret_cast<wxTextCtrl *>(controls[i]))->ChangeValue(editedGrids);
-				tqsl_setLocationFieldCharData(loc, i, (reinterpret_cast<wxTextCtrl *>(controls[i]))->GetValue().ToUTF8());
+				(reinterpret_cast<wxTextCtrl *>(p1_controls[i]))->ChangeValue(editedGrids);
+				tqsl_setLocationFieldCharData(loc, field, (reinterpret_cast<wxTextCtrl *>(p1_controls[i]))->GetValue().ToUTF8());
 			}
 		} else if (strcmp(gabbi_name, "IOTA") == 0) {
-			wxString iotaVal = (reinterpret_cast<wxTextCtrl *>(controls[i]))->GetValue();
+			wxString iotaVal = (reinterpret_cast<wxTextCtrl *>(p1_controls[i]))->GetValue();
 			if (iotaVal.size() == 0) {
 				continue;
 			}
@@ -591,17 +988,17 @@ TQSLWizCertPage::validate() {
 			if (cont != wxT("AF-") && cont != wxT("AN-") && cont != wxT("AS-") && cont != wxT("EU-") &&
 			    cont != wxT("NA-") && cont != wxT("OC-") && cont != wxT("SA-")) {
 				if (valMsg.IsEmpty()) {
-					valMsg = wxString::Format(_("IOTA %s is not correct. Must start with AF-, AN-, AS-, EU-, NA-, OC- or SA-"), iotaVal.c_str());
+					valMsg = wxString::Format(_("IOTA reference %s is not correct. Must start with AF-, AN-, AS-, EU-, NA-, OC- or SA-"), iotaVal.c_str());
 				}
 			}
 			wxString num = iotaVal.Right(3);
 			long iotanum;
 			if (!iotaVal.Right(3).ToLong(&iotanum)) {
 				if (valMsg.IsEmpty()) {
-					valMsg = wxString::Format(_("IOTA %s is not correct. Must have a number after the '-'"), iotaVal.c_str());
+					valMsg = wxString::Format(_("IOTA reference %s is not correct. Must have a number after the '-'"), iotaVal.c_str());
 				}
 			}
-		} else if (in_type == TQSL_LOCATION_FIELD_BADZONE) {
+		} else if (in_type == TQSL_LOCATION_FIELD_BADZONE && p1_controls[i]) {
 // Possible errors, here for harvesting
 #ifdef tqsltranslate
 	static const char* verrs[] = {
@@ -612,39 +1009,82 @@ TQSLWizCertPage::validate() {
 };
 #endif
 			char buf[256];
+			tqsl_getLocationFieldCharData(loc, field, buf, sizeof buf);
+			if (strlen(buf) > 0)
+				valMsg = wxGetTranslation(wxString::FromUTF8(buf));
+			(reinterpret_cast<wxStaticText *>(p1_controls[i]))->SetLabel(valMsg);
+		}
+	}
+	// Do the second page
+	if (second_page > 0) {
+		tqsl_setStationLocationCapturePage(loc, second_page);
+	}
+	for (int i = 0; second_page > 0 && i < static_cast<int>(p2_controls.size()); i++) {
+		char gabbi_name[40];
+		int in_type;
+		int flags;
+		tqsl_getLocationFieldDataGABBI(loc, i, gabbi_name, sizeof gabbi_name);
+		tqsl_getLocationFieldInputType(loc, i, &in_type);
+		tqsl_getLocationFieldFlags(loc, i, &flags);
+		if (flags == TQSL_LOCATION_FIELD_SELNXT) {
+			int index;
+			tqsl_getLocationFieldIndex(loc, i, &index);
+			if (index <= 0) {
+				char label[256];
+				tqsl_getLocationFieldDataLabel(loc, i, label, sizeof label);
+				valMsg = wxString::Format(_("You must select a %hs"), label);
+			}
+		} else if (in_type == TQSL_LOCATION_FIELD_BADZONE && p2_controls[i]) {
+			char buf[256];
 			tqsl_getLocationFieldCharData(loc, i, buf, sizeof buf);
 			if (strlen(buf) > 0)
 				valMsg = wxGetTranslation(wxString::FromUTF8(buf));
-			(reinterpret_cast<wxStaticText *>(controls[i]))->SetLabel(valMsg);
+			(reinterpret_cast<wxStaticText *>(p2_controls[i]))->SetLabel(valMsg);
 		}
 	}
 	if (errlbl) errlbl->SetLabel(valMsg);
+	tqsl_setStationLocationCapturePage(loc, initial_page);
 	return 0;
 }
 
 bool
-TQSLWizCertPage::TransferDataFromWindow() {
-	tqslTrace("TQSLWizCertPage::TransferDataFromWindow", NULL);
+TQSLWizLocPage::TransferDataFromWindow() {
+	tqslTrace("TQSLWizLocPage::TransferDataFromWindow", NULL);
 
 	tqsl_setStationLocationCapturePage(loc, loc_page);
-	for (int i = 0; i < static_cast<int>(controls.size()); i++) {
-		int in_type;
-		tqsl_getLocationFieldInputType(loc, i, &in_type);
-		switch(in_type) {
-			case TQSL_LOCATION_FIELD_DDLIST:
-			case TQSL_LOCATION_FIELD_LIST:
-				break;
-			case TQSL_LOCATION_FIELD_TEXT:
-				tqsl_setLocationFieldCharData(loc, i, (reinterpret_cast<wxTextCtrl *>(controls[i]))->GetValue().ToUTF8());
-				break;
+	if (loc_page != second_page) {
+		for (int i = 0; i < static_cast<int>(p1_controls.size()); i++) {
+			int in_type;
+			tqsl_getLocationFieldInputType(loc, i, &in_type);
+			switch(in_type) {
+				case TQSL_LOCATION_FIELD_DDLIST:
+				case TQSL_LOCATION_FIELD_LIST:
+					break;
+				case TQSL_LOCATION_FIELD_TEXT:
+					tqsl_setLocationFieldCharData(loc, i, (reinterpret_cast<wxTextCtrl *>(p1_controls[i]))->GetValue().ToUTF8());
+					break;
+			}
+		}
+	} else {
+		for (int i = 0; i < static_cast<int>(p2_controls.size()); i++) {
+			int in_type;
+			tqsl_getLocationFieldInputType(loc, i, &in_type);
+			switch(in_type) {
+				case TQSL_LOCATION_FIELD_DDLIST:
+				case TQSL_LOCATION_FIELD_LIST:
+					break;
+				case TQSL_LOCATION_FIELD_TEXT:
+					tqsl_setLocationFieldCharData(loc, i, (reinterpret_cast<wxTextCtrl *>(p2_controls[i]))->GetValue().ToUTF8());
+					break;
+			}
 		}
 	}
 	if (errlbl) errlbl->SetLabel(valMsg);
 	return true;
 }
 void
-TQSLWizCertPage::OnPageChanging(wxWizardEvent& ev) {
-	tqslTrace("TQSLWizCertPage::OnPageChanging", "Direction=", ev.GetDirection());
+TQSLWizLocPage::OnPageChanging(wxWizardEvent& ev) {
+	tqslTrace("TQSLWizLocPage::OnPageChanging", "Direction=", ev.GetDirection());
 
 	validate();
 	if (valMsg.Len() > 0 && ev.GetDirection()) {
@@ -744,7 +1184,7 @@ TQSLWizFinalPage::OnPageChanging(wxWizardEvent& ev) {
 	tqslTrace("TQSLWizFinalPage::OnPageChanging", "Direction=", ev.GetDirection());
 
 	validate();
-	if (valMsg.Len() > 0 && ev.GetDirection()) {
+	if (!valMsg.IsEmpty() && ev.GetDirection()) {
 		ev.Veto();
 		wxMessageBox(valMsg, _("Error"), wxOK | wxICON_ERROR, this);
 	}

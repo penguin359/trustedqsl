@@ -15,8 +15,6 @@
 #include "extwizard.h"
 #include "tqsltrace.h"
 
-#define EW_HELP_BUT wxID_HIGHEST+300
-
 BEGIN_EVENT_TABLE(ExtWizard, wxWizard)
 	EVT_WIZARD_PAGE_CHANGED(-1, ExtWizard::OnPageChanged)
 END_EVENT_TABLE()
@@ -38,16 +36,20 @@ ExtWizard::ReportSize(const wxSize& size) {
 		_minsize.SetHeight(size.GetHeight());
 }
 
-ExtWizard::ExtWizard(wxWindow *parent, wxHtmlHelpController *help, const wxString& title)
-	: wxWizard(parent, -1, title), _help(help) {
+ExtWizard::ExtWizard(wxWindow *parent, wxHtmlHelpController *help, const wxString& title) {
 	tqslTrace("ExtWizard::ExtWizard", "parent=%lx, title=%s", reinterpret_cast<void *>(parent), S(title));
 
+	SetExtraStyle(wxWIZARD_EX_HELPBUTTON);
+	Create(parent, wxID_ANY, title);
+	_help = help;
 	CenterOnParent();
 }
 
 BEGIN_EVENT_TABLE(ExtWizard_Page, wxWizardPageSimple)
-	EVT_BUTTON(EW_HELP_BUT, ExtWizard_Page::OnHelp)
+	EVT_WIZARD_HELP(-1, ExtWizard_Page::OnHelp)
 END_EVENT_TABLE()
+// FindWindowById(wxID_FORWARD,this->GetParent())->Hide()//Or->Disable()
+
 
 void
 ExtWizard_Page::check_valid(TQ_WXTEXTEVENT&) {
@@ -58,18 +60,18 @@ ExtWizard_Page::check_valid(TQ_WXTEXTEVENT&) {
 void
 ExtWizard_Page::AdjustPage(wxBoxSizer *sizer, const wxString& helpfile) {
 	tqslTrace("ExtWizard_Page::AdjustPage", NULL);
+
 	_helpfile = helpfile;
 
 	if (!_helpfile.IsEmpty() && _parent->HaveHelp()) {
-		// Space filler
-		sizer->Add(new wxStaticText(this, -1, wxT("")), 1, 0, 10);
-		sizer->Add(new wxButton(this, EW_HELP_BUT, _("Help")), 0, wxALL, 10);
+		FindWindowById(wxID_HELP, this->GetParent())->Enable(); // or Show()
+	} else {
+		FindWindowById(wxID_HELP, this->GetParent())->Disable(); // or Hide()
 	}
 
 	SetAutoLayout(TRUE);
 	SetSizer(sizer);
-	sizer->Fit(this);
 	sizer->SetSizeHints(this);
+	Layout();
 	_parent->ReportSize(sizer->CalcMin());
 }
-

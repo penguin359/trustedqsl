@@ -473,10 +473,16 @@ LogPrefs::LogPrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm")) {
 	config->Read(wxT("DateRange"), &allow, true);
 	daterange->SetValue(allow);
 	sizer->Add(daterange, 0, wxLEFT|wxRIGHT|wxTOP, 10);
+
 	dispdupes = new wxCheckBox(this, ID_PREF_FILE_DISPLAY_DUPES, _("Display details of already uploaded QSOs when signing a log"));
 	config->Read(wxT("DispDupes"), &allow, DEFAULT_DISP_DUPES);
 	dispdupes->SetValue(allow);
 	sizer->Add(dispdupes, 0, wxLEFT|wxRIGHT|wxTOP, 10);
+
+	ignoresecs = new wxCheckBox(this, ID_PREF_IGNORE_SECONDS, _("Ignore seconds in QSO times"));
+	config->Read(wxT("IgnoreSeconds"), &allow, DEFAULT_IGNORE_SECONDS);
+	ignoresecs->SetValue(allow);
+	sizer->Add(ignoresecs, 0, wxLEFT|wxRIGHT|wxTOP, 10);
 
 	int logverify;
         config->Read(wxT("LogVerify"), &logverify, TQSL_LOC_REPORT);
@@ -505,6 +511,7 @@ bool LogPrefs::TransferDataFromWindow() {
 	config->Write(wxT("BadCalls"), badcalls->GetValue());
 	config->Write(wxT("DateRange"), daterange->GetValue());
 	config->Write(wxT("DispDupes"), dispdupes->GetValue());
+	config->Write(wxT("IgnoreSeconds"), ignoresecs->GetValue());
 	config->Write(wxT("LogVerify"), handleQTH->GetSelection());
 
 	return true;

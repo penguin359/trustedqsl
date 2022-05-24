@@ -275,7 +275,10 @@ getLocalizedErrorString_v(int err) {
 	}
 	if (err == (TQSL_CERT_NOT_FOUND | 0x1000)) {
 		err = TQSL_CERT_NOT_FOUND;
-		wxString composed = wxString::Format(_("There is no valid callsign certificate for %hs available. This QSO cannot be signed"), tQSL_CustomError);
+		const char *call, *ent;
+		call = strtok(tQSL_CustomError, "|");
+		ent = strtok(NULL, "|");
+		wxString composed = wxString::Format(_("There is no valid callsign certificate for %hs in entity %hs available. This QSO cannot be signed"), call, ent);
 		return composed;
 	}
 	return wxGetTranslation(wxString::FromUTF8(error_strings[adjusted_err]));

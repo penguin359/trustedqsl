@@ -9,7 +9,7 @@ KEYCHAIN="/Library/Keychains/System.keychain"
 KEYCHAIN="$HOME/Library/Keychains/Login.keychain-db"
 SIGNOPTS="--options runtime --timestamp"
 
-if [ "x$1" == "x-legacy" ]; then
+if [ "x$1" = "x-legacy" ]; then
 	SIGNOPTS=""			# Legacy can't have the hardened runtime
 	shift
 fi

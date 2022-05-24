@@ -90,6 +90,8 @@ LocTree::Build(int flags, const TQSL_PROVIDER *provider) {
 	for (int i = 0; i < _nloc && i < 2000; i++) {
 		char locname[256];
 		check_tqsl_error(tqsl_getStationLocationName(loc, i, locname, sizeof locname));
+		if (!strcmp(locname, ".empty"))				// Dummy station location
+			continue;
 		char callsign[256];
 		check_tqsl_error(tqsl_getStationLocationCallSign(loc, i, callsign, sizeof callsign));
 		wxString locutf8 = wxString::FromUTF8(locname);

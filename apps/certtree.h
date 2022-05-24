@@ -31,10 +31,11 @@
 
 class CertTreeItemData : public wxTreeItemData {
  public:
-	explicit CertTreeItemData(tQSL_Cert cert) : _cert(cert) {}
+	explicit CertTreeItemData(tQSL_Cert cert) : _cert(cert) {path = wxEmptyString; basename = wxEmptyString;}
 	~CertTreeItemData();
 	tQSL_Cert getCert() { return _cert; }
-
+	wxString path;
+	wxString basename;
  private:
 	tQSL_Cert _cert;
 };

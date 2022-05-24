@@ -61,7 +61,7 @@ class ExtWizard : public wxWizard {
 
 class ExtWizard_Page : public wxWizardPageSimple {
  public:
-	explicit ExtWizard_Page(ExtWizard *parent) : wxWizardPageSimple(parent), _parent(parent), _helpfile(wxT("")) {}
+	explicit ExtWizard_Page(ExtWizard *parent) : wxWizardPageSimple(parent), _parent(parent), _helpfile(wxT("")) { }
 
 	virtual const char *validate() { return NULL; }	// Returns error message string or NULL=no error
 	virtual void refresh() { }	// Updates page contents based on page-specific criteria
@@ -70,7 +70,7 @@ class ExtWizard_Page : public wxWizardPageSimple {
 	ExtWizard *_parent;
 	void AdjustPage(wxBoxSizer *sizer, const wxString& helpfile = wxT(""));
  private:
-	void OnHelp(wxCommandEvent&) { if (_helpfile != wxT("")) _parent->DisplayHelp(_helpfile); }
+	void OnHelp(wxWizardEvent&) { if (_helpfile != wxT("")) _parent->DisplayHelp(_helpfile); }
 	wxString _helpfile;
 
 	DECLARE_EVENT_TABLE();

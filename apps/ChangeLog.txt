@@ -1,5 +1,69 @@
 TQSL changes
 ============
+2.6.2
+----------
+Add an option for new callsign certificate requests for club calls, QSL
+managers, and DXpeditions.
+
+Expand gridsquare input field to be long enough for four six-digit locators.
+
+Allow properties of expired callsign certificates to be displayed from the
+right click menu.
+
+2.6.1
+----------
+Fix a major error in handing previously uploaded QSOs that can cause TQSL
+to either hang or keep asking how to handle those QSOs.
+
+2.6
+----------
+When defining a station location with only one park defined, do not force
+that park to be selected. Default to "[None]" and allow that to be saved.
+
+Don't allow renewal from a superceded callsign certificate. LoTW
+won't allow that to work without a current signing certificate.
+
+Remove the certificate type selection dialog. Explain what this was 
+for - using a shared account for QSOs or a distinct one.
+
+Add a log-handling preference that permits ignoring seconds in QSO
+times to assist with discarding duplicate QSOs.
+
+Allow command line signing without a station location being specified.
+
+Handle station location setup with multiple certs for one call, moving
+from an entity without a PAS into one with so zones get set correctly
+
+Display full station location details when asking a user to validate
+that the right station location is being used.
+
+Validate a callsign certificate is still valid just before using it to
+sign a log (requires network access to validate against ARRL).
+
+Add separate folders under callsign certificate display to indicate status
+of each cert (valid, expired, replaced, etc.)
+
+Merge Station Location definition page to a single page.
+
+Force proper zones when there's a single zone for ITU or CQ.
+
+
+2.5.10 (unreleased)
+----------
+Provide directions for how to upload a log when "Sign and Save" is used.
+
+When opening a Callsign Certificate file, show both TQ6 and P12 files. This
+makes it more obvious how to choose a P12 (as it doesn't require changing
+the file type pulldown.)
+
+Export a copy of any imported Callsign Certificate.
+
+Correct the sizing of the Callsign Certificate and Station Location property
+windows.
+
+Correct possible hang when displaying Callsign Certificate properties of
+a pending callsign certificate.
+
 2.5.9
 ----------
 Fix problem that caused the TQSL preference for log handling to be ignored for

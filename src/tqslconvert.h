@@ -96,7 +96,15 @@ DLLEXPORT int CALLCONVENTION tqsl_setConverterQTHDetails(tQSL_Converter conv, in
   * \c allow defaults to 1 for backwards compatibility when tqsl_beginADIFConverter or
   * tqsl_beginCabrilloConverter is called.
   */
-DLLEXPORT int CALLCONVENTION tqsl_setConverterAllowDuplicates(tQSL_Converter convp, int allow);
+DLLEXPORT int CALLCONVENTION tqsl_setConverterAllowDuplicates(tQSL_Converter convp, int ignore);
+/** Configure the converter to ignore (ignore != 0) or include (ignore == 0)
+  * seconds in times when detecting duplicate QSOs in a signed log.
+  * Duplicate detection is done using QSO details, location details, and
+  * certificate serial number.
+  *
+  * \c ignore defaults to 0.
+  */
+DLLEXPORT int CALLCONVENTION tqsl_setConverterIgnoreSeconds(tQSL_Converter convp, int ignore);
 
 /** Specify the name of the application using the conversion library.
   * This is output in a header record in the exported log file.

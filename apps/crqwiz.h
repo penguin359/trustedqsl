@@ -89,9 +89,6 @@ class CRQWiz : public ExtWizard {
 	CRQ_Page *signPage;
 	tQSL_Cert cert;
 	TQSL_CERT_REQ *_crq;
-	// TypePage data
-	CRQ_Page *typePage;
-	int certType;
 
  private:
 	CRQ_Page *_first;
@@ -196,19 +193,6 @@ class CRQ_PasswordPage : public CRQ_Page {
 	DECLARE_EVENT_TABLE()
 };
 
-class CRQ_TypePage : public CRQ_Page {
- public:
-	explicit CRQ_TypePage(CRQWiz *parent);
-	virtual bool TransferDataFromWindow();
-	virtual CRQ_Page *GetPrev() const;
- private:
-	bool initialized;
-	wxRadioBox *certType;
-	CRQWiz *_parent;
-
-	DECLARE_EVENT_TABLE()
-};
-
 class CRQ_SignPage : public CRQ_Page {
  public:
 	explicit CRQ_SignPage(CRQWiz *parent, TQSL_CERT_REQ *crq = 0);
@@ -224,6 +208,8 @@ class CRQ_SignPage : public CRQ_Page {
 	int em_w;
         void OnPageChanging(wxWizardEvent &);
 	CRQWiz *_parent;
+	wxRadioBox *choice;
+	wxStaticText* introText;
 	DECLARE_EVENT_TABLE()
 };
 
