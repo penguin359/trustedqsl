@@ -1,3 +1,11 @@
+trustedqsl (2.6.3-1) unstable; urgency=medium
+
+  * New upstream version 2.6.3
+  * Refresh patches for new upstream version
+  * Fix segfault when renewing station certificate (Closes: #1012020)
+
+ -- tony mancill <tmancill@debian.org>  Sat, 04 Jun 2022 08:37:47 -0700
+
 trustedqsl (2.6.2-1) unstable; urgency=medium
 
   * New upstream version 2.6.2.
