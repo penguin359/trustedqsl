@@ -3,7 +3,7 @@ Author: tony mancill <tmancill@debian.org>
 
 --- a/src/location.cpp
 +++ b/src/location.cpp
-@@ -1192,7 +1192,7 @@ tqsl_getCabrilloMapEntry(const char *con
+@@ -1192,7 +1192,7 @@
  		return 1;
  	}
  	if (init_cabrillo_map()) {
@@ -12,7 +12,7 @@ Author: tony mancill <tmancill@debian.org>
  		return 1;
  	}
  	map<string, triplet<int, int, TQSL_CABRILLO_FREQ_TYPE> >::iterator it;
-@@ -2332,7 +2332,7 @@ tqsl_getLocationFieldCharData(tQSL_Locat
+@@ -2332,7 +2332,7 @@
  	}
  	TQSL_LOCATION_FIELDLIST &fl = loc->pagelist[loc->page-1].fieldlist;
  	if (buf == NULL || field_num < 0 || field_num >= static_cast<int>(fl.size())) {
@@ -23,7 +23,7 @@ Author: tony mancill <tmancill@debian.org>
  	}
 --- a/apps/lang/ca_ES/tqslapp.po
 +++ b/apps/lang/ca_ES/tqslapp.po
-@@ -1819,7 +1819,7 @@ msgstr "Prova a penjar la versió %s des
+@@ -1819,7 +1819,7 @@
  
  #: tqsl.cpp:2924
  #, c-format
@@ -32,7 +32,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "%s: No es pot carregar La xarxa està ocupada o el lloc LoTW està massa "
  "ocupat."
-@@ -1973,7 +1973,7 @@ msgid "Please try again later."
+@@ -1973,7 +1973,7 @@
  msgstr "Si us plau, intenta-ho més tard."
  
  #: tqsl.cpp:3376 tqsl.cpp:3455
@@ -41,7 +41,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "No es pot actualitzar. La xarxa és lenta o el lloc LoTW està massa ocupat."
  
-@@ -2062,7 +2062,7 @@ msgstr ""
+@@ -2062,7 +2062,7 @@
  
  #: tqsl.cpp:3954 tqsl.cpp:3989
  msgid ""
@@ -52,7 +52,7 @@ Author: tony mancill <tmancill@debian.org>
  "LoTW està massa ocupat."
 --- a/apps/lang/de/tqslapp.po
 +++ b/apps/lang/de/tqslapp.po
-@@ -1807,7 +1807,7 @@ msgstr "Bitte versuchen Sie %s später h
+@@ -1807,7 +1807,7 @@
  
  #: tqsl.cpp:2924
  #, c-format
@@ -61,7 +61,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "%s: kann nicht hochladen. Das Netzwerk ist nicht verfügbar oder die LoTW "
  "Webseite ist zu beschäftigt."
-@@ -1960,7 +1960,7 @@ msgid "Please try again later."
+@@ -1960,7 +1960,7 @@
  msgstr "Bitte versuchen Sie es später noch einmal."
  
  #: tqsl.cpp:3376 tqsl.cpp:3455
@@ -70,7 +70,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "Keine Aktualisierung möglich. Entweder ist das Netzwerk nicht verfügbar oder "
  "die LoTW-Website ist zu beschäftigt."
-@@ -2049,7 +2049,7 @@ msgstr ""
+@@ -2049,7 +2049,7 @@
  
  #: tqsl.cpp:3954 tqsl.cpp:3989
  msgid ""
@@ -81,7 +81,7 @@ Author: tony mancill <tmancill@debian.org>
  "LoTW Webseite ist zu beschäftigt."
 --- a/apps/lang/es/tqslapp.po
 +++ b/apps/lang/es/tqslapp.po
-@@ -1805,7 +1805,7 @@ msgstr "Por favor trate de subir el %s m
+@@ -1805,7 +1805,7 @@
  
  #: tqsl.cpp:2924
  #, c-format
@@ -90,7 +90,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "%s: no se pudo subir. No hay red o el sitio web de LoTW está muy ocupado."
  
-@@ -1956,7 +1956,7 @@ msgid "Please try again later."
+@@ -1956,7 +1956,7 @@
  msgstr "Por favor inténtalo más tarde."
  
  #: tqsl.cpp:3376 tqsl.cpp:3455
@@ -99,7 +99,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "No se puede actualizar. La red no funciona o el sitio web de LoTW está "
  "demasiado ocupado."
-@@ -2045,7 +2045,7 @@ msgstr ""
+@@ -2045,7 +2045,7 @@
  
  #: tqsl.cpp:3954 tqsl.cpp:3989
  msgid ""
@@ -110,7 +110,7 @@ Author: tony mancill <tmancill@debian.org>
  "de LOTW está demasiado ocupado."
 --- a/apps/lang/fi/tqslapp.po
 +++ b/apps/lang/fi/tqslapp.po
-@@ -1803,7 +1803,7 @@ msgstr "Yritä lähettää %s myöhemmin
+@@ -1803,7 +1803,7 @@
  
  #: tqsl.cpp:2924
  #, c-format
@@ -119,7 +119,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "%s: Ei voida lähettää. Verkko on alhaalla tai LoTW-palvelin on liian "
  "kiireinen."
-@@ -1954,7 +1954,7 @@ msgid "Please try again later."
+@@ -1954,7 +1954,7 @@
  msgstr "Yritä uudelleen myöhemmin."
  
  #: tqsl.cpp:3376 tqsl.cpp:3455
@@ -128,7 +128,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "Ei voida päivittää. Joko verkko on poissa käytöstä tai LoTW-sivusto on liian "
  "kiireinen."
-@@ -2043,7 +2043,7 @@ msgstr ""
+@@ -2043,7 +2043,7 @@
  
  #: tqsl.cpp:3954 tqsl.cpp:3989
  msgid ""
@@ -139,7 +139,7 @@ Author: tony mancill <tmancill@debian.org>
  "sivusto on liian kiireinen."
 --- a/apps/lang/fr/tqslapp.po
 +++ b/apps/lang/fr/tqslapp.po
-@@ -1822,7 +1822,7 @@ msgstr "S'il vous plaît essayez de tél
+@@ -1822,7 +1822,7 @@
  
  #: tqsl.cpp:2924
  #, c-format
@@ -148,7 +148,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "%s : impossible de télécharger. Le réseau est hors service ou le site de "
  "LoTW est trop occupé."
-@@ -1975,7 +1975,7 @@ msgid "Please try again later."
+@@ -1975,7 +1975,7 @@
  msgstr "Merci de réessayer plus tard."
  
  #: tqsl.cpp:3376 tqsl.cpp:3455
@@ -157,7 +157,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "Impossible de mettre à jour. Le réseau est hors service ou le site de LoTW "
  "est trop occupé."
-@@ -2065,7 +2065,7 @@ msgstr ""
+@@ -2065,7 +2065,7 @@
  
  #: tqsl.cpp:3954 tqsl.cpp:3989
  msgid ""
@@ -168,7 +168,7 @@ Author: tony mancill <tmancill@debian.org>
  "site de LoTW est trop occupé."
 --- a/apps/lang/hi_IN/tqslapp.po
 +++ b/apps/lang/hi_IN/tqslapp.po
-@@ -1587,7 +1587,7 @@ msgstr "कृपया %s को बा
+@@ -1587,7 +1587,7 @@
  
  #: tqsl.cpp:2924
  #, c-format
@@ -177,7 +177,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr "%s: अपलोड करने में असमर्थ. नेटवर्क बंद है या LoTW साइट बहुत व्यस्त है."
  
  #: tqsl.cpp:2928
-@@ -1716,7 +1716,7 @@ msgid "Please try again later."
+@@ -1716,7 +1716,7 @@
  msgstr "कृपया पुन: प्रयास करें."
  
  #: tqsl.cpp:3376 tqsl.cpp:3455
@@ -186,7 +186,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr "अद्यतन करने में असमर्थ-या तो आपका इंटरनेट कनेक्शन बंद है या LoTW साइट बहुत व्यस्त है."
  
  #: tqsl.cpp:3379 tqsl.cpp:3458 tqsl.cpp:3960 tqsl.cpp:3995
-@@ -1798,7 +1798,7 @@ msgid "Unable to check for updates - eit
+@@ -1798,7 +1798,7 @@
  msgstr "अद्यतनों के लिए जांच करने में असमर्थ - या तो आपका इंटरनेट बंद है या LoTW पहुँच से बहार है."
  
  #: tqsl.cpp:3954 tqsl.cpp:3989
@@ -197,7 +197,7 @@ Author: tony mancill <tmancill@debian.org>
  #: tqsl.cpp:3965
 --- a/apps/lang/it/tqslapp.po
 +++ b/apps/lang/it/tqslapp.po
-@@ -1812,7 +1812,7 @@ msgstr "Prova a caricare il %s più tard
+@@ -1812,7 +1812,7 @@
  
  #: tqsl.cpp:2924
  #, c-format
@@ -206,7 +206,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "%s: Impossibile caricare. La rete è giù oppure il sito di LoTW è troppo "
  "occupato."
-@@ -1963,7 +1963,7 @@ msgid "Please try again later."
+@@ -1963,7 +1963,7 @@
  msgstr "Per favore riprova più tardi."
  
  #: tqsl.cpp:3376 tqsl.cpp:3455
@@ -215,7 +215,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "Impossibile aggiornare. La rete è giù oppure il sito di LoTW è troppo "
  "occupato."
-@@ -2052,7 +2052,7 @@ msgstr ""
+@@ -2052,7 +2052,7 @@
  
  #: tqsl.cpp:3954 tqsl.cpp:3989
  msgid ""
@@ -226,7 +226,7 @@ Author: tony mancill <tmancill@debian.org>
  "LoTW è troppo occupato."
 --- a/apps/lang/ja/tqslapp.po
 +++ b/apps/lang/ja/tqslapp.po
-@@ -1787,7 +1787,7 @@ msgstr "%s　のアップロードを後
+@@ -1787,7 +1787,7 @@
  
  #: tqsl.cpp:2924
  #, c-format
@@ -235,7 +235,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "%s：　アップロードできません。 ネットワークがダウンしているか、LoTW　サイトが"
  "ビジー状態です。"
-@@ -1937,7 +1937,7 @@ msgid "Please try again later."
+@@ -1937,7 +1937,7 @@
  msgstr "後でもう一度お試しください。"
  
  #: tqsl.cpp:3376 tqsl.cpp:3455
@@ -244,7 +244,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "更新できません。 ネットワークがダウンしているか、LoTW　サイトがビジー状態で"
  "す。"
-@@ -2026,7 +2026,7 @@ msgstr ""
+@@ -2026,7 +2026,7 @@
  
  #: tqsl.cpp:3954 tqsl.cpp:3989
  msgid ""
@@ -255,7 +255,7 @@ Author: tony mancill <tmancill@debian.org>
  "ビジー状態です。"
 --- a/apps/lang/pl_PL/tqslapp.po
 +++ b/apps/lang/pl_PL/tqslapp.po
-@@ -1792,7 +1792,7 @@ msgstr "Spróbuj przesłać %s później
+@@ -1792,7 +1792,7 @@
  
  #: tqsl.cpp:2924
  #, c-format
@@ -264,7 +264,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "%s: Nie można przesłać. Sieć nie działa lub witryna LoTW jest przeciążona."
  
-@@ -1942,7 +1942,7 @@ msgid "Please try again later."
+@@ -1942,7 +1942,7 @@
  msgstr "Spróbuj ponownie później."
  
  #: tqsl.cpp:3376 tqsl.cpp:3455
@@ -273,7 +273,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "Nie można zaktualizować.  śieć nie działa lub witryna LoTW jest zbyt zajęta."
  
-@@ -2030,7 +2030,7 @@ msgstr ""
+@@ -2030,7 +2030,7 @@
  
  #: tqsl.cpp:3954 tqsl.cpp:3989
  msgid ""
@@ -284,7 +284,7 @@ Author: tony mancill <tmancill@debian.org>
  "zbyt zajęta."
 --- a/apps/lang/pt/tqslapp.po
 +++ b/apps/lang/pt/tqslapp.po
-@@ -1764,7 +1764,7 @@ msgstr "Por favor, tente fazer o upload
+@@ -1764,7 +1764,7 @@
  
  #: tqsl.cpp:2924
  #, c-format
@@ -293,7 +293,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "%s: Não é possível fazer o upload. A rede está em baixo ou o site do LoTW "
  "está muito ocupado."
-@@ -1910,7 +1910,7 @@ msgid "Please try again later."
+@@ -1910,7 +1910,7 @@
  msgstr "Por favor, tente novamente mais tarde. "
  
  #: tqsl.cpp:3376 tqsl.cpp:3455
@@ -302,7 +302,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "Não é possível atualizar. A rede está em baixo ou o site LoTW está muito "
  "ocupado."
-@@ -2000,7 +2000,7 @@ msgstr ""
+@@ -2000,7 +2000,7 @@
  
  #: tqsl.cpp:3954 tqsl.cpp:3989
  msgid ""
@@ -313,7 +313,7 @@ Author: tony mancill <tmancill@debian.org>
  "do LoTW está muito ocupado."
 --- a/apps/lang/ru/tqslapp.po
 +++ b/apps/lang/ru/tqslapp.po
-@@ -1790,7 +1790,7 @@ msgstr "Пожалуйста, попро
+@@ -1790,7 +1790,7 @@
  
  #: tqsl.cpp:2924
  #, c-format
@@ -322,7 +322,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr "%s: Загрузка невозможна. Отказ сети, или сайт LoTW перегружен."
  
  #: tqsl.cpp:2928
-@@ -1939,7 +1939,7 @@ msgid "Please try again later."
+@@ -1939,7 +1939,7 @@
  msgstr "Поробуйте позднее."
  
  #: tqsl.cpp:3376 tqsl.cpp:3455
@@ -331,7 +331,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "Обновление невозможно. Соединение с сетью отсутствует или сайт LoTW "
  "перегружен."
-@@ -2028,7 +2028,7 @@ msgstr ""
+@@ -2028,7 +2028,7 @@
  
  #: tqsl.cpp:3954 tqsl.cpp:3989
  msgid ""
@@ -342,7 +342,7 @@ Author: tony mancill <tmancill@debian.org>
  "перегружен."
 --- a/apps/lang/sv_SE/tqslapp.po
 +++ b/apps/lang/sv_SE/tqslapp.po
-@@ -1791,7 +1791,7 @@ msgstr "Försök ladda upp %s senare."
+@@ -1791,7 +1791,7 @@
  
  #: tqsl.cpp:2924
  #, c-format
@@ -351,7 +351,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "%s: Det gick inte att ladda upp. Nätverket är nere eller så är LoTW-"
  "webbplatsen för upptagen."
-@@ -1942,7 +1942,7 @@ msgid "Please try again later."
+@@ -1942,7 +1942,7 @@
  msgstr "Vänligen försök igen senare."
  
  #: tqsl.cpp:3376 tqsl.cpp:3455
@@ -360,7 +360,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "Det gick inte att uppdatera. Nätverket är nere eller så är LoTW-webbplatsen "
  "för upptagen."
-@@ -2031,7 +2031,7 @@ msgstr ""
+@@ -2031,7 +2031,7 @@
  
  #: tqsl.cpp:3954 tqsl.cpp:3989
  msgid ""
@@ -371,7 +371,7 @@ Author: tony mancill <tmancill@debian.org>
  "LoTW-webbplatsen för upptagen."
 --- a/apps/lang/tr_TR/tqslapp.po
 +++ b/apps/lang/tr_TR/tqslapp.po
-@@ -1743,7 +1743,7 @@ msgstr "%s yüklemeyi daha sonra tekrar
+@@ -1743,7 +1743,7 @@
  
  #: tqsl.cpp:2924
  #, c-format
@@ -380,7 +380,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr ""
  "%s: Yükleme Yapılamadı.  Internet sorunu ya da LOTW sitesinde Problem var."
  
-@@ -1890,7 +1890,7 @@ msgid "Please try again later."
+@@ -1890,7 +1890,7 @@
  msgstr "Lütfen daha sonra tekrar deneyiniz."
  
  #: tqsl.cpp:3376 tqsl.cpp:3455
@@ -389,7 +389,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr "Güncelleme başarısız. Ağ bağlantısı yok , ya da LOTW sitesi meşgul."
  
  #: tqsl.cpp:3379 tqsl.cpp:3458 tqsl.cpp:3960 tqsl.cpp:3995
-@@ -1977,7 +1977,7 @@ msgstr ""
+@@ -1977,7 +1977,7 @@
  
  #: tqsl.cpp:3954 tqsl.cpp:3989
  msgid ""
@@ -400,7 +400,7 @@ Author: tony mancill <tmancill@debian.org>
  "Problem var."
 --- a/apps/tqsl.cpp
 +++ b/apps/tqsl.cpp
-@@ -2938,7 +2938,7 @@ int MyFrame::UploadFile(const wxString&
+@@ -2938,7 +2938,7 @@
  			wxLogMessage(_("Please try uploading the %s later."), fileType.c_str());
  			retval = TQSL_EXIT_CONNECTION_FAILED;
  		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
@@ -409,7 +409,7 @@ Author: tony mancill <tmancill@debian.org>
  			wxLogMessage(_("Please try uploading the %s later."), fileType.c_str());
  			retval = TQSL_EXIT_CONNECTION_FAILED;
  		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
-@@ -3390,7 +3390,7 @@ void MyFrame::UpdateConfigFile() {
+@@ -3395,7 +3395,7 @@
  			wxLogMessage(_("Unable to update - either your Internet connection is down or LoTW is unreachable."));
  			wxLogMessage(_("Please try again later."));
  		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
@@ -418,7 +418,7 @@ Author: tony mancill <tmancill@debian.org>
  			wxLogMessage(_("Please try again later."));
  		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
  			wxLogMessage(_("Unable to connect to the update site."));
-@@ -3469,7 +3469,7 @@ void MyFrame::UpdateTQSL(wxString& url)
+@@ -3474,7 +3474,7 @@
  			wxLogMessage(_("Unable to update - either your Internet connection is down or LoTW is unreachable."));
  			wxLogMessage(_("Please try again later."));
  		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
@@ -427,7 +427,7 @@ Author: tony mancill <tmancill@debian.org>
  			wxLogMessage(_("Please try again later."));
  		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
  			wxLogMessage(_("Unable to connect to the update site."));
-@@ -3968,7 +3968,7 @@ MyFrame::DoCheckForUpdates(bool silent,
+@@ -3973,7 +3973,7 @@
  			} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
  				networkError = true;
  				ri->error = true;
@@ -436,7 +436,7 @@ Author: tony mancill <tmancill@debian.org>
  				ri->errorText += wxT("\n");
  				ri->errorText += _("Please try again later.");
  			} else if (retval == CURLE_SSL_CONNECT_ERROR) {
-@@ -4003,7 +4003,7 @@ MyFrame::DoCheckForUpdates(bool silent,
+@@ -4008,7 +4008,7 @@
  		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
  			networkError = true;
  			ri->error = true;
@@ -447,7 +447,7 @@ Author: tony mancill <tmancill@debian.org>
  		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
 --- a/apps/tqslupdater.cpp
 +++ b/apps/tqslupdater.cpp
-@@ -216,7 +216,7 @@ MyFrame::UpdateTQSL(wxString& url) {
+@@ -216,7 +216,7 @@
  		if (retval == CURLE_COULDNT_RESOLVE_HOST || retval == CURLE_COULDNT_CONNECT) {
  			wxMessageBox(wxT("Unable to update - either your Internet connection is down or LoTW is unreachable.\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
  		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
@@ -456,7 +456,7 @@ Author: tony mancill <tmancill@debian.org>
  		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
  			wxMessageBox(wxT("Unable to connect to the update site.\nPlease try again later"), wxT("Error"), wxOK | wxICON_ERROR, this);
  		} else { // some other error
-@@ -300,7 +300,7 @@ MyFrame::DoCheckForUpdates(bool silent,
+@@ -300,7 +300,7 @@
  		if (retval == CURLE_COULDNT_RESOLVE_HOST || retval == CURLE_COULDNT_CONNECT) {
  			wxMessageBox(wxT("Unable to check for updates - either your Internet connection is down or LoTW is unreachable.\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
  		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
@@ -467,7 +467,7 @@ Author: tony mancill <tmancill@debian.org>
  		} else { // some other error
 --- a/apps/lang/zh_CN/tqslapp.po
 +++ b/apps/lang/zh_CN/tqslapp.po
-@@ -1675,7 +1675,7 @@ msgstr "请在 %s 后重试上传。"
+@@ -1675,7 +1675,7 @@
  
  #: tqsl.cpp:2924
  #, c-format
@@ -476,7 +476,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr "%s: 不能上传 - 网络掉线或者LoTW网站太忙。"
  
  #: tqsl.cpp:2928
-@@ -1808,7 +1808,7 @@ msgid "Please try again later."
+@@ -1808,7 +1808,7 @@
  msgstr "请稍后再试。"
  
  #: tqsl.cpp:3376 tqsl.cpp:3455
@@ -485,7 +485,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr "不能更新--或者你的网络掉线或者LoTW网站太忙。"
  
  #: tqsl.cpp:3379 tqsl.cpp:3458 tqsl.cpp:3960 tqsl.cpp:3995
-@@ -1893,7 +1893,7 @@ msgstr "不能检测更新--或者你的
+@@ -1893,7 +1893,7 @@
  
  #: tqsl.cpp:3954 tqsl.cpp:3989
  msgid ""
@@ -496,7 +496,7 @@ Author: tony mancill <tmancill@debian.org>
  #: tqsl.cpp:3965
 --- a/apps/lang/zh_TW/tqslapp.po
 +++ b/apps/lang/zh_TW/tqslapp.po
-@@ -1686,7 +1686,7 @@ msgstr "請在 %s 後重試上傳."
+@@ -1686,7 +1686,7 @@
  
  #: tqsl.cpp:2924
  #, c-format
@@ -505,7 +505,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr "%s: 不能上傳 - 網絡斷線或者LoTW網站太繁忙."
  
  #: tqsl.cpp:2928
-@@ -1822,7 +1822,7 @@ msgid "Please try again later."
+@@ -1822,7 +1822,7 @@
  msgstr "請稍後再試."
  
  #: tqsl.cpp:3376 tqsl.cpp:3455
@@ -514,7 +514,7 @@ Author: tony mancill <tmancill@debian.org>
  msgstr "不能更新--或者您的網絡斷線或者LoTW網站太忙."
  
  #: tqsl.cpp:3379 tqsl.cpp:3458 tqsl.cpp:3960 tqsl.cpp:3995
-@@ -1907,7 +1907,7 @@ msgstr "不能檢測更新 - 或者您�
+@@ -1907,7 +1907,7 @@
  
  #: tqsl.cpp:3954 tqsl.cpp:3989
  msgid ""
