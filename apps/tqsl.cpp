@@ -2022,7 +2022,7 @@ int MyFrame::ConvertLogToString(tQSL_Location loc, const wxString& infile, wxStr
 			if (tqsl_getStationLocationCaptureName(loc, loc_name, sizeof loc_name)) {
 				strncpy(loc_name, "Unknown", sizeof loc_name);
 			}
-			LocPropDial dial(wxString::FromUTF8(loc_name), false, this);
+			LocPropDial dial(wxString::FromUTF8(loc_name), false, infile.ToUTF8(), this);
 			int locnOK = dial.ShowModal();
 			if (locnOK != wxID_OK)  {
 				return TQSL_EXIT_CANCEL;
@@ -3007,21 +3007,26 @@ static bool verify_cert(tQSL_Location loc, bool editing) {
 	bool goodCert = false;
 	long serial = 0;
 	wxString status;
+	wxString errString;
 	for (int i = 0; i < ncerts; i++) {
 		tqsl_getCertificateSerial(certlist[i], &serial);
 		frame->CheckCertStatus(serial, status);
 		if (status == wxT("Bad serial")) {
-			wxMessageBox(wxString::Format(_("There are no current callsign certificates for callsign %hs. This station location cannot be used to sign a log file."), call), _("No Certificate"), wxOK | wxICON_EXCLAMATION);
-			return false;
+			errString = wxString::Format(_("There are no current callsign certificates for callsign %hs. This station location cannot be used to sign a log file."), call);
 		} else if (status == wxT("Superceded")) {
-			wxMessageBox(wxString::Format(_("There is a newer callsign certificate for callsign %hs. This station location cannot be used to sign a log file until the new certificate is installed."), call), _("No Certificate"), wxOK | wxICON_EXCLAMATION);
+			errString = wxString::Format(_("There is a newer callsign certificate for callsign %hs. This station location cannot be used to sign a log file until the new certificate is installed."), call);
 		} else if (status == wxT("Expired")) {
-			wxMessageBox(wxString::Format(_("The callsign certificate for callsign %hs has expired. This station location cannot be used to sign a log file until a valid callsign certificate is installed."), call), _("No Certificate"), wxOK | wxICON_EXCLAMATION);
+			errString = wxString::Format(_("The callsign certificate for callsign %hs has expired. This station location cannot be used to sign a log file until a valid callsign certificate is installed."), call);
 		} else if (status == wxT("Unrevoked")) {
 			goodCert = true;
+			break;
 		} else {			// Can't tell - no network?
 			goodCert = true;
+			break;
 		}
+	}
+	if (!goodCert) {
+		wxMessageBox(errString, _("No Certificate"), wxOK | wxICON_EXCLAMATION);
 	}
 	tqsl_freeCertificateList(certlist, ncerts);
 	return goodCert;
@@ -4420,7 +4425,7 @@ MyFrame::ProcessQSODataFile(bool upload, bool compressed) {
 		tqslTrace("MyFrame::ProcessQSODataFile", "file=%s location %hs, call %hs dxcc %hs",
 				S(infile), loc_name, callsign, dxcc.name());
 		if (strcmp(callsign, "[None]")) {
-			LocPropDial dial(wxString::FromUTF8(loc_name), false, this);
+			LocPropDial dial(wxString::FromUTF8(loc_name), false, infile.ToUTF8(), this);
 			int locnOK = dial.ShowModal();
 			if (locnOK == wxID_OK) {
 				if (upload) {
@@ -7155,9 +7160,9 @@ BEGIN_EVENT_TABLE(LocPropDial, wxDialog)
 	EVT_BUTTON(wxID_OK, LocPropDial::closeMe)
 END_EVENT_TABLE()
 
-LocPropDial::LocPropDial(wxString locname, bool display, wxWindow *parent)
+LocPropDial::LocPropDial(wxString locname, bool display, const char *filename, wxWindow *parent)
 		: wxDialog(parent, -1, _("Station Location Properties"), wxDefaultPosition, wxSize(1000, 15 * LABEL_HEIGHT)) {
-	tqslTrace("LocPropDial", "locname=%s", S(locname));
+	tqslTrace("LocPropDial", "locname=%s, filename=%s", S(locname), filename);
 
 	const char *fields[] = { "CALL", __("Call sign: "),
 				 "DXCC", __("DXCC Entity: "),
@@ -7237,8 +7242,12 @@ LocPropDial::LocPropDial(wxString locname, bool display, wxWindow *parent)
 		topsizer->Add(new wxButton(this, wxID_OK, _("Close")),
 				0, wxALIGN_CENTER | wxALL, 10);
 	} else {
+		wxString det = _("Signing File: ") + wxString::FromUTF8(filename);
+		wxStaticText* detailsLabel = new wxStaticText(this, -1, det, wxDefaultPosition, wxSize(label_width*8, -1), wxALIGN_CENTRE_HORIZONTAL|wxST_NO_AUTORESIZE);
+		topsizer->Add(detailsLabel);
 		int fontSize = wxNORMAL_FONT->GetPointSize();
 		wxFont fnt(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+
 		wxStaticText* m1 = new wxStaticText(this, -1, _("Please verify that this is the correct Station Location for the QSOs being signed."));
 		m1->SetFont(fnt);
 		topsizer->Add(m1, 0, wxALL | wxALIGN_CENTER, 10);
@@ -7262,7 +7271,7 @@ void
 displayLocProperties(LocTreeItemData *item, wxWindow *parent) {
 	tqslTrace("displayLocProperties", "item=%lx", item);
 	if (item != NULL) {
-		LocPropDial dial(item->getLocname(), true, parent);
+		LocPropDial dial(item->getLocname(), true, NULL, parent);
 		dial.ShowModal();
 	}
 }

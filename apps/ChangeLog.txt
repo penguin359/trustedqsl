@@ -1,5 +1,17 @@
 TQSL changes
 ============
+2.6.3
+----------
+Handle the case where there's both a valid and an invalid callsign certificate
+for a given call - don't error out when detecing the invalid one, continue
+searching for a valid callsign certificate for the call.
+
+Include the filename of the log being signed in the station location
+verification page.
+
+Don't do a ULS test when requesting a new callsign certificate which has an
+end date. This allows requests for former callsigns.
+
 2.6.2
 ----------
 Add an option for new callsign certificate requests for club calls, QSL

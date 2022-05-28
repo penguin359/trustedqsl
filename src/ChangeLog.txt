@@ -3,6 +3,9 @@ TQSLLIB changes
 
 2.5
 ---
+Return true for the expiry check for callsign certificates where
+the certificate has an invalid serial number.
+
 Add initialization for legacy crypto provider for OpenSSL to allow
 TQSL certificate algorithms to work.
 

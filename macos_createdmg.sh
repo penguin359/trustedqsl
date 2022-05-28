@@ -68,6 +68,7 @@ if [ "x$1" != "x" ]; then
 fi
 /bin/echo "Creating a package..."
 pkgbuild --analyze --root $WORKDIR/TrustedQSL ${WORKDIR}/tqslapp.plist
+plutil -replace BundleIsRelocatable -bool NO ${WORKDIR}/tqslapp.plist
 
 if [ "x$2" != "x" ]; then
 	pkgbuild --root ${WORKDIR}//TrustedQSL --component-plist ${WORKDIR}/tqslapp.plist --install-location /Applications/TrustedQSL `pwd`/${IMGNAME}-${TQSLVER}.pkg --keychain $KEYCHAIN --sign "$2"

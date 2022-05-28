@@ -1027,6 +1027,9 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 
 	validate();
 
+	bool hasEndDate = (!tqsl_isDateNull(&_parent->qsonotafter) && tqsl_isDateValid(&_parent->qsonotafter));
+	bool notInULS = false;
+
 	// First check if there's a slash. If so, it's a portable. Use the base callsign
 	wxString callsign = _parent->callsign;
 	int slashpos = callsign.Find('/', true);
@@ -1085,6 +1088,10 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 				int stat2 = GetULSInfo("W1AW", name, attn, addr1, city, state, zip, update);
 				if (stat2 == 2)					// Also nothing for a good call
 					break;
+				if (hasEndDate) {				// Allow former calls
+					notInULS = true;
+					break;
+				}
 				valMsg = wxString::Format(_("The callsign %s is not currently registered in the FCC ULS database as of %s.\nIf this is a newly registered call, you must wait at least one business day for it to be valid. Please enter a currently valid callsign."), callsign.c_str(), update.c_str());
 				break;
 		}
@@ -1116,7 +1123,7 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 		}
 	}
 
-	if (ok && !tqsl_isDateNull(&_parent->qsonotafter) && tqsl_isDateValid(&_parent->qsonotafter)) {
+	if (ok && hasEndDate && !notInULS) {		// If it has an end date and it's a current call
 		wxString msg = _("You have chosen a QSO end date for this Callsign Certificate. The 'QSO end date' should ONLY be set if that date is the date when that callsign's license expired or the license was replaced by a new callsign.");
 			msg += wxT("\n\n");
 			msg += _("If you set an end date, you will not be able to sign QSOs past that date, even if the Callsign Certificate itself is still valid.");
