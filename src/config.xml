@@ -1,4 +1,4 @@
-<tqslconfig majorversion="11" minorversion="19">
+<tqslconfig majorversion="11" minorversion="20">
      <adifmap>
        <adifmode adif-mode="AM" mode="AM">AM</adifmode>
        <adifmode adif-mode="ARDOP" mode="ARDOP">ARDOP</adifmode>
@@ -7715,6 +7715,7 @@
        <satellite endDate="1993-09-10" name="Arsene" startDate="1993-05-13">OSCAR 24</satellite>
        <satellite name="BO-102" startDate="2019-07-25">BIT Progress-OSCAR 102 (CAS-7B)</satellite>
        <satellite endDate="2017-02-17" name="BY70-1" startDate="2016-12-28">Bayi Kepu Weixing 1</satellite>
+       <satellite name="CAS-2T" startDate="2016-11-09">CAS-2T</satellite>
        <satellite name="CAS-3H" startDate="2015-09-18">LilacSat-2</satellite>
        <satellite name="CAS-4A" startDate="2017-10-18">CAMSAT 4A (CAS-4A)</satellite>
        <satellite name="CAS-4B" startDate="2017-10-18">CAMSAT 4B (CAS-4B)</satellite>

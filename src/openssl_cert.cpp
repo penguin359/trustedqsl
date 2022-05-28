@@ -860,7 +860,8 @@ tqsl_isCertificateExpired(tQSL_Cert cert, int *status) {
 
 	long serial = 0;
 	tqsl_getCertificateSerial(cert, &serial);
-	if (tqsl_getCertificateStatus(serial) == TQSL_CERT_STATUS_EXP) {
+	int sts = tqsl_getCertificateStatus(serial);
+	if (sts == TQSL_CERT_STATUS_EXP || sts == TQSL_CERT_STATUS_INV) {
 		*status = true;
 		return 0;
 	}
