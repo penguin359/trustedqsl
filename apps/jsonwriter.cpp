@@ -61,7 +61,7 @@ static const wxChar* writerTraceMask = _T("traceWriter");
 
 
  To write a JSON value object using a four-spaces indentation and forcing all
- comment strings to apear before the value they refer to, use the following code:
+ comment strings to appear before the value they refer to, use the following code:
  \code
   wxJSONWriter writer(wxJSONWRITER_STYLED |   // want a styled output
                 wxJSONWRITER_WRITE_COMMENTS |  // want comments in the document
@@ -102,14 +102,14 @@ static const wxChar* writerTraceMask = _T("traceWriter");
  In ANSI builds the user may want to suppress UTF-8 encoding so
  that the JSON text can be stored in ANSI format.
  Note that this is not valid JSON text unless all characters written
- to the JSON text document are in the US-ASCII character ser (0x00..0x7F).
+ to the JSON text document are in the US-ASCII character set (0x00..0x7F).
  To know more read \ref wxjson_tutorial_unicode_ansi
 
  \par Efficiency
 
  In versions up to 1.0 the JSON writer wrote every character to the
  output object (the string or the stream).
- This is very inefficient becuase the writer converted each char to
+ This is very inefficient because the writer converted each char to
  UTF-8 when writing to streams but we have to note that only string values
  have to be actually converted.
  Special JSON characters, numbers and literals do not need the conversion
@@ -120,7 +120,7 @@ static const wxChar* writerTraceMask = _T("traceWriter");
 
  \par The problem of writing doubles
 
- You can customize the ouput of doubles by specifing  the format string
+ You can customize the output of doubles by specifying  the format string
  that has to be used by the JSON writer class. To know more about this issue
  read \ref wxjson_tutorial_write_doubles
 */
@@ -133,14 +133,14 @@ static const wxChar* writerTraceMask = _T("traceWriter");
 
  \param indent the initial indentation in number of spaces. Default is ZERO.
     If you specify the wxJSONWRITER_TAB_INDENT flag for the \e style,
-    this value referes to the number of TABs in the initial indentation
+    this value refers to the number of TABs in the initial indentation
 
  \param step the indentation increment for new objects/arrays in number of spaces
      (default is 3).
     This value is ignored if you specify the wxJSONWRITER_TAB_INDENT flag for
     the \e style: the indentation increment is only one TAB character.
 
- \param style this is a combination of the following constants OR'ed togheter:
+ \param style this is a combination of the following constants OR'ed together:
     \li wxJSONWRITER_NONE: no indentation is performed and no LF character is
         written between values.
         This style produces strict JSON text but it is hard to read by humans
@@ -185,7 +185,7 @@ static const wxChar* writerTraceMask = _T("traceWriter");
         indentation. It is ignored if wxJSONWRITER_STYLED is not set.
         This style produces strict JSON text.
     \li wxJSONWRITER_NOUTF8_STREAM: suppress UTF-8 conversion when writing string
-        values to the stream thus producing ANSI text output; only meaningfull in
+        values to the stream thus producing ANSI text output; only meaningful in
         ANSI builds, this flag is simply ignored in Unicode builds.
     \li wxJSONWRITER_MEMORYBUFF: 
 
@@ -240,9 +240,9 @@ wxJSONWriter::~wxJSONWriter() {
  Also note that the Write() function does not return a status code.
  If you are writing to a string, you do not have to warry about this
  issue: no errors can occur when writing to strings.
- On the other hand, wehn writing to a stream there could be errors
+ On the other hand, when writing to a stream there could be errors
  in the write operation.
- If an error occurs, the \c Write(9 function immediatly returns
+ If an error occurs, the \c Write(9 function immediately returns
  without trying further output operations.
  You have to check the status of the stream by calling the stream's
  memberfunctions. Example:
@@ -779,7 +779,7 @@ wxJSONWriter::WriteStringValue(wxOutputStream& os, const wxString& str) {
         }
 
         // check if SPLIT_STRING flag is set and if the string has to
-        // be splitted
+        // be split
         if ((m_style & wxJSONWRITER_STYLED) && (m_style & wxJSONWRITER_SPLIT_STRING))   {
             // split the string if the character written is LF
             if (ch == '\n') {
@@ -1098,7 +1098,7 @@ wxJSONWriter::WriteMemoryBuff(wxOutputStream& os, const wxMemoryBuffer& buff) {
 
     // if STYLED and SPLIT_STRING flags are set, the function writes 20 bytes on every row
     // the following is the counter of bytes written.
-    // the string is splitted only for the special meory buffer type, not for array of INTs
+    // the string is split only for the special meory buffer type, not for array of INTs
     int bytesWritten = 0;
     bool splitString = false;
     if ((m_style & wxJSONWRITER_STYLED) &&

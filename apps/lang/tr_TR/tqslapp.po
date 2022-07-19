@@ -1743,7 +1743,7 @@ msgstr "%s yüklemeyi daha sonra tekrar deneyin."
 
 #: tqsl.cpp:2924
 #, c-format
-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
+msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
 msgstr ""
 "%s: Yükleme Yapılamadı.  Internet sorunu ya da LOTW sitesinde Problem var."
 
@@ -1890,7 +1890,7 @@ msgid "Please try again later."
 msgstr "Lütfen daha sonra tekrar deneyiniz."
 
 #: tqsl.cpp:3376 tqsl.cpp:3455
-msgid "Unable to update. The nework is down or the LoTW site is too busy."
+msgid "Unable to update. The network is down or the LoTW site is too busy."
 msgstr "Güncelleme başarısız. Ağ bağlantısı yok , ya da LOTW sitesi meşgul."
 
 #: tqsl.cpp:3379 tqsl.cpp:3458 tqsl.cpp:3960 tqsl.cpp:3995
@@ -1977,7 +1977,7 @@ msgstr ""
 
 #: tqsl.cpp:3954 tqsl.cpp:3989
 msgid ""
-"Unable to check for updates. The nework is down or the LoTW site is too busy."
+"Unable to check for updates. The network is down or the LoTW site is too busy."
 msgstr ""
 "Güncellemeler kontrol edilemedi.  Internet sorunu ya da LOTW sitesinde "
 "Problem var."

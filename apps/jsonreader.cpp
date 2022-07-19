@@ -39,7 +39,7 @@
  wxJSONValue::IsValid() function returns FALSE.
  This is the case of a document that is empty or contains only
  whitespaces or comments.
- If the document contains a starting object/array character immediatly
+ If the document contains a starting object/array character immediately
  followed by a closing object/array character
  (i.e.: \c {}) then the function returns an \b empty array or object
  JSON value.
@@ -54,7 +54,7 @@
  This means that the JSON input text may contain anything
  before the first start-object/array character except these two chars themselves
  unless they are included in a C/C++ comment.
- Comment lines that apear before the first start array/object character,
+ Comment lines that appear before the first start array/object character,
  are non ignored if the parser is constructed with the wxJSONREADER_STORE_COMMENT
  flag: they are added to the comment's array of the root JSON value.
 
@@ -121,7 +121,7 @@
     the end-of-file is reached.
 
  \li multi-line strings: this feature allows a JSON string type to be
-    splitted in two or more lines as in the standard C/C++
+    split in two or more lines as in the standard C/C++
     languages. The drawback is that this feature is error-prone
     and you have to use it with care.
     For more info about this topic read \ref wxjson_tutorial_style_split
@@ -138,7 +138,7 @@
  \li a stream object (\b wxInputStream)
 
  When the input is from a string object, the character represented in the
- string is platform- and mode- dependant; in other words, characters are
+ string is platform- and mode- dependent; in other words, characters are
  represented differently: in ANSI builds they depend on the charset in use
  and in Unicode builds they depend on the platform (UCS-2 on win32, UCS-4
  or UTF-8 on GNU/Linux).
@@ -187,7 +187,7 @@ static const wxChar* storeTraceMask = _T("StoreComment");
  JSON parser objects should always be constructed on the stack but
  it does not hurt to have a global JSON parser.
 
- \param flags this paramter controls how much error-tolerant should the
+ \param flags this parameter controls how much error-tolerant should the
         parser be
 
  \param maxErrors the maximum number of errors (and warnings, too) that are
@@ -196,7 +196,7 @@ static const wxChar* storeTraceMask = _T("StoreComment");
     reported.
 
  The \c flag parameter is the combination of ZERO or more of the
- following constants OR'ed toghether:
+ following constants OR'ed together:
 
  \li wxJSONREADER_ALLOW_COMMENTS: C/C++ comments are recognized by the
      parser; a warning is reported by the parser
@@ -206,15 +206,15 @@ static const wxChar* storeTraceMask = _T("StoreComment");
  \li wxJSONREADER_CASE: the parser recognizes mixed-case literal strings
  \li wxJSONREADER_MISSING: the parser allows missing or wrong close-object
      and close-array characters
- \li wxJSONREADER_MULTISTRING: strings may be splitted in two or more
+ \li wxJSONREADER_MULTISTRING: strings may be split in two or more
      lines
  \li wxJSONREADER_COMMENTS_AFTER: if STORE_COMMENTS if defined, the parser
-     assumes that comment lines apear \b before the value they
+     assumes that comment lines appear \b before the value they
      refer to unless this constant is specified. In the latter case,
-     comments apear \b after the value they refer to.
+     comments appear \b after the value they refer to.
  \li wxJSONREADER_NOUTF8_STREAM: suppress UTF-8 conversion when reading a
          string value from a stream: the reader assumes that the input stream
-         is encoded in ANSI format and not in UTF-8; only meaningfull in ANSI
+         is encoded in ANSI format and not in UTF-8; only meaningful in ANSI
          builds, this flag is simply ignored in Unicode builds.
 
  You can also use the following shortcuts to specify some predefined
@@ -230,7 +230,7 @@ static const wxChar* storeTraceMask = _T("StoreComment");
 
  The following code fragment construct a JSON parser, turns on all
  wxJSON extensions and also stores C/C++ comments in the value object
- they refer to. The parser assumes that the comments apear before the
+ they refer to. The parser assumes that the comments appear before the
  value:
 
  \code
@@ -348,7 +348,7 @@ wxJSONReader::Parse(wxInputStream& is, wxJSONValue* val) {
     m_warnings.clear();
 
     // if a wxJSONValue is not passed to the Parse function
-    // we set the temparary object created on the stack
+    // we set the temporary object created on the stack
     // I know this will slow down the validation of input
     if (val == 0)  {
         val = &temp;
@@ -749,7 +749,7 @@ wxJSONReader::DoRead(wxInputStream& is, wxJSONValue& parent) {
 void
 wxJSONReader::StoreValue(int ch, const wxString& key, wxJSONValue& value, wxJSONValue& parent) {
     // if 'ch' == } or ] than value AND key may be empty when a open object/array
-    // is immediatly followed by a close object/array
+    // is immediately followed by a close object/array
     //
     // if 'ch' == , (comma) value AND key (for TypeMap) cannot be empty
     //
@@ -829,7 +829,7 @@ wxJSONReader::StoreValue(int ch, const wxString& key, wxJSONValue& value, wxJSON
  number are automatically added by the functions.
  The \c fmt parameter is a format string that has the same syntax as the \b printf
  function.
- Note that it is the user's responsability to provide a format string suitable
+ Note that it is the user's responsiability to provide a format string suitable
  with the arguments: another string or a character.
 */
 void
@@ -1092,12 +1092,12 @@ wxJSONReader::SkipComment(wxInputStream& is) {
  like the following one:
  \code
    [
-      "This is a very long string value which is splitted into more"
+      "This is a very long string value which is split into more"
       "than one line because it is more human readable"
    ]
  \endcode
  Because of the lack of the value separator (,) the parser
- assumes that the string was splitted into several double-quoted
+ assumes that the string was split into several double-quoted
  strings.
  If the value does not contain a string then an error is
  reported.
@@ -1105,7 +1105,7 @@ wxJSONReader::SkipComment(wxInputStream& is) {
 */
 int
 wxJSONReader::ReadString(wxInputStream& is, wxJSONValue& val) {
-    // the char last read is the opening qoutes (")
+    // the char last read is the opening quotes (")
 
     wxMemoryBuffer utf8Buff;
     char ues[8];        // stores a Unicode Escaped Esquence: \uXXXX
@@ -1154,7 +1154,7 @@ wxJSONReader::ReadString(wxInputStream& is, wxJSONValue& val) {
                     continue;
                     // break;
                 default :
-                    AddError(_T("Unknow escaped character \'\\%c\'"), ch);
+                    AddError(_T("Unknown escaped character \'\\%c\'"), ch);
             }
         } else {
             // we have read a non-escaped character so we have to append it to
@@ -1309,7 +1309,7 @@ wxJSONReader::ReadToken(wxInputStream& is, int ch, wxString& s) {
  boolean value and stores it in the wxJSONValue object \c val.
 
  The function also checks that \c val is of type wxJSONTYPE_INVALID otherwise
- an error is reported becasue a value cannot follow another value:
+ an error is reported because a value cannot follow another value:
  maybe a (,) or (:) is missing.
 
  If the literal starts with a digit, a plus or minus sign, the function
@@ -1584,7 +1584,7 @@ wxJSONReader::AppendUES(wxMemoryBuffer& utf8Buff, const char* uesBuffer) {
     }
     utf8Buff.AppendData(buffer, len);
 
-    // sould never fail
+    // should never fail
     wxASSERT(len != wxCONV_FAILED);
     return 0;
 }
@@ -1592,7 +1592,7 @@ wxJSONReader::AppendUES(wxMemoryBuffer& utf8Buff, const char* uesBuffer) {
 //! Store the comment string in the value it refers to.
 /*!
  The function searches a suitable value object for storing the
- comment line that was read by the parser and temporarly
+ comment line that was read by the parser and temporarily
  stored in \c m_comment.
  The function searches the three values pointed to by:
  \li \c m_next
@@ -1610,7 +1610,7 @@ wxJSONReader::AppendUES(wxMemoryBuffer& utf8Buff, const char* uesBuffer) {
 
  Note that the comment line is only stored if the wxJSONREADER_STORE_COMMENTS
  flag was used when the parser object was constructed; otherwise, the
- function does nothing and immediatly returns.
+ function does nothing and immediately returns.
  Also note that if the comment line has to be stored but the
  function cannot find a suitable value to add the comment line to,
  an error is reported (note: not a warning but an error).

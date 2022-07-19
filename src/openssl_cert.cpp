@@ -4456,7 +4456,7 @@ tqsl_store_cert(const char *pem, X509 *cert, const char *certfile, int type, boo
 			subjid += string(" ") + value;
 	}
 	if (subjid == "") {
-		// If haven't found a displayable subject name we undertand, use the raw DN
+		// If haven't found a displayable subject name we understand, use the raw DN
 		X509_NAME_oneline(X509_get_subject_name(cert), issuer, sizeof issuer);
 		subjid = string("  ") + issuer;
 	}

@@ -1807,7 +1807,7 @@ msgstr "Bitte versuchen Sie %s später hochzuladen."
 
 #: tqsl.cpp:2924
 #, c-format
-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
+msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
 msgstr ""
 "%s: kann nicht hochladen. Das Netzwerk ist nicht verfügbar oder die LoTW "
 "Webseite ist zu beschäftigt."
@@ -1960,7 +1960,7 @@ msgid "Please try again later."
 msgstr "Bitte versuchen Sie es später noch einmal."
 
 #: tqsl.cpp:3376 tqsl.cpp:3455
-msgid "Unable to update. The nework is down or the LoTW site is too busy."
+msgid "Unable to update. The network is down or the LoTW site is too busy."
 msgstr ""
 "Keine Aktualisierung möglich. Entweder ist das Netzwerk nicht verfügbar oder "
 "die LoTW-Website ist zu beschäftigt."
@@ -2049,7 +2049,7 @@ msgstr ""
 
 #: tqsl.cpp:3954 tqsl.cpp:3989
 msgid ""
-"Unable to check for updates. The nework is down or the LoTW site is too busy."
+"Unable to check for updates. The network is down or the LoTW site is too busy."
 msgstr ""
 "Kann nicht nach Updates suchen. Das Netzwerk ist nicht verfügbar oder die "
 "LoTW Webseite ist zu beschäftigt."

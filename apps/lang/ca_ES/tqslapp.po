@@ -1819,7 +1819,7 @@ msgstr "Prova a penjar la versió %s després."
 
 #: tqsl.cpp:2924
 #, c-format
-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
+msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
 msgstr ""
 "%s: No es pot carregar La xarxa està ocupada o el lloc LoTW està massa "
 "ocupat."
@@ -1973,7 +1973,7 @@ msgid "Please try again later."
 msgstr "Si us plau, intenta-ho més tard."
 
 #: tqsl.cpp:3376 tqsl.cpp:3455
-msgid "Unable to update. The nework is down or the LoTW site is too busy."
+msgid "Unable to update. The network is down or the LoTW site is too busy."
 msgstr ""
 "No es pot actualitzar. La xarxa és lenta o el lloc LoTW està massa ocupat."
 
@@ -2062,7 +2062,7 @@ msgstr ""
 
 #: tqsl.cpp:3954 tqsl.cpp:3989
 msgid ""
-"Unable to check for updates. The nework is down or the LoTW site is too busy."
+"Unable to check for updates. The network is down or the LoTW site is too busy."
 msgstr ""
 "No es pot comprovar si hi ha actualitzacions. La xarxa es lenta o el lloc "
 "LoTW està massa ocupat."

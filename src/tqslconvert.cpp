@@ -1,4 +1,4 @@
- /***************************************************************************
+/***************************************************************************
                           tqslconvert.cpp  -  description
                              -------------------
     begin                : Sun Nov 17 2002
@@ -2017,13 +2017,68 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 				olddup[dbdata.size] = '\0';
 #endif
 				// here olddup = "GRIDSQUARE: ML01OX", stnloc "GRIDSQUARE: MLO2oa".
+				// Station loc details like "CQZ: 5, GRIDSQUARE: FM18ju, ITUZ: 8, US_COUNTY: Fairfax, US_STATE: VA"
 
-				snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "%s|%s", olddup, stnloc);
+				// If the same, it's just a dupe.
+				if (!strcmp(olddup, stnloc)) {
+					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "%s|%s", olddup, stnloc);
+					free(olddup);
+					return 0;
+				}
+				// Strip spaces
+				string olds = olddup;
+				size_t found = olds.find(' ');
+				while (found != string::npos) {
+					olds.replace(found, 1, "");
+					found = olds.find(' ');
+				}
+				string news = stnloc;
+				found = news.find(' ');
+				while (found != string::npos) {
+					news.replace(found, 1, "");
+					found = news.find(' ');
+				}
+				// Iterate the previous and current station locations.
+				vector<string>oldstn;
+				vector<string>qsostn;
+				splitStr(olds, oldstn, ',');
+				splitStr(news, qsostn, ',');
+				// What we have now is the vectors having "GRIDSQUARE:ML10X" in each entry. Look for changes.
+				bool changed = false;
+				for (size_t i = 0; i < oldstn.size(); i++) {
+					size_t cp = oldstn[i].find(":");
+					string key = oldstn[i].substr(0, cp+1);
+					for (size_t j = 0; j < qsostn.size(); j++) {
+						cp = qsostn[j].find(":");
+						string qsokey = qsostn[j].substr(0, cp+1);
+						// Finally - is the key the same?
+						if (key == qsokey) {
+							if (oldstn[i] != qsostn[j] && key != oldstn[i]) {
+								changed = true;
+							}
+							break;
+						}
+					}
+					if (changed)
+						break;
+				}
+				if (changed) {
+					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "%s|%s", olddup, stnloc);
+					free(olddup);
+					return 0;
+				}
 				free(olddup);
-				return 0;
+				// This is a valid update, delete the old one and let it update.
 #ifdef USE_LMDB
+				dbkey.mv_size = strlen(dupekey);
+				dbkey.mv_data = dupekey;
+				int dbdel_err = mdb_del(conv->txn, conv->seendb, &dbkey, &dbdata);
 			} else if (dbget_err != MDB_NOTFOUND) {
 #else
+				memset(&dbkey, 0, sizeof dbkey);
+				dbkey.size = strlen(dupekey);
+				dbkey.data = dupekey;
+				conv->seendb->del(conv->seendb, conv->txn, &dbkey, 0);
 			} else if (dbget_err != DB_NOTFOUND) {
 #endif
 				//non-zero return, but not "not found" - thus error

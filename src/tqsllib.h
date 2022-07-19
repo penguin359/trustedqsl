@@ -205,7 +205,7 @@ DLLEXPORT int CALLCONVENTION tqsl_init();
   * before calling any other functions in the library.
   *
   * Note that this is purely optional. The library will figure out an
-  * approriate directory if tqsl_setDirectory isn't called. Unless there is
+  * appropriate directory if tqsl_setDirectory isn't called. Unless there is
   * some particular need to set the directory explicitly, programs should
   * refrain from doing so.
   */
@@ -876,7 +876,7 @@ DLLEXPORT int CALLCONVENTION tqsl_endSigning(tQSL_Cert cert);
   *
   * The GABBI format requires that the tCERT record contain an integer identifier
   * that is unique within the GABBI file. Similarly, each tSTATION record must
-  * contain a unique identifier. Aditionally, the tSTATION record must reference
+  * contain a unique identifier. Additionally, the tSTATION record must reference
   * the identifier of a preceding tCERT record. Finally, each tCONTACT record must
   * reference a preceding tSTATION record. (A GABBI processor uses these identifiers
   * and references to tie the station and contact records together and to verify
@@ -1015,7 +1015,7 @@ DLLEXPORT int CALLCONVENTION tqsl_hasPrevStationLocationCapture(tQSL_Location lo
 /** Save the station location data. Note that the name must have been
   * set via tqsl_setStationLocationCaptureName if this is a new
   * station location. If the \c overwrite parameter is zero and a
-  * station location of that name is already in existance, an error
+  * station location of that name is already in existence, an error
   * occurs with tQSL_Error set to TQSL_NAME_EXISTS.
   */
 DLLEXPORT int CALLCONVENTION tqsl_saveStationLocationCapture(tQSL_Location loc, int overwrite);
@@ -1039,7 +1039,7 @@ DLLEXPORT int CALLCONVENTION tqsl_getStationLocationCallSign(tQSL_Location loc, 
 DLLEXPORT int CALLCONVENTION tqsl_getStationLocationField(tQSL_Location locp, const char *name, char *namebuf, int bufsize);
 
 /** Retrieve a saved station location.
-  * Once finished wih the station location, tqsl_endStationLocationCapture()
+  * Once finished with the station location, tqsl_endStationLocationCapture()
   * should be called to release resources.
   */
 DLLEXPORT int CALLCONVENTION tqsl_getStationLocation(tQSL_Location *loc, const char *name);
@@ -1360,10 +1360,10 @@ DLLEXPORT int CALLCONVENTION tqsl_getADIFSubMode(const char *adif_item, char *mo
   */
 DLLEXPORT const char* CALLCONVENTION tqsl_getGABBItCERT(tQSL_Cert cert, int uid);
 
-/** Get a GABBI record that contains the Staion Location data.
+/** Get a GABBI record that contains the Station Location data.
   *
   * \li \c uid is the value for the STATION_UID field.
-  * \li \c certuid is the value of the asociated CERT_UID field.
+  * \li \c certuid is the value of the associated CERT_UID field.
   *
   * Returns the NULL pointer on error.
   *

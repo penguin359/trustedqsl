@@ -1791,7 +1791,7 @@ msgstr "Försök ladda upp %s senare."
 
 #: tqsl.cpp:2924
 #, c-format
-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
+msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
 msgstr ""
 "%s: Det gick inte att ladda upp. Nätverket är nere eller så är LoTW-"
 "webbplatsen för upptagen."
@@ -1942,7 +1942,7 @@ msgid "Please try again later."
 msgstr "Vänligen försök igen senare."
 
 #: tqsl.cpp:3376 tqsl.cpp:3455
-msgid "Unable to update. The nework is down or the LoTW site is too busy."
+msgid "Unable to update. The network is down or the LoTW site is too busy."
 msgstr ""
 "Det gick inte att uppdatera. Nätverket är nere eller så är LoTW-webbplatsen "
 "för upptagen."
@@ -2031,7 +2031,7 @@ msgstr ""
 
 #: tqsl.cpp:3954 tqsl.cpp:3989
 msgid ""
-"Unable to check for updates. The nework is down or the LoTW site is too busy."
+"Unable to check for updates. The network is down or the LoTW site is too busy."
 msgstr ""
 "Det går inte att söka efter uppdateringar. Nätverket är nere eller så är "
 "LoTW-webbplatsen för upptagen."

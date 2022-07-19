@@ -1686,7 +1686,7 @@ msgstr "請在 %s 後重試上傳."
 
 #: tqsl.cpp:2924
 #, c-format
-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
+msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
 msgstr "%s: 不能上傳 - 網絡斷線或者LoTW網站太繁忙."
 
 #: tqsl.cpp:2928
@@ -1822,7 +1822,7 @@ msgid "Please try again later."
 msgstr "請稍後再試."
 
 #: tqsl.cpp:3376 tqsl.cpp:3455
-msgid "Unable to update. The nework is down or the LoTW site is too busy."
+msgid "Unable to update. The network is down or the LoTW site is too busy."
 msgstr "不能更新--或者您的網絡斷線或者LoTW網站太忙."
 
 #: tqsl.cpp:3379 tqsl.cpp:3458 tqsl.cpp:3960 tqsl.cpp:3995
@@ -1907,7 +1907,7 @@ msgstr "不能檢測更新 - 或者您的網絡斷線或者LoTW無法訪問."
 
 #: tqsl.cpp:3954 tqsl.cpp:3989
 msgid ""
-"Unable to check for updates. The nework is down or the LoTW site is too busy."
+"Unable to check for updates. The network is down or the LoTW site is too busy."
 msgstr "不能檢測更新--或者您的網絡斷線或者LoTW網站太忙."
 
 #: tqsl.cpp:3965

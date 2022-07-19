@@ -14,7 +14,8 @@ if [ "x$1" = "x-legacy" ]; then
 	shift
 fi
 
-file apps/tqsl.app/Contents/MacOS/tqsl | grep -q x86_64 || IMGNAME="tqsl-legacy"
+file apps/tqsl.app/Contents/MacOS/tqsl | grep -q ppc && IMGNAME="tqsl-legacy"
+file apps/tqsl.app/Contents/MacOS/tqsl | grep -q arm64 && IMGNAME="tqsl-arm64"
 
 /bin/echo -n "Copying files to image directory... "
 
@@ -62,6 +63,8 @@ hdiutil create -ov -srcfolder $WORKDIR -volname "TrustedQSL v$TQSLVER" "$IMGNAME
 
 if [ "x$1" != "x" ]; then
 	echo "Codesigning as $1"
+	plutil -replace CFBundleName -string tqsl ${WORKDIR}/TrustedQSL/tqsl.app/Contents/Info.plist
+	echo codesign --deep --options runtime --timestamp --verbose --sign "$1" --keychain $KEYCHAIN $WORKDIR/TrustedQSL/tqsl.app
 	codesign --deep --options runtime --timestamp --verbose --sign "$1" --keychain $KEYCHAIN $WORKDIR/TrustedQSL/tqsl.app
 # Check that it signed OK
 	codesign --verify $WORKDIR/TrustedQSL/tqsl.app || exit 1

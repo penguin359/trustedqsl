@@ -202,6 +202,7 @@ CertTree::SelectCert(tQSL_Cert cert) {
 	// Iterate the tree, looking for a matching certificate
 	wxTreeItemId root = GetRootItem();
 	wxTreeItemIdValue issCookie;
+	wxTreeItemIdValue listsCookie;
 	wxTreeItemIdValue certCookie;
 	wxTreeItemId top;
 	if (_nissuers > 1) {
@@ -210,16 +211,20 @@ CertTree::SelectCert(tQSL_Cert cert) {
 		top = root;
 	}
 	while (top.IsOk()) {
-		wxTreeItemId item = GetFirstChild(top, certCookie);
+		wxTreeItemId item = GetFirstChild(top, listsCookie);
 		while (item.IsOk()) {
-			tQSL_Cert cert = GetItemData(item)->getCert();
-			long s;
-			tqsl_getCertificateSerial(cert, &s);
-			if (s == serial) {	// found it
-				SelectItem(item);
-				return;
+			wxTreeItemId subitem = GetFirstChild(item, certCookie);
+			while (subitem.IsOk()) {
+				tQSL_Cert cert = GetItemData(subitem)->getCert();
+				long s;
+				tqsl_getCertificateSerial(cert, &s);
+				if (s == serial) {	// found it
+					SelectItem(subitem);
+					return;
+				}
+				subitem = GetNextChild(item, certCookie);
 			}
-			item = GetNextChild(top, certCookie);
+			item = GetNextChild(top, listsCookie);
 		}
 		if (_nissuers > 1) {
 			top = GetNextChild(root, issCookie);

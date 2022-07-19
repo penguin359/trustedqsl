@@ -3,6 +3,10 @@ TQSLLIB changes
 
 2.5
 ---
+Don't generate a warning for an already uploaded QSO where the changes are
+only cases where previously omitted station location details were added. For
+example, adding a CQ Zone to a station location that previously omitted it.
+
 Return true for the expiry check for callsign certificates where
 the certificate has an invalid serial number.
 
@@ -46,7 +50,7 @@ Allow full administrative subdivision names so that loggers that emit
 
 When comparing DXCC grid sets (multiple grids due to operating on a
 boundary between gridsquares) allow the grids to be in any order and
-stil match.
+still match.
 
 Allow ADIF parser to return arbitrary ADIF fields.
 
@@ -263,14 +267,14 @@ Add new tqsllib APIs:
     APIs to export and import duplicates database records
     Added an API to calculate the difference between dates
 
-Verify that the BAND and FREQ fields are consistent. Disallow freqencies
+Verify that the BAND and FREQ fields are consistent. Disallow frequencies
 outside of valid ranges for ham bands. This catches "10110" used (KHz)
 versus the ADIF required 10.110 (MHz).
 
 Always convert frequency values in Cabrillo logs to Megahertz
 independent of contest type (HF/VHF).
 
-Remove strcpy/strcat/sprintf and replace with strn* variants where possble.
+Remove strcpy/strcat/sprintf and replace with strn* variants where possible.
 
 Allow FREQ=0 when BAND is set. 
 
@@ -307,7 +311,7 @@ Add a mechanism to the location definition process to allow enforcement
 of proper zone number combinations. A status message is returned to allow
 the caller to report illogical selections.
 
-Duplicate checking database. No changes necessary for exising code. However
+Duplicate checking database. No changes necessary for existing code. However
 new or updated code is strongly encouraged to enable duplicate checking
 and commit or discard a particular signing instance as appropriate
 

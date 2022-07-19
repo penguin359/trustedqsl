@@ -75,7 +75,7 @@ enum wxJSONType {
 };
 
 // the comment position: every value only has one comment position
-// althrough comments may be splitted into several lines
+// althrough comments may be split into several lines
 enum {
   wxJSONVALUE_COMMENT_DEFAULT = 0,
   wxJSONVALUE_COMMENT_BEFORE,
@@ -141,7 +141,7 @@ class WXDLLIMPEXP_JSON wxJSONValue {
     bool IsObject() const;
     bool IsMemoryBuff() const;
 
-    // function for retireving the value as ...
+    // function for retrieving the value as ...
     int            AsInt() const;
     unsigned int   AsUInt() const;
     short          AsShort() const;
@@ -277,7 +277,7 @@ class WXDLLIMPEXP_JSON wxJSONValue {
     wxJSONRefData*  Init(wxJSONType type);
     wxJSONRefData*  COW();
 
-    // overidden from wxObject
+    // overridden from wxObject
     virtual wxJSONRefData*  CloneRefData(const wxJSONRefData *data) const;
     virtual wxJSONRefData*  CreateRefData() const;
 
@@ -383,7 +383,7 @@ class WXDLLIMPEXP_JSON wxJSONRefData {
     This data member contains the JSON data types defined by the
     JSON syntax with the exception of the complex objects.
     This data member is an union of the primitive types
-    so that it is simplier to cast them in other compatible types.
+    so that it is simpler to cast them in other compatible types.
     */
     wxJSONValueHolder m_value;
 

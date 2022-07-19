@@ -1587,7 +1587,7 @@ msgstr "कृपया %s को बाद में अपलोड करन�
 
 #: tqsl.cpp:2924
 #, c-format
-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
+msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
 msgstr "%s: अपलोड करने में असमर्थ. नेटवर्क बंद है या LoTW साइट बहुत व्यस्त है."
 
 #: tqsl.cpp:2928
@@ -1716,7 +1716,7 @@ msgid "Please try again later."
 msgstr "कृपया पुन: प्रयास करें."
 
 #: tqsl.cpp:3376 tqsl.cpp:3455
-msgid "Unable to update. The nework is down or the LoTW site is too busy."
+msgid "Unable to update. The network is down or the LoTW site is too busy."
 msgstr "अद्यतन करने में असमर्थ-या तो आपका इंटरनेट कनेक्शन बंद है या LoTW साइट बहुत व्यस्त है."
 
 #: tqsl.cpp:3379 tqsl.cpp:3458 tqsl.cpp:3960 tqsl.cpp:3995
@@ -1798,7 +1798,7 @@ msgid "Unable to check for updates - either your Internet connection is down or 
 msgstr "अद्यतनों के लिए जांच करने में असमर्थ - या तो आपका इंटरनेट बंद है या LoTW पहुँच से बहार है."
 
 #: tqsl.cpp:3954 tqsl.cpp:3989
-msgid "Unable to check for updates. The nework is down or the LoTW site is too busy."
+msgid "Unable to check for updates. The network is down or the LoTW site is too busy."
 msgstr "अद्यतनों के लिए जांच करने में असमर्थ. नेटवर्क बंद है या LoTW साइट बहुत व्यस्त है."
 
 #: tqsl.cpp:3965

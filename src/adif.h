@@ -73,7 +73,7 @@ typedef struct {
 	long signed min_value;				///< Min value
 	long signed max_value;				///< Max value
 	const char **enumStrings;			///< Enumerated values
-	void *userPointer;				///< user poitner
+	void *userPointer;				///< user pointer
 } tqsl_adifFieldDefinitions;
 
 /** Field returned from parsing */

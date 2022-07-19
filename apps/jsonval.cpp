@@ -54,7 +54,7 @@ static const wxChar* cowTraceMask = _T("traceCOW");
  \brief The reference counted JSON value data (internal use).
 
  Starting from version 0.4, the JSON value class use the reference
- counting tecnique (also know as \e copy-on-write) described in the
+ counting technique (also know as \e copy-on-write) described in the
  \b wxWidgets documentation in order to speed up processing.
  The class is used internally by the wxJSONValue class which does
  all processing.
@@ -106,7 +106,7 @@ wxJSONRefData::GetRefCount() const {
 /*! \class wxJSONValue
  \brief The JSON value class implementation.
 
-This class holds a JSON value which may be of variuos types (see the
+This class holds a JSON value which may be of various types (see the
 wxJSONType constants for a description of the types).
 To know more about the internal representation of JSON values see
 \ref pg_json_internals.
@@ -172,7 +172,7 @@ The following is an example:
 /*!
  The overloaded constructors allow the user to construct a JSON value
  object that holds the specified value and type of value.
- The default ctor construct a valid JSON object that constains a \b null
+ The default ctor construct a valid JSON object that contains a \b null
  value.
 
  If you want to create an \b invalid JSON value object you have to use the
@@ -420,7 +420,7 @@ wxJSONValue::~wxJSONValue() {
 }
 
 
-// functions for retreiving the value type: they are all 'const'
+// functions for retrieving the value type: they are all 'const'
 
 
 //! Return the type of the value stored in the object.
@@ -567,7 +567,7 @@ wxJSONValue::IsValid() const {
  \b short for 16-bits integers.
  This is because the \b int data type may have different width on different
  platforms.
- Regardless the widht of the data type (16 or 32 bits), the function returns
+ Regardless the width of the data type (16 or 32 bits), the function returns
  the correct result because it relies on the INT_MAX and INT_MIN macros.
 
  \sa \ref json_internals_integer
@@ -629,7 +629,7 @@ wxJSONValue::IsShort() const {
  32-bits integers and \b unsigned \b short for 16-bits integers.
  This is because the \b unsigned \b int data type may have different width
  on different platforms.
- Regardless the widht of the data type (16 or 32 bits), the function returns
+ Regardless the width of the data type (16 or 32 bits), the function returns
  the correct result because it relies on the UINT_MAX macro.
 
 
@@ -898,7 +898,7 @@ wxJSONValue::AsDouble() const {
     is returned. Note that this is NOT a valid JSON text.
  
  \li if the value is of type wxJSONTYPE_MEMORYBUFF the string returned contains the
-    hexadecimal digits of the first 5 bytes preceeded by the length of the buffer,
+    hexadecimal digits of the first 5 bytes preceded by the length of the buffer,
     enclosed in parenthesis
 
  If the value is an array or map, the returned string is the number of
@@ -1326,8 +1326,8 @@ wxJSONValue::AsMemoryBuff(wxMemoryBuffer& buff) const {
 
 //! Return the stored value as a map object.
 /*!
- This function is for testing and debugging purposes and you shold never use it.
- To retreive values from an array or map JSON object use the \c Item() or ItemAt()
+ This function is for testing and debugging purposes and you should never use it.
+ To retrieve values from an array or map JSON object use the \c Item() or ItemAt()
  memberfunctions or the subscript operator.
  If the stored value is not a map type, returns a NULL pointer.
 */
@@ -1345,8 +1345,8 @@ wxJSONValue::AsMap() const {
 
 //! Return the stored value as an array object.
 /*!
- This function is for testing and debugging purposes and you shold never use it.
- To retreive values from an array or map JSON object use the \c Item() or ItemAt()
+ This function is for testing and debugging purposes and you should never use it.
+ To retrieve values from an array or map JSON object use the \c Item() or ItemAt()
  memberfunctions or the subscript operator.
  If the stored value is not an array type, returns a NULL pointer.
 */
@@ -1581,7 +1581,7 @@ wxJSONValue::Append(const void* buff, size_t len) {
  in this object and returns TRUE if the operation is succefull.
  If the value stored in this value is not a string object
  the function does nothing and returns FALSE.
- Note that in order to be successfull, the value must contain
+ Note that in order to be successful, the value must contain
  a \b wxString object and not a pointer to C-string.
 */
 bool
@@ -1848,10 +1848,10 @@ wxJSONValue::operator[] (const wxString& key) {
  right operand of the assignment operator.
  Note that the old value is deleted but not the other data members
  in the wxJSONRefData structure.
- This is particularly usefull for the parser class which stores
+ This is particularly useful for the parser class which stores
  comment lines in a temporary wxJSONvalue object that is of type
  wxJSONTYPE_INVALID.
- As comment lines may apear before the value they refer to, comments
+ As comment lines may appear before the value they refer to, comments
  are stored in a value that is not yet being read.
  when the value is read, it is assigned to the temporary JSON value
  object without deleting the comment lines.
@@ -1989,7 +1989,7 @@ wxJSONValue::operator = (const wxJSONValue& other) {
  default values because \e copy-on-write is used by this class.
  However, you have to treat them as real copies; in other words, if you
  change the values of the returned object your changes does not reflect
- in the otiginal value.
+ in the original value.
  Example:
  \code
   wxJSONValue defaultValue(0);
@@ -2079,7 +2079,7 @@ wxJSONValue::Find(const wxString& key) const {
 
 //! Return a string description of the type
 /*!
- This static function is only usefull for debugging purposes and
+ This static function is only useful for debugging purposes and
  should not be used by users of this class.
  It simply returns a string representation of the JSON value
  type stored in a object.
@@ -2118,9 +2118,9 @@ wxJSONValue::TypeToString(wxJSONType type) {
     return s;
 }
 
-//! Returns informations about the object
+//! Returns information about the object
 /*!
- The function is only usefull for debugging purposes and will probably
+ The function is only useful for debugging purposes and will probably
  be dropped in future versions.
  Returns a string that contains info about the object such as:
 
@@ -2209,9 +2209,9 @@ wxJSONValue::Dump(bool deep, int indent) const {
     return s;
 }
 
-//! Returns informations about the object
+//! Returns information about the object
 /*!
- The function is only usefull for debugging purposes and will probably
+ The function is only useful for debugging purposes and will probably
  be dropped in future versions.
  You should not rely on this function to exist in future versions.
 */
@@ -2265,7 +2265,7 @@ wxJSONValue::GetInfo() const {
  \endcode
 
  Note that if the two JSON value objects share the same referenced
- data, the function immediatly returns TRUE without doing a deep
+ data, the function immediately returns TRUE without doing a deep
  comparison which is, sure, useless.
  For further info see \ref json_internals_compare.
 */
@@ -2437,7 +2437,7 @@ wxJSONValue::IsSameAs(const wxJSONValue& other) const {
         case wxJSONTYPE_OBJECT :
             size = Size();
 #if defined(JSONDEBUG)
-            wxLogTrace(compareTraceMask, _T("(%s) Comparing a map obejct - size=%d"),
+            wxLogTrace(compareTraceMask, _T("(%s) Comparing a map object - size=%d"),
                         __PRETTY_FUNCTION__, size);
 #endif
             if (size != other.Size())  {
@@ -2724,7 +2724,7 @@ wxJSONValue::SetType(wxJSONType type) {
 
     // the function unshares the referenced data but does not delete the
     // structure. This is because the wxJSON reader stores comments
-    // that apear before the value in a temporary value of type wxJSONTYPE_INVALID
+    // that appear before the value in a temporary value of type wxJSONTYPE_INVALID
     // which is invalid and, next, it stores the JSON value in the same
     // wxJSONValue object.
     // If we would delete the structure using 'Unref()' we loose the
@@ -2787,7 +2787,7 @@ wxJSONValue::SetType(wxJSONType type) {
  object is constructed.
  The line number is set by the parser class, wxJSONReader, when
  a JSON text is read from a stream or a string.
- it is used when reading a comment line: comment lines that apear
+ it is used when reading a comment line: comment lines that appear
  on the same line as a value are considered \b inline comments of
  the value.
 */
@@ -2991,14 +2991,14 @@ wxJSONValue::AllocExclusive() {
 
 //! Convert memory buffer object to a string representation.
 /*/
-The fucntion returns a string representation of the data contained in the
+The function returns a string representation of the data contained in the
 memory buffer object \c buff.
 The string is conposed of two hexadecimal digits for every byte contained
 in the memory buffer; bytes are separated by a space character.
-The string starts with the actual lenght of the data enclosed in parenthesis.
+The string starts with the actual length of the data enclosed in parenthesis.
 The string will contain \c len bytes if \c len is less than the length
 of the actual data in \c buff.
-Note that the(len) printed in the output referes to the length of the buffer
+Note that the(len) printed in the output refers to the length of the buffer
 which may be greater than the length that has to be printed.
 
  \b Example:
@@ -3022,7 +3022,7 @@ The function returns a string representation of the data contained in the
 binary memory buffer pointed to by \c buff for \c len bytes.
 The string is composed of two hexadecimal digits for every byte contained
 in the memory buffer; bytes are separated by a space character.
-The string starts with pointer to binary data followed by the lenght of the
+The string starts with pointer to binary data followed by the length of the
 data enclosed in parenthesis.
 
  \b Example:
@@ -3033,8 +3033,8 @@ This is an example of printing ten bytes from a memory buffer:
 
 @param buff the pointer to the memory buffer data
 @len   the length of the data that has to be printed
-@actualLen the real lenght of the memory buffer that has to be printed
-        just afetr the pointer; may be greater than \c len. If this parameter
+@actualLen the real length of the memory buffer that has to be printed
+        just after the pointer; may be greater than \c len. If this parameter
         is -1 then it is equal to \c len
 */
 wxString

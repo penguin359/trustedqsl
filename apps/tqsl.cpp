@@ -2938,7 +2938,7 @@ int MyFrame::UploadFile(const wxString& infile, const char* filename, int numrec
 			wxLogMessage(_("Please try uploading the %s later."), fileType.c_str());
 			retval = TQSL_EXIT_CONNECTION_FAILED;
 		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
-			wxLogMessage(_("%s: Unable to upload. The nework is down or the LoTW site is too busy."), infile.c_str());
+			wxLogMessage(_("%s: Unable to upload. The network is down or the LoTW site is too busy."), infile.c_str());
 			wxLogMessage(_("Please try uploading the %s later."), fileType.c_str());
 			retval = TQSL_EXIT_CONNECTION_FAILED;
 		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
@@ -3001,6 +3001,9 @@ static bool verify_cert(tQSL_Location loc, bool editing) {
 	}
 	if (editing) {
 		tqsl_freeCertificateList(certlist, ncerts);
+		return true;
+	}
+	if (!strcmp(call, "NONE") || !strcmp(call, "[None]")) {
 		return true;
 	}
 // check if there's a good cert right now for this call
@@ -3395,7 +3398,7 @@ void MyFrame::UpdateConfigFile() {
 			wxLogMessage(_("Unable to update - either your Internet connection is down or LoTW is unreachable."));
 			wxLogMessage(_("Please try again later."));
 		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
-			wxLogMessage(_("Unable to update. The nework is down or the LoTW site is too busy."));
+			wxLogMessage(_("Unable to update. The network is down or the LoTW site is too busy."));
 			wxLogMessage(_("Please try again later."));
 		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
 			wxLogMessage(_("Unable to connect to the update site."));
@@ -3474,7 +3477,7 @@ void MyFrame::UpdateTQSL(wxString& url) {
 			wxLogMessage(_("Unable to update - either your Internet connection is down or LoTW is unreachable."));
 			wxLogMessage(_("Please try again later."));
 		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
-			wxLogMessage(_("Unable to update. The nework is down or the LoTW site is too busy."));
+			wxLogMessage(_("Unable to update. The network is down or the LoTW site is too busy."));
 			wxLogMessage(_("Please try again later."));
 		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
 			wxLogMessage(_("Unable to connect to the update site."));
@@ -3973,7 +3976,7 @@ MyFrame::DoCheckForUpdates(bool silent, bool noGUI) {
 			} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
 				networkError = true;
 				ri->error = true;
-				ri->errorText = wxString(_("Unable to check for updates. The nework is down or the LoTW site is too busy."));
+				ri->errorText = wxString(_("Unable to check for updates. The network is down or the LoTW site is too busy."));
 				ri->errorText += wxT("\n");
 				ri->errorText += _("Please try again later.");
 			} else if (retval == CURLE_SSL_CONNECT_ERROR) {
@@ -4008,7 +4011,7 @@ MyFrame::DoCheckForUpdates(bool silent, bool noGUI) {
 		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
 			networkError = true;
 			ri->error = true;
-			ri->errorText = wxString(_("Unable to check for updates. The nework is down or the LoTW site is too busy."));
+			ri->errorText = wxString(_("Unable to check for updates. The network is down or the LoTW site is too busy."));
 			ri->errorText += wxT("\n");
 			ri->errorText += _("Please try again later.");
 		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
@@ -7567,7 +7570,7 @@ GetElevationType(__out TOKEN_ELEVATION_TYPE * ptet) {
 	if (!IsVista() || ptet == NULL )
 		return E_FAIL;
 
-	HRESULT hResult = E_FAIL; // assume an error occured
+	HRESULT hResult = E_FAIL; // assume an error occurred
 	HANDLE hToken	= NULL;
 
 	if (!::OpenProcessToken(::GetCurrentProcess(), TOKEN_QUERY, &hToken)) {
@@ -7590,7 +7593,7 @@ IsElevated(BOOL * pbElevated) {
 	if (!IsVista())
 	    return E_FAIL;
 
-	HRESULT hResult = E_FAIL; // assume an error occured
+	HRESULT hResult = E_FAIL; // assume an error occurred
 	HANDLE hToken	= NULL;
 
 	if (!::OpenProcessToken(::GetCurrentProcess(), TOKEN_QUERY, &hToken)) {

@@ -1192,7 +1192,7 @@ tqsl_getCabrilloMapEntry(const char *contest, int *fieldnum, int *contest_type) 
 		return 1;
 	}
 	if (init_cabrillo_map()) {
-		tqslTrace("tqsl_getCabrilloMapEntry", "init_cabrillo_map errror %d", tQSL_Error);
+		tqslTrace("tqsl_getCabrilloMapEntry", "init_cabrillo_map error %d", tQSL_Error);
 		return 1;
 	}
 	map<string, triplet<int, int, TQSL_CABRILLO_FREQ_TYPE> >::iterator it;
@@ -2332,7 +2332,7 @@ tqsl_getLocationFieldCharData(tQSL_Location locp, int field_num, char *buf, int 
 	}
 	TQSL_LOCATION_FIELDLIST &fl = loc->pagelist[loc->page-1].fieldlist;
 	if (buf == NULL || field_num < 0 || field_num >= static_cast<int>(fl.size())) {
-		tqslTrace("tqsl_getLocationFieldCharData", "arg errror buf=0x%lx, field_num=%d", buf, field_num);
+		tqslTrace("tqsl_getLocationFieldCharData", "arg error buf=0x%lx, field_num=%d", buf, field_num);
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
 		return 1;
 	}
@@ -3708,7 +3708,7 @@ tqsl_getLocationFieldLabel(tQSL_Location locp, const char *field, char *buf, int
 	tQSL_Error = TQSL_CALL_NOT_FOUND;
 	return 1;
 }
-// Replaces all occurences of 'from' with 'to' in string 'str'
+// Replaces all occurrences of 'from' with 'to' in string 'str'
 
 static void replaceAll(string& str, const string& from, const string& to) {
 	if (from.empty()) {

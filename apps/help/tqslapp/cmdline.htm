@@ -49,7 +49,7 @@ be displayed before signing a log.</TD></TR>
 ADIF log file. These specify the callsign, QTH details such as zones,
 gridsquare, state/county, etc. for a QSO. If the log includes this
 detail, TQSL can read these fields and take action to use that
-information to ensure that the Station Location is corrrect. By
+information to ensure that the Station Location is correct. By
 default, TQSL will report any discrepancies between QTH and the
 Station Location; TQSL can also be directed to ignore the QTH
 information.<BR>
@@ -132,7 +132,7 @@ If the <A HREF="pref-opt.htm#adifedit">Open ADIF files in ADIF editor</a> box is
 
 Without displaying the QSO date-range dialog and ignoring already uploaded QSOs, digitally sign the &quot;<code>cqww log.adi</code>&quot; log file using the &quot;CQWW Portable&quot; Station Location, upload the digitally signed log file to LoTW, route <b>stderr</b> to the file <code>results.txt</code> and then terminate:
 <P>&nbsp;&nbsp;&nbsp;<CODE>
-  tqsl -d -u -a new -x -l "CQWW Portable" "cqww log.adi" 2>results.txt
+  tqsl -d -u -a compliant  -x -l "CQWW Portable" "cqww log.adi" 2>results.txt
 </CODE>
 <P>
 Edit the &quot;Home&quot; station location before beginning menu-driven operation:

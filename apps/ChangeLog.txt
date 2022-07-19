@@ -1,9 +1,22 @@
 TQSL changes
 ============
+2.6.4
+----------
+Handle both "KH6/K1MU" and "K1MU/KH6" forms of portable callsigns.
+
+Checking for currently valid callsign certificates (change made in TQSL 2.6
+"Validate a callsign certificate is still valid just before using it") causes
+station locations with no selected callsigns to generate an error and fail to
+sign the log. Correct this to bypass this check.
+
+Correct a crash when TQSL detects a callsign certificate that's about to
+expire during startup and the user selects "Yes" to renew that callsign
+certificate.
+
 2.6.3
 ----------
 Handle the case where there's both a valid and an invalid callsign certificate
-for a given call - don't error out when detecing the invalid one, continue
+for a given call - don't error out when detecting the invalid one, continue
 searching for a valid callsign certificate for the call.
 
 Include the filename of the log being signed in the station location
@@ -32,7 +45,7 @@ to either hang or keep asking how to handle those QSOs.
 When defining a station location with only one park defined, do not force
 that park to be selected. Default to "[None]" and allow that to be saved.
 
-Don't allow renewal from a superceded callsign certificate. LoTW
+Don't allow renewal from a superseded callsign certificate. LoTW
 won't allow that to work without a current signing certificate.
 
 Remove the certificate type selection dialog. Explain what this was 
@@ -510,7 +523,7 @@ on systems with non-ASCII characters in the user's home directory name.
 
 2.2
 ----------
-widen fields for station location pages to accomodate long Park names. Permit
+widen fields for station location pages to accommodate long Park names. Permit
 long label names for station location fields.
 
 When renewing a password-protected callsign certificate, entering an incorrect
@@ -727,7 +740,7 @@ any errors show up under that message, not tacked onto the end of it.
 
 2.0.1
 ----------
-Lock the duplicates datbase so only a single TQSL instance can
+Lock the duplicates database so only a single TQSL instance can
 access it in cases where users have multiple TQSL windows open.
 
 Don't use the Directory chooser widget in the preferences pane for
@@ -883,7 +896,7 @@ Remove the initial "Certificate Providers" page from the certificate
 request wizard as it serves no current purpose.
 
 Always display all callsign certificates, including expired and superseded
-certficates.
+certificates.
 
 Use consistent terminology throughout - "Callsign Certificate" and "Station
 Location".
@@ -898,7 +911,7 @@ that are not consistent with the BAND setting.
 Correct the exit code for circumstances when -a abort is used and an bad QSO
 is detected. Display the error information on that QSO before exiting.
 
-Detect new verions of the TQSL configuration file when performing the
+Detect new versions of the TQSL configuration file when performing the
 "check for updates" operation (manual or automatic) and allow the user to
 update the configuration file if there is a newer one available.
 
@@ -1023,7 +1036,7 @@ Install TQSL icon when "make install" used on Linux.
 Make the new icons optional.
 
 Correct the suppression of the TQSL version number when "-n" is used
-on the commmand line.
+on the command line.
 
 Report errors when critical files cannot be opened (station data,
 certificates, etc.)
@@ -1065,7 +1078,7 @@ close that window. Fix duplicate handling error introduced at RC6.
 
 1.14.3
 ------
-On Windows, use a newer verions of libcurl that doesn't suffer from the defect
+On Windows, use a newer versions of libcurl that doesn't suffer from the defect
 fixed by http://support.microsoft.com/kb/975858. This defect causes an error
 message "schannel: failed to setup extended errors".
 
@@ -1168,7 +1181,7 @@ Minor changes:
  - The "Edit station location" window title now contains the callsign and
    station location name
 
- - Station locations can no longer be defined using expired or superceded
+ - Station locations can no longer be defined using expired or superseded
    certificates
 
  - Users are no longer prompted for a password while importing a .p12 file
