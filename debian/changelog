@@ -1,3 +1,12 @@
+trustedqsl (2.6.4-1) unstable; urgency=medium
+
+  * New upstream version 2.6.4
+  * Remove patches applied upstream
+  * Freshen years in debian/copyright
+  * Bump Standards-Version to 4.6.1
+
+ -- tony mancill <tmancill@debian.org>  Mon, 18 Jul 2022 20:06:56 -0700
+
 trustedqsl (2.6.3-1) unstable; urgency=medium
 
   * New upstream version 2.6.3
