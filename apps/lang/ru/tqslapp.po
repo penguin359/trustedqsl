@@ -1790,7 +1790,7 @@ msgstr "Пожалуйста, попробуйте загрузить %s поз�
 
 #: tqsl.cpp:2924
 #, c-format
-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
+msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
 msgstr "%s: Загрузка невозможна. Отказ сети, или сайт LoTW перегружен."
 
 #: tqsl.cpp:2928
@@ -1939,7 +1939,7 @@ msgid "Please try again later."
 msgstr "Поробуйте позднее."
 
 #: tqsl.cpp:3376 tqsl.cpp:3455
-msgid "Unable to update. The nework is down or the LoTW site is too busy."
+msgid "Unable to update. The network is down or the LoTW site is too busy."
 msgstr ""
 "Обновление невозможно. Соединение с сетью отсутствует или сайт LoTW "
 "перегружен."
@@ -2028,7 +2028,7 @@ msgstr ""
 
 #: tqsl.cpp:3954 tqsl.cpp:3989
 msgid ""
-"Unable to check for updates. The nework is down or the LoTW site is too busy."
+"Unable to check for updates. The network is down or the LoTW site is too busy."
 msgstr ""
 "Невозможно проверить наличие обновлений. Отказ сети, или сайт LoTW "
 "перегружен."

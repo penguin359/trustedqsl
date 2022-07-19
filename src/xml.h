@@ -58,7 +58,7 @@ class XMLElement {
 	/** Returns a pair where:
       *
       * \li \c getAttribute().first := the attribute's value
-      * \li \c getAttribute().second := a bool, true if the atrtribute key exists
+      * \li \c getAttribute().second := a bool, true if the attribute key exists
       */
 	pair<string, bool> getAttribute(const string& key);
 	/// Add an element to the list of contained subelements

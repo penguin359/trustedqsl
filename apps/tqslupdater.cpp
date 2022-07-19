@@ -216,7 +216,7 @@ MyFrame::UpdateTQSL(wxString& url) {
 		if (retval == CURLE_COULDNT_RESOLVE_HOST || retval == CURLE_COULDNT_CONNECT) {
 			wxMessageBox(wxT("Unable to update - either your Internet connection is down or LoTW is unreachable.\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
 		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
-			wxMessageBox(wxT("Unable to update. The nework is down or the LoTW site is too busy\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
+			wxMessageBox(wxT("Unable to update. The network is down or the LoTW site is too busy\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
 		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
 			wxMessageBox(wxT("Unable to connect to the update site.\nPlease try again later"), wxT("Error"), wxOK | wxICON_ERROR, this);
 		} else { // some other error
@@ -300,7 +300,7 @@ MyFrame::DoCheckForUpdates(bool silent, bool noGUI) {
 		if (retval == CURLE_COULDNT_RESOLVE_HOST || retval == CURLE_COULDNT_CONNECT) {
 			wxMessageBox(wxT("Unable to check for updates - either your Internet connection is down or LoTW is unreachable.\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
 		} else if (retval == CURLE_WRITE_ERROR || retval == CURLE_SEND_ERROR || retval == CURLE_RECV_ERROR) {
-			wxMessageBox(wxT("Unable to check for updates. The nework is down or the LoTW site is too busy.\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
+			wxMessageBox(wxT("Unable to check for updates. The network is down or the LoTW site is too busy.\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
 		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
 			wxMessageBox(wxT("Unable to connect to the update site.\nPlease try again later."), wxT("Error"), wxOK | wxICON_ERROR, this);
 		} else { // some other error

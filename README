@@ -82,7 +82,7 @@ This option instructs tqsl on how to handle the MY_ fields in an
 ADIF log file. These specify the callsign, QTH details such as zones,
 gridsquare, state/county, etc. for a QSO. If the log includes this
 detail, TQSL can read these fields and take action to use that
-information to ensure that the Station Location is corrrect. By
+information to ensure that the Station Location is correct. By
 default, TQSL will report any discrepancies between QTH and the
 Station Location; TQSL can also be directed to ignore the QTH
 information.
@@ -193,7 +193,7 @@ provides information on success or failure using the following values:
         9 - Some QSOs were processed, and some QSOs were ignored because
             they were duplicates or out of date range (some QSOs written)
        10 - Command syntax error
-       11 - LoTW network connnection failed (no network or LoTW is unreachable)
+       11 - LoTW network connection failed (no network or LoTW is unreachable)
        12 - Unknown error
        13 - The TQSL duplicates database is locked.
 

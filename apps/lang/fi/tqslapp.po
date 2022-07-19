@@ -1803,7 +1803,7 @@ msgstr "Yritä lähettää %s myöhemmin."
 
 #: tqsl.cpp:2924
 #, c-format
-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
+msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
 msgstr ""
 "%s: Ei voida lähettää. Verkko on alhaalla tai LoTW-palvelin on liian "
 "kiireinen."
@@ -1954,7 +1954,7 @@ msgid "Please try again later."
 msgstr "Yritä uudelleen myöhemmin."
 
 #: tqsl.cpp:3376 tqsl.cpp:3455
-msgid "Unable to update. The nework is down or the LoTW site is too busy."
+msgid "Unable to update. The network is down or the LoTW site is too busy."
 msgstr ""
 "Ei voida päivittää. Joko verkko on poissa käytöstä tai LoTW-sivusto on liian "
 "kiireinen."
@@ -2043,7 +2043,7 @@ msgstr ""
 
 #: tqsl.cpp:3954 tqsl.cpp:3989
 msgid ""
-"Unable to check for updates. The nework is down or the LoTW site is too busy."
+"Unable to check for updates. The network is down or the LoTW site is too busy."
 msgstr ""
 "Ei voida tarkistaa päivityksiä. Joko verkko on poissa käytöstä tai LoTW-"
 "sivusto on liian kiireinen."

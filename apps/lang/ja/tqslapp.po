@@ -1787,7 +1787,7 @@ msgstr "%s　のアップロードを後でもう一度お試しください。"
 
 #: tqsl.cpp:2924
 #, c-format
-msgid "%s: Unable to upload. The nework is down or the LoTW site is too busy."
+msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
 msgstr ""
 "%s：　アップロードできません。 ネットワークがダウンしているか、LoTW　サイトが"
 "ビジー状態です。"
@@ -1937,7 +1937,7 @@ msgid "Please try again later."
 msgstr "後でもう一度お試しください。"
 
 #: tqsl.cpp:3376 tqsl.cpp:3455
-msgid "Unable to update. The nework is down or the LoTW site is too busy."
+msgid "Unable to update. The network is down or the LoTW site is too busy."
 msgstr ""
 "更新できません。 ネットワークがダウンしているか、LoTW　サイトがビジー状態で"
 "す。"
@@ -2026,7 +2026,7 @@ msgstr ""
 
 #: tqsl.cpp:3954 tqsl.cpp:3989
 msgid ""
-"Unable to check for updates. The nework is down or the LoTW site is too busy."
+"Unable to check for updates. The network is down or the LoTW site is too busy."
 msgstr ""
 "アップデートを確認できません。 ネットワークがダウンしているか、LoTW　サイトが"
 "ビジー状態です。"

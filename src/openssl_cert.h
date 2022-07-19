@@ -99,7 +99,7 @@ CLIENT_STATIC TQSL_X509_STACK *tqsl_ssl_load_certs_from_file(const char *filenam
   * to sign either the test certificate itself or the CA cert that signed
   * the test certificate.
   *
-  * Returns NULL if the test certificate is valid, othewise returns an error message.
+  * Returns NULL if the test certificate is valid, otherwise returns an error message.
   */
 CLIENT_STATIC const char *tqsl_ssl_verify_cert(X509 *cert, TQSL_X509_STACK *cacerts, TQSL_X509_STACK *rootcerts, int purpose,
 	int (*cb)(int ok, X509_STORE_CTX *ctx), TQSL_X509_STACK **chain = 0);

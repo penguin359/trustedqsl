@@ -82,7 +82,7 @@
 // the following macro, if defined, cause the wxJSONvalue and its
 // referenced data structure to store and increment a static
 // progressive counter in the ctor.
-// this is only usefull for debugging purposes
+// this is only useful for debugging purposes
 // #define WXJSON_USE_VALUE_COUNTER
 
 
@@ -193,7 +193,7 @@
 
 //
 // check if wxWidgets is compiled using --enable-stl in which case
-// we have to use different aproaches when declaring the array and
+// we have to use different approaches when declaring the array and
 // key/value containers (see the docs: wxJSON internals: array and hash_map
 #undef wxJSON_USE_STL
 #if defined( wxUSE_STL ) && wxUSE_STL == 1

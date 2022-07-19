@@ -1033,13 +1033,22 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 	// First check if there's a slash. If so, it's a portable. Use the base callsign
 	wxString callsign = _parent->callsign;
 	int slashpos = callsign.Find('/', true);
-	if (slashpos != wxNOT_FOUND)
-		callsign = callsign.Left(slashpos);
+	wxString prefix = callsign;
+	wxString suffix = wxT("");
+	if (slashpos != wxNOT_FOUND) {
+		wxString prefix = callsign = callsign.Left(slashpos);
+		wxString suffix = callsign = callsign.Right(slashpos);
+		callsign = prefix;
+	}
 
 	// Is this in the ULS?
 	if (valMsg.Len() == 0 && _parent->usa && !_parent->onebyone) {
 		wxString name, attn, addr1, city, state, zip, update;
 		int stat = GetULSInfo(callsign.ToUTF8(), name, attn, addr1, city, state, zip, update);
+		// handle portable/home and home/portable
+		if (stat == 2 && !wxIsEmpty(suffix)) {
+			stat = GetULSInfo(suffix.ToUTF8(), name, attn, addr1, city, state, zip, update);
+		}
 		switch (stat) {
 			case 0:
 				_parent->validusa = true;		// Good data returned
