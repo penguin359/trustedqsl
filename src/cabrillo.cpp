@@ -338,6 +338,35 @@ tqsl_strtoupper(char *str) {
 }
 
 
+/*
+ * Read a line from a cabrillo file.
+ * Start with stripping whitespace, read up until any line-ending character
+ * (\r \n)
+ * Replaces fgets which has a fixed line ending (\n).
+ */
+
+static char *fgets_cab(char *s, int size, FILE *stream) {
+	int status;
+	int ws;
+	while (1) {
+		ws = fgetc(stream);
+		if (ws == EOF) {
+			return 0;
+		}
+		if (!isspace(ws)) {
+			break;
+		}
+	}
+	ungetc(ws, stream);					// Push that back onto the stream
+	char format[20];
+	snprintf(format, sizeof format, "%%%d[^\r\n]", size - 1);	// Format allows what's left up to \r or \n
+	status = fscanf(stream, format, s);
+	if (status == 0)
+		return NULL;
+	s[size-1] = '\0';
+	return s;
+}
+
 static int
 mode_xlat(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp) {
 	static map<string, string> modes;
@@ -512,7 +541,7 @@ tqsl_beginCabrillo(tQSL_Cabrillo *cabp, const char *filename) {
 #endif
 	char *cp;
 	terrno = TQSL_CABRILLO_NO_START_RECORD;
-	while ((cp = fgets(cab->rec, sizeof cab->rec, cab->fp)) != 0) {
+	while ((cp = fgets_cab(cab->rec, sizeof cab->rec, cab->fp)) != 0) {
 		cab->line_no++;
 		if (tqsl_parse_cabrillo_record(cab->rec) != 0
 			&& strstr(cab->rec, "START-OF-LOG"))
@@ -520,7 +549,7 @@ tqsl_beginCabrillo(tQSL_Cabrillo *cabp, const char *filename) {
 	}
 	if (cp != 0) {
 		terrno = TQSL_CABRILLO_NO_CONTEST_RECORD;
-		while ((cp = fgets(cab->rec, sizeof cab->rec, cab->fp)) != 0) {
+		while ((cp = fgets_cab(cab->rec, sizeof cab->rec, cab->fp)) != 0) {
 			cab->line_no++;
 			char *vp;
 			if ((vp = tqsl_parse_cabrillo_record(cab->rec)) != 0
@@ -634,7 +663,7 @@ tqsl_getCabrilloField(tQSL_Cabrillo cabp, tqsl_cabrilloField *field, TQSL_CABRIL
 	}
 	if (cab->datap == 0 || cab->field_idx < 0 || cab->field_idx >= cab->contest->nfields) {
 		char *cp;
-		while ((cp = fgets(cab->rec, sizeof cab->rec, cab->fp)) != 0) {
+		while ((cp = fgets_cab(cab->rec, sizeof cab->rec, cab->fp)) != 0) {
 			cab->line_no++;
 			cab->datap = tqsl_parse_cabrillo_record(cab->rec);
 			if (cab->datap != 0) {

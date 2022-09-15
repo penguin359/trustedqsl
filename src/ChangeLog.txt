@@ -3,6 +3,14 @@ TQSLLIB changes
 
 2.5
 ---
+Don't allow illogical combinations of CQ and ITU zones in a station location.
+
+Allow cr-delimited Cabrillo files (iles from very old Mac apps).
+
+Be more aggressive about deleting a corrupt upload database. If a get or put
+returns EINVAL (Oracle-speak for corrupt database), close and delete it before
+returning an error.
+
 Don't generate a warning for an already uploaded QSO where the changes are
 only cases where previously omitted station location details were added. For
 example, adding a CQ Zone to a station location that previously omitted it.

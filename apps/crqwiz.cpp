@@ -109,7 +109,7 @@ CRQ_ProviderPage::CRQ_ProviderPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Pa
 	sizer->Add(st, 0, wxALL, 10);
 
 	sizer->Add(new wxStaticText(this, -1, _("Certificate Issuer:")), 0, wxLEFT|wxRIGHT, 10);
-	tc_provider = new wxComboBox(this, ID_CRQ_PROVIDER, wxT(""), wxDefaultPosition,
+	tc_provider = new wxOwnerDrawnComboBox(this, ID_CRQ_PROVIDER, wxT(""), wxDefaultPosition,
 		wxDefaultSize, 0, 0, wxCB_DROPDOWN|wxCB_READONLY);
 	sizer->Add(tc_provider, 0, wxLEFT|wxRIGHT|wxEXPAND, 10);
 	tc_provider_info = new wxStaticText(this, ID_CRQ_PROVIDER_INFO, wxT(""), wxDefaultPosition,
@@ -212,7 +212,7 @@ CRQ_CallsignPage::CRQ_CallsignPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Pa
 
 	hsizer = new wxBoxSizer(wxHORIZONTAL);
 	hsizer->Add(dst, 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
-	tc_dxcc = new wxComboBox(this, ID_CRQ_DXCC, wxT(""), wxDefaultPosition,
+	tc_dxcc = new wxOwnerDrawnComboBox(this, ID_CRQ_DXCC, wxT(""), wxDefaultPosition,
 		wxSize(em_w*25, -1), 0, 0, wxCB_DROPDOWN|wxCB_READONLY);
 	hsizer->Add(tc_dxcc, 1, 0, 0);
 	sizer->Add(hsizer, 0, wxALL, 10);
@@ -234,7 +234,7 @@ CRQ_CallsignPage::CRQ_CallsignPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Pa
 	if (i >= 0)
 		tc_dxcc->SetSelection(i);
 	struct {
-		wxComboBox **cb;
+		wxOwnerDrawnComboBox **cb;
 		int id;
 	} boxes[][3] = {
 	    { {&tc_qsobeginy, ID_CRQ_QBYEAR}, {&tc_qsobeginm, ID_CRQ_QBMONTH}, {&tc_qsobegind, ID_CRQ_QBDAY} },
@@ -258,15 +258,15 @@ CRQ_CallsignPage::CRQ_CallsignPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Pa
 		sizer->Add(new wxStaticText(this, -1, label), 0, wxBOTTOM, 5);
 		hsizer = new wxBoxSizer(wxHORIZONTAL);
 		hsizer->Add(new wxStaticText(this, -1, wxT("Y")), 0, wxLEFT|wxALIGN_CENTER_VERTICAL, 20);
-		*(boxes[i][0].cb) = new wxComboBox(this, boxes[i][0].id, wxT(""), wxDefaultPosition,
+		*(boxes[i][0].cb) = new wxOwnerDrawnComboBox(this, boxes[i][0].id, wxT(""), wxDefaultPosition,
 			wxSize(em_w*8, -1), 0, 0, wxCB_DROPDOWN|wxCB_READONLY);
 		hsizer->Add(*(boxes[i][0].cb), 0, wxLEFT, 5);
 		hsizer->Add(new wxStaticText(this, -1, wxT("M")), 0, wxLEFT|wxALIGN_CENTER_VERTICAL, 10);
-		*(boxes[i][1].cb) = new wxComboBox(this, boxes[i][1].id, wxT(""), wxDefaultPosition,
+		*(boxes[i][1].cb) = new wxOwnerDrawnComboBox(this, boxes[i][1].id, wxT(""), wxDefaultPosition,
 			wxSize(em_w*6, -1), 0, 0, wxCB_DROPDOWN|wxCB_READONLY);
 		hsizer->Add(*(boxes[i][1].cb), 0, wxLEFT, 5);
 		hsizer->Add(new wxStaticText(this, -1, wxT("D")), 0, wxLEFT|wxALIGN_CENTER_VERTICAL, 10);
-		*(boxes[i][2].cb) = new wxComboBox(this, boxes[i][2].id, wxT(""), wxDefaultPosition,
+		*(boxes[i][2].cb) = new wxOwnerDrawnComboBox(this, boxes[i][2].id, wxT(""), wxDefaultPosition,
 			wxSize(em_w*6, -1), 0, 0, wxCB_DROPDOWN|wxCB_READONLY);
 		hsizer->Add(*(boxes[i][2].cb), 0, wxLEFT, 5);
 		int iofst = 0;
@@ -850,12 +850,12 @@ CRQ_CallsignPage::validate() {
 			}
 		}
 	}
-	_parent->qsonotbefore.year = strtol(tc_qsobeginy->GetStringSelection().ToUTF8(), NULL, 10);
-	_parent->qsonotbefore.month = strtol(tc_qsobeginm->GetStringSelection().ToUTF8(), NULL, 10);
-	_parent->qsonotbefore.day = strtol(tc_qsobegind->GetStringSelection().ToUTF8(), NULL, 10);
-	_parent->qsonotafter.year = strtol(tc_qsoendy->GetStringSelection().ToUTF8(), NULL, 10);
-	_parent->qsonotafter.month = strtol(tc_qsoendm->GetStringSelection().ToUTF8(), NULL, 10);
-	_parent->qsonotafter.day = strtol(tc_qsoendd->GetStringSelection().ToUTF8(), NULL, 10);
+	_parent->qsonotbefore.year = strtol(tc_qsobeginy->GetValue().ToUTF8(), NULL, 10);
+	_parent->qsonotbefore.month = strtol(tc_qsobeginm->GetValue().ToUTF8(), NULL, 10);
+	_parent->qsonotbefore.day = strtol(tc_qsobegind->GetValue().ToUTF8(), NULL, 10);
+	_parent->qsonotafter.year = strtol(tc_qsoendy->GetValue().ToUTF8(), NULL, 10);
+	_parent->qsonotafter.month = strtol(tc_qsoendm->GetValue().ToUTF8(), NULL, 10);
+	_parent->qsonotafter.day = strtol(tc_qsoendd->GetValue().ToUTF8(), NULL, 10);
 	if (!tqsl_isDateValid(&_parent->qsonotbefore)) {
 		valMsg = _("QSO begin date: You must choose proper values for Year, Month and Day.");
 		goto notok;
@@ -1036,8 +1036,8 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 	wxString prefix = callsign;
 	wxString suffix = wxT("");
 	if (slashpos != wxNOT_FOUND) {
-		wxString prefix = callsign = callsign.Left(slashpos);
-		wxString suffix = callsign = callsign.Right(slashpos);
+		prefix = callsign.Left(slashpos);
+		suffix = callsign.Right(slashpos+1);
 		callsign = prefix;
 	}
 
@@ -1099,6 +1099,12 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 					break;
 				if (hasEndDate) {				// Allow former calls
 					notInULS = true;
+					break;
+				}
+				// If this call has a slash, then it may be a portable call from
+				// outside the US. We really can't tell at this point so just
+				// let it go.
+				if (slashpos != wxNOT_FOUND) {
 					break;
 				}
 				valMsg = wxString::Format(_("The callsign %s is not currently registered in the FCC ULS database as of %s.\nIf this is a newly registered call, you must wait at least one business day for it to be valid. Please enter a currently valid callsign."), callsign.c_str(), update.c_str());
