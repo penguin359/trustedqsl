@@ -18,6 +18,7 @@
 #include "wx/wxprec.h"
 #include "wx/object.h"
 #include "wx/config.h"
+#include "wx/odcombo.h"
 
 #ifdef __BORLANDC__
 	#pragma hdrstop
@@ -206,7 +207,7 @@ class ContestMap : public PrefsPanel {
 
 	wxButton *delete_but, *edit_but;
 	wxGrid *grid;
-	wxComboBox *dgmodes;
+	wxOwnerDrawnComboBox *dgmodes;
 	vector <const char *> modes;
 	ContestSet contestmap;
 	DECLARE_EVENT_TABLE()

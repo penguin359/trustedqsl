@@ -27,6 +27,7 @@
 
 #include "extwizard.h"
 #include "wx/radiobox.h"
+#include "wx/odcombo.h"
 
 #include "certtree.h"
 
@@ -108,10 +109,10 @@ class TQSLWizLocPage : public TQSLWizPage {
 	vector<void *> p2_controls;	// Second page
 // location controls
 	wxStaticText *callLabel;	// Top label
-	wxComboBox *ctlCallSign;	// Callsign
-	wxComboBox *ctlEntity;		// DXCC
-	wxComboBox *ctlCQZ;		// CQ Zone
-	wxComboBox *ctlITUZ;		// ITU Zone
+	wxOwnerDrawnComboBox *ctlCallSign;	// Callsign
+	wxOwnerDrawnComboBox *ctlEntity;		// DXCC
+	wxOwnerDrawnComboBox *ctlCQZ;		// CQ Zone
+	wxOwnerDrawnComboBox *ctlITUZ;		// ITU Zone
 	wxTextCtrl *ctlGrid;		// Gridsquare
 	wxTextCtrl *ctlIOTA;		// IOTA
 	wxBoxSizer *boxITUZ;
@@ -120,15 +121,15 @@ class TQSLWizLocPage : public TQSLWizPage {
 // Secondary Pages
 	wxBoxSizer *boxPAS;		// Primary Administrative Subdivision (STATE)
 	wxStaticText *lblPAS;
-	wxComboBox *ctlPAS;
+	wxOwnerDrawnComboBox *ctlPAS;
 	bool PASexists;			// Is there a PAS?
 	wxBoxSizer *boxSAS;		// Secondary AS - County
 	wxStaticText *lblSAS;
-	wxComboBox *ctlSAS;
+	wxOwnerDrawnComboBox *ctlSAS;
 	bool SASexists;			// Is there a SAS?
 	wxBoxSizer *boxPark;		// US/DX Park
 	wxStaticText *lblPark;
-	wxComboBox *ctlPark;
+	wxOwnerDrawnComboBox *ctlPark;
 	bool Parkexists;		// Is there a Park?
 
 	typedef map <std::string, std::string> ForcedMap;

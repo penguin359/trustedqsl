@@ -1,5 +1,12 @@
 TQSL changes
 ============
+2.6.5
+----------
+Change the widget used for pulldown menus because Microsoft's windows 11 22H2 preview
+broke them and Microsoft refuses to fix the bug.
+
+Correct the portable callsign fix - it didn't work properly and didn't cover all cases.
+
 2.6.4
 ----------
 Handle both "KH6/K1MU" and "K1MU/KH6" forms of portable callsigns.

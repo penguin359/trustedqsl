@@ -1505,6 +1505,8 @@ update_page(int page, TQSL_LOCATION *loc) {
 	int current_entity = -1;
 	int loaded_cqz = -1;
 	int loaded_ituz = -1;
+	TQSL_LOCATION_FIELD *cqz = get_location_field_page("CQZ", loc);
+	TQSL_LOCATION_FIELD *ituz = get_location_field_page("ITUZ", loc);
 	tqslTrace("update_page", "page=%d, loc=0x%lx", page, loc);
 	for (int i = 0; i < static_cast<int>(p.fieldlist.size()); i++) {
 		TQSL_LOCATION_FIELD& field = p.fieldlist[i];
@@ -1718,9 +1720,9 @@ update_page(int page, TQSL_LOCATION *loc) {
 				// No dependencies
 				TQSL_LOCATION_FIELD *ent = get_location_field_page("DXCC", loc);
 				current_entity = strtol(ent->cdata.c_str(), NULL, 10);
-				bool cqz = field.gabbi_name == "CQZ";
-				bool ituz = field.gabbi_name == "ITUZ";
-				if (field.items.size() == 0 || (cqz && current_entity != loaded_cqz) || (ituz && current_entity != loaded_ituz)) {
+				bool isCQZ = field.gabbi_name == "CQZ";
+				bool isITUZ = field.gabbi_name == "ITUZ";
+				if (field.items.size() == 0 || (isCQZ && current_entity != loaded_cqz) || (isITUZ && current_entity != loaded_ituz)) {
 					XMLElement enumlist;
 					if (config_field.getFirstElement("enums", enumlist)) {
 						field.items.clear();
@@ -1776,10 +1778,20 @@ update_page(int page, TQSL_LOCATION *loc) {
 							field.idx = 0;
 							string oldcdata = field.cdata;
 							field.changed = true;
-							if (cqz)
+							int currentCQ = cqz->idata;
+							int currentITU = ituz->idata;
+							if (isCQZ) {
 								loaded_cqz = current_entity;
-							if (ituz)
+								if (!inMap(0, currentITU, false, true, zoneMap)) {
+									currentITU = 0;		// Not valid here, ignore
+								}
+							}
+							if (isITUZ) {
 								loaded_ituz = current_entity;
+								if (!inMap(currentCQ, 0, true, false, zoneMap)) {
+									currentCQ = 0;		// Not valid here, ignore
+								}
+							}
 							if (!(field.flags & TQSL_LOCATION_FIELD_MUSTSEL)) {
 								TQSL_LOCATION_ITEM item;
 								item.label = "[None]";
@@ -1787,7 +1799,16 @@ update_page(int page, TQSL_LOCATION *loc) {
 							}
 							char buf[40];
 							for (int j = lower; j <= upper; j++) {
-								if (!zoneMap || inMap(j, j, cqz, ituz, zoneMap)) {
+								bool zoneOK = true;
+								if (zoneMap) {
+									if (isCQZ) {
+										zoneOK = inMap(j, currentITU, true, true, zoneMap);
+									} 
+									if (isITUZ) {
+										zoneOK = inMap(currentCQ, j, true, true, zoneMap);
+									}
+								}
+								if (zoneOK) {
 									snprintf(buf, sizeof buf, "%d", j);
 									TQSL_LOCATION_ITEM item;
 									item.text = buf;
@@ -1809,8 +1830,6 @@ update_page(int page, TQSL_LOCATION *loc) {
 	bool zonesok = true;
 	string zone_error = "";
 
-	TQSL_LOCATION_FIELD *cqz = get_location_field_page("CQZ", loc);
-	TQSL_LOCATION_FIELD *ituz = get_location_field_page("ITUZ", loc);
 	int currentCQ = cqz->idata;
 	int currentITU = ituz->idata;
 	// Check each division, start from entity, then division
@@ -2439,7 +2458,7 @@ tqsl_setLocationFieldIndex(tQSL_Location locp, int field_num, int dat) {
 	}
 	TQSL_LOCATION_FIELDLIST &fl = loc->pagelist[loc->page-1].fieldlist;
 	if (field_num < 0 || field_num >= static_cast<int>(fl.size())) {
-		tqslTrace("tqsl_setLocationFieldIndex", "arg error field_num=%d, dat=%d", field_num, dat);
+		tqslTrace("tqsl_setLocationFieldIndex", "arg error index out of range page %d size %d - field_num=%d, dat=%d", loc->page, fl.size(), field_num, dat);
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
 		return 1;
 	}
@@ -2451,7 +2470,7 @@ tqsl_setLocationFieldIndex(tQSL_Location locp, int field_num, int dat) {
 			fl[field_num].cdata = fl[field_num].items[dat].text;
 			fl[field_num].idata = fl[field_num].items[dat].ivalue;
 		} else {
-			tqslTrace("tqsl_setLocationFieldIndex", "arg error field_num=%d", field_num);
+			tqslTrace("tqsl_setLocationFieldIndex", "arg error page %d field_num=%d dat=%d", loc->page, field_num, dat);
 			tQSL_Error = TQSL_ARGUMENT_ERROR;
 			return 1;
 		}

@@ -173,12 +173,13 @@ TQSLWizLocPage::UpdateFields(int noupdate_field) {
 
 	validate();
 
+	tqslTrace("TQSLWizLocPage::UpdateFields", "Validation done");
 	for (int i = noupdate_field+1; i < static_cast<int>(p1_controls.size()-1); i++) {
 		int changed;
 		int in_type;
 		char gabbi_name[40];
 
-		wxComboBox* cb = reinterpret_cast<wxComboBox *>(p1_controls[i]);
+		wxOwnerDrawnComboBox* cb = reinterpret_cast<wxOwnerDrawnComboBox *>(p1_controls[i]);
 		wxTextCtrl* tx = reinterpret_cast<wxTextCtrl *>(p1_controls[i]);
 		wxStaticText* st = reinterpret_cast<wxStaticText *>(p1_controls[i]);
 		tqsl_getLocationFieldChanged(loc, i, &changed);
@@ -257,7 +258,7 @@ TQSLWizLocPage::UpdateFields(int noupdate_field) {
 			bool defaulted = false;
 			tqsl_getLocationFieldIndex(loc, i, &selected);
 			int new_sel = 0;
-			wxString old_sel = cb->GetStringSelection();
+			wxString old_sel = cb->GetValue();
 			wxString old_text = old_sel;
 			if (old_sel.IsEmpty() && strcmp(gabbi_name, "CALL") == 0) {
 				old_sel = (reinterpret_cast<TQSLWizard*>(GetParent()))->GetDefaultCallsign();
@@ -337,6 +338,7 @@ TQSLWizLocPage::UpdateFields(int noupdate_field) {
 		}
 	}
 
+	tqslTrace("TQSLWizLocPage::UpdateFields", "Updating station location capture");
 	tqsl_updateStationLocationCapture(loc);
 	errlbl->SetLabel(wxString::FromUTF8(tQSL_CustomError));
 
@@ -367,7 +369,7 @@ TQSLWizLocPage::UpdateFields(int noupdate_field) {
 
 		tqsl_getLocationFieldDataLabel(loc, i, label, sizeof label);
 		tqsl_getLocationFieldDataGABBI(loc, i, gabbi_name, sizeof gabbi_name);
-		wxComboBox* cb;
+		wxOwnerDrawnComboBox* cb;
 		if (isPAS(gabbi_name)) {
 			if (!boxITUZ->IsShown(boxPAS))
 				relayout = true;
@@ -457,7 +459,7 @@ TQSLWizLocPage::UpdateFields(int noupdate_field) {
 			bool defaulted = false;
 			tqsl_getLocationFieldIndex(loc, i, &selected);
 			int new_sel = 0;
-			wxString old_sel = cb->GetStringSelection();
+			wxString old_sel = cb->GetValue();
 			wxString old_text = old_sel;
 			if (strlen(callsign) >0 && forced[gabbi_name] == callsign) {
 				char buf[256];
@@ -523,6 +525,7 @@ TQSLWizLocPage::UpdateFields(int noupdate_field) {
 		tqsl_updateStationLocationCapture(loc);
 		errlbl->SetLabel(wxString::FromUTF8(tQSL_CustomError));
 	}
+	tqslTrace("TQSLWizLocPage::update_fields", "done");
 }
 
 void
@@ -535,8 +538,10 @@ TQSLWizLocPage::OnComboBoxEvent(wxCommandEvent& event) {
 	tqsl_getStationLocationCapturePage(loc, &cur_page);
 
 	int cidx = control_idx;
+	tqslTrace("TQSLWizLocPage::OnComboBoxEvent", "control index = %d", cidx);
 	if (cidx >= page_2_offset) {
 		cidx = control_idx - page_2_offset;
+		tqslTrace("TQSLWizLocPage::OnComboBoxEvent", "page 2 control index = %d", cidx);
 		if (cur_page != second_page) {
         		tqsl_setStationLocationCapturePage(loc, second_page);
 		}
@@ -723,24 +728,24 @@ TQSLWizLocPage::TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp)
 		switch(in_type) {
 			case TQSL_LOCATION_FIELD_DDLIST:
 			case TQSL_LOCATION_FIELD_LIST:
-				control_p = new wxComboBox(this, TQSL_ID_LOW+total_fields, wxT(""), wxDefaultPosition, wxSize(control_width, -1),
+				control_p = new wxOwnerDrawnComboBox(this, TQSL_ID_LOW+total_fields, wxT(""), wxDefaultPosition, wxSize(control_width, -1),
 				0, 0, wxCB_DROPDOWN|wxCB_READONLY);
 				hsizer->Add(control_p, 0, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
 				if(!strcmp(gabbi_name, "CALL")) {
-					ctlCallSign = static_cast<wxComboBox*>(control_p);
+					ctlCallSign = static_cast<wxOwnerDrawnComboBox*>(control_p);
 					sizer->Add(hsizer, 0, wxLEFT|wxRIGHT, 5);
 				}
 				if(!strcmp(gabbi_name, "DXCC")) {
-					ctlEntity = static_cast<wxComboBox*>(control_p);
+					ctlEntity = static_cast<wxOwnerDrawnComboBox*>(control_p);
 					ctlEntity->SetFont(dxccFont);
 					sizer->Add(hsizer, 0, wxLEFT|wxRIGHT, 5);
 				}
 				if(!strcmp(gabbi_name, "ITUZ")) {
-					ctlITUZ = static_cast<wxComboBox*>(control_p);
+					ctlITUZ = static_cast<wxOwnerDrawnComboBox*>(control_p);
 					boxITUZ = hsizer;
 				}
 				if(!strcmp(gabbi_name, "CQZ")) {
-					ctlCQZ = static_cast<wxComboBox*>(control_p);
+					ctlCQZ = static_cast<wxOwnerDrawnComboBox*>(control_p);
 					boxCQZ = hsizer;
 				}
 				break;
@@ -811,7 +816,7 @@ TQSLWizLocPage::TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp)
 		switch(in_type) {
 			case TQSL_LOCATION_FIELD_DDLIST:
 			case TQSL_LOCATION_FIELD_LIST:
-				control_p = new wxComboBox(this, TQSL_ID_LOW+total_fields, wxT(""), wxDefaultPosition, wxSize(control_width, -1),
+				control_p = new wxOwnerDrawnComboBox(this, TQSL_ID_LOW+total_fields, wxT(""), wxDefaultPosition, wxSize(control_width, -1),
 				0, 0, wxCB_DROPDOWN|wxCB_READONLY);
 				break;
 			case TQSL_LOCATION_FIELD_TEXT:
@@ -823,19 +828,19 @@ TQSLWizLocPage::TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp)
 		p2_controls.push_back(control_p);
 		switch (i) {
 		    case 0:	// US_STATE
-			ctlPAS = static_cast<wxComboBox*>(control_p);
+			ctlPAS = static_cast<wxOwnerDrawnComboBox*>(control_p);
 			boxPAS->Add(control_p, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
 			boxITUZ->Add(boxPAS, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
 			sizer->Add(boxITUZ, 0, wxLEFT|wxRIGHT, 5);
 			break;
 		    case 1:	// US_COUNTY
-			ctlSAS = static_cast<wxComboBox*>(control_p);
+			ctlSAS = static_cast<wxOwnerDrawnComboBox*>(control_p);
 			boxSAS->Add(control_p, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
 			boxCQZ->Add(boxSAS, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
 			sizer->Add(boxCQZ, 0, wxLEFT|wxRIGHT, 5);
 			break;
 		    case 2:	// US_PARK
-			ctlPark = static_cast<wxComboBox*>(control_p);
+			ctlPark = static_cast<wxOwnerDrawnComboBox*>(control_p);
 			boxPark->Add(control_p, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
 			boxIOTA->Add(boxPark, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
 			sizer->Add(boxIOTA, 0, wxLEFT|wxRIGHT, 5);

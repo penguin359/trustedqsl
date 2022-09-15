@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?define UpgradeCode = "BA40FA93-F9D6-44E2-BB81-82B0A676E731" ?>
 <?define BadUpgradeCode = "BA40FA94-F9D6-44E2-BB81-82B0A676E741" ?>
-<?define tqslVersion = "2.6.4" ?>
-<?define beta = "" ?>
+<?define tqslVersion = "2.6.5" ?>
+<?define beta = "-rc4" ?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Product Name="Trusted QSL $(var.tqslVersion)$(var.beta)" Id="*" UpgradeCode="$(var.UpgradeCode)" Version="$(var.tqslVersion)" Manufacturer="The TrustedQSL Developers" Language="1033">

@@ -1123,6 +1123,37 @@ static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 }
 #endif // USE_LMDB
 
+static void close_db(TQSL_CONVERTER *conv) {
+	tqslTrace("close_db", NULL);
+
+	if (conv->db_open) {
+#ifdef USE_LMDB
+		if (conv->txn) mdb_txn_abort(conv->txn);
+#else
+		if (conv->txn) conv->txn->abort(conv->txn);
+#endif
+#ifdef USE_LMDB
+		mdb_dbi_close(conv->dbenv, conv->seendb);
+#else
+		conv->seendb->close(conv->seendb, 0);
+#endif
+		if (conv->dbenv) {
+#ifdef USE_LMDB
+			mdb_env_close(conv->dbenv);
+#else
+			conv->dbenv->close(conv->dbenv, 0);
+#endif
+		}
+		// close files and clean up converters, if any
+		if (conv->adif) tqsl_endADIF(&conv->adif);
+		if (conv->cab) tqsl_endCabrillo(&conv->cab);
+		if (conv->errfile) fclose(conv->errfile);
+	}
+
+	conv->db_open = false;
+	return;
+}
+
 static const char* get_ident_rec(TQSL_CONVERTER *conv) {
 	int major = 0, minor = 0, config_major = 0, config_minor = 0;
 
@@ -1974,6 +2005,11 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 #endif
 				if (0 != dbput_err) {
 					strncpy(tQSL_CustomError, db_strerror(dbput_err), sizeof tQSL_CustomError);
+					if (dbput_err == EINVAL) {
+						close_db(conv);
+						remove_db(conv->dbpath);
+						free(conv->dbpath);
+					}
 					tQSL_Error = TQSL_DB_ERROR;
 					return 0;
 				}
@@ -1985,6 +2021,11 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 #endif
 				//non-zero return, but not "not found" - thus error
 				strncpy(tQSL_CustomError, db_strerror(dbget_err), sizeof tQSL_CustomError);
+				if (dbget_err == EINVAL) {
+					close_db(conv);
+					remove_db(conv->dbpath);
+					free(conv->dbpath);
+				}
 				tQSL_Error = TQSL_DB_ERROR;
 				return 0;
 				// could be more specific but there's very little the user can do at this point anyway
@@ -2083,6 +2124,11 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 #endif
 				//non-zero return, but not "not found" - thus error
 				strncpy(tQSL_CustomError, db_strerror(dbget_err), sizeof tQSL_CustomError);
+				if (dbget_err == EINVAL) {
+					close_db(conv);
+					remove_db(conv->dbpath);
+					free(conv->dbpath);
+				}
 				tQSL_Error = TQSL_DB_ERROR;
 				return 0;
 				// could be more specific but there's very little the user can do at this point anyway
@@ -2101,6 +2147,11 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 #endif
 			if (0 != dbput_err) {
 				strncpy(tQSL_CustomError, db_strerror(dbput_err), sizeof tQSL_CustomError);
+				if (dbput_err == EINVAL) {
+					close_db(conv);
+					remove_db(conv->dbpath);
+					free(conv->dbpath);
+				}
 				tQSL_Error = TQSL_DB_ERROR;
 				return 0;
 			}
