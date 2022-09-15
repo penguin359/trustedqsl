@@ -1,3 +1,10 @@
+trustedqsl (2.6.5-1) unstable; urgency=medium
+
+  * New upstream version 2.6.5
+  * Update build-dep for wxWidgets to 3.2 (Closes: #1019778)
+
+ -- tony mancill <tmancill@debian.org>  Wed, 14 Sep 2022 17:26:37 -0700
+
 trustedqsl (2.6.4-1) unstable; urgency=medium
 
   * New upstream version 2.6.4
