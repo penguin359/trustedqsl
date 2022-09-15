@@ -1,2 +1,3 @@
-# file is actual JS code with embedded HTML
-source: source-is-missing src/doxygen/html/menu.js
+# help and documentation files are shipped as HTML
+trustedqsl source: source-is-missing [apps/help/tqslapp/*
+trustedqsl source: source-is-missing [src/doxygen/html/*
