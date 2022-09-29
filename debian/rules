@@ -16,6 +16,9 @@ override_dh_install:
 	# (they would belong in a -dev package)
 	dh_install
 	rm -r debian/trustedqsl/usr/include
+	# symlink tqsl documentation into /usr/share/doc/trustedqsl
+	# see: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1020635
+	dh_link usr/share/TrustedQSL/help/tqslapp usr/share/doc/trustedqsl/help 
 
 override_dh_installman:
 	# Duplicate the tqsl.5 man page for tqsl.1 but fix its section
