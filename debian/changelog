@@ -1,3 +1,9 @@
+trustedqsl (2.7.1-1ppa1~ubuntu22.10) kinetic; urgency=medium
+
+  * Convert to an Ubuntu PPA for backporting new releases
+
+ -- Loren M. Lang <lorenl@north-winds.org>  Wed, 29 Nov 2023 09:19:14 -0800
+
 trustedqsl (2.7.1-1) unstable; urgency=medium
 
   * New upstream version 2.7.1
