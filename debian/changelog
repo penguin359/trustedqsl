@@ -1,3 +1,10 @@
+trustedqsl (2.6.5-1ppa1~ubuntu20.04) focal; urgency=medium
+
+  * Convert to an Ubuntu PPA for backporting new releases
+  * Updated build-dep to match Ubuntu 20.04
+
+ -- Loren M. Lang <lorenl@north-winds.org>  Mon, 05 Dec 2022 00:37:06 -0800
+
 trustedqsl (2.6.5-1) unstable; urgency=medium
 
   * New upstream version 2.6.5
