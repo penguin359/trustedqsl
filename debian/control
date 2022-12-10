@@ -8,8 +8,8 @@ Priority: optional
 Build-Depends: cmake,
                debhelper-compat (= 12),
                libcurl4-openssl-dev,
+               libdb-dev,
                libexpat1-dev,
-               liblmdb-dev,
                libssl-dev,
                libwxgtk3.0-gtk3-dev,
                zlib1g-dev
