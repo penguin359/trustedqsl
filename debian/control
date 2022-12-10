@@ -13,7 +13,7 @@ Build-Depends: cmake,
                libssl-dev,
                libwxgtk3.0-gtk3-dev,
                zlib1g-dev
-Standards-Version: 4.7.0
+Standards-Version: 4.1.4
 Vcs-Browser: https://github.com/penguin359/trustedqsl
 Vcs-Git: https://github.com/penguin359/trustedqsl
 Homepage: https://sourceforge.net/projects/trustedqsl/
