@@ -13,7 +13,7 @@ Build-Depends: cmake,
                libssl-dev,
                libwxgtk3.0-gtk3-dev,
                zlib1g-dev
-Standards-Version: 4.6.2
+Standards-Version: 4.6.0.1
 Vcs-Browser: https://salsa.debian.org/debian-hamradio-team/trustedqsl
 Vcs-Git: https://salsa.debian.org/debian-hamradio-team/trustedqsl.git
 Homepage: https://sourceforge.net/projects/trustedqsl/
