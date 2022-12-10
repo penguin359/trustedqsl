@@ -2,6 +2,7 @@ trustedqsl (2.6.5-1ppa1~ubuntu20.10) groovy; urgency=medium
 
   * Convert to an Ubuntu PPA for backporting new releases
   * Updated build-dep to match Ubuntu 20.10
+  * Fixed error in lintian overrides
 
  -- Loren M. Lang <lorenl@north-winds.org>  Mon, 05 Dec 2022 00:37:06 -0800
 
