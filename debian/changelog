@@ -2,6 +2,7 @@ trustedqsl (2.7.1-1ppa1~ubuntu20.04) focal; urgency=medium
 
   * Convert to an Ubuntu PPA for backporting new releases
   * Updated build-dep to match Ubuntu 20.04
+  * Fixed error in lintian overrides
 
  -- Loren M. Lang <lorenl@north-winds.org>  Wed, 29 Nov 2023 09:19:14 -0800
 
