@@ -424,7 +424,6 @@ getLocalizedErrorString() {
 	    { wxLANGUAGE_JAPANESE, 110 },
 	    { wxLANGUAGE_JAVANESE, 111 },
 #ifdef WX31
-	    { wxLANGUAGE_KABYLE, wxLANGUAGE_KABYLE + 0x8000 },
 #endif
 	    { wxLANGUAGE_KANNADA, 112 },
 	    { wxLANGUAGE_KASHMIRI, 113 },
@@ -550,7 +549,6 @@ getLocalizedErrorString() {
 	    { wxLANGUAGE_ZHUANG, 228 },
 	    { wxLANGUAGE_ZULU, 229 },
 #ifndef WX31
-	    { wxLANGUAGE_KABYLE, wxLANGUAGE_KABYLE + 0x8000 },	// wx3.1 moved this to after Javanese.
 #endif
 	    { wxLANGUAGE_USER_DEFINED, 230 },
 	    { wxLANGUAGE_DEFAULT, -1}
