@@ -2,3 +2,4 @@
 reduce-cmake-version-requirement.diff
 0002-Reverted-patch-2ea0db84-from-upstream-Git-repo.patch
 0003-Reverted-OpenSSL-count-referencing.patch
+0003-Dropped-language-that-is-unsupported-on-older-wxWidg.patch

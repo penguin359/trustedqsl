@@ -1,0 +1,28 @@
+From: "Loren M. Lang" <lorenl@north-winds.org>
+Date: Sun, 11 Dec 2022 13:24:03 -0800
+Subject: Dropped language that is unsupported on older wxWidgets
+
+---
+ apps/wxutil.cpp | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/apps/wxutil.cpp b/apps/wxutil.cpp
+index 874788d..6abdae0 100644
+--- a/apps/wxutil.cpp
++++ b/apps/wxutil.cpp
+@@ -434,7 +434,6 @@ getLocalizedErrorString() {
+ 	    { wxLANGUAGE_JAPANESE, 110 },
+ 	    { wxLANGUAGE_JAVANESE, 111 },
+ #ifdef WX31
+-	    { wxLANGUAGE_KABYLE, wxLANGUAGE_KABYLE + 0x8000 },
+ #endif
+ 	    { wxLANGUAGE_KANNADA, 112 },
+ 	    { wxLANGUAGE_KASHMIRI, 113 },
+@@ -560,7 +559,6 @@ getLocalizedErrorString() {
+ 	    { wxLANGUAGE_ZHUANG, 228 },
+ 	    { wxLANGUAGE_ZULU, 229 },
+ #ifndef WX31
+-	    { wxLANGUAGE_KABYLE, wxLANGUAGE_KABYLE + 0x8000 },	// wx3.1 moved this to after Javanese.
+ #endif
+ 	    { wxLANGUAGE_USER_DEFINED, 230 },
+ 	    { wxLANGUAGE_DEFAULT, -1}
