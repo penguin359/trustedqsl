@@ -1,3 +1,9 @@
+trustedqsl (2.6.5-1ppa1~ubuntu20.04.1) focal; urgency=medium
+
+  * Updated build-dep to match previous package from Ubuntu 20.04
+
+ -- Loren M. Lang <lorenl@north-winds.org>  Tue, 13 Dec 2022 01:50:21 -0800
+
 trustedqsl (2.6.5-1ppa1~ubuntu20.04) focal; urgency=medium
 
   * Convert to an Ubuntu PPA for backporting new releases
