@@ -1,3 +1,11 @@
+trustedqsl (2.7.1-1) unstable; urgency=medium
+
+  * New upstream version 2.7.1
+  * Replace build-dep on liblmdb-dev with libsqlite3-dev
+  * Freshen years in debian/copyright
+
+ -- tony mancill <tmancill@debian.org>  Tue, 07 Nov 2023 21:25:22 -0800
+
 trustedqsl (2.6.5-2) unstable; urgency=medium
 
   * Symlink /usr/share/docs/trustedqsl/help to upstream docs
