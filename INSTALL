@@ -30,10 +30,7 @@ The TrustedQSL library depends on several other libraries:
 OpenSSL (http://www.openssl.org/) - OpenSSL 1.1.1g was used for TQSL 2.5.5.
 expat 1.x XML parser library (http://expat.sourceforge.net/) - expat 2.2.9
 zlib (http://zlib.net/) zlib 1.2.11
-One of the following:
-    LMDB (Lightning Memory-mapped DataBase) - https://lmdb.readthedocs.io/ - lmdb 0.9.23
-    or 
-    Berkeley DB (http://www.oracle.com/technetwork/products/berkeleydb/downloads/index.html) - BDB 6.2.23
+SQLite3 (https://sqlite.org)
 wxWidgets (http://wxwidgets.org/downloads) - wxWidgets 2.8.12 or wxWidgets 3.1.2
 curl - (http://curl.haxx.se/download.html) - curl 7.70.0
 
@@ -108,15 +105,6 @@ You'll need to have the Mac developer's tools, Xcode 1.5, installed.
 
 This is done in much the same manner as building under Linux/Unix, above.
 
-You will need to download and compile Berkeley DB 5.3 or later. The version
-of Berkeley DB shipped with OS X (as of 10.8) is out of date.
-
-You also may not want to install the library into system directories:
-
-cmake -DBDB_PREFIX=$HOME/bdb -DCMAKE_INSTALL_PREFIX=$HOME/tqsllib .
-make
-sudo make install
-
 To build a universal binary with compatibility from MacOS 10.4 upwards through
 Mojave, use the following shell script:
 
@@ -144,7 +132,6 @@ cmake  \
     -DCMAKE_LINKER=/usr/bin/gcc-4.0 \
     -DCMAKE_CXX_COMPILER=/usr/bin/c++-4.0 \
     -DCMAKE_C_COMPILER=/usr/bin/gcc-4.0 \
-    -DBDB_PREFIX=$bdb \
     -DCMAKE_OSX_SYSROOT=$sdk \
     -DCMAKE_CXX_FLAGS=" -I $HOME/bdb/include  -I /usr/include/c++/4.0.0 \
         -I $sdk/System/Library/Frameworks/Carbon.framework/Headers \

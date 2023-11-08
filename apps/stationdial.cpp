@@ -129,6 +129,7 @@ TQSLGetStationNameDialog::OnOk(wxCommandEvent&) {
 		EndModal(wxID_CANCEL);
 	} else if (!s.IsEmpty()) {
 		_selected = s;
+		wxConfig::Get()->Write(wxT("LastStationLocation"), s);
 		EndModal(wxID_OK);
 	}
 }
@@ -143,9 +144,13 @@ TQSLGetStationNameDialog::OnCancel(wxCommandEvent&) {
 void
 TQSLGetStationNameDialog::RefreshList() {
 	tqslTrace("TQSLGetStationNameDialog::RefreshList", NULL);
+	wxString last_loc;
+	if (!editonly)
+		last_loc = wxConfig::Get()->Read(wxT("LastStationLocation"));
 	namelist->Clear();
 	item_data.clear();
 	int n;
+	int select_index = -1;
 	tQSL_Location loc;
 	check_tqsl_error(tqsl_initStationLocationCapture(&loc));
 	check_tqsl_error(tqsl_getNumStationLocations(loc, &n));
@@ -161,8 +166,14 @@ TQSLGetStationNameDialog::RefreshList() {
 		item_data.push_back(it);
 	}
 	sort(item_data.begin(), item_data.end(), itemLess);
-	for (int i = 0; i < static_cast<int>(item_data.size()); i++)
+	for (int i = 0; i < static_cast<int>(item_data.size()); i++) {
 		namelist->Append(item_data[i].label, &(item_data[i].name));
+		if (!editonly && item_data[i].name == last_loc) {
+			select_index = i;
+		}
+	}
+	if (select_index >= 0)
+		namelist->SetSelection(select_index);
 	check_tqsl_error(tqsl_endStationLocationCapture(&loc));
 }
 

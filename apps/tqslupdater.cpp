@@ -31,9 +31,11 @@
 	#include <wx/wx.h>
 #endif
 
-#ifdef _MSC_VER //could probably do a more generic check here...
-// stdint exists on vs2012 and (I think) 2010, but not 2008 or its platform
-  #define uint8_t unsigned char
+#ifdef _MSC_VER
+  // stdint exists on vs2012 and (I think) 2010, but not 2008 or its platform
+  #if _MSC_VER < 1600
+    #define uint8_t unsigned char
+  #endif
 #else
 #include <stdint.h> //for uint8_t; should be cstdint but this is C++11 and not universally supported
 #endif

@@ -1420,6 +1420,10 @@ DLLEXPORT int  CALLCONVENTION tqsl_diagFileOpen(void);
  *
  */
 DLLEXPORT int  CALLCONVENTION tqsl_openDiagFile(const char* file);
+/** Removes the upload database if it exists
+ *
+ */
+DLLEXPORT void CALLCONVENTION tqsl_removeUploadDatabase(void);
 
 #ifdef _WIN32
 DLLEXPORT wchar_t* CALLCONVENTION utf8_to_wchar(const char* str);

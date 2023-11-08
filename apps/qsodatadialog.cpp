@@ -27,6 +27,7 @@
 #include "tqslexcept.h"
 #include "tqsltrace.h"
 #include "wxutil.h"
+#include "tqslbuild.h"
 
 using std::vector;
 using std::ofstream;
@@ -627,6 +628,19 @@ QSODataDialog::WriteQSOFile(QSORecordList& recs, const char *fname) {
 	unsigned char buf[2048];
 	int rec_cnt = 0;
 	QSORecordList::iterator it;
+	wxDateTime now = wxDateTime::Now().ToUTC();
+	wxString timestamp = now.Format(wxT("%Y%m%d")).c_str();
+	timestamp += wxT(" ");
+	timestamp += now.Format(wxT("%H%M%S")).c_str();
+
+	out << "TQSL ADIF export" << endl;
+	tqsl_adifMakeField("CREATED_TIMESTAMP", 0, (const unsigned char *) timestamp.c_str(), -1, buf, sizeof buf);
+	out << buf << endl;
+	tqsl_adifMakeField("PROGRAMID", 0, (const unsigned char *)"TQSL", -1, buf, sizeof buf);
+	out << buf << endl;
+	tqsl_adifMakeField("PROGRAMVERSION", 0, (const unsigned char *)(const char *)TQSL_VERSION, -1, buf, sizeof buf);
+	out << buf << endl;
+	out << "<EOH>" << endl << endl;
 	for (it = recs.begin(); it != recs.end(); it++) {
 		wxString dtstr;
 		if (it->_call == wxT("NONE"))		// Skipped back on added record
@@ -644,8 +658,8 @@ QSODataDialog::WriteQSOFile(QSORecordList& recs, const char *fname) {
 			out << buf << endl;
 		} else {
 			tqsl_adifMakeField("MODE", 0, (const unsigned char*)(const char *)it->_mode.ToUTF8(), -1, buf, sizeof buf);
+			out << "   " << buf << endl;
 		}
-		out << "   " << buf << endl;
 		dtstr.Printf(wxT("%04d%02d%02d"), it->_date.year, it->_date.month, it->_date.day);
 		tqsl_adifMakeField("QSO_DATE", 0, (const unsigned char*)(const char *)dtstr.ToUTF8(), -1, buf, sizeof buf);
 		out << "   " << buf << endl;

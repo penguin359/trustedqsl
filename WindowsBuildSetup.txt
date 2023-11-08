@@ -311,14 +311,12 @@ to link based on the build type.
   - Type 'msbuild /p:Configuration=Debug ALL_BUILD.vcxproj'
   - Type 'msbuild /p:Configuration=Release ALL_BUILD.vcxproj'
 
- - Berkeley DB
+ - SQLite3
 
- Download from http://download.oracle.com/berkeley-db/db-6.0.20.NC.zip
- and unzip to c:\db-6.0.20.NC. From Visual Studio, open the 
- build_windows\Berkeley_DB.sln project and upgrade it when prompted. Update
- the project to build static libraries (Configuration Properties/General/
- Configuration Type). You can now build the Debug and Release libraries.
- Only the 'db' project needs to be built.
+ Download the SQLite source amalgamation. Unzip it into a build directory.
+ Compile wwith
+cl -c -O2 sqlite3.c
+lib /OUT:sqlite3.lib sqlite3.obj
 
 -- 4) Running cmake --
 

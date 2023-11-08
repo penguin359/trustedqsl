@@ -174,7 +174,7 @@ TQSLWizLocPage::UpdateFields(int noupdate_field) {
 	validate();
 
 	tqslTrace("TQSLWizLocPage::UpdateFields", "Validation done");
-	for (int i = noupdate_field+1; i < static_cast<int>(p1_controls.size()-1); i++) {
+	for (int i = noupdate_field+1; i < static_cast<int>(p1_controls.size()); i++) {
 		int changed;
 		int in_type;
 		char gabbi_name[40];

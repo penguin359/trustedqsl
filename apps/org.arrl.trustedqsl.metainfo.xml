@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2023 The TrustedQSL Developers -->
+<component type="desktop-application">
+    <metadata_license>0BSD</metadata_license>
+    <project_license>BSD-4-Clause</project_license>
+    <id>org.arrl.trustedqsl</id>
+    <name>TrustedQSL</name>
+    <summary>Ham Radio Contact validation tooling</summary>
+    <description>
+	<p>
+	This is the TrustedQSL project, which provides tools for digitally signing Amateur Radio QSO records.
+	</p>
+	<p>This software consists of voluntary contributions made by many individuals on behalf of the ARRL. More information on the "Logbook of The World" project and the ARRL is available from the ARRL Web site at www.arrl.org.</p>
+    </description>
+    <categories>
+	<category>Utility</category>
+	<category>FileTools</category>
+    </categories>
+    <content_rating type="oars-1.0"/>
+    <url type="homepage">https://sourceforge.net/projects/trustedqsl/</url>
+    <url type="bugtracker">https://trustedqsl.sourceforge.net/mantis/</url>
+    <url type="help">https://lotw.arrl.org/lotw-help/?lang=en</url>
+    <screenshots>
+	<screenshot type="default">
+	    <caption>TrustedQSL GUI</caption>
+	    <image type="source">https://www.ncdxa.org/images/trustedqsl.png</image>
+	</screenshot>
+	<screenshot type="default">
+	    <caption>Certificate Handling</caption>
+	    <image type="source">https://www.ncdxa.org/images/certaccept.png</image>
+	</screenshot>
+    </screenshots>
+    <keywords>
+	<keyword>QSL</keyword>
+	<keyword>Ham Radio</keyword>
+	<keyword>QSO</keyword>
+	<keyword>ADIF</keyword>
+    </keywords>
+    <languages>
+	<lang>ca_ES</lang>
+	<lang>ca_ES</lang>
+	<lang>de</lang>
+	<lang>es</lang>
+	<lang>fi</lang>
+	<lang>fr</lang>
+	<lang>hi_IN</lang>
+	<lang>it</lang>
+	<lang>ja</lang>
+	<lang>pl_PL</lang>
+	<lang>pt</lang>
+	<lang>ru</lang>
+	<lang>sv_SE</lang>
+	<lang>tr_TR</lang>
+	<lang>zh_CN</lang>
+	<lang>zh_TW</lang>
+    </languages>
+    <launchable type="desktop-id">org.arrl.trustedqsl.desktop</launchable>
+    <provides>
+	<id>org.arrl.trustedqsl.desktop</id>
+	<binary>tqsl</binary>
+    </provides>
+    <!-- Maintainer notes:
+     Appstream version naming convention doesn't conform to what the TQSL project has
+     typically used. Separate beta modifiers with a tilde, not a hyphen.
+     See https://www.freedesktop.org/software/appstream/docs/chap-AppStream-Misc.html#sect-AppStream-Misc-VerCmp
+    -->
+    <releases>
+	<release version="2.7" date="2023-10-01">
+	    <description><p>Conversion to sqlite, updates to callsign certificate handling to correct handling of portable and 1x1 callsigns.</p></description>
+	</release>
+	<release version="2.7~rc1" date="2023-09-26">
+	    <description><p>Release candidate for 2.7</p></description>
+	</release>
+	<release version="2.7~beta2" date="2023-09-11">
+	    <description><p>New release - remove LMDB due to stability issues, go to SQLite3</p></description>
+	</release>
+	<release version="2.7~beta" date="2023-05-11">
+	    <description><p>New release - move to LMDB, OpenSSL3, Flatpak</p></description>
+	</release>
+    </releases>
+</component>
+

@@ -58,6 +58,7 @@ using std::vector;
 #define DEFAULT_ADIF_EDIT false
 #define DEFAULT_DISP_DUPES true
 #define DEFAULT_IGNORE_SECONDS false
+#define DEFAULT_IGNORE_CALLSIGN false
 #define DEFAULT_LOG_TAB false
 #define DEFAULT_CERTPWD false
 //online
@@ -95,6 +96,7 @@ enum {		// Window IDs
 	ID_PREF_FILE_CERTPWD,
 	ID_PREF_FILE_LOGVFY,
 	ID_PREF_IGNORE_SECONDS,
+	ID_PREF_IGNORE_CALLSIGN,
 	ID_PREF_MODE_MAP,
 	ID_PREF_MODE_ADIF,
 	ID_PREF_MODE_DELETE,
@@ -155,7 +157,7 @@ class LogPrefs : public PrefsPanel {
 	void ShowHide();
  private:
 	wxTextCtrl *cabrillo, *adif;
-	wxCheckBox *badcalls, *daterange, *dispdupes, *ignoresecs;
+	wxCheckBox *badcalls, *daterange, *dispdupes, *ignoresecs, *ignorecall;
 	wxRadioBox *handleQTH;
 };
 

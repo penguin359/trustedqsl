@@ -106,6 +106,13 @@ DLLEXPORT int CALLCONVENTION tqsl_setConverterAllowDuplicates(tQSL_Converter con
   */
 DLLEXPORT int CALLCONVENTION tqsl_setConverterIgnoreSeconds(tQSL_Converter convp, int ignore);
 
+/** Configure the converter to ignore (ignore != 0) or include (ignore == 0)
+  * callsigns in ADIF logs, 
+  *
+  * \c ignore defaults to 0.
+  */
+DLLEXPORT int CALLCONVENTION tqsl_setConverterIgnoreCallsigns(tQSL_Converter convp, int ignore);
+
 /** Specify the name of the application using the conversion library.
   * This is output in a header record in the exported log file.
   * Call this before calling tqsl_getConverterGABBI.
@@ -179,6 +186,10 @@ DLLEXPORT int CALLCONVENTION tqsl_setADIFConverterDateFilter(tQSL_Converter conv
   *
   * tQSL_Error is set to TQSL_DUPLICATE_QSO if the QSO has already been
   * processed on the current computer.
+  *
+  * tQSL_Error is set to TQSL_NEW_UPLOAD_DB if a new uploads database was
+  * created. This allows TQSL to attempt to re-load the QSOs from the most recent
+  * automatic backup (if it exists).
   *
   * N.B. On systems that distinguish text-mode files from binary-mode files,
   * notably Windows, the GABBI records should be written in binary mode.

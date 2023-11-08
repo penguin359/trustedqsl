@@ -142,6 +142,10 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 	wxTreeItemId invalid = NULL;
 	wxTreeItemId pending = NULL;
 	wxTreeItemId expired = NULL;
+	int invalidCnt = 0;
+	int pendingCnt = 0;
+	int replacedCnt = 0;
+	int expiredCnt = 0;
 	_nissuers = issuers.size();
 	for (iss_it = issuers.begin(); iss_it != issuers.end(); iss_it++) {
 		if (_nissuers > 1) {
@@ -164,21 +168,25 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 				if (!invalid)
 					invalid = AppendItem(_nissuers > 1 ? id : rootId, _("Invalid, unusable"), FOLDER_ICON);
 				AppendItem(invalid, list[i].first, icon_type, -1, cert);
+				invalidCnt++;
 			} else if (keyonly) {
 				icon_type = NOCERT_ICON;
 				if (!pending)
 					pending = AppendItem(_nissuers > 1 ? id : rootId, _("Certificates that are awaiting ARRL approval"), FOLDER_ICON);
 				AppendItem(pending, list[i].first, icon_type, -1, cert);
+				pendingCnt++;
 			} else if (sup) {
 				icon_type = REPLACED_ICON;
 				if (!replaced)
 					replaced = AppendItem(_nissuers > 1 ? id : rootId, _("Certificates replaced with a newer one"), FOLDER_ICON);
 				AppendItem(replaced, list[i].first, icon_type, -1, cert);
+				replacedCnt++;
 			} else if (exp) {
 				icon_type = EXPIRED_ICON;
 				if (!expired)
 					expired = AppendItem(_nissuers > 1 ? id : rootId, _("Certificates that have expired"), FOLDER_ICON);
 				AppendItem(expired, list[i].first, icon_type, -1, cert);
+				expiredCnt++;
 			} else {
 				icon_type = CERT_ICON;
 				AppendItem(valid, list[i].first, icon_type, -1, cert);
@@ -191,6 +199,10 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 		valid = AppendItem(_nissuers > 1 ? id : rootId, _("Active, usable certificates"), FOLDER_ICON);
 	Expand(valid);
 	Expand(rootId);
+	if (invalidCnt > 0) Expand(invalid);
+	if (pendingCnt > 0) Expand(pending);
+	if (replacedCnt > 0) Expand(replaced);
+	if (expiredCnt > 0) Expand(expired);
 	return _ncerts;
 }
 

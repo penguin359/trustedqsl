@@ -1,9 +1,5 @@
 project (tqsllib)
 
-set(OSX_ARCH i386 CACHE STRING "Architectures to build for OSX")
-
-string(REPLACE " " ";" CMAKE_OSX_ARCHITECTURES ${OSX_ARCH})
-
 if(WIN32)
   add_definitions(-DXML_STATIC)
 endif()
@@ -35,9 +31,6 @@ endif()
 if(WIN32)
 set(TQSLLIB_RCFILE "tqsllib.rc")
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/${TQSLLIB_RCFILE}.in" "${CMAKE_CURRENT_SOURCE_DIR}/${TQSLLIB_RCFILE}")
-set(TQSLLIBNAME "tqsllib2") #for compatibility with existing software
-else()
-set(TQSLLIBNAME "tqsllib")
 endif()
 
 set(TQSLLIB_SRC tqsllib.cpp openssl_cert.cpp adif.cpp xml.cpp location.cpp tqslconvert.cpp cabrillo.cpp)
@@ -49,12 +42,19 @@ find_path(CARBON_INCLUDE_DIR Carbon.h)
 endif()
 if(WIN32)
 #def file for correct 2.x exports
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+set(TQSLLIB_SRC ${TQSLLIB_SRC} "tqsllib2-x64.def")
+else()
 set(TQSLLIB_SRC ${TQSLLIB_SRC} "tqsllib2.def")
+endif()
 endif()
 
 add_library(${TQSLLIBNAME} ${TQSLLIBTYPE} ${TQSLLIB_SRC} ${TQSLLIB_HDR} ${TQSLLIB_RCFILE})
-target_link_libraries(${TQSLLIBNAME} ${OPENSSL_LIBRARIES} ${EXPAT_LIBRARIES} ${ZLIB_LIBRARIES} ${BDB_LIBRARIES} ${LMDB_LIBRARIES} ${CARBON_LIBRARY})
-include_directories(${OPENSSL_INCLUDE_DIR} ${ZLIB_INCLUDE_DIR} ${EXPAT_INCLUDE_DIR} ${BDB_INCLUDE_DIR} ${LMDB_INCLUDE_DIR} ${CARBON_INCLUDE_DIR})
+target_link_libraries(${TQSLLIBNAME} ${OPENSSL_LIBRARIES} ${EXPAT_LIBRARIES} ${ZLIB_LIBRARIES} ${SQLite3_LIBRARIES} ${CARBON_LIBRARY})
+if(WIN32)
+  target_link_libraries(${TQSLLIBNAME} ws2_32)
+endif()
+include_directories(${OPENSSL_INCLUDE_DIR} ${ZLIB_INCLUDE_DIR} ${EXPAT_INCLUDE_DIR} ${SQLite3_INCLUDE_DIRS} ${CARBON_INCLUDE_DIR})
 
 if(NOT APPLE AND NOT WIN32)
 set(HEADERS_TO_INSTALL tqsllib.h tqslerrno.h cabrillo.h adif.h tqslconvert.h)

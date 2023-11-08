@@ -90,6 +90,7 @@ class CRQWiz : public ExtWizard {
 	CRQ_Page *signPage;
 	tQSL_Cert cert;
 	TQSL_CERT_REQ *_crq;
+	bool forceSigning;	// Portable call, non-US. Require signing
 
  private:
 	CRQ_Page *_first;
@@ -211,6 +212,7 @@ class CRQ_SignPage : public CRQ_Page {
 	CRQWiz *_parent;
 	wxRadioBox *choice;
 	wxStaticText* introText;
+	wxString introContent;
 	DECLARE_EVENT_TABLE()
 };
 

@@ -42,6 +42,7 @@ CRQWiz::CRQWiz(TQSL_CERT_REQ *crq, tQSL_Cert xcert, wxWindow *parent, wxHtmlHelp
 	dxcc = -1;
 	validcerts = false;		// No signing certs to use
 	onebyone = false;
+	forceSigning = false;		// Not portable
 	renewal = (_crq != NULL);	// It's a renewal if there's a CRQ provided
 	usa = validusa = false;		// Not usa
 	// Get count of valid certificates
@@ -679,15 +680,13 @@ CRQ_SignPage::CRQ_SignPage(CRQWiz *parent, TQSL_CERT_REQ *crq)
 	_parent = parent;
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
-	wxString itext;
-	itext = wxString(_("Is this new certificate for a callsign where you already have a "
-		"LoTW account, and you want the QSOs for this call to be added to an existing LoTW account? "));
-        itext += wxT("\n\n");
-	itext += _("If so, choose a callsign below for the primary LoTW account. If not, choose 'No', and a new LoTW account will be set up for these QSOs.");
+	introContent = wxString(_("Is this new certificate for a callsign where you already have a LoTW account, and you want the QSOs for this call to be added to an existing LoTW account? "));
+        introContent += wxT("\n\n");
+	introContent += _("If so, choose a callsign below for the primary LoTW account. If not, choose 'No', and a new LoTW account will be set up for these QSOs.");
 
-	itext += wxT("\n\n");
-	itext += _("CAUTION: Mixing QSOs for unrelated callsigns into one LoTW account can cause issues with handling awards.");
-	introText = new wxStaticText(this, -1, itext);
+	introContent += wxT("\n\n");
+	introContent += _("CAUTION: Mixing QSOs for unrelated callsigns into one LoTW account can cause issues with handling awards.");
+	introText = new wxStaticText(this, -1, introContent);
 	sizer->Add(introText);
 
 	wxSize sz = getTextSize(this);
@@ -714,10 +713,11 @@ CRQ_SignPage::CRQ_SignPage(CRQWiz *parent, TQSL_CERT_REQ *crq)
 		choice->SetSelection(1);
 		_parent->signIt = false;
 		cert_tree->Show(false);
-		introText->SetLabel(_("Since you have no callsign certificates, you must "
+		introContent = _("Since you have no callsign certificates, you must "
 					"submit an 'Unsigned' certificate request. This will allow you to "
 					"create your initial callsign certificate for LoTW use. "
-					"Click 'Finish' to complete this callsign certificate request."));
+					"Click 'Finish' to complete this callsign certificate request.");
+		introText->SetLabel(introContent);
 	}
 	introText->Wrap(em_w * 50);
 	AdjustPage(sizer, wxT("crq4.htm"));
@@ -727,9 +727,19 @@ CRQ_SignPage::CRQ_SignPage(CRQWiz *parent, TQSL_CERT_REQ *crq)
 void
 CRQ_SignPage::refresh() {
 	tqslTrace("CRQ_SignPage::refresh", NULL);
-	if (cert_tree->Build(0, &(_parent->provider)) > 0) {
+	if (cert_tree->Build(0, &(_parent->provider)) > 0 || _parent->forceSigning) {
 		choice->SetSelection(2);
 		_parent->signIt = true;
+		if (_parent->forceSigning) {
+			choice->SetSelection(2);
+			_parent->signIt = true;
+			cert_tree->Show(true);
+			choice->Enable(false);
+			introText->SetLabel(_("This portable callsign request requires approval using an existing callsign certificate"));
+		} else {
+			introText->SetLabel(introContent);
+			choice->Enable(true);
+		}
 	} else {
 		choice->SetSelection(1);
 		_parent->signIt = false;
@@ -925,6 +935,11 @@ CRQ_CallsignPage::validate() {
 	if (!_parent->usa || _parent->callsign.Len() != 3)
 		_parent->onebyone = false;
 
+	if (_parent->onebyone && !tqsl_isDateValid(&_parent->qsonotafter)) {
+		valMsg = _("US 1x1 callsign requests must provide an end date");
+		goto notok;
+	}
+
 	// Data looks okay, now let's make sure this isn't a duplicate request
 	// (unless it's a renewal).
 
@@ -1014,10 +1029,28 @@ CRQ_CallsignPage::validate() {
 			valMsg = wxString::Format(fmt, _parent->callsign.c_str(), _parent->callsign.c_str());
 		}
 	}
- notok:
+notok:
 	tc_status->SetLabel(valMsg);
 	tc_status->Wrap(_parent->maxWidth);
 	return 0;
+}
+
+static bool
+validCallSign(const string& call) {
+	// Check for invalid characters
+	if (call.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/") != string::npos)
+		return false;
+	// Need at least one letter
+	if (call.find_first_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ") == string::npos)
+		return false;
+	// Need at least one number
+	size_t num;
+	if ((num = call.find_first_of("0123456789")) == string::npos)
+		return false;
+	// At least one letter after the number - catches "/KP4" for example
+	if (call.find_first_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ", num) == string::npos)
+		return false;
+	return true;
 }
 
 bool
@@ -1030,6 +1063,8 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 	bool hasEndDate = (!tqsl_isDateNull(&_parent->qsonotafter) && tqsl_isDateValid(&_parent->qsonotafter));
 	bool notInULS = false;
 
+	_parent->forceSigning = false;
+
 	// First check if there's a slash. If so, it's a portable. Use the base callsign
 	wxString callsign = _parent->callsign;
 	int slashpos = callsign.Find('/', true);
@@ -1037,8 +1072,24 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 	wxString suffix = wxT("");
 	if (slashpos != wxNOT_FOUND) {
 		prefix = callsign.Left(slashpos);
-		suffix = callsign.Right(slashpos+1);
+		suffix = callsign.Right(callsign.Len() - slashpos - 1);
 		callsign = prefix;
+	}
+
+	// Shuffle time. Is one of these a valid callsign?
+	if (!suffix.IsEmpty()) {
+		// Is the prefix valid? If so, OK.
+		if (!validCallSign(std::string(prefix.mb_str()))) {
+			// Else how about suffix?
+			if (validCallSign(std::string(suffix.mb_str()))) {
+				callsign = suffix;
+				suffix = prefix;
+				prefix = callsign;
+			}
+		}
+		if (!validCallSign(std::string(prefix.mb_str()))) {
+			_parent->usa = false;
+		}
 	}
 
 	// Is this in the ULS?
@@ -1101,18 +1152,17 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 					notInULS = true;
 					break;
 				}
-				// If this call has a slash, then it may be a portable call from
-				// outside the US. We really can't tell at this point so just
-				// let it go.
-				if (slashpos != wxNOT_FOUND) {
-					break;
-				}
 				valMsg = wxString::Format(_("The callsign %s is not currently registered in the FCC ULS database as of %s.\nIf this is a newly registered call, you must wait at least one business day for it to be valid. Please enter a currently valid callsign."), callsign.c_str(), update.c_str());
 				break;
 		}
 	}
-
 	if (valMsg.Len() == 0) {
+		// If this call has a slash, then it may be a portable call from
+		// outside the US. We really can't tell at this point so just
+		// let it go.
+		if (!suffix.IsEmpty()) {
+			_parent->forceSigning = true;
+		}
 		ok = true;
 	} else {
 		wxMessageBox(valMsg, _("Error"), wxOK | wxICON_ERROR, this);
@@ -1138,7 +1188,15 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 		}
 	}
 
-	if (ok && hasEndDate && !notInULS) {		// If it has an end date and it's a current call
+	if (ok && _parent->forceSigning) {
+		if (!_parent->validcerts) {
+			wxString msg = _("You cannot request a certificate for a portable callsign as you must sign those requests, but you have no valid Callsign Certificates that you can use to sign this request.");
+			wxMessageBox(msg, _("TQSL Error"), wxOK | wxICON_ERROR, this);
+			return false;
+		}
+	}
+
+	if (ok && hasEndDate && !notInULS && !_parent->onebyone) {	// If it has an end date and it's a current call
 		wxString msg = _("You have chosen a QSO end date for this Callsign Certificate. The 'QSO end date' should ONLY be set if that date is the date when that callsign's license expired or the license was replaced by a new callsign.");
 			msg += wxT("\n\n");
 			msg += _("If you set an end date, you will not be able to sign QSOs past that date, even if the Callsign Certificate itself is still valid.");

@@ -18,6 +18,7 @@
 #include <sys/stat.h>
 #ifdef _WIN32
     #include <io.h>
+    #include <tchar.h>
     #include <windows.h>
     #include <direct.h>
     #include <Shlobj.h>
@@ -50,13 +51,13 @@ using std::string;
 DLLEXPORTDATA int tQSL_Error = 0;
 DLLEXPORTDATA int tQSL_Errno = 0;
 DLLEXPORTDATA TQSL_ADIF_GET_FIELD_ERROR tQSL_ADIF_Error;
-DLLEXPORTDATA const char *tQSL_BaseDir = 0;
-DLLEXPORTDATA const char *tQSL_RsrcDir = 0;
+DLLEXPORTDATA const char *tQSL_BaseDir = NULL;
+DLLEXPORTDATA const char *tQSL_RsrcDir = NULL;
 DLLEXPORTDATA char tQSL_ErrorFile[TQSL_MAX_PATH_LEN];
 DLLEXPORTDATA char tQSL_CustomError[256];
 DLLEXPORTDATA char tQSL_ImportCall[256];
 DLLEXPORTDATA long tQSL_ImportSerial = 0;
-DLLEXPORTDATA FILE* tQSL_DiagFile = 0;
+DLLEXPORTDATA FILE* tQSL_DiagFile = NULL;
 
 #define TQSL_OID_BASE "1.3.6.1.4.1.12348.1."
 #define TQSL_OID_CALLSIGN TQSL_OID_BASE "1"
@@ -143,8 +144,8 @@ static int pmkdir(const wchar_t *path, int perm) {
 	char *p = wchar_to_utf8(path, true);
 	tqslTrace("pmkdir", "path=%s", p);
 	free(p);
-	int nleft = (sizeof npath / 2) - 1;
-	wcsncpy(dpath, path, (sizeof dpath / 2));
+	int nleft = sizeof(npath) / sizeof(npath[0]) - 1;
+	wcsncpy(dpath, path, sizeof(dpath) / sizeof(dpath[0]));
 	cp = wcstok(dpath, L"/\\");
 	npath[0] = 0;
 	while (cp) {
@@ -207,8 +208,8 @@ tqsl_get_rsrc_dir() {
 	DWORD bsize = sizeof wpath;
 	int wval;
 	if ((wval = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-		"Software\\TrustedQSL", 0, KEY_READ, &hkey)) == ERROR_SUCCESS) {
-		wval = RegQueryValueEx(hkey, "InstallPath", 0, &dtype, (LPBYTE)wpath, &bsize);
+		_T("Software\\TrustedQSL"), 0, KEY_READ, &hkey)) == ERROR_SUCCESS) {
+		wval = RegQueryValueEx(hkey, _T("InstallPath"), 0, &dtype, (LPBYTE)wpath, &bsize);
 		RegCloseKey(hkey);
 		if (wval == ERROR_SUCCESS) {
 			string p = string(wpath);
@@ -282,7 +283,7 @@ tqsl_init() {
 	if (semaphore)
 		return 0;
 #ifdef _WIN32
-	static wchar_t path[TQSL_MAX_PATH_LEN * 2];
+	static wchar_t path[TQSL_MAX_PATH_LEN];
 	// lets cin/out/err work in windows
 	// AllocConsole();
 	// freopen("CONIN$", "r", stdin);
@@ -357,7 +358,7 @@ tqsl_init() {
 #if defined(_WIN32)
 		wchar_t *wcp;
 		if ((wcp = _wgetenv(L"TQSLDIR")) != NULL && *wcp != '\0') {
-			wcsncpy(path, wcp, sizeof path);
+			wcsncpy(path, wcp, sizeof(path) / sizeof(path[0]));
 #else
 		char *cp;
 		if ((cp = getenv("TQSLDIR")) != NULL && *cp != '\0') {
@@ -367,8 +368,8 @@ tqsl_init() {
 #if defined(_WIN32)
 			wval = SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, 0, path);
 			if (wval != ERROR_SUCCESS)
-				wcsncpy(path, L"C:", sizeof path);
-			wcsncat(path, L"\\TrustedQSL", sizeof path - wcslen(path) - 1);
+				wcsncpy(path, L"C:", sizeof(path) / sizeof(path[0]));
+			wcsncat(path, L"\\TrustedQSL", sizeof(path) / sizeof(path[0]) - wcslen(path) - 1);
 #elif defined(LOTW_SERVER)
 			strncpy(path, "/var/lotw/tqsl", sizeof path);
 #else  // some unix flavor
@@ -401,7 +402,7 @@ tqsl_init() {
 		FILE *test;
 #if defined(_WIN32)
 		tQSL_BaseDir = wchar_to_utf8(path, true);
-		wcsncat(path, L"\\tmp.tmp", sizeof path - wcslen(path) - 1);
+		wcsncat(path, L"\\tmp.tmp", sizeof(path) / sizeof(path[0]) - wcslen(path) - 1);
 		if ((test = _wfopen(path, L"wb")) == NULL) {
 			tQSL_Errno = errno;
 			char *p = wchar_to_utf8(path, false);
@@ -425,6 +426,12 @@ tqsl_init() {
 		unlink(path);
 #endif
 	}
+	//
+	// Ensure that tQSL_RsrcDir is set
+	// Correction from JJ1BDX
+	//
+	if (!tQSL_RsrcDir)
+		tQSL_RsrcDir = tQSL_BaseDir;
 	semaphore = 1;
 	return 0;
 }
@@ -633,9 +640,9 @@ tqsl_encodeBase64(const unsigned char *data, int datalen, char *output, int outp
 	rval = 0;
 	goto end;
 
- err:
+err:
 	tQSL_Error = TQSL_OPENSSL_ERROR;
- end:
+end:
 	if (bio != NULL)
 		BIO_free_all(bio);
 	return rval;
@@ -676,9 +683,9 @@ tqsl_decodeBase64(const char *input, unsigned char *data, int *datalen) {
 	rval = 0;
 	goto end;
 
- err:
+err:
 	tQSL_Error = TQSL_OPENSSL_ERROR;
- end:
+end:
 	if (bio != NULL)
 		BIO_free_all(bio);
 	return rval;
@@ -940,7 +947,7 @@ tqsl_initDate(tQSL_Date *date, const char *str) {
 	if (date->day < 1 || date->day > 31)
 		goto err;
 	return 0;
- err:
+err:
 	tQSL_Error = TQSL_INVALID_DATE;
 		return 1;
 }
@@ -992,7 +999,7 @@ tqsl_initTime(tQSL_Time *time, const char *str) {
 	time->minute = parts[1];
 	time->second = parts[2];
 	return 0;
- err:
+err:
 	tQSL_Error = TQSL_INVALID_TIME;
 		return 1;
 }

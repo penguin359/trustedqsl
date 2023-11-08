@@ -1803,7 +1803,7 @@ update_page(int page, TQSL_LOCATION *loc) {
 								if (zoneMap) {
 									if (isCQZ) {
 										zoneOK = inMap(j, currentITU, true, true, zoneMap);
-									} 
+									}
 									if (isITUZ) {
 										zoneOK = inMap(currentCQ, j, true, true, zoneMap);
 									}
@@ -3118,7 +3118,7 @@ tqsl_getStationLocationField(tQSL_Location locp, const char *name, char *namebuf
 		}
 	} while (1);
 	strncpy(namebuf, "", bufsize);		// Did not find it
- done:
+done:
 	tqsl_setStationLocationCapturePage(loc, old_page);
 	return 0;
 }

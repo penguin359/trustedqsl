@@ -3,9 +3,27 @@ TQSLLIB changes
 
 2.5
 ---
+Update the uploads database handling to correctly respond when the database
+is an empty file - delete and recreate.
+
+Add a database index to the uploads database to improve the performance.
+
+Replace the uploads database with SQLite to hopefully improve the reliability
+and recoverability. 
+
+Update the cryptographic algorithms used for protecting P12 files (saved
+callsign certificates and the related private key) from RC2 to AES-256.
+
+OpenSSL 3.x changed the way invalid private key passwords are reported. Add
+a check to allow this to work correctly. (Prior to this fix, it was not
+possible to import a P12 file and set a passphrase, which is normally
+disabled).
+
+Fix wide-string buffer allocation issues reported and patched by K7IW.
+
 Don't allow illogical combinations of CQ and ITU zones in a station location.
 
-Allow cr-delimited Cabrillo files (iles from very old Mac apps).
+Allow cr-delimited Cabrillo files (files from very old Mac apps).
 
 Be more aggressive about deleting a corrupt upload database. If a get or put
 returns EINVAL (Oracle-speak for corrupt database), close and delete it before

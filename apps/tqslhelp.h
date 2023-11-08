@@ -17,7 +17,7 @@
 // tqslInternetFSHandler
 // ----------------------------------------------------------------------------
 
-class WXDLLIMPEXP_NET tqslInternetFSHandler : public wxFileSystemHandler {
+class tqslInternetFSHandler : public wxFileSystemHandler {
  public:
         virtual bool CanOpen(const wxString& location);
         virtual wxFSFile* OpenFile(wxFileSystem& fs, const wxString& location);
