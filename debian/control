@@ -8,7 +8,7 @@ Build-Depends: cmake,
                debhelper-compat (= 13),
                libcurl4-openssl-dev,
                libexpat1-dev,
-               liblmdb-dev,
+               libsqlite3-dev,
                libssl-dev,
                libwxgtk3.2-dev,
                zlib1g-dev
