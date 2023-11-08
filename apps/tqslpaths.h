@@ -38,12 +38,12 @@ class DocPaths : public wxPathList {
 #endif
 #if defined(_WIN32)
 		HKEY hkey;
-		if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"Software\\TrustedQSL",
+		if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("Software\\TrustedQSL"),
 			0, KEY_READ, &hkey) == ERROR_SUCCESS) {
 			DWORD dtype;
 			char path[TQSL_MAX_PATH_LEN];
 			DWORD bsize = sizeof path;
-			if (RegQueryValueEx(hkey, L"HelpDir", 0, &dtype, (LPBYTE)path, &bsize)
+			if (RegQueryValueEx(hkey, _T("HelpDir"), 0, &dtype, (LPBYTE)path, &bsize)
 				== ERROR_SUCCESS) {
 				Add(wxString::FromUTF8(path) + wxT("\\"));
 				Add(wxString::FromUTF8(path) + wxT("\\") + subdir);

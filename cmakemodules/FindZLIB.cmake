@@ -33,11 +33,15 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
+FILE(GLOB ZLIB_DIRECTORIES
+	"${CMAKE_SOURCE_DIR}/../zlib"
+	"${CMAKE_SOURCE_DIR}/../zlib-[0-9].*"
+	"C:/zlib"
+	"C:/zlib-[0-9].*"
+	)
 FIND_PATH(ZLIB_INCLUDE_DIR zlib.h
     "[HKEY_LOCAL_MACHINE\\SOFTWARE\\GnuWin32\\Zlib;InstallPath]/include"
-	"C:\\zlib\\"
-	"C:\\zlib-1.2.8\\"
-	"C:\\zlib-1.2.7\\"
+    ${ZLIB_DIRECTORIES}
 )
 
 SET(ZLIB_NAMES_DBG zlibd zlibd1 zlibstaticd)
@@ -51,24 +55,40 @@ else()
   set(ZLIB_NAMES_REL ${ZLIB_NAMES_REL} zlibstatic)
 endif()
 
+FILE(GLOB ZLIB_DIRECTORIES_DBG
+	"${CMAKE_SOURCE_DIR}/../zlib/Debug"
+	"${CMAKE_SOURCE_DIR}/../zlib/build/Debug"
+	"${CMAKE_SOURCE_DIR}/../zlib-[0-9].*/Debug"
+	"${CMAKE_SOURCE_DIR}/../zlib-[0-9].*/build/Debug"
+	"C:/zlib/Debug"
+	"C:/zlib/build/Debug"
+	"C:/zlib-[0-9].*/Debug"
+	"C:/zlib-[0-9].*/build/Debug"
+	)
 FIND_LIBRARY(ZLIB_LIBRARY_DBG
     NAMES
         ${ZLIB_NAMES_DBG}
     PATHS
         "[HKEY_LOCAL_MACHINE\\SOFTWARE\\GnuWin32\\Zlib;InstallPath]/lib"
-		"C:\\zlib\\Debug"
-		"C:\\zlib-1.2.8\\Debug"
-		"C:\\zlib-1.2.7\\Debug"
+        ${ZLIB_DIRECTORIES_DBG}
 )
 
+FILE(GLOB ZLIB_DIRECTORIES_REL
+	"${CMAKE_SOURCE_DIR}/../zlib/Release"
+	"${CMAKE_SOURCE_DIR}/../zlib/build/Release"
+	"${CMAKE_SOURCE_DIR}/../zlib-[0-9].*/Release"
+	"${CMAKE_SOURCE_DIR}/../zlib-[0-9].*/build/Release"
+	"C:/zlib/Release"
+	"C:/zlib/build/Release"
+	"C:/zlib-[0-9].*/Release"
+	"C:/zlib-[0-9].*/build/Release"
+	)
 FIND_LIBRARY(ZLIB_LIBRARY_REL
     NAMES
         ${ZLIB_NAMES_REL}
     PATHS
         "[HKEY_LOCAL_MACHINE\\SOFTWARE\\GnuWin32\\Zlib;InstallPath]/lib"
-		"C:\\zlib\\Release"
-		"C:\\zlib-1.2.8\\Release"
-		"C:\\zlib-1.2.7\\Release"
+        ${ZLIB_DIRECTORIES_REL}
 )
 
 MARK_AS_ADVANCED(ZLIB_LIBRARY_DBG ZLIB_LIBRARY_REL ZLIB_INCLUDE_DIR)

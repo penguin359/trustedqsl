@@ -588,7 +588,7 @@ tqsl_beginCabrillo(tQSL_Cabrillo *cabp, const char *filename) {
 	}
 	*((struct TQSL_CABRILLO **)cabp) = cab;
 	return 0;
- err:
+err:
 	strncpy(tQSL_ErrorFile, filename, sizeof tQSL_ErrorFile);
 	tQSL_ErrorFile[sizeof tQSL_ErrorFile-1] = 0;
 	tqsl_free_cab(cab);
@@ -774,7 +774,7 @@ tqsl_getCabrilloField(tQSL_Cabrillo cabp, tqsl_cabrilloField *field, TQSL_CABRIL
 	else
 		*error = TQSL_CABRILLO_NO_ERROR;
 	return 0;
- err:
+err:
 	cab->datap = NULL;		// Ignore this
 	strncpy(tQSL_ErrorFile, cab->filename, sizeof tQSL_ErrorFile);
 	tQSL_ErrorFile[sizeof tQSL_ErrorFile-1] = 0;

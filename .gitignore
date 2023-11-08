@@ -7,6 +7,9 @@ install_manifest.txt
 #emacs junk
 *~
 
+#vim junk
+*.swp
+
 # builder stuff
 tests.txt
 linter
@@ -44,14 +47,7 @@ lib/
 _UpgradeReport_Files/
 addlang.sh
 MOVE-TAG.bat
-apps/lang/de/wxstd.mo
-apps/lang/es/wxstd.mo
-apps/lang/fr/wxstd.mo
-apps/lang/it/wxstd.mo
-apps/lang/ja/wxstd.mo
-apps/lang/pt/wxstd.mo
-apps/lang/ru/wxstd.mo
-apps/lang/zh/wxstd.mo
+/build*/
 cmaker.bat
 tests/CTestTestfile.cmake
 ts2vc08.py

@@ -11,7 +11,8 @@ To inspect or change TQSL's log handling options, select the <B>File</B> menu's 
 <LI><a href="pref-log.htm#nonamateur">Allow Nonamateur Callsigns</a></li>
 <LI><a href="pref-log.htm#daterange">Prompt for QSO Date Range</a></li>
 <LI><a href="pref-log.htm#dupdetails">Display details of already uploaded QSOs when signing a log</a></li>
-<LI><a href="pref-log.htm#seconds">Ignore seconds in QSO times</a></l
+<LI><a href="pref-log.htm#seconds">Ignore seconds in QSO times</a></li>
+<LI><a href="pref-log.htm#ignorecall">Ignore callsigns in ADIF files</a></li>
 <LI><a href="pref-log.htm#qthops">Specify how to handle QTH details in ADIF logs</a></li>
 </UL>
 
@@ -24,7 +25,7 @@ file types. The <a href="signupload.htm">Select File to Sign and Upload</a> and
 <a href="signupload.htm">Select File to Sign and Save</a> dialogs set their <b>Files of type</b>
 selectors based on the extensions specified on this tab:
 <p>
-<img src="pref-opt.bmp" width=429 height=417 border=0>
+<img src="pref-opt.bmp" width=420 height=442 border=0>
 <P>
 In the example shown above, files whose names end in <code>.log</code> or <code>.cab</code>
 will be treated as Cabrillo files, while those with names ending in <code>.adi</code> or
@@ -61,6 +62,10 @@ If, when <a href="signupload.htm">signing and uploading a file</a> or <a href="s
 <a name="seconds"></a>
 <H5>Ignore seconds in QSO times</H5>
 If, when <a href="signupload.htm">signing and uploading a file</a> or <a href="signupload.htm">signing and saving a file</a>,  and this box is checked, then the seconds part of the QSO time are set to zero. This is useful if your log contains mistakenly logged QSOs, such as those from WSJT-X when the station contacted sends multiple confirmations. The duplicate QSOs can then be ignored when signing a log.
+
+<a name="ignorecall"></a>
+<H5>Ignore callsigns  in ADIF files</H5>
+If, when <a href="signupload.htm">signing and uploading a file</a> or <a href="signupload.htm">signing and saving a file</a>,  and this box is checked, then the callsigns of the operator in the ADIF file (STATION_CALLSIGN, OPERATOR) for the QSO record are ignored. This is useful if your log contains an invalid callsign for logged QSOs.
 
 <a name="qthops"></a>
 <H5>Set options for handling QTH details in ADIF logs</H5>

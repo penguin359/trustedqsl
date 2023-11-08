@@ -15,7 +15,7 @@ if [ "x$1" = "x-legacy" ]; then
 fi
 
 file apps/tqsl.app/Contents/MacOS/tqsl | grep -q ppc && IMGNAME="tqsl-legacy"
-file apps/tqsl.app/Contents/MacOS/tqsl | grep -q arm64 && IMGNAME="tqsl-arm64"
+file apps/tqsl.app/Contents/MacOS/tqsl | grep -q i386 && IMGNAME="tqsl-legacy"
 
 /bin/echo -n "Copying files to image directory... "
 
@@ -42,7 +42,8 @@ do
     do
 	mkdir $WORKDIR/TrustedQSL/$app.app/Contents/Resources/$lang.lproj
 	cp apps/lang/$lang/tqslapp.mo $WORKDIR/TrustedQSL/$app.app/Contents/Resources/$lang.lproj
-	cp apps/lang/$lang/wxstd.mo $WORKDIR/TrustedQSL/$app.app/Contents/Resources/$lang.lproj
+	[ -f apps/lang/$lang/wxstd.mo ] && cp apps/lang/$lang/wxstd.mo $WORKDIR/TrustedQSL/$app.app/Contents/Resources/$lang.lproj
+	[ -f apps/lang/$lang/wxstd-3.2.mo ] && cp apps/lang/$lang/wxstd-3.2.mo $WORKDIR/TrustedQSL/$app.app/Contents/Resources/$lang.lproj
     done
 # Make an empty 'en.lproj' folder so wx knows it's default
     mkdir $WORKDIR/TrustedQSL/$app.app/Contents/Resources/en.lproj

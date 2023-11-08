@@ -106,7 +106,7 @@ tqsl_beginADIF(tQSL_ADIF *adifp, const char *filename) {
 	}
 	*((struct TQSL_ADIF **)adifp) = adif;
 	return 0;
- err:
+err:
 	free_adif(adif);
 	return 1;
 }

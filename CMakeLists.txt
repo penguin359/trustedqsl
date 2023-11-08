@@ -86,18 +86,10 @@ foreach(flag_var
 endforeach(flag_var)
 else()
 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
+	set(gtest_force_shared_crt ON CACHE BOOL "Use shared (DLL) run-time lib even when Google Test is built as static lib." FORCE)
 endif()
 
-# Prefer LMDB, fall back to BDB if that's not available
-find_package(LMDB)
-if(NOT LMDB_FOUND)
-	set (LMDB_LIBRARIES "")
-	find_package(BDB REQUIRED)
-	set (LMDB_INCLUDE_DIR "")
-else()
-	add_definitions(-DUSE_LMDB)
-	set (BDB_INCLUDE_DIR "")
-endif()
+find_package(SQLite3 REQUIRED)
 
 if(NOT APPLE AND NOT WIN32)
 	add_definitions("-DCONFDIR=\"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/TrustedQSL/\"")
@@ -168,7 +160,14 @@ IF(TQSL_VERSION_UPDATE AND NOT TQSL_VERSION_UPDATE EQUAL 0)
 else()
 	set(TQSLVERSION "${TQSL_VERSION_MAJOR}.${TQSL_VERSION_MINOR}")
 endif()
-#
+
+if(WIN32)
+set(TQSLLIBNAME "tqsllib2") #for compatibility with existing software
+else()
+set(TQSLLIBNAME "tqsllib")
+endif()
+
 add_subdirectory(src) #tqsllib
 add_subdirectory(apps)
 macro_optional_add_subdirectory(tests)
+enable_testing()

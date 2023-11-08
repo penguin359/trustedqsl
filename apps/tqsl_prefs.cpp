@@ -59,13 +59,13 @@ Preferences::Preferences(wxWindow *parent, wxHtmlHelpController *help)
 	wxBoxSizer *butsizer = new wxBoxSizer(wxHORIZONTAL);
 
 	wxButton *button = new wxButton(this, ID_HELP_BUT, _("Help") );
-	butsizer->Add(button, 0, wxALIGN_RIGHT | wxALL, 10);
+	butsizer->Add(button, 0, wxALL, 10);
 
 	button = new wxButton(this, ID_OK_BUT, _("OK") );
-	butsizer->Add(button, 0, wxALIGN_RIGHT | wxALL, 10);
+	butsizer->Add(button, 0, wxALL, 10);
 
 	button = new wxButton(this, ID_CAN_BUT, _("Cancel") );
-	butsizer->Add(button, 0, wxALIGN_LEFT | wxALL, 10);
+	butsizer->Add(button, 0, wxALL, 10);
 
 	topsizer->Add(butsizer, 0, wxALIGN_CENTER);
 
@@ -484,6 +484,11 @@ LogPrefs::LogPrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm")) {
 	ignoresecs->SetValue(allow);
 	sizer->Add(ignoresecs, 0, wxLEFT|wxRIGHT|wxTOP, 10);
 
+	ignorecall = new wxCheckBox(this, ID_PREF_IGNORE_CALLSIGN, _("Ignore callsigns in ADIF files"));
+	config->Read(wxT("IgnoreADIFCallsign"), &allow, DEFAULT_IGNORE_CALLSIGN);
+	ignorecall->SetValue(allow);
+	sizer->Add(ignorecall, 0, wxLEFT|wxRIGHT|wxTOP, 10);
+
 	int logverify;
         config->Read(wxT("LogVerify"), &logverify, TQSL_LOC_REPORT);
 	if (logverify != TQSL_LOC_IGNORE && logverify != TQSL_LOC_REPORT && logverify != TQSL_LOC_UPDATE) {
@@ -512,6 +517,7 @@ bool LogPrefs::TransferDataFromWindow() {
 	config->Write(wxT("DateRange"), daterange->GetValue());
 	config->Write(wxT("DispDupes"), dispdupes->GetValue());
 	config->Write(wxT("IgnoreSeconds"), ignoresecs->GetValue());
+	config->Write(wxT("IgnoreADIFcallsign"), ignorecall->GetValue());
 	config->Write(wxT("LogVerify"), handleQTH->GetSelection());
 
 	return true;

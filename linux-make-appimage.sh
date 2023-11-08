@@ -47,7 +47,6 @@ cd build &&
 		-i AppDir/TrustedQSL.png \
 		--output appimage \
 		--appdir AppDir && \
-	chmod 755 TQSL-*x86_64.AppImage  && \
-	cp TQSL-*.AppImage $HERE/TQSL-x86_64.AppImage && \
+	cp TQSL-*.AppImage $HERE/tqsl-${VERSION}_x86_64.AppImage && \
 	cd $HERE && \
 	rm -rf $TEMPDIR

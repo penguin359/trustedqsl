@@ -3001,7 +3001,7 @@ of the actual data in \c buff.
 Note that the(len) printed in the output refers to the length of the buffer
 which may be greater than the length that has to be printed.
 
- \b Example:
+\b Example:
 This is an example of printing a memory buffer object that contains 10 bytes:
 \code
   0x80974653(10) 00 01 02 03 04 05 06 07 08 09
@@ -3025,7 +3025,7 @@ in the memory buffer; bytes are separated by a space character.
 The string starts with pointer to binary data followed by the length of the
 data enclosed in parenthesis.
 
- \b Example:
+\b Example:
 This is an example of printing ten bytes from a memory buffer:
 \code
   0x80974653(10) 00 01 02 03 04 05 06 07 08 09
@@ -3041,7 +3041,7 @@ wxString
 wxJSONValue::MemoryBuffToString(const void* buff, size_t len, size_t actualLen) {
     wxString s;
     size_t buffLen = actualLen;
-    if (buffLen == (size_t) -1)    {
+    if (buffLen == static_cast <size_t> (-1))    {
         buffLen = len;
     }
     s.Printf(_T("%p (%u) "), buff, buffLen);

@@ -326,7 +326,7 @@ QSLApp::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 			break;
 		} while (1);
 
- abortSigning:
+abortSigning:
 
 		if (cancelled)
 			cerr << "Signing cancelled" << endl;

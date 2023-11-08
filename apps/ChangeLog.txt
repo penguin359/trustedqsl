@@ -1,9 +1,81 @@
 TQSL changes
 ============
+2.7.1
+----------
+Allow TQSL to run on Windows XP. Note that this is a stopgap and XP is well
+past end of support, continued operation is not guaranteed.
+
+For Mac, fix the date range dialog box to show more than one character for input.
+
+Fix one-by-one US callsign requests - they're stuck on the end date request.
+
+On Windows, if the main TQSL window is not visible (off screen), force it to
+appear on the default monitor.
+
+Handle corrupted private key with a less cryptic error message.
+
+2.7
+----------
+Fix Callsign Certificate request handling when Logbook returns an error
+message saying that there was an error. Don't mark it as pending ARRL action,
+leading operators to assume ARRL is working the request when it was never
+properly submitted. 
+
+Add command line option to remove Uploads database in the event it gets
+jumbled to the point that SQLite3 can't repair it.
+
+Allow OPERATOR in ADIF files to have long values, as some applications
+incorrectly allow the entry of names in those fields, not callsigns. Any
+non-callsign entry in OPERATOR is ignored.
+
+Update portable call handling to swap prefix/suffix around when the callsign
+is in portable/home call arrangement (like MU/K1MU).
+
+Update configuration for Linux to follow packaging guidelines. Add a 
+Flatpak build to permit build of a portable Linux package.
+
+Add a preference that allows the callsign fields in ADIF files to be 
+ignored.
+
+Correct handling of portable calls for non-US stations working portable
+in the US (P5NOP/W4) to not require a ULS lookup for the base callsign.
+
+Detect download/upload threads not making progress and abort the attempt.
+
+Correct ADIF editor handling of certain modes (PKT, PAC, FM, etc.) so
+the mode is recognized properly.
+
+Correct a defect in the ADIF editor that was causing the SUBMODE to be
+emitted twice for each QSO.
+
+Add an ADIF header to files created using the ADIF editor.
+
+Save the last used Station Location and select that when signing a log.
+
+Correct defect that kept the IOTA identifier from appearing in the station
+location editor. (The location was being properly saved, but would not be
+set in the editor when attempting to edit the station location.
+
+Fix display of properties of a passphrase-protected private key so there is
+no longer an OpenSSL error displayed.
+
+Expand any of the certificate folders where there's a callsign certificate in
+that category (expired/replaced, etc.)
+
+Add header to exported ADIF files (patch from Florian, DF2ET).
+
+Allow ignoring callsign in ADIF files via a preference.
+
+Remove dependency on Oracle Berkeley DB and replace with the more stable LMDB
+(Lightning Memory-Mapped Database).
+
+Restore backed-up upload database whenever that database becomes corrupt.
+(This instability is why Oracle BDB was abandoned.)
+
 2.6.5
 ----------
-Change the widget used for pulldown menus because Microsoft's windows 11 22H2 preview
-broke them and Microsoft refuses to fix the bug.
+Change the widget used for pulldown menus because Microsoft's windows 11 22H2
+preview broke them and Microsoft refuses to fix the bug.
 
 Correct the portable callsign fix - it didn't work properly and didn't cover all cases.
 
