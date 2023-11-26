@@ -1,3 +1,9 @@
+trustedqsl (2.7.1-1~bpo12+1) bookworm-backports; urgency=medium
+
+  * Rebuild for bookworm-backports.
+
+ -- tony mancill <tmancill@debian.org>  Sun, 26 Nov 2023 09:08:41 -0800
+
 trustedqsl (2.7.1-1) unstable; urgency=medium
 
   * New upstream version 2.7.1
