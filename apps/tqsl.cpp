@@ -2819,16 +2819,16 @@ retry_upload:
 	errorbuf[0] = '\0';
 	curl_easy_setopt(curlReq, CURLOPT_ERRORBUFFER, errorbuf);
 
-	curl_mime *mime;
-	curl_mimepart *part;
+	struct curl_httppost* post = NULL, *lastitem = NULL;
 
-	mime = curl_mime_init(curlReq);
-	part = curl_mime_addpart(mime);
-	curl_mime_data(part, reinterpret_cast<const char *>(content), clen);
-	curl_mime_name(part, cpUF);
-	curl_mime_filename(part, filename);
+	curl_formadd(&post, &lastitem,
+		CURLFORM_PTRNAME, cpUF,
+		CURLFORM_BUFFER, filename,
+		CURLFORM_BUFFERPTR, content,
+		CURLFORM_BUFFERLENGTH, clen,
+		CURLFORM_END);
 
-	curl_easy_setopt(curlReq, CURLOPT_MIMEPOST, mime);
+	curl_easy_setopt(curlReq, CURLOPT_HTTPPOST, post);
 
 	intptr_t retval;
 
@@ -2851,8 +2851,8 @@ retry_upload:
 			upload = new UploadDialog(this, wxString(_("Uploading Callsign Certificate")), wxString(_("Uploading Callsign Certificate Request...")));
 		}
 
-		curl_easy_setopt(curlReq, CURLOPT_XFERINFOFUNCTION, &UploadDialog::UpdateProgress);
-		curl_easy_setopt(curlReq, CURLOPT_XFERINFODATA, upload);
+		curl_easy_setopt(curlReq, CURLOPT_PROGRESSFUNCTION, &UploadDialog::UpdateProgress);
+		curl_easy_setopt(curlReq, CURLOPT_PROGRESSDATA, upload);
 		curl_easy_setopt(curlReq, CURLOPT_NOPROGRESS, 0);
 
 		UploadThread thread(curlReq, upload);
@@ -2966,7 +2966,7 @@ retry_upload:
 	}
 	if (frame && upload) upload->Destroy();
 
-	curl_mime_free(mime);
+	curl_formfree(post);
 	curl_easy_cleanup(curlReq);
 	curlReq = NULL;
 
