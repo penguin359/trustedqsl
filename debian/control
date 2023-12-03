@@ -6,6 +6,7 @@ Uploaders: Christoph Berg <myon@debian.org>,
 Section: hamradio
 Priority: optional
 Build-Depends: cmake,
+               pkgconf,
                debhelper (>= 9),
                libcurl4-openssl-dev,
                libexpat1-dev,
