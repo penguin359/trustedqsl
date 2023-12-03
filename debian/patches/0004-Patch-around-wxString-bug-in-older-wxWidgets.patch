@@ -1,0 +1,21 @@
+From: "Loren M. Lang" <lorenl@north-winds.org>
+Date: Sun, 3 Dec 2023 03:27:56 -0800
+Subject: Patch around wxString bug in older wxWidgets
+
+---
+ apps/tqsl.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/apps/tqsl.cpp b/apps/tqsl.cpp
+index 2991bfc..e69ed57 100644
+--- a/apps/tqsl.cpp
++++ b/apps/tqsl.cpp
+@@ -5429,7 +5429,7 @@ QSLApp::OnInit() {
+ 		if (!wxGetEnv(wxT("APPDIR"), &rsrcDir)) {
+ 			wxString home;
+ 			wxGetEnv(wxT("HOME"), &home);
+-			rsrcDir = home + "/.tqsl";
++			rsrcDir = home + L"/.tqsl";
+ 		}
+ 		if (!wxDirExists(rsrcDir)) {
+ 			wxMkdir(rsrcDir);
