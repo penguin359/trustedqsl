@@ -5429,7 +5429,7 @@ QSLApp::OnInit() {
 		if (!wxGetEnv(wxT("APPDIR"), &rsrcDir)) {
 			wxString home;
 			wxGetEnv(wxT("HOME"), &home);
-			rsrcDir = home + "/.tqsl";
+			rsrcDir = home + L"/.tqsl";
 		}
 		if (!wxDirExists(rsrcDir)) {
 			wxMkdir(rsrcDir);
