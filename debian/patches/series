@@ -1,1 +1,2 @@
 0001-Added-minimal-CMake-module-for-finding-SQLite3-with-.patch
+0002-Reverted-patch-2ea0db84-from-upstream-Git-repo.patch
