@@ -106,13 +106,15 @@ class TQSLWizLocPage : public TQSLWizPage {
 
  private:
 	vector<void *> p1_controls;	// First page
+	vector<int> p1_ids;
 	vector<void *> p2_controls;	// Second page
+	vector<int> p2_ids;
 // location controls
 	wxStaticText *callLabel;	// Top label
-	wxOwnerDrawnComboBox *ctlCallSign;	// Callsign
-	wxOwnerDrawnComboBox *ctlEntity;		// DXCC
-	wxOwnerDrawnComboBox *ctlCQZ;		// CQ Zone
-	wxOwnerDrawnComboBox *ctlITUZ;		// ITU Zone
+	tqslComboBox *ctlCallSign;	// Callsign
+	tqslComboBox *ctlEntity;	// DXCC
+	tqslComboBox *ctlCQZ;		// CQ Zone
+	tqslComboBox *ctlITUZ;		// ITU Zone
 	wxTextCtrl *ctlGrid;		// Gridsquare
 	wxTextCtrl *ctlIOTA;		// IOTA
 	wxBoxSizer *boxITUZ;
@@ -121,15 +123,15 @@ class TQSLWizLocPage : public TQSLWizPage {
 // Secondary Pages
 	wxBoxSizer *boxPAS;		// Primary Administrative Subdivision (STATE)
 	wxStaticText *lblPAS;
-	wxOwnerDrawnComboBox *ctlPAS;
+	tqslComboBox *ctlPAS;
 	bool PASexists;			// Is there a PAS?
 	wxBoxSizer *boxSAS;		// Secondary AS - County
 	wxStaticText *lblSAS;
-	wxOwnerDrawnComboBox *ctlSAS;
+	tqslComboBox *ctlSAS;
 	bool SASexists;			// Is there a SAS?
 	wxBoxSizer *boxPark;		// US/DX Park
 	wxStaticText *lblPark;
-	wxOwnerDrawnComboBox *ctlPark;
+	tqslComboBox *ctlPark;
 	bool Parkexists;		// Is there a Park?
 
 	typedef map <std::string, std::string> ForcedMap;
@@ -164,19 +166,5 @@ class TQSLWizFinalPage : public TQSLWizPage {
 	vector<char *> item_data;
 
 	DECLARE_EVENT_TABLE()
-};
-
-// ID values for the GUI controls
-enum {
-	CTL_CALL = TQSL_ID_LOW + 1,
-	CTL_DXCC,
-	CTL_GRID,
-	CTL_ITU,
-	CTL_CQ,
-	CTL_IOTA,
-	CTL_PAS,
-	CTL_SAS,
-	CTL_PARK,
-	CTL_ZERR
 };
 #endif	// __tqslwiz_h

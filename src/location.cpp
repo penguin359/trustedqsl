@@ -4072,15 +4072,26 @@ tqsl_importTQSLFile(const char *file, int(*cb)(int type, const char *, void *), 
 			return 1;
 		}
 		// Clear stored config data to force re-reading new config
-		tqsl_xml_config.clear();
 		DXCCMap.clear();
 		DXCCList.clear();
+		DeletedMap.clear();
+		DXCCZoneMap.clear();
+		DXCCStartMap.clear();
+		DXCCEndMap.clear();
 		BandList.clear();
 		ModeList.clear();
+		PropModeList.clear();
+		SatelliteList.clear();
 		tqsl_page_map.clear();
 		tqsl_field_map.clear();
 		tqsl_adif_map.clear();
+		tqsl_adif_mode_map.clear();
+		tqsl_adif_submode_map.clear();
 		tqsl_cabrillo_map.clear();
+		tqsl_cabrillo_user_map.clear();
+		tqsl_xml_config.clear();
+		// Now reload it all
+		tqsl_load_xml_config();
 		string version = "Configuration V" + section.getAttribute("majorversion").first + "."
 			+ section.getAttribute("minorversion").first + "\n" + fn;
 		if (cb) {

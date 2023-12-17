@@ -348,34 +348,33 @@ QSODataDialog::QSODataDialog(wxWindow *parent, wxString& filename, wxHtmlHelpCon
 		topsizer->Add(_recno_label_ctrl, 0, wxALIGN_CENTER|wxALL, 5);
 		_recno = 1;
 		sizer = new wxBoxSizer(wxHORIZONTAL);
-		// Use a really tiny label font on the buttons, as the labels are there
-		// for accessibility only.
-		wxFont f(1, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 		_recbottom_ctrl = new wxBitmapButton(this, QD_RECBOTTOM, wxBitmap(bottom_xpm));
-		_recbottom_ctrl->SetLabel(_("Go to the first QSO in this log"));
-		_recbottom_ctrl->SetFont(f);
+		ACCESSIBLE(_recbottom_ctrl, ButtonAx);
+		_recbottom_ctrl->SetName(wxT("Go to the first QSO in this log"));
 		sizer->Add(_recbottom_ctrl, 0, wxTOP|wxBOTTOM, 5);
 		_recdown_ctrl = new wxBitmapButton(this, QD_RECDOWN, wxBitmap(left_xpm));
-		_recdown_ctrl->SetLabel(_("Go to the previous QSO in this log"));
-		_recdown_ctrl->SetFont(f);
+		ACCESSIBLE(_recbottom_ctrl, ButtonAx);
+		_recdown_ctrl->SetName(wxT("Go to the previous QSO in this log"));
 		sizer->Add(_recdown_ctrl, 0, wxTOP|wxBOTTOM, 5);
 		_recno_ctrl = new wxTextCtrl(this, QD_RECNO, wxT(""), wxDefaultPosition,
 			wxSize(4*TEXT_WIDTH, TEXT_HEIGHT));
 		_recno_ctrl->Enable(FALSE);
 		sizer->Add(_recno_ctrl, 0, wxALL, 5);
 		_recup_ctrl = new wxBitmapButton(this, QD_RECUP, wxBitmap(right_xpm));
-		_recup_ctrl->SetLabel(_("Go to the next QSO in this log"));
-		_recup_ctrl->SetFont(f);
+		ACCESSIBLE(_recup_ctrl, ButtonAx);
+		_recup_ctrl->SetName(wxT("Go to the next QSO in this log"));
 		sizer->Add(_recup_ctrl, 0, wxTOP|wxBOTTOM, 5);
 		_rectop_ctrl = new wxBitmapButton(this, QD_RECTOP, wxBitmap(top_xpm));
-		_rectop_ctrl->SetLabel(_("Go to the last QSO in this log"));
-		_rectop_ctrl->SetFont(f);
+		ACCESSIBLE(_rectop_ctrl, ButtonAx);
+		_rectop_ctrl->SetName(wxT("Go to the last QSO in this log"));
 		sizer->Add(_rectop_ctrl, 0, wxTOP|wxBOTTOM, 5);
 		if (_reclist->size() > 0)
 			rec = *(_reclist->begin());
 		topsizer->Add(sizer, 0, wxALIGN_CENTER);
 		sizer = new wxBoxSizer(wxHORIZONTAL);
 		_recadd_ctrl = new wxButton(this, QD_RECNEW, _("Add QSO"));
+		ACCESSIBLE(_recadd_ctrl, ButtonAx);
+		_recadd_ctrl->SetName(wxT("Add QSO"));
 		sizer->Add(_recadd_ctrl, 0, wxALL, 5);
 		sizer->Add(new wxButton(this, QD_RECDELETE, _("Delete")), 0, wxALL, 5);
 		topsizer->Add(sizer, 0, wxALIGN_CENTER);

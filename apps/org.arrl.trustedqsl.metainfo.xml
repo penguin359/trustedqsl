@@ -65,6 +65,12 @@
      See https://www.freedesktop.org/software/appstream/docs/chap-AppStream-Misc.html#sect-AppStream-Misc-VerCmp
     -->
     <releases>
+	<release version="2.7.2" date="2023-12-09">
+	    <description><p>Accessibility improvements, MacOS cert handling.</p></description>
+	</release>
+	<release version="2.7.1" date="2023-10-17">
+	    <description><p>Fixes for 1x1 callsign handling, windows XP support.</p></description>
+	</release>
 	<release version="2.7" date="2023-10-01">
 	    <description><p>Conversion to sqlite, updates to callsign certificate handling to correct handling of portable and 1x1 callsigns.</p></description>
 	</release>

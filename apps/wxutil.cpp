@@ -1,11 +1,12 @@
 /***************************************************************************
-                          wxutil.cpp  -  description
-                             -------------------
-    begin                : Thu Aug 14 2003
-    copyright            : (C) 2003 by ARRL
-    author               : Jon Bloom
-    email                : jbloom@arrl.org
-    revision             : $Id$
+
+	                       wxutil.cpp  -  description
+	                          -------------------
+	 begin                : Thu Aug 14 2003
+	 copyright            : (C) 2003 by ARRL
+	 author               : Jon Bloom
+	 email                : jbloom@arrl.org
+	 revision             : $Id$
  ***************************************************************************/
 
 #ifdef HAVE_CONFIG_H
@@ -16,8 +17,11 @@
 #include <wx/dir.h>
 #include <wx/config.h>
 #include <wx/filename.h>
+#include <wx/treectrl.h>
+#include <wx/textctrl.h>
 #include "tqsllib.h"
 #include "tqslerrno.h"
+#include <vector>
 
 #if wxMAJOR_VERSION == 3 && wxMINOR_VERSION > 0
 #define WX31		// wxWidgets isn't done until stuff doesn't run
@@ -161,8 +165,8 @@ static const char *error_strings[] = {
 	__("This file can not be processed due to a system error"),	/* TQSL_FILE_SYSTEM_ERROR */
 	__("The format of this file is incorrect."),		/* TQSL_FILE_SYNTAX_ERROR */
 	__("Callsign certificate could not be installed"),	/* TQSL_CERT_ERROR */
-        __("Callsign Certificate does not match QSO details"),	/* TQSL_CERT_MISMATCH */
-        __("Station Location does not match QSO details"),	/* TQSL_LOCATION_MISMATCH */
+	__("Callsign Certificate does not match QSO details"),	/* TQSL_CERT_MISMATCH */
+	__("Station Location does not match QSO details"),	/* TQSL_LOCATION_MISMATCH */
 };
 
 static wxString
@@ -179,8 +183,14 @@ getLocalizedErrorString_v(int err) {
 			return wxString::FromUTF8(tQSL_CustomError);
 		}
 	}
-	if (err == TQSL_DB_ERROR && tQSL_CustomError[0] != 0) {
-		return wxString::Format(_("Database Error: %hs"), tQSL_CustomError);
+	if (err == TQSL_DB_ERROR) {
+		if (!strcmp(tQSL_CustomError, "dblocked")) {
+			return _("TQSL is unable to sign QSOs because another instance of TQSL is busy.\nTerminate any other copies of TQSL and try again.");
+		} else if (tQSL_CustomError[0] != 0) {
+			return wxString::Format(_("Database Error: %hs"), tQSL_CustomError);
+		} else {
+			return _("Uploads database error");
+		}
 	}
 
 	if (err == TQSL_SYSTEM_ERROR || err == TQSL_FILE_SYSTEM_ERROR) {
@@ -242,7 +252,7 @@ getLocalizedErrorString_v(int err) {
 	}
 	adjusted_err = (err - TQSL_ERROR_ENUM_BASE) & ~0x1000;
 	if (adjusted_err < 0 ||
-	    adjusted_err >=
+		adjusted_err >=
 		static_cast<int>(sizeof error_strings / sizeof error_strings[0])) {
 		return wxString::Format(_("Invalid error code: %d"), err);
 	}
@@ -566,4 +576,529 @@ wxLanguage langWX2toWX3(wxLanguage wx2) {
 	}
 #endif
 	return wx2;
+}
+
+#if (wxUSE_ACCESSIBILITY && defined(__WXMAC__))
+#if wxMAJOR_VERSION < 3
+#define nullptr NULL
+#endif
+
+WindowAccessible::WindowAccessible(wxWindow* win) : wxAccessible(win) {
+	// - already being done - if (win) win->SetAccessible(this);
+}
+
+wxAccStatus WindowAccessible::GetName(int childId, wxString* name) {
+	wxCHECK(GetWindow() != nullptr, wxACC_FAIL);
+
+	name->Clear();
+	// If the control has children, don't override their names
+	if (childId > 0)
+		return wxACC_NOT_IMPLEMENTED;
+	*name = GetWindow()->GetName();
+	return wxACC_OK;
+}
+
+#if (wxMAJOR_VERSION < 3)
+
+// Just an alias
+#define TreeCtrlAx WindowAccessible
+#define ComboBoxAx WindowAccessible
+#define ButtonAx WindowAccessible
+
+#else  // Mac and wx3+
+// utility functions
+namespace {
+enum treeNodeType {
+	RootNode,
+	ParentNode,
+	LeafNode
+};
+class treeInfo {
+ public:
+	treeInfo(treeNodeType nt, int position, wxTreeItemId id, wxString name) : _nt(nt), _position(position), _id(id), _name(name) {}
+	treeNodeType _nt;
+	int _position;
+	wxTreeItemId _id;
+	wxString _name;
+};
+static std::vector <treeInfo> tree;
+
+static void AddKids(const wxTreeCtrl* ctrl, wxTreeItemId parent, wxString parentName) {
+	wxTreeItemIdValue cookie;
+	wxString name;
+	wxTreeItemId kid = ctrl->GetFirstChild(parent, cookie);
+	while (kid.IsOk()) {
+		wxTreeItemId inner = kid;
+		while(inner.IsOk()) {
+			// Walk the siblings below the root
+			treeNodeType nt = LeafNode;
+			if (ctrl->GetChildrenCount(inner))
+				nt = ParentNode;
+			name = ctrl->GetItemText(inner);
+			if (!parentName.IsEmpty()) {
+				name = parentName + wxT(" : ") + name;
+			}
+			tree.push_back(treeInfo(nt, tree.size(), inner, name));
+			if (nt == ParentNode) {
+				AddKids(ctrl, inner, name);
+			}
+			inner = ctrl->GetNextSibling(inner);
+		}
+		kid = ctrl->GetNextChild(kid, cookie);
+	}
+}
+
+static void LoadTreeInfo(const wxTreeCtrl* ctrl) {
+	tree.clear();
+	wxTreeItemId item = ctrl->GetRootItem();
+	wxString name = ctrl->GetName();
+	tree.push_back(treeInfo(RootNode, tree.size(), item, name));
+	wxTreeItemIdValue cookie;
+	wxTreeItemId childId = ctrl->GetFirstChild(item, cookie);
+	if (childId.IsOk()) {
+		wxTreeItemId inner = childId;
+		while(inner.IsOk()) {
+			// Walk the siblings below the root
+			treeNodeType nt = LeafNode;
+			if (ctrl->GetChildrenCount(inner)) {
+				nt = ParentNode;
+			}
+			name = ctrl->GetItemText(inner);
+			tree.push_back(treeInfo(nt, tree.size(), inner, name));
+			if (nt == ParentNode) {
+				AddKids(ctrl, inner, name);
+			}
+			inner = ctrl->GetNextSibling(inner);
+		}
+	}
+}
+
+unsigned FindItemPosition(const wxTreeCtrl *ctrl, wxTreeItemId id) {
+	// Return the 1-based count of the item's position in the pre-order
+	// visit of the items in the tree (not counting the root item which we
+	// assume is a dummy that never matches id)
+	LoadTreeInfo(ctrl);
+	for (int position = 0; position < tree.size(); position++) {
+		if (tree[position]._id == id)
+			return position;
+	}
+	return 0;
+}
+
+wxTreeItemId FindItem(const wxTreeCtrl *ctrl, int nn) {
+	// The inverse of the function above
+	LoadTreeInfo(ctrl);
+	if (nn < 0 || nn >= tree.size())
+		return 0;
+	return tree[nn]._id;
+}
+} // namespace
+
+TreeCtrlAx::TreeCtrlAx(wxTreeCtrl *ctrl) : WindowAccessible(ctrl) {
+}
+
+TreeCtrlAx::~TreeCtrlAx() {}
+
+wxAccStatus TreeCtrlAx::GetChild(int childId, wxAccessible** child) {
+	if (childId == wxACC_SELF) {
+		*child =  this;
+	} else {
+		*child = NULL;
+	}
+	return wxACC_OK;
+}
+
+wxAccStatus TreeCtrlAx::GetChildCount(int* childCount) {
+	wxCHECK(GetWindow() != nullptr, wxACC_FAIL);
+	wxTreeCtrl* ctrl = GetCtrl();
+	if (!ctrl)
+		return wxACC_FAIL;
+
+	*childCount = ctrl->GetCount();
+	return wxACC_OK;
+}
+
+wxAccStatus TreeCtrlAx::GetDefaultAction(int WXUNUSED(childId), wxString* actionName) {
+	actionName->clear();
+
+	return wxACC_OK;
+}
+
+// Returns the description for this object or a child.
+wxAccStatus TreeCtrlAx::GetDescription(int childId, wxString *description) {
+	if (childId == wxACC_SELF) {
+		*description = _("Tree Ctrl - use control/option/arrow keys to navigate");
+	} else {
+		description->Clear();
+	}
+	return wxACC_OK;
+}
+
+// This isn't really used yet by wxWidgets as patched by Audacity for
+// Mac accessibility, as of Audacity 2.3.2, but here it is anyway, keeping the
+// analogy with TrackPanelAx
+wxAccStatus TreeCtrlAx::GetFocus(int *childId, wxAccessible **child) {
+	wxCHECK(GetWindow() != nullptr, wxACC_FAIL);
+	wxTreeCtrl* ctrl = GetCtrl();
+	if (!ctrl)
+		return wxACC_FAIL;
+
+	wxTreeItemId item = ctrl->GetFocusedItem();
+	int id = FindItemPosition(ctrl, item);
+	*childId = id;
+	*child = nullptr;
+	return wxACC_OK;
+}
+
+// Returns help text for this object or a child, similar to tooltip text.
+wxAccStatus TreeCtrlAx::GetHelpText(int WXUNUSED(childId), wxString *helpText) {
+	wxCHECK(GetWindow() != nullptr, wxACC_FAIL);
+	helpText->clear();
+
+	return wxACC_OK;
+}
+
+// Returns the keyboard shortcut for this object or child.
+// Return e.g. ALT+K
+wxAccStatus TreeCtrlAx::GetKeyboardShortcut(int WXUNUSED(childId), wxString *shortcut) {
+	wxCHECK(GetWindow() != nullptr, wxACC_FAIL);
+	shortcut->clear();
+
+	return wxACC_OK;
+}
+
+wxAccStatus TreeCtrlAx::GetLocation(wxRect& rect, int elementId) {
+	wxCHECK(GetWindow() != nullptr, wxACC_FAIL);
+	wxTreeCtrl *ctrl = GetCtrl();
+	if (!ctrl)
+		return wxACC_FAIL;
+
+	if (elementId == wxACC_SELF) {
+		rect = ctrl->GetRect();
+	} else {
+		wxTreeItemId item = FindItem(ctrl, elementId);
+      		if (!(item && ctrl->GetBoundingRect(item, rect))) {
+#ifdef wxACC_INVALID_ARG
+			return wxACC_INVALID_ARG;
+#else
+			return wxACC_FAIL;
+#endif
+		}
+	}
+	rect.SetPosition(ctrl->GetParent()->ClientToScreen(rect.GetPosition()));
+	return wxACC_OK;
+}
+
+wxAccStatus TreeCtrlAx::GetName(int childId, wxString* name) {
+	wxCHECK(GetWindow() != nullptr, wxACC_FAIL);
+	if (childId == wxACC_SELF) {
+		return WindowAccessible::GetName(childId, name);
+	} else {
+		wxTreeCtrl* ctrl = GetCtrl();
+		if (!ctrl) {
+			return wxACC_FAIL;
+		}
+		wxTreeItemId item = FindItem(ctrl, childId);
+		if (item) {
+			*name = tree[childId]._name;
+			return wxACC_OK;
+		} else {
+#ifdef wxACC_INVALID_ARG
+			return wxACC_INVALID_ARG;
+#else
+			return wxACC_FAIL;
+#endif
+		}
+	}
+}
+
+wxAccStatus TreeCtrlAx::GetRole(int childId, wxAccRole* role) {
+	// Not sure if this correct, but it is analogous with what we use in
+	// TrackPanel
+
+	*role = childId == wxACC_SELF ? wxROLE_SYSTEM_PANE : wxROLE_SYSTEM_STATICTEXT;
+	return wxACC_OK;
+}
+
+// Returns a state constant.
+wxAccStatus TreeCtrlAx::GetState(int childId, long* state) {
+	wxCHECK(GetWindow() != nullptr, wxACC_FAIL);
+	wxTreeCtrl* ctrl = GetCtrl();
+	if (!ctrl)
+		return wxACC_FAIL;
+
+	*state =  wxACC_STATE_SYSTEM_FOCUSABLE | wxACC_STATE_SYSTEM_SELECTABLE;
+
+	if (childId == wxACC_SELF) {
+		if (ctrl->IsExpanded(ctrl->GetRootItem())) {
+			*state |= wxACC_STATE_SYSTEM_EXPANDED;
+		} else {
+			*state |= wxACC_STATE_SYSTEM_COLLAPSED;
+		}
+		return wxACC_OK;
+	} else {
+		wxTreeItemId item = FindItem(ctrl, childId);
+		if (item) {
+			if (tree[childId]._nt == ParentNode) {
+				if (ctrl->IsExpanded(item)) {
+					*state |= wxACC_STATE_SYSTEM_EXPANDED;
+				} else {
+					*state |= wxACC_STATE_SYSTEM_COLLAPSED;
+				}
+			}
+			if (item == ctrl->GetFocusedItem())
+				*state |= wxACC_STATE_SYSTEM_FOCUSED;
+
+			if (item == ctrl->GetSelection())
+	         		*state |= wxACC_STATE_SYSTEM_SELECTED;
+		}
+	}
+	return wxACC_OK;
+}
+
+// Returns a localized string representing the value for the object
+// or child.
+wxAccStatus TreeCtrlAx::GetValue(int childId, wxString* strValue) {
+	strValue->Clear();
+	return wxACC_OK;
+}
+
+//wxAccStatus TreeCtrlAx::Navigate(
+//   wxNavDir navDir, int fromId, int* toId, wxAccessible** toObject)
+//{
+//   to do
+//}
+
+// Modify focus or selection
+wxAccStatus TreeCtrlAx::Select(int childId, wxAccSelectionFlags selectFlags) {
+	wxCHECK(GetWindow() != nullptr, wxACC_FAIL);
+	wxTreeCtrl* ctrl = GetCtrl();
+	if (!ctrl)
+		return wxACC_FAIL;
+
+	if (childId != wxACC_SELF) {
+		int childCount;
+		GetChildCount(&childCount);
+		if (childId > childCount)
+			return wxACC_FAIL;
+
+		wxTreeItemId item = FindItem(ctrl, childId);
+		if (item) {
+			if (selectFlags == wxACC_SEL_TAKEFOCUS)
+				ctrl->SetFocusedItem(item);
+			else if (selectFlags == wxACC_SEL_TAKESELECTION)
+				ctrl->SelectItem(item);
+	      		else
+				return wxACC_NOT_IMPLEMENTED;
+			return wxACC_OK;
+		}
+	}
+	return wxACC_NOT_IMPLEMENTED;
+}
+
+// Mac Accessible Window for wxComboBox
+
+ComboBoxAx::ComboBoxAx(wxComboBox *ctrl) : wxAccessible(ctrl) {
+}
+
+ComboBoxAx::~ComboBoxAx() {}
+
+wxAccStatus ComboBoxAx::GetChild(int childId, wxAccessible** child) {
+	if (childId == wxACC_SELF) {
+		*child = this;
+	} else {
+		*child = this;
+	}
+	return wxACC_OK;
+}
+
+wxAccStatus ComboBoxAx::GetRole(int childId, wxAccRole* role) {
+	if (childId == wxACC_SELF) {
+		*role = wxROLE_SYSTEM_COMBOBOX;
+	} else {
+		*role =	wxROLE_SYSTEM_LIST;
+	}
+	return wxACC_OK;
+}
+
+// Returns number of elements
+wxAccStatus ComboBoxAx::GetChildCount(int* childCount) {
+	wxComboBox* ctrl = GetCtrl();
+	if (!ctrl)
+		return wxACC_FAIL;
+
+	*childCount = ctrl->GetCount();
+	return wxACC_OK;
+}
+
+wxAccStatus ComboBoxAx::GetDefaultAction(int WXUNUSED(childId), wxString* actionName) {
+	actionName->clear();
+
+	return wxACC_OK;
+}
+
+// Returns the description for this object or a child.
+wxAccStatus ComboBoxAx::GetDescription(int childId, wxString *description) {
+	wxComboBox* ctrl = GetCtrl();
+	if (!ctrl)
+		return wxACC_FAIL;
+
+	if (childId == wxACC_SELF) {
+		*description = _("ComboBox - Use the arrow keys to navigate the list. Typing the first letter of an entry will navigate to that entry");
+	} else {
+		*description = ctrl->GetValue();
+	}
+	return wxACC_OK;
+}
+
+// Returns help text for this object or a child, similar to tooltip text.
+wxAccStatus ComboBoxAx::GetHelpText(int childId, wxString *helpText) {
+	helpText->clear();
+	return wxACC_OK;
+}
+
+// Returns the keyboard shortcut for this object or child.
+// Return e.g. ALT+K
+wxAccStatus ComboBoxAx::GetKeyboardShortcut(int WXUNUSED(childId), wxString *shortcut) {
+	shortcut->clear();
+
+	return wxACC_OK;
+}
+wxAccStatus ComboBoxAx::Select(int childId, wxAccSelectionFlags selectFlags) {
+	wxCHECK(GetWindow() != nullptr, wxACC_FAIL);
+	wxComboBox* ctrl = GetCtrl();
+	if (!ctrl)
+		return wxACC_FAIL;
+
+	if (childId != wxACC_SELF) {
+		int childCount;
+		GetChildCount(&childCount);
+		if (childId > childCount)
+			return wxACC_FAIL;
+
+		if (selectFlags == wxACC_SEL_TAKEFOCUS)
+			ctrl->SetFocus();
+		else if (selectFlags == wxACC_SEL_TAKESELECTION)
+			ctrl->SetSelection(childId);
+      		else
+			return wxACC_NOT_IMPLEMENTED;
+		return wxACC_OK;
+	}
+	return wxACC_NOT_IMPLEMENTED;
+}
+
+wxAccStatus ComboBoxAx::GetName(int childId, wxString* name) {
+	wxCHECK(GetWindow() != nullptr, wxACC_FAIL);
+
+	*name = GetWindow()->GetName();
+	return wxACC_OK;
+}
+
+// Returns a state constant.
+wxAccStatus ComboBoxAx::GetState(int childId, long* state) {
+	wxComboBox* ctrl = GetCtrl();
+	if (!ctrl)
+		return wxACC_FAIL;
+
+	*state =  wxACC_STATE_SYSTEM_FOCUSABLE | wxACC_STATE_SYSTEM_SELECTABLE;
+
+	if (childId != wxACC_SELF) {
+		*state |= wxACC_STATE_SYSTEM_FOCUSED;
+
+		if (childId == ctrl->GetSelection())
+			*state |= wxACC_STATE_SYSTEM_SELECTED;
+	}
+	return wxACC_OK;
+}
+
+//wxAccStatus ComboBoxAx::Navigate(wxNavDir navDir, int fromId, int* toId, wxAccessible** toObject) {
+//	return wxACC_OK;
+//}
+
+// Mac Accessible Window for Button
+
+ButtonAx::ButtonAx(wxButton *ctrl) : wxAccessible(ctrl) {
+}
+
+ButtonAx::~ButtonAx() {}
+
+wxAccStatus ButtonAx::GetRole(int childId, wxAccRole* role) {
+	*role = wxROLE_SYSTEM_PUSHBUTTON;
+	return wxACC_OK;
+}
+
+wxAccStatus ButtonAx::GetDescription(int childId, wxString *description) {
+	wxCHECK(GetWindow() != nullptr, wxACC_FAIL);
+	description->clear();
+	*description = GetWindow()->GetName();
+
+	return wxACC_OK;
+}
+
+wxAccStatus ButtonAx::GetName(int childId, wxString* name) {
+	wxCHECK(GetWindow() != nullptr, wxACC_FAIL);
+
+	// If the control has children, don't override their names
+	if (childId > 0)
+		return wxACC_NOT_IMPLEMENTED;
+	*name = GetWindow()->GetName();
+	return wxACC_OK;
+}
+
+// Returns a state constant.
+wxAccStatus ButtonAx::GetState(int childId, long* state) {
+	wxButton* ctrl = GetCtrl();
+	if (!ctrl)
+		return wxACC_FAIL;
+
+	*state = 0;
+	if (!ctrl->IsEnabled())
+		*state |= wxACC_STATE_SYSTEM_UNAVAILABLE;
+	return wxACC_OK;
+}
+
+#endif // __WXMAC__
+
+#endif // wxUSE_ACCESSIBILITY
+// Usability for combobox
+
+void
+tqslComboBox::OnTextEntry(TQ_WXTEXTEVENT& event) {
+	static bool skipNext = false;
+
+	if (skipNext) {
+		skipNext = false;
+		event.Skip();
+		return;
+	}
+	wxComboBox *cb = static_cast<wxComboBox*>(event.GetEventObject());
+	wxString val = cb->GetValue();
+	// Does it start with (localized) "[None]" ?
+	wxString none = wxGetTranslation(wxT("[None]"));
+
+	// If so, strip that and check
+	if (val.Left(none.size()) == none) {
+		val = val.Right(val.size() - none.size());
+	}
+
+	if (val.size() == 1) {
+		val = val.Upper();
+		int cnt = cb->GetCount();
+		int idx;
+		for (idx = 0; idx < cnt; idx++) {
+			wxString cur = cb->GetString(idx);
+			if (cur.Left(val.size()) == val) {
+				if (cur == val)		// Not changing
+					break;
+				skipNext = true;
+				cb->SetValue(cur);
+				cb->SetSelection(idx);
+#if wxMAJOR_VERSION > 2
+				cb->Popup();
+#endif
+				break;
+			}
+		}
+	}
+	event.Skip();
 }

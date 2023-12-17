@@ -18,7 +18,6 @@
 #include "wx/wxprec.h"
 #include "wx/object.h"
 #include "wx/config.h"
-#include "wx/odcombo.h"
 
 #ifdef __BORLANDC__
 	#pragma hdrstop
@@ -38,6 +37,7 @@
 #endif
 
 #include "tqslctrls.h"
+#include "wxutil.h"
 
 #include <map>
 #include <vector>
@@ -61,6 +61,7 @@ using std::vector;
 #define DEFAULT_IGNORE_CALLSIGN false
 #define DEFAULT_LOG_TAB false
 #define DEFAULT_CERTPWD false
+#define DEFAULT_OLDCRYPTO false
 //online
 //#define ENABLE_ONLINE_PREFS
 #define DEFAULT_UPL_URL wxT("https://lotw.arrl.org/lotw/upload")
@@ -94,6 +95,9 @@ enum {		// Window IDs
 	ID_PREF_FILE_DISPLAY_DUPES,
 	ID_PREF_FILE_LOG_TAB,
 	ID_PREF_FILE_CERTPWD,
+#if defined(__APPLE__)
+	ID_PREF_FILE_OLDCRYPTO,
+#endif
 	ID_PREF_FILE_LOGVFY,
 	ID_PREF_IGNORE_SECONDS,
 	ID_PREF_IGNORE_CALLSIGN,
@@ -141,6 +145,9 @@ class FilePrefs : public PrefsPanel {
  private:
 	wxTextCtrl *versions;
 	wxCheckBox *autobackup, *adifedit, *logtab, *certpwd;
+#if defined (__APPLE__)
+	wxCheckBox *oldcrypto;
+#endif
 #if !defined(__APPLE__) && !defined(_WIN32)
 	wxTextCtrl *dirPick;
 #else
@@ -209,7 +216,6 @@ class ContestMap : public PrefsPanel {
 
 	wxButton *delete_but, *edit_but;
 	wxGrid *grid;
-	wxOwnerDrawnComboBox *dgmodes;
 	vector <const char *> modes;
 	ContestSet contestmap;
 	DECLARE_EVENT_TABLE()

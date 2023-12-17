@@ -3,6 +3,16 @@ TQSLLIB changes
 
 2.5
 ---
+When loading callsign certificates when the user's computer is set to
+an incorrect date, TQSL would not explain the error "Trusted root
+certificate: certificate is not yet valid". TQSL now detects a root
+certificate appearing to be from the future and tells the user to 
+correct their computer's date/time.
+
+Permit identical QSOs to be ignored when adding to the uploads database.
+
+Allow 3DES, SHA1 for P12 file export for compatibility with Apple Keychain.
+
 Update the uploads database handling to correctly respond when the database
 is an empty file - delete and recreate.
 
