@@ -43,12 +43,14 @@ enum {
 BEGIN_EVENT_TABLE(LocTree, wxTreeCtrl)
 	EVT_TREE_ITEM_ACTIVATED(-1, LocTree::OnItemActivated)
 	EVT_RIGHT_DOWN(LocTree::OnRightDown)
+	EVT_TREE_KEY_DOWN(wxID_ANY, LocTree::OnKeyDown)
 END_EVENT_TABLE()
 
 LocTree::LocTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos,
 		const wxSize& size, long style)
 		: wxTreeCtrl(parent, id, pos, size, style), _nloc(0) {
 	tqslTrace("LocTree::LocTree", "parent=0x%lx, id=0x%lx, style=%d", reinterpret_cast<void *>(parent), reinterpret_cast<void *>(id), style);
+	tabTo = NULL;
 	useContextMenu = true;
 	wxBitmap homebm(home_xpm);
 	wxBitmap folderbm(folder_xpm);
@@ -60,6 +62,11 @@ LocTree::LocTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos,
 
 
 LocTree::~LocTree() {
+}
+
+void
+LocTree::SetTabTo(wxWindow* w) {
+	tabTo = w;
 }
 
 typedef pair<wxString, int> locitem;
@@ -133,6 +140,17 @@ LocTree::OnRightDown(wxMouseEvent& event) {
 		wxMenu *cm = makeLocationMenu(true);
 		PopupMenu(cm, event.GetPosition());
 		delete cm;
+	}
+}
+void
+LocTree::OnKeyDown(wxTreeEvent& event) {
+	const wxKeyEvent &keyev = event.GetKeyEvent();
+	long keycode = keyev.GetKeyCode();
+	if (keycode == WXK_TAB) {
+		if (tabTo) {
+			tabTo->SetFocus();
+			event.Skip();
+		}
 	}
 }
 

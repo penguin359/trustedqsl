@@ -132,6 +132,7 @@ inline TQSL_CONVERTER::TQSL_CONVERTER()  : sentinel(0x4445) {
 	memset(&callsign, 0, sizeof callsign);
 	appName = NULL;
 	need_ident_rec = true;
+	err_tag_line = 0;
 	// Init the band data
 	const char *val;
 	int n = 0;
@@ -417,12 +418,12 @@ get_dbrec(sqlite3 *db, const char *key, char **result) {
 	rc = sqlite3_bind_text(pstmt, 1, key, strlen(key), NULL);
 
 	if (SQLITE_OK != rc) {
+		sqlite3_finalize(pstmt);
 		return -1;
 	}
     	rc = sqlite3_step(pstmt);
 	if (SQLITE_DONE == rc) {			// No record matches
-		sqlite3_reset(pstmt);
-		sqlite3_clear_bindings(pstmt);
+		sqlite3_finalize(pstmt);
 		return 1;
 	}
     	if (SQLITE_ROW != rc) {
@@ -440,13 +441,14 @@ put_dbrec(sqlite3 *db, const char *key, const char *data) {
 	int rc;
 
 	sqlite3_stmt *pstmt;
-	rc = sqlite3_prepare_v2(db, "INSERT INTO QSOs VALUES(?, ?);", 256, &pstmt, NULL);
+	rc = sqlite3_prepare_v2(db, "INSERT OR IGNORE INTO QSOs VALUES(?, ?);", 256, &pstmt, NULL);
 	if (SQLITE_OK != rc) {
 		return -1;
 	}
 	rc = sqlite3_bind_text(pstmt, 1, key, strlen(key), NULL);
 
 	if (SQLITE_OK != rc) {
+		sqlite3_finalize(pstmt);
 		return -1;
 	}
 	rc = sqlite3_bind_text(pstmt, 2, data, strlen(reinterpret_cast<const char *>(data)), NULL);
@@ -673,6 +675,7 @@ remove_db(const char *path)  {
 
 static bool open_db(TQSL_CONVERTER *conv, bool readonly) {
 	bool dbinit_cleanup = false;
+	bool dblocked = false;
 	int dbret;
 	bool triedRemove = false;
 	bool triedDelete = false;
@@ -742,7 +745,8 @@ reopen:
 					if (SQLITE_OK != dbret) {
                 				tQSL_Error = TQSL_DB_ERROR;
                 				tQSL_Errno = errno;
-                				strncpy(tQSL_CustomError, sqlite3_errmsg(conv->seendb), sizeof tQSL_CustomError);
+						snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "DB Error %s - %s",
+                						sqlite3_errmsg(conv->seendb), err_msg);
                 				tqslTrace("open_db", "Error creating table: %s", tQSL_CustomError);
 						break;
 					} else {
@@ -768,6 +772,26 @@ reopen:
 			dbinit_cleanup = true;
 			break;
 		} else {
+			// Opened OK. Let's make a database table just in case
+			const char *sql = "CREATE TABLE IF NOT EXISTS QSOs(tContact TEXT, QTH TEXT);"
+					"CREATE UNIQUE INDEX IF NOT EXISTS tc ON QSOs(tContact);";
+			char *err_msg;
+			dbret = sqlite3_exec(conv->seendb, sql, 0, 0, &err_msg);
+			if (SQLITE_OK != dbret) {
+				if (SQLITE_BUSY == dbret) {
+					dbinit_cleanup = true;
+					dblocked = true;
+					break;
+				}
+				// Something is just not right.
+				if (!triedRemove) {
+					tqslTrace("open_db", "can't create tables, error %s - %s errno %d", err_msg, sqlite3_errmsg(conv->seendb), errno);
+					sqlite3_close(conv->seendb);
+					remove_db(conv->dbpath);
+					triedRemove = true;
+					continue;
+				}
+			}
 			// is it really a DB? Try an get
 			dbret = sqlite3_exec(conv->seendb, "SELECT * FROM QSOs LIMIT 1;", NULL, NULL, NULL);
 			if (SQLITE_OK == dbret) {
@@ -775,9 +799,15 @@ reopen:
 				sqlite3_exec(conv->seendb, "CREATE UNIQUE INDEX IF NOT EXISTS tc ON QSOs(tContact);", NULL, NULL, NULL);
 				break;			// All OK
 			}
+			if (SQLITE_BUSY == dbret) {
+				dbinit_cleanup = true;
+				dblocked = true;
+				break;
+			}
 			// probably SQLITE_NOTADB here. Kill it.
 			if (!triedRemove) {
 				tqslTrace("open_db", "can't open, removing %s errno %d", sqlite3_errmsg(conv->seendb), errno);
+				sqlite3_close(conv->seendb);
 				remove_db(conv->dbpath);
 				triedRemove = true;
 				continue;
@@ -791,7 +821,11 @@ reopen:
 		tqslTrace("open_db", "DB open failed, triedDelete=%d", triedDelete);
 		tQSL_Error = TQSL_DB_ERROR;
 		tQSL_Errno = errno;
-		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "%s: %s", sqlite3_errmsg(conv->seendb), strerror(errno));
+		if (dblocked) {
+			snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "dblocked");
+		} else {
+			snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "%s: %s", sqlite3_errmsg(conv->seendb), strerror(errno));
+		}
 		tqslTrace("open_db", "Error opening db: %s", tQSL_CustomError);
 		conv->txn = false;
 		if (conv->db_open) {
@@ -811,7 +845,10 @@ reopen:
 	}
 	if (!readonly) {
 		conv->txn = true;
-		sqlite3_exec(conv->seendb, "BEGIN;", NULL, NULL, NULL);
+		dbret = sqlite3_exec(conv->seendb, "BEGIN;", NULL, NULL, NULL);
+		if (SQLITE_OK != dbret) {
+			tqslTrace("open_db", "Can't start transaction!");
+		}
 	}
 	conv->db_open = true;
 	return true;

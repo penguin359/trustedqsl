@@ -1,7 +1,34 @@
 TQSL changes
 ============
+2.7.2
+----------
+Fix MacOS Sonoma issues with "Secure coding is not enabled for restorable
+state!" warnings. 
+
+When unable to sign a log due to the uploads database being busy due to
+a concurrent signing operation, provide details as to the cause of the
+error, not a simple "Database Locked".
+
+Preliminary support for Voice Over on Macs.
+
+When unable to open the duplicates database, suppress spurious errors from
+automatic backups. Don't loop on trying to sign a log due to database locks.
+
+When signing a log fails before processing any ADIF records, ensure that
+the error message doesn't include a random "line number".
+
+Handle locked databases - don't re-create an empty database.
+
+Add a preference option for Mac users to allow Callsign certificates to be
+stored using obsolete cryptographic algorithms to allow import by the Mac
+keyring.
+
 2.7.1
 ----------
+Add labeling to menu tabs to allow rendering via accessibility applications
+such as Mac VoiceOver. Much of TQSL does not support VoiceOver due to 
+limitations in wxWidgets.
+
 Allow TQSL to run on Windows XP. Note that this is a stopgap and XP is well
 past end of support, continued operation is not guaranteed.
 

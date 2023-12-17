@@ -28,6 +28,7 @@
 #include "tqsllib.h"
 
 #include "wx/treectrl.h"
+#include "wxutil.h"
 
 class LocTreeItemData : public wxTreeItemData {
  public:
@@ -48,6 +49,8 @@ class LocTree : public wxTreeCtrl {
 	int Build(int flags = TQSL_SELECT_CERT_WITHKEYS, const TQSL_PROVIDER *provider = 0);
 	void OnItemActivated(wxTreeEvent& event);
 	void OnRightDown(wxMouseEvent& event);
+	void OnKeyDown(wxTreeEvent& event);
+	void SetTabTo(wxWindow*);
 	bool useContextMenu;
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -61,6 +64,7 @@ class LocTree : public wxTreeCtrl {
 
  private:
 	int _nloc;
+	wxWindow* tabTo;
 	DECLARE_EVENT_TABLE()
 };
 

@@ -2336,6 +2336,7 @@ tqsl_exportPKCS12(tQSL_Cert cert, bool returnB64, const char *filename, char *ba
 	int key_pbe = NID_aes_256_cbc;
 	PKCS8_PRIV_KEY_INFO *p8 = 0;
 	PKCS12 *p12 = 0;
+	const EVP_MD *md = 0;
 	BIO *out = 0, *b64 = 0;
 	string callSign, issuerOrganization, issuerOrganizationalUnit;
 	tQSL_Date date;
@@ -2356,6 +2357,18 @@ tqsl_exportPKCS12(tQSL_Cert cert, bool returnB64, const char *filename, char *ba
 		return 1;
 	}
 
+#if defined(__APPLE__)
+	const char *oldc = getenv("OLDCRYPTO");
+	tqslTrace("tqsl_exportPKCS12", "get env returns %s", oldc ? oldc : "null");
+	// For compatibility with Apple Keychain for Mac
+	// They don't support anything but deprecated P12 crypto
+	// SHA1, 3DES, RC2.
+	if (oldc && !strcmp(oldc, "TRUE")) {
+		cert_pbe = NID_pbe_WithSHA1And40BitRC2_CBC;
+		key_pbe = NID_pbe_WithSHA1And3_Key_TripleDES_CBC;
+		md = reinterpret_cast<const EVP_MD *> (EVP_get_digestbyname("sha1"));
+	}
+#endif
 	/* Get parameters for key bag attributes */
 	if (tqsl_getCertificateCallSign(cert, buf, sizeof buf)) {
 		tqslTrace("tqsl_exportPKCS12", "get callsign err %d", tQSL_Error);
@@ -2518,7 +2531,9 @@ tqsl_exportPKCS12(tQSL_Cert cert, bool returnB64, const char *filename, char *ba
 		}
 
 		/* Convert stack of safebags into an authsafe */
-		authsafe = PKCS12_pack_p7encdata(cert_pbe, p12password, -1, 0, 0, PKCS12_DEFAULT_ITER, bags);
+		unsigned char p12salt[9];
+		memcpy(p12salt, "lamesalt", 8);
+		authsafe = PKCS12_pack_p7encdata(cert_pbe, p12password, -1, p12salt, 8, PKCS12_DEFAULT_ITER, bags);
 		if (!authsafe) {
 			tqslTrace("tqsl_exportPKCS12", "Error creating authsafe: %s", tqsl_openssl_error());
 			goto p12_end;
@@ -2582,7 +2597,7 @@ tqsl_exportPKCS12(tQSL_Cert cert, bool returnB64, const char *filename, char *ba
 
 	sk_PKCS7_pop_free(safes, PKCS7_free);
 	safes = NULL;
-	PKCS12_set_mac(p12, p12password, -1, 0, 0, PKCS12_DEFAULT_ITER, 0);
+	PKCS12_set_mac(p12, p12password, -1, 0, 0, PKCS12_DEFAULT_ITER, md);
 
 	/* Write the PKCS12 data */
 
@@ -3912,6 +3927,12 @@ tqsl_ssl_verify_cert(X509 *cert, STACK_OF(X509) *cacerts, STACK_OF(X509) *rootce
 	X509_STORE_CTX_set_flags(ctx, X509_V_FLAG_CB_ISSUER_CHECK);
 	rval = X509_verify_cert(ctx);
 	errm = X509_verify_cert_error_string(X509_STORE_CTX_get_error(ctx));
+	if (X509_STORE_CTX_get_error(ctx) == X509_V_ERR_CERT_NOT_YET_VALID) {
+		errm = "Your computer's clock is set to a date in the past. This Certificate cannot be loaded until you fix that.\n\n";
+	}
+	if (X509_STORE_CTX_get_error(ctx) == X509_V_ERR_CERT_HAS_EXPIRED) {
+		errm = "Your computer's clock is set to a date in the future. This Certificate cannot be loaded until you fix that.\n\n";
+	}
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
 #define X509_STORE_CTX_get0_chain(o) ((o)->chain)
 #endif
@@ -4494,7 +4515,7 @@ tqsl_store_cert(const char *pem, X509 *cert, const char *certfile, int type, boo
 				if (tqsl_cert_get_subject_name_entry(x, "AROcallsign", &item)) {
 					if (value == callsign) {
 						/*
-						 * If it's another cert for 
+						 * If it's another cert for
 						 * this call, is it older?
 						 */
 						tm = X509_get_notAfter(x);
