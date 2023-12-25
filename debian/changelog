@@ -1,3 +1,9 @@
+trustedqsl (2.7.2-1ppa1~ubuntu23.04) lunar; urgency=medium
+
+  * Taking maintainership to provide backports as Ubuntu PPA
+
+ -- Loren M. Lang <lorenl@north-winds.org>  Mon, 25 Dec 2023 03:10:39 -0800
+
 trustedqsl (2.7.2-1) unstable; urgency=medium
 
   * New upstream version 2.7.2
