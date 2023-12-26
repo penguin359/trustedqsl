@@ -1,2 +1,3 @@
 # help and documentation files are shipped as HTML
+trustedqsl source: source-is-missing apps/help/tqslapp/*
 trustedqsl source: source-is-missing src/doxygen/html/*
