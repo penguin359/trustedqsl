@@ -12,9 +12,9 @@ Build-Depends: cmake,
                libexpat1-dev,
                libsqlite3-dev,
                libssl-dev,
-               libwxgtk3.0-dev,
+               libwxgtk2.8-dev,
                zlib1g-dev
-Standards-Version: 3.9.7
+Standards-Version: 3.9.5
 Vcs-Browser: https://github.com/penguin359/trustedqsl
 Vcs-Git: https://github.com/penguin359/trustedqsl
 Homepage: https://sourceforge.net/projects/trustedqsl/
