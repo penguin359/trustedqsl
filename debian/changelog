@@ -1,3 +1,12 @@
+trustedqsl (2.7.2-1ppa1~ubuntu20.10) groovy; urgency=medium
+
+  * Taking maintainership to provide backports as Ubuntu PPA
+  * Updated dependencies to match those provided in the official Ubuntu release
+  * Fixed errors/warnings with lintian overrides
+  * Updated Standard version to match distro
+
+ -- Loren M. Lang <lorenl@north-winds.org>  Tue, 26 Dec 2023 05:05:41 -0800
+
 trustedqsl (2.7.2-1) unstable; urgency=medium
 
   * New upstream version 2.7.2
