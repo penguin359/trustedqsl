@@ -7,7 +7,7 @@ Section: hamradio
 Priority: optional
 Build-Depends: cmake,
                pkgconf,
-               debhelper (>= 11),
+               debhelper (>= 9),
                libcurl4-openssl-dev,
                libexpat1-dev,
                libsqlite3-dev,
