@@ -6,12 +6,12 @@ Uploaders: Christoph Berg <myon@debian.org>,
 Section: hamradio
 Priority: optional
 Build-Depends: cmake,
-               debhelper-compat (= 12),
+               debhelper (>= 11),
                libcurl4-openssl-dev,
                libexpat1-dev,
                libsqlite3-dev,
                libssl-dev,
-               libwxgtk3.0-gtk3-dev,
+               libwxgtk3.0-dev,
                zlib1g-dev
 Standards-Version: 4.1.4
 Vcs-Browser: https://github.com/penguin359/trustedqsl
