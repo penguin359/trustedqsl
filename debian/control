@@ -6,7 +6,7 @@ Uploaders: Christoph Berg <myon@debian.org>,
 Section: hamradio
 Priority: optional
 Build-Depends: cmake,
-               debhelper-compat (= 13),
+               debhelper-compat (= 12),
                libcurl4-openssl-dev,
                libexpat1-dev,
                libsqlite3-dev,
