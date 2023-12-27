@@ -3,6 +3,8 @@ CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
 install_manifest.txt
+CTestTestfile.cmake
+buildit.sh
 
 #emacs junk
 *~
@@ -28,6 +30,7 @@ apps/lang/getmo.sh
 apps/makepo.sh
 apps/tqsl.po
 apps/tqslapp.pot
+cmake-debug.sh
 
 #windows-specific products
 UpgradeLog*
@@ -83,6 +86,9 @@ staple.sh
 upload-for-notary.sh
 
 #Testing stuff
+tests/adifTest
+tests/cabrilloTest
+tests/tqsl/
 tests/CMakeLists.txt
 tests/basictest.cpp
 tests/basicTest

@@ -29,6 +29,10 @@
 #if wxMAJOR_VERSION == 3 && wxMINOR_VERSION > 0
 #define WX31
 #endif
+#if wxMAJOR_VERSION == 3 && wxMINOR_VERSION == 0 && wxRELEASE_NUMBER == 5
+#define WX31
+#endif
+
 
 using std::make_pair;
 
@@ -389,6 +393,15 @@ FilePrefs::FilePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm"))
 	config->Read(wxT("CertPwd"), &cp, DEFAULT_CERTPWD);
 	certpwd->SetValue(cp);
 	sizer->Add(certpwd, 0, wxLEFT|wxRIGHT|wxTOP, 10);
+
+#if defined(__APPLE__)
+	oldcrypto = new wxCheckBox(this, ID_PREF_FILE_OLDCRYPTO, _("Export P12 files compatible with Apple Keychain"));
+	bool old;
+	config->Read(wxT("P12OldCrypto"), &old, DEFAULT_OLDCRYPTO);
+	oldcrypto->SetValue(old);
+	sizer->Add(oldcrypto, 0, wxLEFT|wxRIGHT|wxTOP, 10);
+#endif
+
 	SetSizer(sizer);
 	sizer->Fit(this);
 	sizer->SetSizeHints(this);
@@ -422,6 +435,9 @@ bool FilePrefs::TransferDataFromWindow() {
 	config->SetPath(wxT("/"));
 	config->Write(wxT("AdifEdit"), adifedit->GetValue());
 	config->Write(wxT("CertPwd"), certpwd->GetValue());
+#if defined(__APPLE__)
+	config->Write(wxT("P12OldCrypto"), oldcrypto->GetValue());
+#endif
 
 	bool oldLog;
 	config->Read(wxT("LogTab"), &oldLog, DEFAULT_LOG_TAB);
@@ -763,7 +779,6 @@ BEGIN_EVENT_TABLE(ContestMap, PrefsPanel)
 	EVT_BUTTON(ID_PREF_CAB_DELETE, ContestMap::OnDelete)
 	EVT_BUTTON(ID_PREF_CAB_ADD, ContestMap::OnAdd)
 	EVT_BUTTON(ID_PREF_CAB_EDIT, ContestMap::OnEdit)
-	EVT_COMBOBOX(ID_PREF_CAB_MODEMAP, ContestMap::DoUpdateInfo)
 END_EVENT_TABLE()
 
 ContestMap::ContestMap(wxWindow *parent) : PrefsPanel(parent, wxT("pref-cab.htm")) {
@@ -885,17 +900,6 @@ void ContestMap::SetContestList() {
 	}
 	config->SetPath(wxT("/"));
 	Buttons();
-}
-
-void ContestMap::DoUpdateInfo(wxCommandEvent&) {
-	wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
-        int sel = dgmodes->GetSelection();
-	if (sel != wxNOT_FOUND) {
-		const char* mapped = modes[sel];
-		config->Write(wxT("CabrilloDGMap"), wxString::FromUTF8(mapped));
-		config->Flush(false);
-	}
-	return;
 }
 
 bool ContestMap::TransferDataFromWindow() {

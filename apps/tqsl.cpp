@@ -191,7 +191,7 @@ static void exitNow(int status, bool quiet) {
 				 __("The duplicates database is locked")
 				};
 	int stat = status;
-	if (stat > TQSL_EXIT_UNKNOWN || stat < 0) stat = TQSL_EXIT_UNKNOWN;
+	if (stat > TQSL_EXIT_BUSY || stat < 0) stat = TQSL_EXIT_UNKNOWN;
 	wxString msg = wxString::Format(wxT("Final Status: %hs (%d)"), errors[stat], status);
 	wxString err = wxGetTranslation(wxString::FromUTF8(errors[stat]));
 	wxString localmsg = wxString::Format(_("Final Status: %hs (%d)"), (const char *)err.ToUTF8(), status);
@@ -423,14 +423,14 @@ DateRangeDialog::DateRangeDialog(wxWindow *parent) : wxDialog(parent, -1, wxStri
 	hsizer->Add(new wxStaticText(this, -1, _("Start Date (YYYY-MM-DD)")), 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	start_tc = new wxTextCtrl(this, TQSL_DR_START);
 	start_tc->SetMaxLength(10);
-	//rhm start_tc->SetMinSize(wxSize(em_w * 10, -1));
+	start_tc->SetMinSize(wxSize(em_w * 10, -1));
 	hsizer->Add(start_tc, 0, 0, 0);
 	sizer->Add(hsizer, 0, wxALL|wxALIGN_CENTER, 10);
 	hsizer = new wxBoxSizer(wxHORIZONTAL);
 	hsizer->Add(new wxStaticText(this, -1, _("End Date (YYYY-MM-DD)")), 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	end_tc = new wxTextCtrl(this, TQSL_DR_END);
 	end_tc->SetMaxLength(10);
-	//rhm end_tc->SetMinSize(wxSize(em_w * 10, -1));
+	end_tc->SetMinSize(wxSize(em_w * 10, -1));
 	hsizer->Add(end_tc, 0, 0, 0);
 	sizer->Add(hsizer, 0, wxALL|wxALIGN_CENTER, 10);
 	msg = new wxStaticText(this, TQSL_DR_MSG, wxT(""));
@@ -1224,6 +1224,8 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 
 		logwin = new wxTextCtrl(topPanel, -1, wxT(""), wxDefaultPosition, wxSize(400, 300),
 			wxTE_MULTILINE|wxTE_READONLY);
+		ACCESSIBLE(logwin, WindowAccessible);
+		logwin->SetName(wxT("Status Log"));
 		topSizer->Add(logwin, 1, wxEXPAND | wxALL, 1);
 	}
 
@@ -1239,19 +1241,15 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	b1Panel->SetSizer(b1sizer);
 
 	wxBitmapButton *up = new wxBitmapButton(b1Panel, tl_Upload, uploadbm);
-	// Use a really tiny label font on the buttons, as the labels are there
-	// for accessibility only.
-	wxFont f(1, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-	up->SetLabel(_("Sign a log and upload it automatically to LoTW"));
+	ACCESSIBLE(up, ButtonAx);
+	up->SetName(wxT("Sign a log and upload it automatically to LoTW"));
 	up->SetBitmapDisabled(upload_disbm);
-	up->SetFont(f);
 	b1sizer->Add(up, 0, wxALL, 1);
 	wxString b1lbl = wxT("\n");
 	b1lbl += _("Sign a log and upload it automatically to LoTW");
 	wxStaticText *b1txt = new wxStaticText(b1Panel, -1, b1lbl);
 	b1sizer->Add(b1txt, 1, wxFIXED_MINSIZE | wxALL, 1);
 	b1txt->SetLabel(b1lbl);
-	up->SetLabel(b1lbl);
 	bsizer->Add(b1Panel, 0, wxALL, 1);
 
 	wxPanel* b2Panel = new wxPanel(buttons);
@@ -1259,14 +1257,13 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	wxBoxSizer* b2sizer = new wxBoxSizer(wxHORIZONTAL);
 	b2Panel->SetSizer(b2sizer);
 	wxBitmapButton *signsave = new wxBitmapButton(b2Panel, tl_Save, savebm);
-	signsave->SetLabel(_("Sign a log and save it for uploading later"));
-	signsave->SetFont(f);
+	ACCESSIBLE(signsave, ButtonAx);
+	signsave->SetName(wxT("Sign a log and save it for uploading later"));
 	b2sizer->Add(signsave, 0, wxALL, 1);
 	wxString b2lbl = wxT("\n");
 	b2lbl += _("Sign a log and save it for uploading later");
 	wxStaticText *b2txt = new wxStaticText(b2Panel, -1, b2lbl);
 	b2txt->SetLabel(b2lbl);
-	signsave->SetLabel(b2lbl);
 	b2sizer->Add(b2txt, 1, wxALL, 1);
 	bsizer->Add(b2Panel, 0, wxALL, 1);
 
@@ -1276,15 +1273,14 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	b3Panel->SetSizer(b3sizer);
 	wxBitmapButton *fed = new wxBitmapButton(b3Panel, tl_Edit, file_editbm);
 	fed->SetBitmapDisabled(file_edit_disbm);
-	fed->SetLabel(_("Create an ADIF file for signing and uploading"));
-	fed->SetFont(f);
+	ACCESSIBLE(fed, ButtonAx);
+	fed->SetName(wxT("Create an ADIF file for signing and uploading"));
 	b3sizer->Add(fed, 0, wxALL, 1);
 	wxString b3lbl = wxT("\n");
 	b3lbl += _("Create an ADIF file for signing and uploading");
 	wxStaticText *b3txt = new wxStaticText(b3Panel, -1, b3lbl);
 	b3sizer->Add(b3txt, 1, wxALL, 1);
 	b3txt->SetLabel(b3lbl);
-	fed->SetLabel(b3lbl);
 	bsizer->Add(b3Panel, 0, wxALL, 1);
 
 	wxPanel* b4Panel = new wxPanel(buttons);
@@ -1292,15 +1288,14 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	wxBoxSizer* b4sizer = new wxBoxSizer(wxHORIZONTAL);
 	b4Panel->SetSizer(b4sizer);
 	wxBitmapButton *lotw = new wxBitmapButton(b4Panel, tl_Login, lotwbm);
-	lotw->SetLabel(_("Log in to the Logbook of the World Site"));
-	lotw->SetFont(f);
+	ACCESSIBLE(lotw, ButtonAx);
+	lotw->SetName(wxT("Log in to the Logbook of the World Site"));
 	b4sizer->Add(lotw, 0, wxALL, 1);
 	wxString b4lbl = wxT("\n");
 	b4lbl += _("Log in to the Logbook of the World Site");
 	wxStaticText *b4txt = new wxStaticText(b4Panel, -1, b4lbl);
 	b4sizer->Add(b4txt, 1, wxALL, 1);
 	b4txt->SetLabel(b4lbl);
-	lotw->SetLabel(b4lbl);
 	bsizer->Add(b4Panel, 0, wxALL, 1);
 
 	notebook->AddPage(buttons, _("Log Operations"));
@@ -1319,12 +1314,19 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	wxBoxSizer* lgsizer = new wxBoxSizer(wxVERTICAL);
 	locgrid->SetSizer(lgsizer);
 
-	loc_tree = new LocTree(locgrid, tc_LocTree, wxDefaultPosition,
-		wxDefaultSize, wxTR_DEFAULT_STYLE | wxBORDER_NONE);
+#if wxUSE_ACCESSIBILITY
+	int treeStyle = wxTR_HAS_BUTTONS | wxSUNKEN_BORDER;;
+#else
+	int treeStyle = wxTR_DEFAULT_STYLE | wxBORDER_NONE;
+#endif
+
+	loc_tree = new LocTree(locgrid, tc_LocTree, wxDefaultPosition, wxDefaultSize, treeStyle);
 
 	loc_tree->SetBackgroundColour(defBkg);
 	loc_tree->Build();
 	LocTreeReset();
+	ACCESSIBLE(loc_tree, TreeCtrlAx);
+	loc_tree->SetName(wxT("Station Locations"));
 	lgsizer->Add(loc_tree, 1, wxEXPAND);
 
 	wxString lsl = wxT("\n");
@@ -1349,9 +1351,11 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	lb1Panel->SetSizer(lb1sizer);
 
 	loc_add_button = new wxBitmapButton(lb1Panel, tl_AddLoc, locaddbm);
-	loc_add_button->SetFont(f);
 	loc_add_button->SetBitmapDisabled(locadd_disbm);
+	ACCESSIBLE(loc_add_button, ButtonAx);
+	loc_add_button->SetName(wxT("Create a new Station Location"));
 	lb1sizer->Add(loc_add_button, 0, wxALL, 1);
+	loc_tree->SetTabTo(loc_add_button);
 	// Note - the doubling below is to size the label to allow the control to stretch later
 	loc_add_label = new wxStaticText(lb1Panel, -1, wxT("\nCreate a new Station LocationCreate a new Station\n"));
 	lb1sizer->Add(loc_add_label, 1, wxFIXED_MINSIZE | wxALL, 1);
@@ -1361,7 +1365,6 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	wxString lal = wxT("\n");
 	lal += _("Create a new Station Location");
 	loc_add_label->SetLabel(lal);
-	loc_add_button->SetLabel(lal);
 
 	wxPanel* lb2Panel = new wxPanel(lbuttons);
 	lb2Panel->SetBackgroundColour(defBkg);
@@ -1369,9 +1372,10 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	lb2Panel->SetSizer(lb2sizer);
 
 	loc_edit_button = new wxBitmapButton(lb2Panel, tl_EditLoc, editbm);
-	loc_edit_button->SetFont(f);
 	loc_edit_button->SetBitmapDisabled(edit_disbm);
 	loc_edit_button->Enable(false);
+	ACCESSIBLE(loc_edit_button, ButtonAx);
+	loc_edit_button->SetName(wxT("Edit a Station Location"));
 	lb2sizer->Add(loc_edit_button, 0, wxALL, 1);
 	wxString lel = wxT("\n");
 	lel += _("Edit a Station Location");
@@ -1385,9 +1389,10 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	lb3Panel->SetSizer(lb3sizer);
 
 	loc_delete_button = new wxBitmapButton(lb3Panel, tl_DeleteLoc, deletebm);
-	loc_delete_button->SetFont(f);
 	loc_delete_button->SetBitmapDisabled(delete_disbm);
 	loc_delete_button->Enable(false);
+	ACCESSIBLE(loc_delete_button, ButtonAx);
+	loc_delete_button->SetName(wxT("Delete a Station Location"));
 	lb3sizer->Add(loc_delete_button, 0, wxALL, 1);
 	wxString ldl = wxT("\n");
 	ldl += _("Delete a Station Location");
@@ -1401,9 +1406,10 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	lb4Panel->SetSizer(lb4sizer);
 
 	loc_prop_button = new wxBitmapButton(lb4Panel, tl_PropLoc, propertiesbm);
-	loc_prop_button->SetFont(f);
 	loc_prop_button->SetBitmapDisabled(properties_disbm);
 	loc_prop_button->Enable(false);
+	ACCESSIBLE(loc_prop_button, ButtonAx);
+	loc_prop_button->SetName(wxT("Display Station Location Properties"));
 	lb4sizer->Add(loc_prop_button, 0, wxALL, 1);
 	wxString lpl = wxT("\n");
 	lpl += _("Display Station Location Properties");
@@ -1426,9 +1432,11 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	certgrid->SetSizer(cgsizer);
 
 	cert_tree = new CertTree(certgrid, tc_CertTree, wxDefaultPosition,
-		wxDefaultSize, wxTR_DEFAULT_STYLE | wxBORDER_NONE); //wxTR_HAS_BUTTONS | wxSUNKEN_BORDER);
+		wxDefaultSize, treeStyle); //wxTR_HAS_BUTTONS | wxSUNKEN_BORDER);
 
 	cert_tree->SetBackgroundColour(defBkg);
+	ACCESSIBLE(cert_tree, TreeCtrlAx);
+	cert_tree->SetName(wxT("Callsign Certificates"));
 	cgsizer->Add(cert_tree, 1, wxEXPAND);
 
 	wxString csq = wxT("\n");
@@ -1454,13 +1462,14 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	cb1Panel->SetSizer(cb1sizer);
 
 	cert_load_button = new wxBitmapButton(cb1Panel, tc_Load, importbm);
-	cert_load_button->SetFont(f);
 	cert_load_button->SetBitmapDisabled(delete_disbm);
+	ACCESSIBLE(cert_load_button, ButtonAx);
+	cert_load_button->SetName(wxT("Load a Callsign Certificate"));
+	cert_tree->SetTabTo(cert_load_button);
 	cb1sizer->Add(cert_load_button, 0, wxALL, 1);
 	wxString lcl = wxT("\n");
 	lcl += _("Load a Callsign Certificate");
 	cert_load_label = new wxStaticText(cb1Panel, -1, lcl, wxDefaultPosition, wxSize(tw, th));
-	cert_load_button->SetLabel(lcl);
 	cb1sizer->Add(cert_load_label, 1, wxFIXED_MINSIZE | wxALL, 1);
 	cbsizer->Add(cb1Panel, 0, wxALL, 1);
 
@@ -1470,9 +1479,10 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	cb2Panel->SetSizer(cb2sizer);
 
 	cert_save_button = new wxBitmapButton(cb2Panel, tc_CertSave, downloadbm);
-	cert_save_button->SetFont(f);
 	cert_save_button->SetBitmapDisabled(download_disbm);
 	cert_save_button->Enable(false);
+	ACCESSIBLE(cert_save_button, ButtonAx);
+	cert_save_button->SetName(wxT("Save a Callsign Certificate"));
 	cb2sizer->Add(cert_save_button, 0, wxALL, 1);
 	wxString csl = wxT("\n");
 	csl += _("Save a Callsign Certificate");
@@ -1486,9 +1496,10 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	cb3Panel->SetSizer(cb3sizer);
 
 	cert_renew_button = new wxBitmapButton(cb3Panel, tc_CertRenew, uploadbm);
-	cert_renew_button->SetFont(f);
 	cert_renew_button->SetBitmapDisabled(upload_disbm);
 	cert_renew_button->Enable(false);
+	ACCESSIBLE(cert_renew_button, ButtonAx);
+	cert_renew_button->SetName(wxT("Renew a Callsign Certificate"));
 	cb3sizer->Add(cert_renew_button, 0, wxALL, 1);
 	wxString crl = wxT("\n");
 	crl += _("Renew a Callsign Certificate");
@@ -1502,9 +1513,10 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	cb4Panel->SetSizer(cb4sizer);
 
 	cert_prop_button = new wxBitmapButton(cb4Panel, tc_CertProp, propertiesbm);
-	cert_prop_button->SetFont(f);
 	cert_prop_button->SetBitmapDisabled(properties_disbm);
 	cert_prop_button->Enable(false);
+	ACCESSIBLE(cert_prop_button, ButtonAx);
+	cert_prop_button->SetName(wxT("Display a Callsign Certificate's Properties"));
 	cb4sizer->Add(cert_prop_button, 0, wxALL, 1);
 	wxString dcl = wxT("\n");
 	dcl += _("Display a Callsign Certificate's Properties");
@@ -1521,6 +1533,8 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 		logtab->SetSizer(ltsizer);
 		logwin = new wxTextCtrl(logtab, -1, wxT(""), wxDefaultPosition, wxSize(800, 600),
 			wxTE_MULTILINE|wxTE_READONLY);
+		ACCESSIBLE(logwin, WindowAccessible);
+		logwin->SetName(wxT("Status Log"));
 		ltsizer->Add(logwin, 1, wxEXPAND);
 		notebook->AddPage(logtab, _("Status Log"));
 	}
@@ -2230,6 +2244,9 @@ restart:
 			}
 			bool has_error = (tQSL_Error != TQSL_NO_ERROR);
 			if (has_error) {
+				bool dberror = false;
+				if (tQSL_Error == TQSL_DB_ERROR)
+					dberror = true;
 				processed++;
 				if (!dupe_error) {
 					errors++;
@@ -2278,7 +2295,7 @@ restart:
 						errmsg += _("Click 'Cancel' to abandon signing this log.");
 						ErrorsDialog dial(this, errmsg);
 						int choice = dial.ShowModal();
-						if (choice == TQSL_AE_CAN) {
+						if (dberror || choice == TQSL_AE_CAN) {
 							cancelled = true;
 							goto abortSigning;
 						}
@@ -4794,6 +4811,8 @@ MyFrame::BackupConfig(const wxString& filename, bool quiet) {
 			int status = tqsl_getDuplicateRecordsV2(conv, dupekey, dupedata, sizeof(dupekey));
 			if (status == -1)		// End of file
 				break;
+			if (status && tQSL_Error == TQSL_DB_ERROR)
+				break;
 			check_tqsl_error(status);
 			wxString dk = wxString::FromUTF8(dupekey);
 			wxString dd = wxString::FromUTF8(dupedata);
@@ -5429,7 +5448,7 @@ QSLApp::OnInit() {
 		if (!wxGetEnv(wxT("APPDIR"), &rsrcDir)) {
 			wxString home;
 			wxGetEnv(wxT("HOME"), &home);
-			rsrcDir = home + "/.tqsl";
+			rsrcDir = home + wxT("/.tqsl");
 		}
 		if (!wxDirExists(rsrcDir)) {
 			wxMkdir(rsrcDir);
@@ -6621,11 +6640,11 @@ MyFrame::CertTreeReset() {
 	if (!cert_save_label) return;
 	wxString nl = wxT("\n");
 	cert_save_label->SetLabel(nl + _("Save a Callsign Certificate"));
-	cert_save_button->SetLabel(nl + _("Save a Callsign Certificate"));
+	cert_save_button->SetName(wxT("Save a Callsign Certificate"));
 	cert_renew_label->SetLabel(nl + _("Renew a Callsign Certificate"));
-	cert_renew_button->SetLabel(nl + _("Renew a Callsign Certificate"));
+	cert_renew_button->SetName(wxT("Renew a Callsign Certificate"));
 	cert_prop_label->SetLabel(nl + _("Display a Callsign Certificate"));
-	cert_prop_button->SetLabel(nl + _("Display a Callsign Certificate"));
+	cert_prop_button->SetName(wxT("Display a Callsign Certificate"));
 	cert_menu->Enable(tc_c_Renew, false);
 	cert_renew_button->Enable(false);
 	cert_select_label->SetLabel(nl + _("Select a Callsign Certificate to process"));
@@ -6669,17 +6688,23 @@ void MyFrame::OnCertTreeSel(wxTreeEvent& event) {
 		wxString nl = wxT("\n");
 		cert_save_label->SetLabel(nl + _("Save the Callsign Certificate for") + wxT(" ") + callSign);
 		cert_save_label->Wrap(w - 10);
-		cert_save_button->SetLabel(nl + _("Save the Callsign Certificate for") + wxT(" ") + callSign);
+		wxString name = _("Save the Callsign Certificate for");
+		name += wxT(" ") + callSign;
+		cert_save_button->SetName(name);
 		cert_prop_label->SetLabel(nl + _("Display the Callsign Certificate properties for") + wxT(" ") + callSign);
 		cert_prop_label->Wrap(w - 10);
-		cert_prop_button->SetLabel(nl + _("Display the Callsign Certificate properties for") + wxT(" ") + callSign);
+		name = _("Display the Callsign Certificate properties for");
+		name  += wxT(" ") + callSign;
+		cert_prop_button->SetName(name);
 		if (!(keyonly || expired || superseded)) {
 			cert_renew_label->SetLabel(nl + _("Renew the Callsign Certificate for") +wxT(" ") + callSign);
 			cert_renew_label->Wrap(w - 10);
-			cert_renew_button->SetLabel(nl + _("Renew the Callsign Certificate for") +wxT(" ") + callSign);
+			name = _("Renew the Callsign Certificate for");
+			name += wxT(" ") + callSign;
+			cert_renew_button->SetName(name);
 		} else {
 			cert_renew_label->SetLabel(nl + _("Renew a Callsign Certificate"));
-			cert_renew_button->SetLabel(nl + _("Renew a Callsign Certificate"));
+			cert_renew_button->SetName(wxT("Renew a Callsign Certificate"));
 		}
 		cert_menu->Enable(tc_c_Renew, !(keyonly || expired || superseded));
 		cert_menu->Enable(tc_c_Undelete, deleted != 0);
@@ -6710,7 +6735,6 @@ void MyFrame::OnCertExport(wxCommandEvent& WXUNUSED(event)) {
 	wxString filename;
 	if (!data->path.IsEmpty() && !data->basename.IsEmpty()) {
 		filename = data->path + data->basename + wxT(".p12");
-
 	} else {
 		tqslTrace("MyFrame::OnCertExport", "call=%s", call);
 		wxString file_default = flattenCallSign(wxString::FromUTF8(call));
@@ -6764,6 +6788,16 @@ void MyFrame::OnCertExport(wxCommandEvent& WXUNUSED(event)) {
 		}
 	} while (terr);
 	// When setting the password, always use UTF8.
+#if defined(__APPLE__)
+	// pass option to use old crypto
+	bool oldCrypto;
+	wxConfig::Get()->Read(wxT("P12OldCrypto"), &oldCrypto, DEFAULT_OLDCRYPTO);
+	if (oldCrypto)
+		setenv("OLDCRYPTO", "TRUE", true);
+	else
+		setenv("OLDCRYPTO", "FALSE", true);
+#endif
+
 	if (tqsl_exportPKCS12File(data->getCert(), filename.ToUTF8(), dial.Password().ToUTF8())) {
 		char buf[500];
 		strncpy(buf, getLocalizedErrorString().ToUTF8(), sizeof buf);
@@ -6863,11 +6897,11 @@ MyFrame::LocTreeReset() {
 	stn_menu->Enable(tm_s_Properties, false);
 	wxString nl = wxT("\n");
 	loc_edit_label->SetLabel(nl + _("Edit a Station Location"));
-	loc_edit_button->SetLabel(nl + _("Edit a Station Location"));
+	loc_edit_button->SetName(wxT("Edit a Station Location"));
 	loc_delete_label->SetLabel(nl + _("Delete a Station Location"));
-	loc_delete_button->SetLabel(nl + _("Delete a Station Location"));
+	loc_delete_button->SetName(wxT("Delete a Station Location"));
 	loc_prop_label->SetLabel(nl + _("Display Station Location Properties"));
-	loc_prop_button->SetLabel(nl + _("Display Station Location Properties"));
+	loc_prop_button->SetName(wxT("Display Station Location Properties"));
 	loc_select_label->SetLabel(nl + _("Select a Station Location to process"));
 }
 
@@ -6890,13 +6924,13 @@ void MyFrame::OnLocTreeSel(wxTreeEvent& event) {
 		wxString nl = wxT("\n");
 		loc_edit_label->SetLabel(nl + _("Edit Station Location ") + call + wxT(": ") + lname);
 		loc_edit_label->Wrap(w - 10);
-		loc_edit_button->SetLabel(nl + _("Edit Station Location ") + call + wxT(": ") + lname);
+		loc_edit_button->SetName(wxT("Edit Station Location ") + call + wxT(": ") + lname);
 		loc_delete_label->SetLabel(nl + _("Delete Station Location ") + call + wxT(": ") + lname);
 		loc_delete_label->Wrap(w - 10);
-		loc_delete_button->SetLabel(nl +  _("Delete Station Location ") + call + wxT(": ") + lname);
+		loc_delete_button->SetName(wxT("Delete Station Location ") + call + wxT(": ") + lname);
 		loc_prop_label->SetLabel(nl + _("Display Station Location Properties for ") + call + wxT(": ") + lname);
 		loc_prop_label->Wrap(w - 10);
-		loc_prop_button->SetLabel(nl + _("Display Station Location Properties for ") + call + wxT(": ") + lname);
+		loc_prop_button->SetName(wxT("Display Station Location Properties for ") + call + wxT(": ") + lname);
 		loc_select_label->SetLabel(wxT(""));
 	} else {
 		LocTreeReset();

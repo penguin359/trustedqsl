@@ -20,6 +20,7 @@ using std::string;
 #include "wxutil.h"
 #include "tqsltrace.h"
 #include "winstrdefs.h"
+#include "tqslctrls.h"
 
 extern int get_address_field(const char *callsign, const char *field, string& result);
 
@@ -32,13 +33,27 @@ BEGIN_EVENT_TABLE(TQSLWizard, wxWizard)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(TQSLWizLocPage, TQSLWizPage)
-	EVT_COMBOBOX(-1, TQSLWizLocPage::OnComboBoxEvent)
 	EVT_CHECKBOX(-1, TQSLWizLocPage::OnCheckBoxEvent)
 	EVT_WIZARD_PAGE_CHANGING(wxID_ANY, TQSLWizLocPage::OnPageChanging)
-	EVT_TEXT(wxID_ANY, TQSLWizLocPage::OnTextEvent)
+	EVT_TEXT(ID_LOC_GRID, TQSLWizLocPage::OnTextEvent)
+	EVT_TEXT(ID_LOC_IOTA, TQSLWizLocPage::OnTextEvent)
 #if wxMAJOR_VERSION < 3 && (wxMAJOR_VERSION != 2 && wxMINOR_VERSION != 9)
 	EVT_SIZE(TQSLWizLocPage::OnSize)
 #endif
+	EVT_COMBOBOX(ID_LOC_CALL, TQSLWizLocPage::OnComboBoxEvent)
+	EVT_COMBOBOX(ID_LOC_DXCC, TQSLWizLocPage::OnComboBoxEvent)
+	EVT_COMBOBOX(ID_LOC_ITU, TQSLWizLocPage::OnComboBoxEvent)
+	EVT_COMBOBOX(ID_LOC_CQ, TQSLWizLocPage::OnComboBoxEvent)
+	EVT_COMBOBOX(ID_LOC_PAS, TQSLWizLocPage::OnComboBoxEvent)
+	EVT_COMBOBOX(ID_LOC_SAS, TQSLWizLocPage::OnComboBoxEvent)
+	EVT_COMBOBOX(ID_LOC_PARK, TQSLWizLocPage::OnComboBoxEvent)
+	EVT_TEXT(ID_LOC_CALL, tqslComboBox::OnTextEntry)
+	EVT_TEXT(ID_LOC_DXCC, tqslComboBox::OnTextEntry)
+	EVT_TEXT(ID_LOC_ITU, tqslComboBox::OnTextEntry)
+	EVT_TEXT(ID_LOC_CQ, tqslComboBox::OnTextEntry)
+	EVT_TEXT(ID_LOC_PAS, tqslComboBox::OnTextEntry)
+	EVT_TEXT(ID_LOC_SAS, tqslComboBox::OnTextEntry)
+	EVT_TEXT(ID_LOC_PARK, tqslComboBox::OnTextEntry)
 END_EVENT_TABLE()
 
 static char callsign[TQSL_CALLSIGN_MAX+1];
@@ -179,7 +194,7 @@ TQSLWizLocPage::UpdateFields(int noupdate_field) {
 		int in_type;
 		char gabbi_name[40];
 
-		wxOwnerDrawnComboBox* cb = reinterpret_cast<wxOwnerDrawnComboBox *>(p1_controls[i]);
+		tqslComboBox* cb = reinterpret_cast<tqslComboBox *>(p1_controls[i]);
 		wxTextCtrl* tx = reinterpret_cast<wxTextCtrl *>(p1_controls[i]);
 		wxStaticText* st = reinterpret_cast<wxStaticText *>(p1_controls[i]);
 		tqsl_getLocationFieldChanged(loc, i, &changed);
@@ -369,7 +384,7 @@ TQSLWizLocPage::UpdateFields(int noupdate_field) {
 
 		tqsl_getLocationFieldDataLabel(loc, i, label, sizeof label);
 		tqsl_getLocationFieldDataGABBI(loc, i, gabbi_name, sizeof gabbi_name);
-		wxOwnerDrawnComboBox* cb;
+		tqslComboBox* cb;
 		if (isPAS(gabbi_name)) {
 			if (!boxITUZ->IsShown(boxPAS))
 				relayout = true;
@@ -531,9 +546,25 @@ TQSLWizLocPage::UpdateFields(int noupdate_field) {
 void
 TQSLWizLocPage::OnComboBoxEvent(wxCommandEvent& event) {
 	tqslTrace("TQSLWizLocPage::OnComboBoxEvent", NULL);
-	int control_idx = event.GetId() - TQSL_ID_LOW;
+
+	int control_idx = -1;
+	for (int idx = 0; idx < static_cast<int>(p1_ids.size()); idx ++) {
+		if (p1_ids[idx] == event.GetId()) {
+			control_idx = idx;
+			break;
+		}
+	}
+	if (control_idx == -1) {
+		for (int idx = 0; idx < static_cast<int>(p2_ids.size()); idx ++) {
+			if (p2_ids[idx] == event.GetId()) {
+				control_idx = (idx + static_cast<int>(p1_ids.size()));
+				break;
+			}
+		}
+	}
 	if (control_idx < 0 || control_idx >= static_cast<int>(p1_controls.size()) + static_cast<int>(p2_controls.size()))
 		return;
+
 	int cur_page;
 	tqsl_getStationLocationCapturePage(loc, &cur_page);
 
@@ -588,7 +619,21 @@ TQSLWizLocPage::OnComboBoxEvent(wxCommandEvent& event) {
 void
 TQSLWizLocPage::OnTextEvent(wxCommandEvent& event) {
 	tqslTrace("TQSLWizLocPage::OnTextEvent", NULL);
-	int control_idx = event.GetId() - TQSL_ID_LOW;
+	int control_idx = -1;
+	for (int idx = 0; idx < static_cast<int>(p1_ids.size()); idx ++) {
+		if (p1_ids[idx] == event.GetId()) {
+			control_idx = idx;
+			break;
+		}
+	}
+	if (control_idx == -1) {
+		for (int idx = 0; idx < static_cast<int>(p2_ids.size()); idx ++) {
+			if (p2_ids[idx] == event.GetId()) {
+				control_idx = (idx + static_cast<int>(p1_ids.size()));
+				break;
+			}
+		}
+	}
 	if (control_idx < 0 || control_idx >= static_cast<int>(p1_controls.size()) + static_cast<int>(p2_controls.size()))
 		return;
 	int cur_page;
@@ -679,12 +724,14 @@ TQSLWizLocPage::TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp)
 	if (tqsl_getNextStationLocationCapturePage(loc, &second_page)) second_page = 0;
 
         wxFont callSignFont(48, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+#if !__WXMAC__
         wxFont dxccFont(24, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+#endif
         wxFont labelFont(6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
 	wxBoxSizer *hsizer;
 	hsizer = new wxBoxSizer(wxHORIZONTAL);
-	hsizer->Add(new wxStaticText(this, -1, wxT("Confirming QSOs with Station"), wxDefaultPosition, wxSize(label_w*9, -1), wxALIGN_CENTRE_HORIZONTAL|wxST_NO_AUTORESIZE), 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5);
+	hsizer->Add(new wxStaticText(this, -1, wxT("Confirming QSOs with Station"), wxDefaultPosition, wxSize(label_w*9, -1), wxALIGN_CENTRE_HORIZONTAL|wxST_NO_AUTORESIZE), 0, wxALL|wxALIGN_CENTER_VERTICAL, 5);
 	sizer->Add(hsizer, 1);
 	sizer->AddStretchSpacer(1);
 	hsizer = new wxBoxSizer(wxHORIZONTAL);
@@ -692,7 +739,7 @@ TQSLWizLocPage::TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp)
 			wxSize(label_w*9, -1), wxALIGN_CENTRE_HORIZONTAL|wxST_NO_AUTORESIZE);
 	callLabel->SetFont(callSignFont);
 	hsizer->Add(callLabel, 0, wxALIGN_CENTRE_VERTICAL, 5);
-	sizer->Add(hsizer, 0, wxALIGN_CENTRE_VERTICAL, 5);
+	sizer->Add(hsizer, 0, wxALIGN_CENTRE_HORIZONTAL, 5);
 	// Process the first page
 	tqsl_getNumLocationField(loc, &numf);
 	for (int i = 0; i < numf; i++) {
@@ -717,40 +764,64 @@ TQSLWizLocPage::TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp)
 		tqsl_getLocationFieldDataGABBI(loc, i, gabbi_name, sizeof gabbi_name);
 		tqsl_getLocationFieldFlags(loc, i, &flags);
 		tqsl_getLocationFieldDataLength(loc, i, &data_length);
+		int ctl_id = wxID_ANY;
 		if (!strcmp(gabbi_name, "DXCC")) {
+			ctl_id = ID_LOC_DXCC;
 			data_length *= 6;			// Wider font, DXCC set to 10 chs when 45 is right.
 		} else if (!strcmp(gabbi_name, "GRIDSQUARE")) {
+			ctl_id = ID_LOC_GRID;
 			data_length = 17;			// Logbook allows 27?
-		} else if (strcmp(gabbi_name, "CQZ") == 0 || strcmp(gabbi_name, "ITUZ") == 0) {
+		} else if (strcmp(gabbi_name, "CQZ") == 0) {
+			ctl_id = ID_LOC_CQ;
 			data_length = 8;			// Logbook 10, need "[NONE]".
+		} else if (strcmp(gabbi_name, "ITUZ") == 0) {
+			ctl_id = ID_LOC_ITU;
+			data_length = 8;			// Logbook 10, need "[NONE]".
+		} else if (strcmp(gabbi_name, "CALL") == 0) {
+			ctl_id = ID_LOC_CALL;
+		} else if (strcmp(gabbi_name, "IOTA") == 0) {
+			ctl_id = ID_LOC_IOTA;
+		} else {
+			ctl_id = TQSL_ID_LOW+total_fields;
 		}
 		control_width = getTextSize(this).GetWidth() * data_length;
 		switch(in_type) {
 			case TQSL_LOCATION_FIELD_DDLIST:
 			case TQSL_LOCATION_FIELD_LIST:
-				control_p = new wxOwnerDrawnComboBox(this, TQSL_ID_LOW+total_fields, wxT(""), wxDefaultPosition, wxSize(control_width, -1),
+#if wxUSE_ACCESSIBILITY && __WXMAC__
+				control_p = new tqslComboBox(this, ctl_id, wxT(""), wxDefaultPosition, wxSize(control_width, -1),
+				0, 0, wxCB_DROPDOWN);
+#else
+				control_p = new tqslComboBox(this, ctl_id, wxT(""), wxDefaultPosition, wxSize(control_width, -1),
 				0, 0, wxCB_DROPDOWN|wxCB_READONLY);
+#endif
+				ACCESSIBLE(static_cast<tqslComboBox*>(control_p), ComboBoxAx);
+				control_p->SetName(lbl);
 				hsizer->Add(control_p, 0, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
 				if(!strcmp(gabbi_name, "CALL")) {
-					ctlCallSign = static_cast<wxOwnerDrawnComboBox*>(control_p);
+					ctlCallSign = static_cast<tqslComboBox*>(control_p);
 					sizer->Add(hsizer, 0, wxLEFT|wxRIGHT, 5);
 				}
 				if(!strcmp(gabbi_name, "DXCC")) {
-					ctlEntity = static_cast<wxOwnerDrawnComboBox*>(control_p);
+					ctlEntity = static_cast<tqslComboBox*>(control_p);
+#if !__WXMAC__
 					ctlEntity->SetFont(dxccFont);
+#endif
 					sizer->Add(hsizer, 0, wxLEFT|wxRIGHT, 5);
 				}
 				if(!strcmp(gabbi_name, "ITUZ")) {
-					ctlITUZ = static_cast<wxOwnerDrawnComboBox*>(control_p);
+					ctlITUZ = static_cast<tqslComboBox*>(control_p);
 					boxITUZ = hsizer;
 				}
 				if(!strcmp(gabbi_name, "CQZ")) {
-					ctlCQZ = static_cast<wxOwnerDrawnComboBox*>(control_p);
+					ctlCQZ = static_cast<tqslComboBox*>(control_p);
 					boxCQZ = hsizer;
 				}
 				break;
 			case TQSL_LOCATION_FIELD_TEXT:
-				control_p = new wxTextCtrl(this, TQSL_ID_LOW+total_fields, wxT(""), wxDefaultPosition, wxSize(control_width, -1));
+				control_p = new wxTextCtrl(this, ctl_id, wxT(""), wxDefaultPosition, wxSize(control_width, -1));
+				ACCESSIBLE(control_p, wxAccessible);
+				control_p->SetName(lbl);
 				hsizer->Add(control_p, 0, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
 				if(!strcmp(gabbi_name, "GRIDSQUARE")) {
 					ctlGrid = static_cast<wxTextCtrl*>(control_p);
@@ -765,6 +836,7 @@ TQSLWizLocPage::TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp)
 				break;
 		}
 		p1_controls.push_back(control_p);
+		p1_ids.push_back(ctl_id);
 		total_fields++;
 	}
 
@@ -783,6 +855,7 @@ TQSLWizLocPage::TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp)
 		tqsl_getLocationFieldDataLength(loc, i, &data_length);
 		char gabbi_name[256];
 		tqsl_getLocationFieldDataGABBI(loc, i, gabbi_name, sizeof gabbi_name);
+		int ctl_id = wxID_ANY;
 		if (in_type != TQSL_LOCATION_FIELD_BADZONE) {
 			switch (i) {
 			    case 0:		// US_STATE
@@ -792,6 +865,7 @@ TQSLWizLocPage::TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp)
 						wxSize(label_w, -1), wxALIGN_RIGHT/*|wxST_NO_AUTORESIZE*/);
 				lblPAS->SetFont(labelFont);
 				boxPAS->Add(lblPAS, 0, wxTOP|wxALIGN_CENTER_VERTICAL, 5);
+				ctl_id = ID_LOC_PAS;
 				break;
 			    case 1:		// US_COUNTY
 				control_width = getTextSize(this).GetWidth() * 20;
@@ -800,6 +874,7 @@ TQSLWizLocPage::TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp)
 						wxSize(label_w, -1), wxALIGN_RIGHT/*|wxST_NO_AUTORESIZE*/);
 				lblSAS->SetFont(labelFont);
 				boxSAS->Add(lblSAS, 0, wxTOP|wxALIGN_CENTER_VERTICAL, 5);
+				ctl_id = ID_LOC_SAS;
 				break;
 			    case 2:		// US_PARK
 				control_width = getTextSize(this).GetWidth() * data_length;
@@ -808,6 +883,7 @@ TQSLWizLocPage::TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp)
 						wxSize(label_w, -1), wxALIGN_RIGHT/*|wxST_NO_AUTORESIZE*/);
 				lblPark->SetFont(labelFont);
 				boxPark->Add(lblPark, 0, wxTOP|wxALIGN_CENTER_VERTICAL, 5);
+				ctl_id = ID_LOC_PARK;
 				break;
 			}
 		}
@@ -816,31 +892,40 @@ TQSLWizLocPage::TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp)
 		switch(in_type) {
 			case TQSL_LOCATION_FIELD_DDLIST:
 			case TQSL_LOCATION_FIELD_LIST:
-				control_p = new wxOwnerDrawnComboBox(this, TQSL_ID_LOW+total_fields, wxT(""), wxDefaultPosition, wxSize(control_width, -1),
+				control_p = new tqslComboBox(this, ctl_id, wxT(""), wxDefaultPosition, wxSize(control_width, -1),
+#if wxUSE_ACCESSIBILITY && __WXMAC__
+				0, 0, wxCB_DROPDOWN);
+#else
 				0, 0, wxCB_DROPDOWN|wxCB_READONLY);
+#endif
+				ACCESSIBLE(static_cast<tqslComboBox*>(control_p), ComboBoxAx);
+				control_p->SetName(lbl);
 				break;
 			case TQSL_LOCATION_FIELD_TEXT:
-				control_p = new wxTextCtrl(this, TQSL_ID_LOW+total_fields, wxT(""), wxDefaultPosition, wxSize(control_width, -1));
+				control_p = new wxTextCtrl(this, ctl_id, wxT(""), wxDefaultPosition, wxSize(control_width, -1));
+				ACCESSIBLE(control_p, WindowAccessible);
+				control_p->SetName(lbl);
 				break;
 			case TQSL_LOCATION_FIELD_BADZONE:
 				continue;
 		}
 		p2_controls.push_back(control_p);
+		p2_ids.push_back(ctl_id);
 		switch (i) {
 		    case 0:	// US_STATE
-			ctlPAS = static_cast<wxOwnerDrawnComboBox*>(control_p);
+			ctlPAS = static_cast<tqslComboBox*>(control_p);
 			boxPAS->Add(control_p, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
 			boxITUZ->Add(boxPAS, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
 			sizer->Add(boxITUZ, 0, wxLEFT|wxRIGHT, 5);
 			break;
 		    case 1:	// US_COUNTY
-			ctlSAS = static_cast<wxOwnerDrawnComboBox*>(control_p);
+			ctlSAS = static_cast<tqslComboBox*>(control_p);
 			boxSAS->Add(control_p, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
 			boxCQZ->Add(boxSAS, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
 			sizer->Add(boxCQZ, 0, wxLEFT|wxRIGHT, 5);
 			break;
 		    case 2:	// US_PARK
-			ctlPark = static_cast<wxOwnerDrawnComboBox*>(control_p);
+			ctlPark = static_cast<tqslComboBox*>(control_p);
 			boxPark->Add(control_p, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
 			boxIOTA->Add(boxPark, 1, wxALIGN_CENTER | wxLEFT | wxTOP, 5);
 			sizer->Add(boxIOTA, 0, wxLEFT|wxRIGHT, 5);
@@ -853,7 +938,7 @@ TQSLWizLocPage::TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp)
 	wxCoord w, h;
 	int tsize = 80;
 	sdc.GetTextExtent(wxString::FromUTF8("X"), &w, &h);
-	errlbl = new wxStaticText(this, -1, wxT(""), wxDefaultPosition,
+	errlbl = new wxStaticText(this, ID_LOC_ZERR, wxT(""), wxDefaultPosition,
 			wxSize(w*tsize, h), wxALIGN_LEFT|wxST_NO_AUTORESIZE);
 	sizer->AddStretchSpacer(1);
 	sizer->Add(errlbl, 0);
@@ -1166,6 +1251,8 @@ TQSLWizFinalPage::TQSLWizFinalPage(TQSLWizard *parent, tQSL_Location locp, TQSLW
 	newname = new wxTextCtrl(this, TQSL_ID_LOW+1, wxT(""), wxPoint(0, y), wxSize(control_width, -1));
 	sizer->Add(newname, 0, wxEXPAND);
 	newname->SetValue(parent->GetLocationName());
+	ACCESSIBLE(newname, WindowAccessible);
+	newname->SetName(_("Station Location Name"));
 	errlbl = new wxStaticText(this, -1, wxT(""), wxDefaultPosition, wxSize(control_width, -1),
 				wxALIGN_LEFT/*|wxST_NO_AUTORESIZE*/);
 	sizer->Add(errlbl, 0, wxTOP);

@@ -1,4 +1,4 @@
-<tqslconfig majorversion="11" minorversion="25">
+<tqslconfig majorversion="11" minorversion="26">
      <adifmap>
        <adifmode adif-mode="AM" mode="AM">AM</adifmode>
        <adifmode adif-mode="ARDOP" mode="ARDOP">ARDOP</adifmode>
@@ -7732,6 +7732,7 @@
        <satellite name="HO-113" startDate="2021-12-26">HO-113</satellite>
        <satellite name="HO-119" startDate="2022-12-18">Hope-OSCAR 119</satellite>
        <satellite name="HO-68" startDate="2009-12-15">Hope-Oscar 68</satellite>
+       <satellite name="INSPR7" startDate="2023-04-15">INSPIRE-Sat7</satellite>
        <satellite name="IO-117" startDate="2022-07-13">GreenCube</satellite>
        <satellite name="IO-86" startDate="2015-09-28">Indonesia-OSCAR 86 (LAPAN-ORARI)</satellite>
        <satellite name="JO-97" startDate="2018-12-08">Jordan-OSCAR 97(JY1Sat)</satellite>

@@ -52,6 +52,7 @@ enum {
 BEGIN_EVENT_TABLE(CertTree, wxTreeCtrl)
 	EVT_TREE_ITEM_ACTIVATED(-1, CertTree::OnItemActivated)
 	EVT_RIGHT_DOWN(CertTree::OnRightDown)
+	EVT_TREE_KEY_DOWN(wxID_ANY, CertTree::OnKeyDown)
 END_EVENT_TABLE()
 
 CertTree::CertTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos,
@@ -73,6 +74,9 @@ CertTree::CertTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos,
 	il->Add(replacedbm);
 	il->Add(folderbm);
 	SetImageList(il);
+	ACCESSIBLE(this, WindowAccessible);
+	this->SetName(_("Callsign Certificates"));
+	tabTo = NULL;
 }
 
 
@@ -286,5 +290,22 @@ CertTree::OnRightDown(wxMouseEvent& event) {
 		}
 		PopupMenu(cm, event.GetPosition());
 		delete cm;
+	}
+}
+
+void
+CertTree::SetTabTo(wxWindow *w) {
+	tabTo = w;
+}
+
+void
+CertTree::OnKeyDown(wxTreeEvent& event) {
+	const wxKeyEvent& keyev = event.GetKeyEvent();
+	long keycode = keyev.GetKeyCode();
+	if (keycode == WXK_TAB) {
+		if (tabTo) {
+			tabTo->SetFocus();
+			event.Skip();
+		}
 	}
 }

@@ -110,8 +110,10 @@ CRQ_ProviderPage::CRQ_ProviderPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Pa
 	sizer->Add(st, 0, wxALL, 10);
 
 	sizer->Add(new wxStaticText(this, -1, _("Certificate Issuer:")), 0, wxLEFT|wxRIGHT, 10);
-	tc_provider = new wxOwnerDrawnComboBox(this, ID_CRQ_PROVIDER, wxT(""), wxDefaultPosition,
+	tc_provider = new tqslComboBox(this, ID_CRQ_PROVIDER, wxT(""), wxDefaultPosition,
 		wxDefaultSize, 0, 0, wxCB_DROPDOWN|wxCB_READONLY);
+	ACCESSIBLE(tc_provider, ComboBoxAx);
+	tc_provider->SetName(wxT("Certificate Issuer"));
 	sizer->Add(tc_provider, 0, wxLEFT|wxRIGHT|wxEXPAND, 10);
 	tc_provider_info = new wxStaticText(this, ID_CRQ_PROVIDER_INFO, wxT(""), wxDefaultPosition,
 		wxSize(0, em_h*5));
@@ -176,6 +178,13 @@ static wxDateTime::Month mons[] = {
 
 BEGIN_EVENT_TABLE(CRQ_CallsignPage, CRQ_Page)
 	EVT_TEXT(ID_CRQ_CALL, CRQ_Page::check_valid)
+	EVT_TEXT(ID_CRQ_DXCC, tqslComboBox::OnTextEntry)
+	EVT_TEXT(ID_CRQ_QBYEAR, tqslComboBox::OnTextEntry)
+	EVT_TEXT(ID_CRQ_QBMONTH, tqslComboBox::OnTextEntry)
+	EVT_TEXT(ID_CRQ_QBDAY, tqslComboBox::OnTextEntry)
+	EVT_TEXT(ID_CRQ_QEYEAR, tqslComboBox::OnTextEntry)
+	EVT_TEXT(ID_CRQ_QEMONTH, tqslComboBox::OnTextEntry)
+	EVT_TEXT(ID_CRQ_QEDAY, tqslComboBox::OnTextEntry)
 	EVT_COMBOBOX(ID_CRQ_DXCC, CRQ_Page::check_valid)
 	EVT_COMBOBOX(ID_CRQ_QBYEAR, CRQ_Page::check_valid)
 	EVT_COMBOBOX(ID_CRQ_QBMONTH, CRQ_Page::check_valid)
@@ -206,6 +215,8 @@ CRQ_CallsignPage::CRQ_CallsignPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Pa
 		cs = wxString::FromUTF8(crq->callSign);
 	tc_call = new wxTextCtrl(this, ID_CRQ_CALL, cs, wxDefaultPosition, wxSize(em_w*15, -1));
 	tc_call->SetMaxLength(TQSL_CALLSIGN_MAX);
+	ACCESSIBLE(tc_call, WindowAccessible);
+	tc_call->SetName(wxT("Call sign"));
 	hsizer->Add(tc_call, 0, wxEXPAND, 0);
 	sizer->Add(hsizer, 0, wxLEFT|wxRIGHT|wxTOP|wxEXPAND, 10);
 	if (crq && crq->callSign[0])
@@ -213,9 +224,16 @@ CRQ_CallsignPage::CRQ_CallsignPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Pa
 
 	hsizer = new wxBoxSizer(wxHORIZONTAL);
 	hsizer->Add(dst, 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
-	tc_dxcc = new wxOwnerDrawnComboBox(this, ID_CRQ_DXCC, wxT(""), wxDefaultPosition,
+#if  wxUSE_ACCESSIBILITY && __WXMAC__
+	tc_dxcc = new tqslComboBox(this, ID_CRQ_DXCC, wxT(""), wxDefaultPosition,
+		wxSize(em_w*25, -1), 0, 0, wxCB_DROPDOWN);
+#else
+	tc_dxcc = new tqslComboBox(this, ID_CRQ_DXCC, wxT(""), wxDefaultPosition,
 		wxSize(em_w*25, -1), 0, 0, wxCB_DROPDOWN|wxCB_READONLY);
+#endif
 	hsizer->Add(tc_dxcc, 1, 0, 0);
+	ACCESSIBLE(tc_dxcc, ComboBoxAx);
+	tc_dxcc->SetName(wxT("DXCC Entity"));
 	sizer->Add(hsizer, 0, wxALL, 10);
 
 	DXCC dx;
@@ -235,7 +253,7 @@ CRQ_CallsignPage::CRQ_CallsignPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Pa
 	if (i >= 0)
 		tc_dxcc->SetSelection(i);
 	struct {
-		wxOwnerDrawnComboBox **cb;
+		tqslComboBox **cb;
 		int id;
 	} boxes[][3] = {
 	    { {&tc_qsobeginy, ID_CRQ_QBYEAR}, {&tc_qsobeginm, ID_CRQ_QBMONTH}, {&tc_qsobegind, ID_CRQ_QBDAY} },
@@ -259,17 +277,23 @@ CRQ_CallsignPage::CRQ_CallsignPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Pa
 		sizer->Add(new wxStaticText(this, -1, label), 0, wxBOTTOM, 5);
 		hsizer = new wxBoxSizer(wxHORIZONTAL);
 		hsizer->Add(new wxStaticText(this, -1, wxT("Y")), 0, wxLEFT|wxALIGN_CENTER_VERTICAL, 20);
-		*(boxes[i][0].cb) = new wxOwnerDrawnComboBox(this, boxes[i][0].id, wxT(""), wxDefaultPosition,
-			wxSize(em_w*8, -1), 0, 0, wxCB_DROPDOWN|wxCB_READONLY);
+		*(boxes[i][0].cb) = new tqslComboBox(this, boxes[i][0].id, wxT(""), wxDefaultPosition,
+			wxSize(em_w*8, -1), 0, 0, wxCB_DROPDOWN/*|wxCB_READONLY*/);
 		hsizer->Add(*(boxes[i][0].cb), 0, wxLEFT, 5);
+		ACCESSIBLE(*(boxes[i][0].cb), ComboBoxAx);
+		(*boxes[i][0].cb)->SetName(i ? wxT("QSO End Year") : wxT("QSO Begin Year"));
 		hsizer->Add(new wxStaticText(this, -1, wxT("M")), 0, wxLEFT|wxALIGN_CENTER_VERTICAL, 10);
-		*(boxes[i][1].cb) = new wxOwnerDrawnComboBox(this, boxes[i][1].id, wxT(""), wxDefaultPosition,
-			wxSize(em_w*6, -1), 0, 0, wxCB_DROPDOWN|wxCB_READONLY);
+		*(boxes[i][1].cb) = new tqslComboBox(this, boxes[i][1].id, wxT(""), wxDefaultPosition,
+			wxSize(em_w*6, -1), 0, 0, wxCB_DROPDOWN/*|wxCB_READONLY*/);
 		hsizer->Add(*(boxes[i][1].cb), 0, wxLEFT, 5);
+		ACCESSIBLE(*(boxes[i][1].cb), ComboBoxAx);
+		(*boxes[i][1].cb)->SetName(i ? wxT("QSO End Month") : wxT("QSO Begin Month"));
 		hsizer->Add(new wxStaticText(this, -1, wxT("D")), 0, wxLEFT|wxALIGN_CENTER_VERTICAL, 10);
-		*(boxes[i][2].cb) = new wxOwnerDrawnComboBox(this, boxes[i][2].id, wxT(""), wxDefaultPosition,
-			wxSize(em_w*6, -1), 0, 0, wxCB_DROPDOWN|wxCB_READONLY);
+		*(boxes[i][2].cb) = new tqslComboBox(this, boxes[i][2].id, wxT(""), wxDefaultPosition,
+			wxSize(em_w*6, -1), 0, 0, wxCB_DROPDOWN/*|wxCB_READONLY*/);
 		hsizer->Add(*(boxes[i][2].cb), 0, wxLEFT, 5);
+		ACCESSIBLE(*(boxes[i][2].cb), ComboBoxAx);
+		(*boxes[i][2].cb)->SetName(i ? wxT("QSO End Day of Month") : wxT("QSO Begin Day of Month"));
 		int iofst = 0;
 		if (i > 0) {
 			iofst++;
@@ -390,6 +414,8 @@ CRQ_NamePage::CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(paren
 	else if (config->Read(wxT("Name"), &val))
 		s = val;
 	tc_name = new wxTextCtrl(this, ID_CRQ_NAME, s, wxDefaultPosition, wxSize(def_w, -1));
+	ACCESSIBLE(tc_name, WindowAccessible);
+	tc_name->SetName(wxT("Name"));
 	hsizer->Add(tc_name, 1, 0, 0);
 	sizer->Add(hsizer, 0, wxALL, 10);
 	tc_name->SetMaxLength(TQSL_CRQ_NAME_MAX);
@@ -403,6 +429,8 @@ CRQ_NamePage::CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(paren
 	hsizer->Add(new wxStaticText(this, -1, _("Address"), wxDefaultPosition, zst->GetSize(),
 		wxST_NO_AUTORESIZE|wxALIGN_RIGHT), 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	tc_addr1 = new wxTextCtrl(this, ID_CRQ_ADDR1, s, wxDefaultPosition, wxSize(def_w, -1));
+	ACCESSIBLE(tc_addr1, WindowAccessible);
+	tc_addr1->SetName(wxT("Address line 1"));
 	hsizer->Add(tc_addr1, 1, 0, 0);
 	sizer->Add(hsizer, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
 	tc_addr1->SetMaxLength(TQSL_CRQ_ADDR_MAX);
@@ -416,6 +444,8 @@ CRQ_NamePage::CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(paren
 	hsizer->Add(new wxStaticText(this, -1, wxT(""), wxDefaultPosition, zst->GetSize(),
 		wxST_NO_AUTORESIZE|wxALIGN_RIGHT), 0, wxRIGHT, 5);
 	tc_addr2 = new wxTextCtrl(this, ID_CRQ_ADDR2, s, wxDefaultPosition, wxSize(def_w, -1));
+	ACCESSIBLE(tc_addr2, WindowAccessible);
+	tc_addr2->SetName(wxT("Address line 2"));
 	hsizer->Add(tc_addr2, 1, 0, 0);
 	sizer->Add(hsizer, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
 	tc_addr2->SetMaxLength(TQSL_CRQ_ADDR_MAX);
@@ -429,6 +459,8 @@ CRQ_NamePage::CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(paren
 	hsizer->Add(new wxStaticText(this, -1, _("City"), wxDefaultPosition, zst->GetSize(),
 		wxST_NO_AUTORESIZE|wxALIGN_RIGHT), 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	tc_city = new wxTextCtrl(this, ID_CRQ_CITY, s, wxDefaultPosition, wxSize(def_w, -1));
+	ACCESSIBLE(tc_city, WindowAccessible);
+	tc_city->SetName(wxT("City"));
 	hsizer->Add(tc_city, 1, 0, 0);
 	sizer->Add(hsizer, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
 	tc_city->SetMaxLength(TQSL_CRQ_CITY_MAX);
@@ -442,6 +474,8 @@ CRQ_NamePage::CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(paren
 	hsizer->Add(new wxStaticText(this, -1, _("State"), wxDefaultPosition, zst->GetSize(),
 		wxST_NO_AUTORESIZE|wxALIGN_RIGHT), 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	tc_state = new wxTextCtrl(this, ID_CRQ_STATE, s, wxDefaultPosition, wxSize(def_w, -1));
+	ACCESSIBLE(tc_state, WindowAccessible);
+	tc_state->SetName(wxT("State"));
 	hsizer->Add(tc_state, 1, 0, 0);
 	sizer->Add(hsizer, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
 	tc_state->SetMaxLength(TQSL_CRQ_STATE_MAX);
@@ -455,6 +489,8 @@ CRQ_NamePage::CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(paren
 	hsizer->Add(zst, 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	tc_zip = new wxTextCtrl(this, ID_CRQ_ZIP, s, wxDefaultPosition, wxSize(def_w, -1));
 	hsizer->Add(tc_zip, 1, 0, 0);
+	ACCESSIBLE(tc_zip, WindowAccessible);
+	tc_zip->SetName(wxT("ZIP"));
 	sizer->Add(hsizer, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
 	tc_zip->SetMaxLength(TQSL_CRQ_POSTAL_MAX);
 
@@ -467,6 +503,8 @@ CRQ_NamePage::CRQ_NamePage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(paren
 	hsizer->Add(new wxStaticText(this, -1, _("Country"), wxDefaultPosition, zst->GetSize(),
 		wxST_NO_AUTORESIZE|wxALIGN_RIGHT), 0, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	tc_country = new wxTextCtrl(this, ID_CRQ_COUNTRY, s, wxDefaultPosition, wxSize(def_w, -1));
+	ACCESSIBLE(tc_country, WindowAccessible);
+	tc_country->SetName(wxT("Country"));
 	hsizer->Add(tc_country, 1, 0, 0);
 	sizer->Add(hsizer, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
 	tc_country->SetMaxLength(TQSL_CRQ_COUNTRY_MAX);
@@ -566,6 +604,8 @@ CRQ_EmailPage::CRQ_EmailPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(par
 	tc_email = new wxTextCtrl(this, ID_CRQ_EMAIL, s, wxDefaultPosition, wxSize(em_w*30, -1));
 	sizer->Add(tc_email, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
 	tc_email->SetMaxLength(TQSL_CRQ_EMAIL_MAX);
+	ACCESSIBLE(tc_email, WindowAccessible);
+	tc_email->SetName(wxT("e-mail"));
 	wxStaticText *tc_warn = new wxStaticText(this, -1, _("Note: The e-mail address you provide here is the address to which the issued Certificate will be sent. Make sure it's the correct address!"));
 	sizer->Add(tc_warn, 0, wxALL, 10);
 	tc_warn->Wrap(_parent->maxWidth);
@@ -621,10 +661,14 @@ CRQ_PasswordPage::CRQ_PasswordPage(CRQWiz *parent) :  CRQ_Page(parent) {
 	sizer->Add(new wxStaticText(this, -1, _("Passphrase:")),
 		0, wxLEFT|wxRIGHT|wxTOP, 10);
 	tc_pw1 = new wxTextCtrl(this, ID_CRQ_PW1, wxT(""), wxDefaultPosition, wxSize(em_w*20, -1), wxTE_PASSWORD);
+	tc_pw1->SetName(wxT("Passphrase"));
+	ACCESSIBLE(tc_pw1, WindowAccessible);
 	sizer->Add(tc_pw1, 0, wxLEFT|wxRIGHT, 10);
 	sizer->Add(new wxStaticText(this, -1, _("Enter the passphrase again for verification:")),
 		0, wxLEFT|wxRIGHT|wxTOP, 10);
 	tc_pw2 = new wxTextCtrl(this, ID_CRQ_PW2, wxT(""), wxDefaultPosition, wxSize(em_w*20, -1), wxTE_PASSWORD);
+	ACCESSIBLE(tc_pw2, WindowAccessible);
+	tc_pw2->SetName(wxT("Repeat the Passphrase"));
 	sizer->Add(tc_pw2, 0, wxLEFT|wxRIGHT, 10);
 	wxStaticText *tc_pwwarn = new wxStaticText(this, -1, _("DO NOT lose the passphrase you choose! You will be unable to use the Certificate without this passphrase!"));
 	tc_pwwarn->Wrap(em_w * 40);
@@ -704,6 +748,7 @@ CRQ_SignPage::CRQ_SignPage(CRQWiz *parent, TQSL_CERT_REQ *crq)
 		wxSize(em_w*30, em_h*8), wxTR_HAS_BUTTONS | wxSUNKEN_BORDER);
 	sizer->Add(cert_tree, 0, wxLEFT|wxRIGHT|wxBOTTOM|wxEXPAND);
 	cert_tree->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+	ACCESSIBLE(cert_tree, TreeCtrlAx);
 	sizer->Add(tc_status, 0, wxALL|wxEXPAND, 10);
 	// Default to 'signed' unless there's no valid certificates to use for signing.
 	if (cert_tree->Build(0, &(_parent->provider)) > 0) {

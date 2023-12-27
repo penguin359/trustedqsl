@@ -29,7 +29,7 @@
 #include "wx/radiobox.h"
 
 #include "wx/wxhtml.h"
-#include "wx/odcombo.h"
+#include "wx/combobox.h"
 
 #include "certtree.h"
 
@@ -111,7 +111,7 @@ class CRQ_ProviderPage : public CRQ_Page {
 	void DoUpdateInfo();
 	void UpdateInfo(wxCommandEvent&);
 	vector<TQSL_PROVIDER> providers;
-	wxOwnerDrawnComboBox *tc_provider;
+	tqslComboBox *tc_provider;
 	wxStaticText *tc_provider_info;
 
 	DECLARE_EVENT_TABLE()
@@ -124,10 +124,11 @@ class CRQ_CallsignPage : public CRQ_Page {
 	virtual const char *validate();
 	virtual CRQ_Page *GetPrev() const;
 	virtual CRQ_Page *GetNext() const;
+
  private:
 	wxTextCtrl *tc_call;
-	wxOwnerDrawnComboBox *tc_qsobeginy, *tc_qsobeginm, *tc_qsobegind, *tc_dxcc;
-	wxOwnerDrawnComboBox *tc_qsoendy, *tc_qsoendm, *tc_qsoendd;
+	tqslComboBox *tc_qsobeginy, *tc_qsobeginm, *tc_qsobegind, *tc_dxcc;;
+	tqslComboBox *tc_qsoendy, *tc_qsoendm, *tc_qsoendd;
 	wxStaticText *tc_status;
 	bool initialized;		// Set true when validating makes sense
 	int em_w;
