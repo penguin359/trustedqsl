@@ -116,7 +116,7 @@ static const char *error_strings[] = {
 	"PKCS#12 file not TQSL compatible",			/* TQSL_PKCS12_ERROR */
 	"Callsign Certificate not TQSL compatible",		/* TQSL_CERT_TYPE_ERROR */
 	"Date out of range",					/* TQSL_DATE_OUT_OF_RANGE */
-	"Already Uploaded QSO suppressed",			/* TQSL_DUPLICATE_QSO */
+	"Already Uploaded QSO detected",			/* TQSL_DUPLICATE_QSO */
 	"Database error",					/* TQSL_DB_ERROR */
 	"The selected station location could not be found",	/* TQSL_LOCATION_NOT_FOUND */
 	"The selected callsign could not be found",		/* TQSL_CALL_NOT_FOUND */
@@ -540,14 +540,34 @@ tqsl_getErrorString_v(int err) {
 			static_cast<int>(OPENSSL_VERSION_NUMBER >> 12) & 0xff);
 		return buf;
 	}
-	if (err == TQSL_CERT_NOT_FOUND && tQSL_ImportCall[0] != '\0') {
+	if ((err & 0xff) == TQSL_CERT_NOT_FOUND) {
+		if (tQSL_ImportCall[0] == '\0')
+			strncpy(tQSL_ImportCall, "unknown", sizeof tQSL_ImportCall);
+		if ((err & TQSL_CERT_NOT_FOUND_SUPERCEDED)) {
+			snprintf(buf, sizeof buf,
+				"This is not the current callsign certificate file for %s - download the latest from https://lotw.arrl.org/lotwuser/certs.tq6", tQSL_ImportCall);
+			tQSL_ImportCall[0] = '\0';
+			return buf;
+		}
+		if ((err & TQSL_CERT_NOT_FOUND_EXPIRED)) {
+			snprintf(buf, sizeof buf,
+				"You cannot install this Callsign Certificate as it has expired - download the latest from https://lotw.arrl.org/lotwuser/certs.tq6");
+			tQSL_ImportCall[0] = '\0';
+			return buf;
+		}
+		if ((err & TQSL_CERT_NOT_FOUND_INVALID)) {
+			snprintf(buf, sizeof buf,
+				"This TQ6 file is corrupt and cannot be installed. Download the latest from https://lotw.arrl.org/lotwuser/certs.tq6");
+			tQSL_ImportCall[0] = '\0';
+			return buf;
+		}
 		snprintf(buf, sizeof buf,
-			"The private key for callsign %s serial %ld is not present on this computer; you can obtain it by loading a .tbk or .p12 file",
-			tQSL_ImportCall, tQSL_ImportSerial);
+			"This file is related to a callsign certificate request from some other computer. You can only open this on the computer system logged in as the user that request the callsign certificate for %s.",
+			tQSL_ImportCall);
 		tQSL_ImportCall[0] = '\0';
 		return buf;
 	}
-	adjusted_err = (err - TQSL_ERROR_ENUM_BASE) & ~0x1000;
+	adjusted_err = ((err & 0xff) - TQSL_ERROR_ENUM_BASE);
 	if (adjusted_err < 0 ||
 	    adjusted_err >=
 		static_cast<int>(sizeof error_strings / sizeof error_strings[0])) {
