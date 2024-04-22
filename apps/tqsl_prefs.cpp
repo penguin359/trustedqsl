@@ -394,13 +394,11 @@ FilePrefs::FilePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm"))
 	certpwd->SetValue(cp);
 	sizer->Add(certpwd, 0, wxLEFT|wxRIGHT|wxTOP, 10);
 
-#if defined(__APPLE__)
 	oldcrypto = new wxCheckBox(this, ID_PREF_FILE_OLDCRYPTO, _("Export P12 files compatible with Apple Keychain"));
 	bool old;
 	config->Read(wxT("P12OldCrypto"), &old, DEFAULT_OLDCRYPTO);
 	oldcrypto->SetValue(old);
 	sizer->Add(oldcrypto, 0, wxLEFT|wxRIGHT|wxTOP, 10);
-#endif
 
 	SetSizer(sizer);
 	sizer->Fit(this);
@@ -435,9 +433,7 @@ bool FilePrefs::TransferDataFromWindow() {
 	config->SetPath(wxT("/"));
 	config->Write(wxT("AdifEdit"), adifedit->GetValue());
 	config->Write(wxT("CertPwd"), certpwd->GetValue());
-#if defined(__APPLE__)
 	config->Write(wxT("P12OldCrypto"), oldcrypto->GetValue());
-#endif
 
 	bool oldLog;
 	config->Read(wxT("LogTab"), &oldLog, DEFAULT_LOG_TAB);

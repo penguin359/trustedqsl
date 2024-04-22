@@ -1098,6 +1098,17 @@ validCallSign(const string& call) {
 	return true;
 }
 
+static bool
+isUSCallsign(wxString& call) {
+	wxString first = call.Upper().Left(1);
+	wxString second = call.Upper().Left(2);
+
+	if (first == wxT("W") || first == wxT("K") || first == wxT("N") ||
+	    (second >= wxT("AA") && second <= wxT("AL")))
+		return true;
+	return false;
+}
+
 bool
 CRQ_CallsignPage::TransferDataFromWindow() {
 	tqslTrace("CRQ_CallsignPage::TransferDataFromWindow", NULL);
@@ -1138,7 +1149,7 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 	}
 
 	// Is this in the ULS?
-	if (valMsg.Len() == 0 && _parent->usa && !_parent->onebyone) {
+	if (valMsg.Len() == 0 && _parent->usa && !_parent->onebyone && isUSCallsign(callsign)) {
 		wxString name, attn, addr1, city, state, zip, update;
 		int stat = GetULSInfo(callsign.ToUTF8(), name, attn, addr1, city, state, zip, update);
 		// handle portable/home and home/portable
@@ -1189,7 +1200,6 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 			case 1:
 				break;						// Error reading ULS info
 			case 2:
-
 				int stat2 = GetULSInfo("W1AW", name, attn, addr1, city, state, zip, update);
 				if (stat2 == 2)					// Also nothing for a good call
 					break;
@@ -1201,6 +1211,7 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 				break;
 		}
 	}
+
 	if (valMsg.Len() == 0) {
 		// If this call has a slash, then it may be a portable call from
 		// outside the US. We really can't tell at this point so just

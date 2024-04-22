@@ -12,6 +12,7 @@ correct their computer's date/time.
 Permit identical QSOs to be ignored when adding to the uploads database.
 
 Allow 3DES, SHA1 for P12 file export for compatibility with Apple Keychain.
+Add an API to permit this downgraded cryptographic suite.
 
 Update the uploads database handling to correctly respond when the database
 is an empty file - delete and recreate.

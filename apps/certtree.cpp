@@ -12,6 +12,8 @@
 
 #include <errno.h>
 #include <wx/imaglist.h>
+#include <wx/config.h>
+#include <wx/tokenzr.h>
 #include <map>
 #include <vector>
 #include <algorithm>
@@ -151,6 +153,30 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 	int replacedCnt = 0;
 	int expiredCnt = 0;
 	_nissuers = issuers.size();
+	typedef map<wxString, int> komap;
+	komap alreadyPended;
+	komap goodCerts;			// Keep track of calls with good certificates
+
+
+	// First pass, track good certs.
+	for (iss_it = issuers.begin(); iss_it != issuers.end(); iss_it++) {
+		certlist& list = iss_it->second;
+		sort(list.begin(), list.end(), cl_cmp);
+		for (int i = 0; i < static_cast<int>(list.size()); i++) {
+			int keyonly = 1;
+			int exp = 0, sup = 0;
+			int keytype = tqsl_getCertificatePrivateKeyType(_certs[list[i].second]);
+			tqsl_isCertificateExpired(_certs[list[i].second], &exp);
+			tqsl_isCertificateSuperceded(_certs[list[i].second], &sup);
+			tqsl_getCertificateKeyOnly(_certs[list[i].second], &keyonly);
+			if (keytype != TQSL_PK_TYPE_ERR && !keyonly && !sup && !exp) {
+				wxString callsign = wxString(list[i].first).BeforeFirst(' ');
+				goodCerts[callsign] = 1;
+			}
+		}
+	}
+
+	// Second pass, filter and populate the tree
 	for (iss_it = issuers.begin(); iss_it != issuers.end(); iss_it++) {
 		if (_nissuers > 1) {
 			id = AppendItem(rootId, iss_it->first, FOLDER_ICON);
@@ -159,6 +185,7 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 		sort(list.begin(), list.end(), cl_cmp);
 		valid = AppendItem(_nissuers > 1 ? id : rootId, _("Active, usable certificates"), FOLDER_ICON);
 		for (int i = 0; i < static_cast<int>(list.size()); i++) {
+			wxString callsign = wxString(list[i].first).BeforeFirst(' ');
 			CertTreeItemData *cert = new CertTreeItemData(_certs[list[i].second]);
 			int keyonly = 1;
 			int exp = 0, sup = 0;
@@ -168,24 +195,46 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 			tqsl_isCertificateSuperceded(_certs[list[i].second], &sup);
 			tqsl_getCertificateKeyOnly(_certs[list[i].second], &keyonly);
 			if (keytype == TQSL_PK_TYPE_ERR) {
+				if (goodCerts.find(callsign) != goodCerts.end())
+					continue;
 				icon_type = BROKEN_ICON;
 				if (!invalid)
-					invalid = AppendItem(_nissuers > 1 ? id : rootId, _("Invalid, unusable"), FOLDER_ICON);
+					invalid = AppendItem(_nissuers > 1 ? id : rootId, _("Unusable: Missing Private Key"), FOLDER_ICON);
 				AppendItem(invalid, list[i].first, icon_type, -1, cert);
 				invalidCnt++;
 			} else if (keyonly) {
 				icon_type = NOCERT_ICON;
-				if (!pending)
-					pending = AppendItem(_nissuers > 1 ? id : rootId, _("Certificates that are awaiting ARRL approval"), FOLDER_ICON);
-				AppendItem(pending, list[i].first, icon_type, -1, cert);
-				pendingCnt++;
+				// Is a request pending for this call?
+                		wxString reqPending = wxConfig::Get()->Read(wxT("RequestPending"));
+				wxString callsign = wxString(list[i].first).BeforeFirst(' ');
+
+                		wxStringTokenizer tkz(reqPending, wxT(","));
+                		while (tkz.HasMoreTokens()) {
+                        		wxString pend = tkz.GetNextToken();
+                        		if (pend == callsign) {
+						// Only show once
+						if (alreadyPended.find(callsign) == alreadyPended.end()) {
+							if (!pending)
+								pending = AppendItem(_nissuers > 1 ? id : rootId, _("Incomplete Certificates - requires a matching TQ6"), FOLDER_ICON);
+							AppendItem(pending, list[i].first, icon_type, -1, cert);
+							pendingCnt++;
+							alreadyPended[callsign] = 1;
+						}
+                                		break;
+                        		}
+                		}
+
 			} else if (sup) {
+				if (goodCerts.find(callsign) != goodCerts.end())
+					continue;
 				icon_type = REPLACED_ICON;
 				if (!replaced)
 					replaced = AppendItem(_nissuers > 1 ? id : rootId, _("Certificates replaced with a newer one"), FOLDER_ICON);
 				AppendItem(replaced, list[i].first, icon_type, -1, cert);
 				replacedCnt++;
 			} else if (exp) {
+				if (goodCerts.find(callsign) != goodCerts.end())
+					continue;
 				icon_type = EXPIRED_ICON;
 				if (!expired)
 					expired = AppendItem(_nissuers > 1 ? id : rootId, _("Certificates that have expired"), FOLDER_ICON);
