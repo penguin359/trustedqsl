@@ -1,4 +1,6 @@
-trustedqsl (2.7.3-1) UNRELEASED; urgency=medium
+trustedqsl (2.7.3-1) unstable; urgency=medium
+
+  * Team upload
 
   [ Loren M. Lang ]
   * Fix watch file to ignore warning about possible PGP signature
