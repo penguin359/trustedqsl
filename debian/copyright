@@ -3,14 +3,14 @@ Upstream-Name: TrustedQSL
 Source: https://sourceforge.net/projects/trustedqsl/
 
 Files: *
-Copyright: 2001-2023 American Radio Relay League, Inc.
+Copyright: 2001-2024 American Radio Relay League, Inc.
 License: ARRL
  License Terms and Conditions
  .
- Copyright (C) 2001-2023 American Radio Relay League, Inc. All rights
+ Copyright (C) 2001-2024 American Radio Relay League, Inc. All rights
  reserved.
  .
- Portions (C) 2003-2023 The TrustedQSL Developers. Please see the AUTHORS.txt
+ Portions (C) 2003-2024 The TrustedQSL Developers. Please see the AUTHORS.txt
  file for contributors
  .
  Redistribution and use in source and binary forms, with or without
@@ -67,10 +67,24 @@ License: ARRL
  site at www.arrl.org.
 
 Files: debian/*
-Copyright: 2013-2023 Kamal Mostafa <kamal@whence.com>
-           2019-2023 Christoph Berg <myon@debian.org>
-           2019-2023 tony mancill <tmancill@debian.org>
+Copyright: 2013-2024 Kamal Mostafa <kamal@whence.com>
+           2019-2024 Christoph Berg <myon@debian.org>
+           2019-2024 tony mancill <tmancill@debian.org>
 License: permissive
  Copying and distribution of this package, with or without modification,
  are permitted in any medium without royalty provided the copyright notice
  and this notice are preserved.
+
+Files: apps/org.arrl.trustedqsl.metainfo.xml
+Copyright: 2001-2024 American Radio Relay League, Inc.
+License: 0bsd
+ Permission to use, copy, modify, and/or distribute this software for
+ any purpose with or without fee is hereby granted.
+ .
+ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL
+ WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE
+ FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY
+ DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
+ AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+ OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.

@@ -75,7 +75,8 @@
 #define TQSL_CERT_CB_PROMPT          0		///< Callback prompt
 #define TQSL_CERT_CB_DUPLICATE       0x100	///< Dupe cert callback
 #define TQSL_CERT_CB_ERROR           0x200	///< Error import callback
-#define TQSL_CERT_CB_LOADED          0x300	///< Cert loaded callback
+#define TQSL_CERT_CB_LOADED          0x400	///< Cert loaded callback
+#define TQSL_CERT_CB_SERIAL          0x800	///< User cert serial callback
 #define TQSL_CERT_CB_RESULT_TYPE(x)  ((x) & 0x0f00) ///< Result type mask
 
 typedef void * tQSL_Cert;		///< Opaque certificate type
@@ -748,6 +749,16 @@ DLLEXPORT int CALLCONVENTION tqsl_createCertRequest(const char *filename, TQSL_C
   * The supplied \c p12password is used to encrypt the PKCS12 data.
   */
 DLLEXPORT int CALLCONVENTION tqsl_exportPKCS12File(tQSL_Cert cert, const char *filename, const char *p12password);
+
+/** Save a key pair and certificates to a file in PKCS12 format.
+  * Use downgraded crypto for Apple Keyring compatibility.
+  *
+  * The tQSL_Cert must be initialized for signing (see tqsl_beginSigning())
+  * if the user certificate is being exported.
+  *
+  * The supplied \c p12password is used to encrypt the PKCS12 data.
+  */
+DLLEXPORT int CALLCONVENTION tqsl_exportPKCS12FileWeakCrypto(tQSL_Cert cert, const char *filename, const char *p12password);
 
 /** Save a key pair and certificates to a Base64 string in PKCS12 format.
   *

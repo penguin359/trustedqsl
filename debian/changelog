@@ -1,3 +1,13 @@
+trustedqsl (2.7.3-1) UNRELEASED; urgency=medium
+
+  [ Loren M. Lang ]
+  * Fix watch file to ignore warning about possible PGP signature
+  * New upstream version 2.7.3
+  * Bump Standards-Version to 4.7.0
+  * Freshen years in debian/copyright
+
+ -- Loren M. Lang <lorenl@north-winds.org>  Sun, 21 Apr 2024 17:35:34 -0700
+
 trustedqsl (2.7.2-1) unstable; urgency=medium
 
   * New upstream version 2.7.2
