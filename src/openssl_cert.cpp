@@ -2321,7 +2321,7 @@ tqsl_add_bag_attribute(PKCS12_SAFEBAG *bag, const char *oidname, const string& v
 }
 
 static int
-tqsl_exportPKCS12(tQSL_Cert cert, bool returnB64, const char *filename, char *base64, int b64len, const char *p12password) {
+tqsl_exportPKCS12(tQSL_Cert cert, bool returnB64, const char *filename, char *base64, int b64len, const char *p12password, bool weakCrypto) {
 	STACK_OF(X509) *root_sk = 0, *ca_sk = 0, *chain = 0;
 	const char *cp;
 	char rootpath[TQSL_MAX_PATH_LEN], capath[TQSL_MAX_PATH_LEN];
@@ -2357,18 +2357,16 @@ tqsl_exportPKCS12(tQSL_Cert cert, bool returnB64, const char *filename, char *ba
 		return 1;
 	}
 
-#if defined(__APPLE__)
-	const char *oldc = getenv("OLDCRYPTO");
-	tqslTrace("tqsl_exportPKCS12", "get env returns %s", oldc ? oldc : "null");
+	tqslTrace("tqsl_exportPKCS12", "weak crypto flag %d", weakCrypto);
 	// For compatibility with Apple Keychain for Mac
 	// They don't support anything but deprecated P12 crypto
 	// SHA1, 3DES, RC2.
-	if (oldc && !strcmp(oldc, "TRUE")) {
+	if (weakCrypto) {
 		cert_pbe = NID_pbe_WithSHA1And40BitRC2_CBC;
 		key_pbe = NID_pbe_WithSHA1And3_Key_TripleDES_CBC;
 		md = reinterpret_cast<const EVP_MD *> (EVP_get_digestbyname("sha1"));
 	}
-#endif
+
 	/* Get parameters for key bag attributes */
 	if (tqsl_getCertificateCallSign(cert, buf, sizeof buf)) {
 		tqslTrace("tqsl_exportPKCS12", "get callsign err %d", tQSL_Error);
@@ -2649,13 +2647,19 @@ p12_end:
 DLLEXPORT int CALLCONVENTION
 tqsl_exportPKCS12File(tQSL_Cert cert, const char *filename, const char *p12password) {
 	tqslTrace("tqsl_exportPKCS12File", NULL);
-	return tqsl_exportPKCS12(cert, false, filename, NULL, 0, p12password);
+	return tqsl_exportPKCS12(cert, false, filename, NULL, 0, p12password, false);
+}
+
+DLLEXPORT int CALLCONVENTION
+tqsl_exportPKCS12FileWeakCrypto(tQSL_Cert cert, const char *filename, const char *p12password) {
+	tqslTrace("tqsl_exportPKCS12File", NULL);
+	return tqsl_exportPKCS12(cert, false, filename, NULL, 0, p12password, true);
 }
 
 DLLEXPORT int CALLCONVENTION
 tqsl_exportPKCS12Base64(tQSL_Cert cert, char *base64, int b64len, const char *p12password) {
 	tqslTrace("tqsl_exportPKCS12Base64", NULL);
-	return tqsl_exportPKCS12(cert, true, NULL, base64, b64len, p12password);
+	return tqsl_exportPKCS12(cert, true, NULL, base64, b64len, p12password, false);
 }
 
 static string
@@ -3928,10 +3932,15 @@ tqsl_ssl_verify_cert(X509 *cert, STACK_OF(X509) *cacerts, STACK_OF(X509) *rootce
 	rval = X509_verify_cert(ctx);
 	errm = X509_verify_cert_error_string(X509_STORE_CTX_get_error(ctx));
 	if (X509_STORE_CTX_get_error(ctx) == X509_V_ERR_CERT_NOT_YET_VALID) {
-		errm = "Your computer's clock is set to a date in the past. This Certificate cannot be loaded until you fix that.\n\n";
-	}
-	if (X509_STORE_CTX_get_error(ctx) == X509_V_ERR_CERT_HAS_EXPIRED) {
-		errm = "Your computer's clock is set to a date in the future. This Certificate cannot be loaded until you fix that.\n\n";
+		errm = "This Callsign Certificate cannot be installed as the first date where it is valid is in the future.\nCheck if your computer is set to the proper date.\n\n";
+	} else if (X509_STORE_CTX_get_error(ctx) == X509_V_ERR_CERT_HAS_EXPIRED) {
+		errm = "This Callsign Certificate cannot be installed as it has expired.\nCheck if your computer is set to the proper date.\n\n";
+	} else if (X509_STORE_CTX_get_error(ctx) == X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY) {
+		if (cacerts != NULL) {
+			errm = "This Callsign Certificate cannot be installed.\nThe certificate authority certificate cannot be found.\nPlease request a replacement Callsign Certificate.\n\n";
+		} else {
+			errm = "This Callsign Certificate cannot be installed.\nThe trusted root certificate cannot be found.\nPlease request a replacement Callsign Certificate.\n\n";
+		}
 	}
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
 #define X509_STORE_CTX_get0_chain(o) ((o)->chain)
@@ -4196,6 +4205,10 @@ tqsl_self_signed_is_ok(int ok, X509_STORE_CTX *ctx) {
 		return 1;
 	if (X509_STORE_CTX_get_error(ctx) == X509_V_ERR_CERT_UNTRUSTED)
 		return 1;
+	// OK if root cert has expired
+	if (X509_STORE_CTX_get_error(ctx) == X509_V_ERR_CERT_HAS_EXPIRED ||
+	    X509_STORE_CTX_get_error(ctx) == X509_V_ERR_CERT_UNTRUSTED)
+		return 1;
 	return ok;
 }
 
@@ -4370,6 +4383,11 @@ tqsl_handle_user_cert(const char *cpem, X509 *x, int (*cb)(int, const char *, vo
 	/* Match the public key in the supplied certificate with a
 	 * private key in the key store.
 	 */
+	tQSL_ImportSerial = ASN1_INTEGER_get(X509_get_serialNumber(x));
+	if (cb != NULL) {
+		// Update the "CRL" for this serial number
+		(*cb)(TQSL_CERT_CB_MILESTONE |  TQSL_CERT_CB_SERIAL, NULL, userdata);
+	}
 	if (tqsl_find_matching_key(x, NULL, NULL, "", NULL, NULL)) {
 		if (tQSL_Error != TQSL_PASSWORD_ERROR) {
 			tqslTrace("tqsl_handle_user_cert", "match error %s", tqsl_openssl_error());
@@ -5054,6 +5072,36 @@ again:
 	tqslTrace("tqsl_find_matching_key", "No matching private key found");
 	rval = 1;
 	tQSL_Error = TQSL_CERT_NOT_FOUND;
+	int sts;
+	sts = tqsl_getCertificateStatus(tQSL_ImportSerial);
+	switch (sts) {
+	    case TQSL_CERT_STATUS_INV:
+		tQSL_Error |= TQSL_CERT_NOT_FOUND_INVALID;
+		break;
+	    case TQSL_CERT_STATUS_SUP:
+		tQSL_Error |= TQSL_CERT_NOT_FOUND_SUPERCEDED;
+		break;
+	    case TQSL_CERT_STATUS_EXP:
+		tQSL_Error |= TQSL_CERT_NOT_FOUND_EXPIRED;
+		break;
+	}
+	/* Check for expired */
+	time_t t;
+	t = time(0);
+	struct tm *tm;
+	tm = gmtime(&t);
+	tQSL_Date d;
+	d.year = tm->tm_year + 1900;
+	d.month = tm->tm_mon + 1;
+	d.day = tm->tm_mday;
+	const ASN1_TIME *ctm;
+	if ((ctm = X509_get_notAfter(cert)) != NULL) {
+		tQSL_Date cert_na;
+		tqsl_get_asn1_date(ctm, &cert_na);
+		if (tqsl_compareDates(&cert_na, &d) < 0) {
+			tQSL_Error |= TQSL_CERT_NOT_FOUND_EXPIRED;
+		}
+	}
 	strncpy(tQSL_ImportCall, ImportCall, sizeof tQSL_ImportCall);
 	goto end;
 err:

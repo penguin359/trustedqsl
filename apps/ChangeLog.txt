@@ -1,5 +1,38 @@
 TQSL changes
 ============
+2.7.3
+----------
+Change "some QSOs suppressed" wording to "some QSOs not processed".
+
+When installing a TQ6 file (signed Callsign Certificate) where the contents
+referenced outdated certificate chain data, TQSL would issue error messages
+which weren't helpful. Improve upon that and suggest corrective action.
+
+Install a set of "orphaned" certificate chain entities as trusted to allow
+some callsign certificates that were being rejected to be installed.
+
+Update messages displayed when signing a log with previously uploaded
+QSOs. Previously TQSL would state that upload was "cancelled" when the
+user never explicitly cancelled.
+
+Fix handling of portable calls in the US to not perform a ULS lookup
+when the base callsign is not a US callsign.
+
+Update the labels on the certificate tree display to be less confusing. 
+Suppress display of expired / replaced callsign certificates when there
+is a good cerificate for a given callsign.
+
+When there's more than one callsign certificate for a given callsign, just
+display one.
+
+When importing callsign certificates, tell the user when they try to install
+an expired certificate, better explain missing "private key" without using
+that jargon, and detect clock errors.
+
+Add a preference option to allow Callsign certificates to be stored using
+obsolete cryptographic algorithms to allow import by the Mac keyring. (This
+was previously added as a Mac-only change, now available for all platforms.)
+
 2.7.2
 ----------
 Fix MacOS Sonoma issues with "Secure coding is not enabled for restorable

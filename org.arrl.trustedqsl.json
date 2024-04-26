@@ -52,8 +52,8 @@
 	    "sources" : [
 		{
 		    "type" : "archive",
-        	    "url" : "https://www.rickmurphy.net/lotw/tqsl-2.7.1.tar.gz",
-        	    "sha256" : "02c9356c7fe0ea8a49b9730ca2689397bf81d924dbda9a764639ee90d2b0d78a"
+        	    "url" : "https://www.rickmurphy.net/lotw/tqsl-2.7.3.tar.gz",
+        	    "sha256" : "6e3ae42c54ff41f53c58cc7118f75350c1fb4e77ebdfb8a90cfe65c8e48d3fcd"
 	  	}
 	    ]
 	}

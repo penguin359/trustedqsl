@@ -95,9 +95,7 @@ enum {		// Window IDs
 	ID_PREF_FILE_DISPLAY_DUPES,
 	ID_PREF_FILE_LOG_TAB,
 	ID_PREF_FILE_CERTPWD,
-#if defined(__APPLE__)
 	ID_PREF_FILE_OLDCRYPTO,
-#endif
 	ID_PREF_FILE_LOGVFY,
 	ID_PREF_IGNORE_SECONDS,
 	ID_PREF_IGNORE_CALLSIGN,
@@ -145,9 +143,7 @@ class FilePrefs : public PrefsPanel {
  private:
 	wxTextCtrl *versions;
 	wxCheckBox *autobackup, *adifedit, *logtab, *certpwd;
-#if defined (__APPLE__)
 	wxCheckBox *oldcrypto;
-#endif
 #if !defined(__APPLE__) && !defined(_WIN32)
 	wxTextCtrl *dirPick;
 #else

@@ -83,8 +83,11 @@ enum {
 	TQSL_EXIT_COMMAND_ERROR = 10,
 	TQSL_EXIT_CONNECTION_FAILED = 11,
 	TQSL_EXIT_UNKNOWN = 12,
-	TQSL_EXIT_BUSY = 13
+	TQSL_EXIT_BUSY = 13,
+	TQSL_EXIT_UPLOADED_ALREADY = 14
 };
+
+bool tqsl_checkCertStatus(long serial, wxString& result);
 
 class MyFrame : public wxFrame {
  public:
@@ -127,8 +130,6 @@ class MyFrame : public wxFrame {
 #endif
 	void DoCheckExpiringCerts(bool noGUI = false);
 	void OnExpiredCertFound(wxCommandEvent& event);
-
-	bool CheckCertStatus(long serial, wxString& result);
 
 	void OnQuit(wxCommandEvent& event);
 	void CRQWizard(wxCommandEvent& event);

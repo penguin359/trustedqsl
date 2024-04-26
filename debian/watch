@@ -7,4 +7,8 @@ version=4
 #http://sf.net/trustedqsl/tqsl-(.*)\.(?:zip|tgz|tbz|txz|(?:tar\.(?:gz|bz2|xz)))
 
 # versions since 2.3 are distributed from www.arrl.org
-https://www.arrl.org/tqsl-download .*/tqsl-(.*)\.(?:zip|tgz|tbz|txz|(?:tar\.(?:gz|bz2|xz)))
+# ARRL's website returns 200 OK even on non-existent files so don't scan for
+# PGP signature
+opts="pgpmode=none" \
+    https://www.arrl.org/tqsl-download \
+    .*/tqsl-(.*)\.(?:zip|tgz|tbz|txz|(?:tar\.(?:gz|bz2|xz)))

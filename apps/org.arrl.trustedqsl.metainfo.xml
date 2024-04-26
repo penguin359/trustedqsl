@@ -5,7 +5,10 @@
     <project_license>BSD-4-Clause</project_license>
     <id>org.arrl.trustedqsl</id>
     <name>TrustedQSL</name>
-    <summary>Ham Radio Contact validation tooling</summary>
+    <summary>Radio Contact validation</summary>
+    <developer id="org.arrl.trustedqsl">
+	<name>K1MU</name>
+    </developer>
     <description>
 	<p>
 	This is the TrustedQSL project, which provides tools for digitally signing Amateur Radio QSO records.
@@ -18,7 +21,7 @@
     </categories>
     <content_rating type="oars-1.0"/>
     <url type="homepage">https://sourceforge.net/projects/trustedqsl/</url>
-    <url type="bugtracker">https://trustedqsl.sourceforge.net/mantis/</url>
+    <url type="bugtracker">https://sourceforge.net/p/trustedqsl/tickets/</url>
     <url type="help">https://lotw.arrl.org/lotw-help/?lang=en</url>
     <screenshots>
 	<screenshot type="default">
@@ -65,6 +68,9 @@
      See https://www.freedesktop.org/software/appstream/docs/chap-AppStream-Misc.html#sect-AppStream-Misc-VerCmp
     -->
     <releases>
+	<release version="2.7.3" date="2024-04-07">
+	    <description><p>Certificate issue message improvements, Handle non-US portable calls properly.</p></description>
+	</release>
 	<release version="2.7.2" date="2023-12-09">
 	    <description><p>Accessibility improvements, MacOS cert handling.</p></description>
 	</release>

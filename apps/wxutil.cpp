@@ -157,7 +157,7 @@ static const char *error_strings[] = {
 	__("PKCS#12 file not TQSL compatible"),			/* TQSL_PKCS12_ERROR */
 	__("Callsign Certificate not TQSL compatible"),		/* TQSL_CERT_TYPE_ERROR */
 	__("Date out of range"),				/* TQSL_DATE_OUT_OF_RANGE */
-	__("Already Uploaded QSO suppressed"),			/* TQSL_DUPLICATE_QSO */
+	__("Already Uploaded QSO detected"),			/* TQSL_DUPLICATE_QSO */
 	__("Database error"),					/* TQSL_DB_ERROR */
 	__("The selected station location could not be found"),	/* TQSL_LOCATION_NOT_FOUND */
 	__("The selected callsign could not be found"),		/* TQSL_CALL_NOT_FOUND */
@@ -167,6 +167,8 @@ static const char *error_strings[] = {
 	__("Callsign certificate could not be installed"),	/* TQSL_CERT_ERROR */
 	__("Callsign Certificate does not match QSO details"),	/* TQSL_CERT_MISMATCH */
 	__("Station Location does not match QSO details"),	/* TQSL_LOCATION_MISMATCH */
+	__("This Callsign Certificate cannot be installed as the first date where it is valid is in the future. Check if your computer is set to the proper date.\n\n"),
+        __("This Callsign Certificate cannot be installed as it has expired. Check if your computer is set to the proper date and that this is the latest Callsign Certificate.\n\n"),
 };
 
 static wxString

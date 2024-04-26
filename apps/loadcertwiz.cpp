@@ -147,6 +147,15 @@ notifyImport(int type, const char *message, void *data) {
 //		wxMessageBox(message, "Certificate Notice");
 		return 0;
 	}
+	if (TQSL_CERT_CB_CALL_TYPE(type) == TQSL_CERT_CB_SERIAL) {
+		int sts = tqsl_getCertificateStatus(tQSL_ImportSerial);
+		if (sts == TQSL_CERT_STATUS_UNK) {
+			wxString status;
+			tqsl_checkCertStatus(tQSL_ImportSerial, status);
+			tqsl_setCertificateStatus(tQSL_ImportSerial, (const char *)status.ToUTF8());
+		}
+		return 0;
+	}
 	return 1;
 }
 

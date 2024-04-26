@@ -38,8 +38,8 @@ The following command line options may be specified on the command line:
 This option instructs TQSL on how to handle QSOs that do not appear to be
 valid. There are many potential causes for invalid QSOs. Examples include QSOs
 with dates outside the valid range for the certificate being used, QSOs
-with invalid amateur callsigns, duplicate QSOs, and attempts to sign with an
-expired certificate.
+with invalid amateur callsigns, previously uploaded QSOs, and attempts to sign
+with an expired callsign certificate.
 
 This option specifies how tqsl should handle these exceptions. Using "-a ask"
 instructs tqsl to use a dialog to ask the user how to proceed. This is the
@@ -49,12 +49,12 @@ Using "-a abort" instructs tqsl to issue an error message when an exception
 QSO is processed and immediately abort signing.
 
 Using "-a compliant" instructs tqsl to sign the QSOs which are compliant
-(not duplicates, in date range, and with valid callsigns) and ignore any
-exception QSOs. This is the recommended behavior for command line applications
-but is not the default action for compatibility reasons.
+(not previously uploaded, in date range, and with valid callsigns) and ignore
+any exception QSOs. This is the recommended behavior for command line
+applications but is not the default action for compatibility reasons.
 
-Using "-a all" instructs tqsl to process all QSOs, ignoring duplicates and
-invalid callsigns. QSOs outside the range of valid dates for the selected
+Using "-a all" instructs tqsl to process all QSOs, ignoring previously
+uploaded QSOs and invalid callsigns. QSOs outside the range of valid dates for the selected
 station certificate will not be signed, as they would not be accepted by
 Logbook.
 
@@ -188,14 +188,16 @@ provides information on success or failure using the following values:
         5 - An error occurred in tqsllib (invalid filename, bad file format)
         6 - Unable to open input file
         7 - Unable to open output file
-        8 - No QSOs were processed because some QSOs were duplicates or
+        8 - No QSOs were processed because some QSOs were already uploaded or
             out of date range (no QSOs written)
         9 - Some QSOs were processed, and some QSOs were ignored because
-            they were duplicates or out of date range (some QSOs written)
+            they were already uploaded or out of date range (some QSOs
+	    were uploaded)
        10 - Command syntax error
        11 - LoTW network connection failed (no network or LoTW is unreachable)
        12 - Unknown error
-       13 - The TQSL duplicates database is locked.
+       13 - The TQSL upload tracking database is locked.
+       14 - Already uploaded QSOs were detected
 
 This exit status is also written to stderr in a format that can be parsed
 by the calling application. The last output from tqsl will be of the format
@@ -212,12 +214,12 @@ Examples of output follows:
 05:57:39 PM: No records output
 05:57:39 PM: Final Status: cancelled by user (1)
 
-06:05:56 PM: /home/rmurphy/k1mu.adi: 414 QSO records were duplicates
+06:05:56 PM: /home/rmurphy/k1mu.adi: 414 QSO records were previously uploaded
 06:05:56 PM: /home/rmurphy/k1mu.adi: wrote 1 records to /home/rmurphy/k1mu.tq8
 06:05:56 PM: /home/rmurphy/k1mu.tq8 is ready to be emailed or uploaded.
 Note: TQSL assumes that this file will be uploaded to LoTW.
 Resubmitting these QSOs will cause them to be reported as duplicates.
-06:05:56 PM: Final Status: Some QSOs were duplicates or out of date range (9)
+06:05:56 PM: Final Status: Some QSOs were previously uploaded or out of date range (9)
 
 An example usage for signing a log would be
 
@@ -239,20 +241,20 @@ Application Changes
 Some logging applications directly call tqsllib functions to sign log files.
 The application programming interface (API) to tqsllib has not changed in
 ways that introduce incompatibilities, but there are additional API calls
-which are necessary for applications to allow duplicate QSO processing to
+which are necessary for applications to allow QSO upload tracking to
 work properly.
 
 Normally, an application will call tqsl_beginCabrilloConverter() or
 tqsl_beginADIFConverter to begin signing a log file. After the converter
 is created by those calls, the application should then call
         tqsl_setConverterAllowDuplicates(conv, false)
-which tells tqsllib that duplicate processing should be enabled. If you do
+which tells tqsllib that upload tracking should be enabled. If you do
 not call tqsl_setConverterAllowDuplicates, the library will assume that
-duplicates should be permitted (for compatibility reasons), which may cause
-unnecessary QSOs to be uploaded.
+previously uploaded QSOs should be permitted (for compatibility reasons),
+which may cause unnecessary QSOs to be uploaded.
 
-If duplicate suppression is enabled, there is a new error return from 
-tqsl_getConverterGABBI that indicates duplicate QSOs. In this case, 
+If upload tracking is enabled, there is a new error return from 
+tqsl_getConverterGABBI that indicates previosuly uploaded QSOs. In this case, 
 tQSL_Error is set to TQSL_DUPLICATE_QSO. Software may need to be modified
 to handle this new result and act appropriately (ignore it, or abort the
 signing operation.)
@@ -261,10 +263,10 @@ After successful processing of a log, an application should call either
 tqsl_convertCommit(conv) or tqsl_convertRollBack(conv) prior to calling
 tqsl_endConverter() to signal that a log conversion has completed.
 tqsl_converterCommit() indicates to tqsllib that the log has been successfully
-processed and that the QSOs should be added to the duplicate detection
+processed and that the QSOs should be added to the upload tracking
 database. Calling tqsl_converterRollBack() indicates to tqsllib that the
 log has not been successfully processed and that the QSO records should
-not be added to the duplicate database. Simply adding the necessary call
+not be added to the upload tracking database. Simply adding the necessary call
 before the converter is closed is enough to bring the application up to date.
 
 change
