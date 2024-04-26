@@ -1,3 +1,9 @@
+trustedqsl (2.7.3-1ppa1~ubuntu23.10) mantic; urgency=medium
+
+  * Taking maintainership to provide backports as Ubuntu PPA
+
+ -- Loren M. Lang <lorenl@north-winds.org>  Fri, 26 Apr 2024 01:25:34 -0700
+
 trustedqsl (2.7.3-1) unstable; urgency=medium
 
   * Team upload
