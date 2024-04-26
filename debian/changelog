@@ -1,3 +1,9 @@
+trustedqsl (2.7.3-1~bpo12+1) bookworm-backports; urgency=medium
+
+  * Rebuild for bookworm-backports.
+
+ -- Loren M. Lang <lorenl@north-winds.org>  Fri, 26 Apr 2024 12:35:53 -0700
+
 trustedqsl (2.7.3-1) unstable; urgency=medium
 
   * Team upload
