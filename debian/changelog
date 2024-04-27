@@ -1,3 +1,12 @@
+trustedqsl (2.7.3-1ppa1~ubuntu22.04) jammy; urgency=medium
+
+  * Taking maintainership to provide backports as Ubuntu PPA
+  * Updated dependencies to match those provided in the official Ubuntu release
+  * Fixed errors/warnings with lintian overrides
+  * Updated Standard version to match distro
+
+ -- Loren M. Lang <lorenl@north-winds.org>  Sat, 27 Apr 2024 05:17:06 -0700
+
 trustedqsl (2.7.3-1) unstable; urgency=medium
 
   * Team upload
