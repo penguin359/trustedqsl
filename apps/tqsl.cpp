@@ -184,14 +184,15 @@ static void exitNow(int status, bool quiet) {
 				 __("Error opening input file"),
 				 __("Error opening output file"),
 				 __("No QSOs written"),
-				 __("Some QSOs suppressed"),
+				 __("Some QSOs not processed"),
 				 __("Command Syntax Error"),
 				 __("LoTW Connection Failed"),
 				 __("Unknown"),
-				 __("The duplicates database is locked")
+				 __("The duplicates database is locked"),
+				 __("Already uploaded QSOs were detected")
 				};
 	int stat = status;
-	if (stat > TQSL_EXIT_BUSY || stat < 0) stat = TQSL_EXIT_UNKNOWN;
+	if (stat > TQSL_EXIT_UPLOADED_ALREADY || stat < 0) stat = TQSL_EXIT_UNKNOWN;
 	wxString msg = wxString::Format(wxT("Final Status: %hs (%d)"), errors[stat], status);
 	wxString err = wxGetTranslation(wxString::FromUTF8(errors[stat]));
 	wxString localmsg = wxString::Format(_("Final Status: %hs (%d)"), (const char *)err.ToUTF8(), status);
@@ -2322,6 +2323,9 @@ abortSigning:
 		if (cancelled) {
 			wxLogWarning(_("Signing cancelled"));
 			numrecs = 0;
+		} else if (aborted && duplicates > 0 && action == TQSL_ACTION_ABORT) {
+			wxLogWarning(_("Duplicate QSO detected"));
+			numrecs = 0;
 		} else if (aborted) {
 			wxLogWarning(_("Signing aborted"));
 			numrecs = 0;
@@ -2353,6 +2357,11 @@ abortSigning:
 			tqsl_converterRollBack(logConv);
 			tqsl_endConverter(&logConv);
 			unlock_db();
+		}
+		if (aborted) {
+			return TQSL_EXIT_UPLOADED_ALREADY;
+		}
+		if (cancelled) {
 			return TQSL_EXIT_CANCEL;
 		}
 		if (action == TQSL_ACTION_ASK || action == TQSL_ACTION_UNSPEC) { // want to ask the user
@@ -2480,7 +2489,8 @@ MyFrame::ConvertLogFile(tQSL_Location loc, const wxString& infile, const wxStrin
 	int status = this->ConvertLogToString(loc, infile, output, numrecs, suppressdate, startdate, enddate, action, logverify, password, defcall);
 
 	if (numrecs == 0) {
-		wxLogMessage(_("No records output"));
+		if (status != TQSL_EXIT_UPLOADED_ALREADY)
+			wxLogMessage(_("No records output"));
 		if (compressed) {
 			gzclose(gout);
 		} else {
@@ -2493,7 +2503,7 @@ MyFrame::ConvertLogFile(tQSL_Location loc, const wxString& infile, const wxStrin
 #else
 		unlink(outfile.ToUTF8());
 #endif
-		if (status == TQSL_EXIT_CANCEL || status == TQSL_EXIT_QSOS_SUPPRESSED)
+		if (status == TQSL_EXIT_CANCEL || status == TQSL_EXIT_QSOS_SUPPRESSED || status == TQSL_EXIT_UPLOADED_ALREADY)
 			return status;
 		else
 			return TQSL_EXIT_NO_QSOS;
@@ -3039,7 +3049,7 @@ static bool verify_cert(tQSL_Location loc, bool editing) {
 	wxString errString;
 	for (int i = 0; i < ncerts; i++) {
 		tqsl_getCertificateSerial(certlist[i], &serial);
-		frame->CheckCertStatus(serial, status);
+		tqsl_checkCertStatus(serial, status);
 		if (status == wxT("Bad serial")) {
 			errString = wxString::Format(_("There are no current callsign certificates for callsign %hs. This station location cannot be used to sign a log file."), call);
 		} else if (status == wxT("Superceded")) {
@@ -3522,8 +3532,9 @@ retry:
 #endif /* _WIN32  || __APPLE__ */
 
 // Check if a certificate is still valid and current at LoTW
-bool MyFrame::CheckCertStatus(long serial, wxString& result) {
-	tqslTrace("MyFrame::CheckCertStatus()", "Serial=%ld", serial);
+bool
+tqsl_checkCertStatus(long serial, wxString& result) {
+	tqslTrace("tqsl_checkCertStatus()", "Serial=%ld", serial);
 	wxConfig* config = reinterpret_cast<wxConfig *>(wxConfig::Get());
 
 	wxString certCheckURL = config->Read(wxT("CertCheckURL"), DEFAULT_CERT_CHECK_URL);
@@ -3564,7 +3575,7 @@ bool MyFrame::CheckCertStatus(long serial, wxString& result) {
 			ret = true;
 		}
 	} else {
-		tqslTrace("MyFrame::CheckCertStatus", "cURL Error during cert status check: %s (%s)\n", curl_easy_strerror((CURLcode)retval), errorbuf);
+		tqslTrace("tqsl_checkCertStatus", "cURL Error during cert status check: %s (%s)\n", curl_easy_strerror((CURLcode)retval), errorbuf);
 		if (curlLogFile) {
 			fprintf(curlLogFile, "cURL Error during cert status check: %s (%s)\n", curl_easy_strerror((CURLcode)retval), errorbuf);
 		}
@@ -3687,7 +3698,7 @@ MyFrame::DoCheckExpiringCerts(bool noGUI) {
 				report_error(&ei);
 				continue;
 			}
-			CheckCertStatus(serial, status);
+			tqsl_checkCertStatus(serial, status);
 			if (tqsl_setCertificateStatus(serial, (const char *)status.ToUTF8())) {
 				report_error(&ei);
 				continue;
@@ -5356,11 +5367,22 @@ QSLApp::OnRun() {
 			m_exitOnFrameDelete = Yes;
 		return MainLoop();
 	}
-	catch(TQSLException& x) {
+	catch(const TQSLException& x) {
 		string msg = x.what();
-		tqslTrace("QSLApp::OnRun", "Last chance handler, string=%s", (const char *)msg.c_str());
 		cerr << "An exception has occurred! " << msg << endl;
+		tqslTrace("QSLApp::OnRun", "Last chance handler, string=%s", (const char *)msg.c_str());
 		wxLogError(wxT("%hs"), x.what());
+		exitNow(TQSL_EXIT_TQSL_ERROR, false);
+	}
+	catch(const std::exception& x) {
+		string msg = x.what();
+		cerr << "An exception has occurred! " << msg << endl;
+		tqslTrace("QSLApp::OnRun", "Last chance handler, string=%s", (const char *)msg.c_str());
+		wxLogError(wxT("%hs"), x.what());
+		exitNow(TQSL_EXIT_TQSL_ERROR, false);
+	}
+	catch ( ... ) {
+		cerr << "Unknown exception" << endl;
 		exitNow(TQSL_EXIT_TQSL_ERROR, false);
 	}
 	return 0;
@@ -6177,13 +6199,15 @@ void MyFrame::FirstTime(void) {
 		if (!found) {
 			// Remove this call from the list of pending certificate requests
 			wxString p = wxConfig::Get()->Read(wxT("RequestPending"));
-			p.Replace(pend, wxT(""), true);
-			wxString rest;
-			while (p.StartsWith(wxT(","), &rest))
-				p = rest;
-			while (p.EndsWith(wxT(","), &rest))
-				p = rest;
-			wxConfig::Get()->Write(wxT("RequestPending"), p);
+			if (!p.IsEmpty()) {
+				p.Replace(pend, wxT(""), true);
+				wxString rest;
+				while (p.StartsWith(wxT(","), &rest))
+					p = rest;
+				while (p.EndsWith(wxT(","), &rest))
+					p = rest;
+				wxConfig::Get()->Write(wxT("RequestPending"), p);
+			}
 		}
 	}
 
@@ -6316,7 +6340,7 @@ cert_cleanup() {
 	if (tQSL_ImportCall[0] != '\0') {				// If a user cert was imported
 		if (tQSL_ImportSerial != 0) {
 			wxString status;
-			frame->CheckCertStatus(tQSL_ImportSerial, status);	// Update from LoTW's "CRL"
+			tqsl_checkCertStatus(tQSL_ImportSerial, status);// Update from LoTW's "CRL"
 			tqsl_setCertificateStatus(tQSL_ImportSerial, (const char *)status.ToUTF8());
 		}
 		int certstat = tqsl_getCertificateStatus(tQSL_ImportSerial);
@@ -6787,18 +6811,18 @@ void MyFrame::OnCertExport(wxCommandEvent& WXUNUSED(event)) {
 			return;
 		}
 	} while (terr);
-	// When setting the password, always use UTF8.
-#if defined(__APPLE__)
 	// pass option to use old crypto
 	bool oldCrypto;
 	wxConfig::Get()->Read(wxT("P12OldCrypto"), &oldCrypto, DEFAULT_OLDCRYPTO);
-	if (oldCrypto)
-		setenv("OLDCRYPTO", "TRUE", true);
-	else
-		setenv("OLDCRYPTO", "FALSE", true);
-#endif
 
-	if (tqsl_exportPKCS12File(data->getCert(), filename.ToUTF8(), dial.Password().ToUTF8())) {
+	// When setting the password, always use UTF8.
+	int ret;
+	if (oldCrypto) {
+		ret = tqsl_exportPKCS12FileWeakCrypto(data->getCert(), filename.ToUTF8(), dial.Password().ToUTF8());
+	} else {
+		ret = tqsl_exportPKCS12File(data->getCert(), filename.ToUTF8(), dial.Password().ToUTF8());
+	}
+	if (ret) {
 		char buf[500];
 		strncpy(buf, getLocalizedErrorString().ToUTF8(), sizeof buf);
 		wxLogError(wxString::Format(_("Export to %s failed: %hs"), filename.c_str(), buf));
