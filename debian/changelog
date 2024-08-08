@@ -1,5 +1,6 @@
-trustedqsl (2.7.3-2) UNRELEASED; urgency=medium
+trustedqsl (2.7.3-2) unstable; urgency=medium
 
+  * Team upload
   * Remove old, duplicated desktop files
 
  -- Daniel Rusek <mail@asciiwolf.com>  Sat, 03 Aug 2024 12:04:26 +0200
