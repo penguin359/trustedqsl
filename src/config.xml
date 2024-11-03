@@ -1,4 +1,4 @@
-<tqslconfig majorversion="11" minorversion="28">
+<tqslconfig majorversion="11" minorversion="29">
      <adifmap>
        <adifmode adif-mode="AM" mode="AM">AM</adifmode>
        <adifmode adif-mode="ARDOP" mode="ARDOP">ARDOP</adifmode>
@@ -7751,6 +7751,7 @@
        <satellite name="MAYA-4" startDate="2021-10-10">Cubesat</satellite>
        <satellite endDate="2000-06-16" name="MIREX" startDate="1991-02-01">MIR Packet Digipeater</satellite>
        <satellite name="MO-112" startDate="2021-06-22">Mirsat-1</satellite>
+       <satellite name="MO-122" startDate="2024-07-04">MESAT1-OSCAR 122</satellite>
        <satellite name="NO-103" startDate="2019-06-25">Navy-OSCAR 103 (BRICSAT 2)</satellite>
        <satellite name="NO-104" startDate="2019-06-25">Navy-OSCAR 104 (PSAT 2)</satellite>
        <satellite name="NO-44" startDate="2001-09-30">Navy-OSCAR 44</satellite>
@@ -7776,6 +7777,7 @@
        <satellite name="SO-41" startDate="2000-09-26">Saudi-OSCAR 41</satellite>
        <satellite name="SO-50" startDate="2002-12-20">Saudi-OSCAR 50</satellite>
        <satellite name="SO-67" startDate="2009-09-17">Sumbandila Oscar 67</satellite>
+       <satellite name="SONATE" startDate="2024-03-04">SONATE-2</satellite>
        <satellite name="TAURUS" startDate="2019-09-17">Taurus-1 (Jinniuzuo-1)</satellite>
        <satellite name="TEVEL1" startDate="2022-01-13">Tevel-1</satellite>
        <satellite name="TEVEL2" startDate="2022-01-13">Tevel-2</satellite>

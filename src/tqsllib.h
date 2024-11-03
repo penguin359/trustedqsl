@@ -36,7 +36,7 @@
   */
 
 #ifndef PATH_MAX				// Should be set by <limits.h>
-#define PATH_MAX 4096
+#define PATH_MAX 4096	///< Override in case not defined in limits.h
 #endif
 
 /* Sizes */
@@ -411,6 +411,10 @@ DLLEXPORT int CALLCONVENTION tqsl_isCertificateSuperceded(tQSL_Cert cert, int *s
 /** Find out if the "certificate" is just a key pair.
   */
 DLLEXPORT int CALLCONVENTION tqsl_getCertificateKeyOnly(tQSL_Cert cert, int *keyonly);
+
+/** Find out if the "certificate" is renewable
+  */
+DLLEXPORT int CALLCONVENTION tqsl_isCertificateRenewable(tQSL_Cert cert, int *status);
 
 /** Get the encoded certificate for inclusion in a GABBI file.
   */
@@ -1223,6 +1227,12 @@ DLLEXPORT int CALLCONVENTION tqsl_saveCallsignLocationInfo(const char *callsign,
 
 /** Retrieve the json results for a given callsign location Detail. */
 DLLEXPORT int CALLCONVENTION tqsl_getCallsignLocationInfo(const char *callsign, char **buf);
+
+#define TQSL_VALID_VUCC_ENT 1			///< Grid is valid for DXCC Entity
+#define TQSL_VALID_VUCC_PAS 2			///< Grid is valid for Primary Administrative Subdivision (State, etc.)
+
+/** Validate that a given four-character gridsquare is acceptable for entity and primary administrative subdivision */
+DLLEXPORT int CALLCONVENTION tqsl_validateVUCCGrid(int entity, const char *pas, const char *grid, int *result);
 
 /** Get the number of DXCC entities in the primary DXCC list.
   */

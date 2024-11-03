@@ -56,8 +56,8 @@
 #define TQSL_LOCATION_MISMATCH 46	///< Station Location does not match QSO details
 #define TQSL_NEW_UPLOAD_DB 47		///< New upload database created, try to re-load it
 
-#define TQSL_CERT_NOT_FOUND_INVALID 0x10000
-#define TQSL_CERT_NOT_FOUND_EXPIRED 0x20000
-#define TQSL_CERT_NOT_FOUND_SUPERCEDED 0x40000
+#define TQSL_CERT_NOT_FOUND_INVALID 0x10000	///< Certificate is invalid
+#define TQSL_CERT_NOT_FOUND_EXPIRED 0x20000	///< Certificate has expired
+#define TQSL_CERT_NOT_FOUND_SUPERCEDED 0x40000	///< Certificate has been replaced with a newer one
 
 #endif /* __TQSLERRNO_H */

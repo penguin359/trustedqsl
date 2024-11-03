@@ -96,12 +96,17 @@ information.
 When using "-f update", the ideal practice should be to either
 specify all QTH information (state, county, grid, zones) in the
 ADIF "MY_" fields, or use an minimal Station Location with no
-QTH data.
+QTH data. If no station location is provided on the command line, 
+(the "-l" option specifies the station location name), an empty station
+location is used which has no callsign or QTH data.
 
   -l <str>      Select Station Location.
 
 This option selects a station location. This is used for signing logs or
 in conjunction with the "-s" option to define a location for editing.
+
+If an empty Station Location name is chosen (-l "") then TQSL enables
+the QTH handing specified with "-f update".
 
   -s            Edit (if used with -l) or create Station Location
 

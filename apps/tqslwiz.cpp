@@ -35,6 +35,7 @@ END_EVENT_TABLE()
 BEGIN_EVENT_TABLE(TQSLWizLocPage, TQSLWizPage)
 	EVT_CHECKBOX(-1, TQSLWizLocPage::OnCheckBoxEvent)
 	EVT_WIZARD_PAGE_CHANGING(wxID_ANY, TQSLWizLocPage::OnPageChanging)
+	EVT_WIZARD_CANCEL(-1, TQSLWizLocPage::OnCancel)
 	EVT_TEXT(ID_LOC_GRID, TQSLWizLocPage::OnTextEvent)
 	EVT_TEXT(ID_LOC_IOTA, TQSLWizLocPage::OnTextEvent)
 #if wxMAJOR_VERSION < 3 && (wxMAJOR_VERSION != 2 && wxMINOR_VERSION != 9)
@@ -137,6 +138,39 @@ TQSLWizard::GetPage(bool final) {
 		(reinterpret_cast<TQSLWizFinalPage *>(_pages[0]))->prev = GetCurrentTQSLPage();
 	return _pages[page_num];
 }
+
+bool TQSLWizLocPage::GetChangedFields(wxString& changes) {
+	ForcedMap::iterator it;
+	for (it = forced.begin(); it != forced.end(); it++) {		// Something set
+		if (it->second != "") {
+			if (!changes.IsEmpty()) {
+				changes = changes + wxT(", ");
+			}
+			changes += wxString::FromUTF8(it->first.c_str());
+		}
+	}
+	for (it = userSet.begin(); it != userSet.end(); it++) {		// Something set
+		if (it->second != "") {
+			if (!changes.IsEmpty()) {
+				changes = changes + wxT(", ");
+			}
+			changes += wxString::FromUTF8(it->first.c_str());
+		}
+	}
+	return !changes.IsEmpty();
+}
+
+void TQSLWizLocPage::OnCancel(wxWizardEvent& ev) {
+	wxString changes(wxT(""));
+
+	if (GetChangedFields(changes)) {
+               if (wxMessageBox(wxString::Format(_("You have changed the following fields in this Station Location: %s\nDo you want to discard those changes?"), changes.c_str()),
+			_("Changes have not been saved"), wxYES_NO|wxICON_QUESTION, this) != wxYES) {
+			ev.Veto();
+		}
+	}
+}
+
 
 void TQSLWizLocPage::OnSize(wxSizeEvent& ev) {
 #if wxMAJOR_VERSION < 3 && (wxMAJOR_VERSION != 2 && wxMINOR_VERSION != 9)
@@ -681,6 +715,7 @@ TQSLWizLocPage::TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp)
 	valMsg = wxT("");
 	invalidGrid = false;
 	allowBadGrid = false;
+	gridChanged = false;
 	gridFromDB = false;
 	tqsl_getStationLocationCapturePage(loc, &loc_page);
 	wxScreenDC sdc;
@@ -994,9 +1029,11 @@ TQSLWizLocPage::validate() {
 			if (gridVal.size() == 0) {
 				continue;
 			}
+
 			string gridlist;
 			get_address_field(callsign, "grids", gridlist);
 			wxString editedGrids = wxT("");
+			// Split the user-provided grid list (comma delimited set)
 			wxStringTokenizer grids(gridVal, wxT(","));	// Comma-separated list of squares
 			while (grids.HasMoreTokens()) {
 				wxString grid = grids.GetNextToken().Trim().Trim(false);
@@ -1045,6 +1082,7 @@ TQSLWizLocPage::validate() {
 					if (valMsg.IsEmpty())
 						valMsg = wxString::Format(_("%s: Invalid Grid Square"), grid.c_str());
 				}
+#ifdef USE_LOC_FOR_GRID
 				if (valMsg.IsEmpty() && !gridlist.empty() && !gridFromDB) {
 					string probe = string(grid.Left(4).mb_str());
 					if (gridlist.find(probe) == string::npos) {
@@ -1054,6 +1092,47 @@ TQSLWizLocPage::validate() {
 						invalidGrid = false;
 					}
 				}
+#else
+				if (valMsg.IsEmpty() && !gridFromDB) {
+					int cur_page;
+					tqsl_getStationLocationCapturePage(loc, &cur_page);
+					tqsl_setStationLocationCapturePage(loc, second_page);
+					int dxcc = -1;
+					if (!tqsl_getLocationDXCCEntity(loc, &dxcc)) {
+						int numf;
+						char gname[50];
+						char pas[50];
+						char label[50];
+						pas[0] = '\0';
+						tqsl_getNumLocationField(loc, &numf);
+						for (int i = 0; i < numf; i++) {
+							if (!tqsl_getLocationFieldDataGABBI(loc, i, gname, sizeof gname)) {
+								if (isPAS(gname)) {
+									tqsl_getLocationFieldCharData(loc, i, pas, sizeof pas);
+									tqsl_getLocationFieldDataLabel(loc, i, label, sizeof label);
+									break;
+								}
+							}
+						}
+						wxString userGrid = grid.Upper().Left(4);
+						int goodGrid = 0;
+						if (!tqsl_validateVUCCGrid(dxcc, pas, userGrid.ToUTF8(), &goodGrid)) {
+							if ((goodGrid & TQSL_VALID_VUCC_ENT) && (goodGrid & TQSL_VALID_VUCC_PAS)) {
+								invalidGrid = false;
+							} else if (!(goodGrid & TQSL_VALID_VUCC_ENT)) {
+								valMsg = wxString::Format(_("Grid %s is not correct for your DXCC Entity. Click 'Next' again to use it anyway."), grid.c_str());
+								invalidGrid = true;
+							} else {
+								valMsg = wxString::Format(_("Grid %s is not correct for your %s. Click 'Next' again to use it anyway."), grid.c_str(), label);
+								invalidGrid = true;
+							}
+						} else {
+							invalidGrid = false;	// Check failed, all OK
+						}
+					}
+					tqsl_setStationLocationCapturePage(loc, cur_page);
+				}
+#endif
 				if (!editedGrids.IsEmpty())
 					editedGrids += wxT(",");
 				editedGrids += grid;
@@ -1151,7 +1230,15 @@ TQSLWizLocPage::TransferDataFromWindow() {
 				case TQSL_LOCATION_FIELD_LIST:
 					break;
 				case TQSL_LOCATION_FIELD_TEXT:
+					char lastValue[100], newValue[100];
+					tqsl_getLocationFieldCharData(loc, i, lastValue, sizeof lastValue);
 					tqsl_setLocationFieldCharData(loc, i, (reinterpret_cast<wxTextCtrl *>(p1_controls[i]))->GetValue().ToUTF8());
+					char gabbi_name[40];
+					tqsl_getLocationFieldDataGABBI(loc, i, gabbi_name, sizeof gabbi_name);
+					if (!strcmp(gabbi_name, "GRIDSQUARE")) {
+						tqsl_getLocationFieldCharData(loc, i, newValue, sizeof newValue);
+						gridChanged = (strcmp(lastValue, newValue) != 0);
+					}
 					break;
 			}
 		}
@@ -1178,11 +1265,14 @@ TQSLWizLocPage::OnPageChanging(wxWizardEvent& ev) {
 
 	validate();
 	if (valMsg.Len() > 0 && ev.GetDirection()) {
-		if (!allowBadGrid) {
+		if (!allowBadGrid || gridChanged) {
 			ev.Veto();
-			allowBadGrid = true;		// Don't allow going forward once
+			if (gridChanged) {
+				allowBadGrid = true;		// Don't allow going forward once
+			}
 		} else {
 			allowBadGrid = false;
+			gridChanged = false;
 		}
 		if (!invalidGrid) {
 			wxMessageBox(valMsg, _("Error"), wxOK | wxICON_ERROR, this);
@@ -1195,7 +1285,21 @@ BEGIN_EVENT_TABLE(TQSLWizFinalPage, TQSLWizPage)
 	EVT_LISTBOX_DCLICK(TQSL_ID_LOW, TQSLWizFinalPage::OnListbox)
 	EVT_TEXT(TQSL_ID_LOW+1, TQSLWizFinalPage::check_valid)
 	EVT_WIZARD_PAGE_CHANGING(wxID_ANY, TQSLWizFinalPage::OnPageChanging)
+	EVT_WIZARD_CANCEL(-1, TQSLWizFinalPage::OnCancel)
 END_EVENT_TABLE()
+
+void
+TQSLWizFinalPage::OnCancel(wxWizardEvent& ev) {
+	TQSLWizLocPage* first = static_cast<TQSLWizLocPage*>(GetParent()->GetPage(0));
+	wxString changes(wxT(""));
+
+	if (first->GetChangedFields(changes)) {
+               if (wxMessageBox(wxString::Format(_("You have changed the following fields in this Station Location: %s\nDo you want to discard those changes?"), changes.c_str()),
+			_("Changes have not been saved"), wxYES_NO|wxICON_QUESTION, this) != wxYES) {
+			ev.Veto();
+		}
+	}
+}
 
 void
 TQSLWizFinalPage::OnListbox(wxCommandEvent &) {

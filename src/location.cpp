@@ -505,6 +505,77 @@ tqsl_load_xml_config() {
 	return 0;
 }
 
+DLLEXPORT int CALLCONVENTION
+tqsl_validateVUCCGrid(int entity, const char *pas, const char *grid, int *result) {
+	FILE *in;
+	*result = 0;
+
+#ifdef _WIN32
+	string path = string(tQSL_RsrcDir) + "\\vuccgrids.dat";
+        wchar_t* wfilename = utf8_to_wchar(path.c_str());
+        if ((in = _wfopen(wfilename, L"rb")) == NULL) {
+                free_wchar(wfilename);
+#else
+	string path = string(tQSL_RsrcDir) + "/vuccgrids.dat";
+        if ((in = fopen(path.c_str(), "rb")) == NULL) {
+#endif
+		tqslTrace("tqsl_validateVUCCGrid", "Unable to open vuccgrids.dat, %m");
+		return 1;
+	}
+	char buf[100];
+	char *cp;
+	while ((cp = fgets(buf, sizeof buf, in)) != 0) {
+		int l = strlen(buf);
+		for (l--; l > 0 && isspc(buf[l]); l--) {
+			buf[l] = '\0';
+		}
+		char *dxcc = strtok(buf, ",");
+		if (!dxcc) {					// parse error
+			fclose(in);
+			tqslTrace("tqsl_validateVUCCGrid", "invalid input - no tokens");
+			return 1;
+		}
+		int ent = strtol(dxcc, NULL, 10);
+		if (ent == 0 && errno == EINVAL) {		// Bad input
+			fclose(in);
+			tqslTrace("tqsl_validateVUCCGrid", "invalid input - no an identity number %s", dxcc);
+			return 1;
+		}
+		if (ent < entity) continue;
+		if (ent > entity) break;
+		char *thispas = strtok(NULL, ",");
+		if (thispas == NULL) {
+			tqslTrace("tqsl_validateVUCCGrid", "invalid input - no PAS");
+			fclose(in);
+			return 1;
+		}
+		char *thisgrid = strtok(NULL, ",");
+		if (thisgrid == NULL) {
+			tqslTrace("tqsl_validateVUCCGrid", "invalid input - no grid");
+			fclose(in);
+			return 1;
+		}
+		if (!strcmp(grid, thisgrid)) {			// Valid grid for this entity
+			tqslTrace("tqsl_validateVUCCGrid", "matches entity");
+			*result |= TQSL_VALID_VUCC_ENT;
+			if (strlen(pas) == 0) {			// and empty PAS
+				*result |= TQSL_VALID_VUCC_PAS;
+				break;
+			}
+			if (!strcmp(pas, thispas)) {		// Plus valid grid for this PAS
+				tqslTrace("tqsl_validateVUCCGrid", "matches PAS and entity");
+				*result |= TQSL_VALID_VUCC_PAS;
+				break;
+			}
+		}
+	}
+	if (*result == 0) {
+		tqslTrace("tqsl_validateVUCCGrid", "Grid not found");
+	}
+	fclose(in);
+	return 0;
+}
+
 static int
 tqsl_get_xml_config_section(const string& section, XMLElement& el) {
 	if (tqsl_load_xml_config())

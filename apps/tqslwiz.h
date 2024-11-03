@@ -95,6 +95,7 @@ class TQSLWizLocPage : public TQSLWizPage {
 	int loc_page;
 	bool invalidGrid;
 	bool allowBadGrid;
+	bool gridChanged;
 	bool gridFromDB;
 	wxBoxSizer* sizer;
 	void UpdateFields(int noupdate_field = -1);
@@ -103,6 +104,8 @@ class TQSLWizLocPage : public TQSLWizPage {
 	virtual TQSLWizPage *GetNext() const;
 	void OnSize(wxSizeEvent&);
 	void OnPageChanging(wxWizardEvent &);
+	void OnCancel(wxWizardEvent &);
+	bool GetChangedFields(wxString &);
 
  private:
 	vector<void *> p1_controls;	// First page
@@ -158,6 +161,7 @@ class TQSLWizFinalPage : public TQSLWizPage {
 	void OnListbox(wxCommandEvent &);
 	virtual const char *validate();
 	void OnPageChanging(wxWizardEvent &);
+	void OnCancel(wxWizardEvent &);
  private:
 	wxListBox *namelist;
 	wxTextCtrl *newname;
