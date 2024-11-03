@@ -1,3 +1,10 @@
+trustedqsl (2.7.4-1) UNRELEASED; urgency=medium
+
+  * Ensure --pristine-tar is enabled by default
+  * New upstream version 2.7.4
+
+ -- Loren M. Lang <lorenl@north-winds.org>  Sun, 03 Nov 2024 14:50:29 -0800
+
 trustedqsl (2.7.3-2) unstable; urgency=medium
 
   * Team upload
