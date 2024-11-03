@@ -24,4 +24,6 @@ void displayTQSLError(const char *pre);
 wxMenu *makeCertificateMenu(bool enable, bool keyonly = false, const char* callsign = NULL);
 wxMenu *makeLocationMenu(bool enable);
 
+#define DEFAULT_CERT_FUZZ 180		// How many days past expiry do we allow renewal
+
 #endif	// __util_h

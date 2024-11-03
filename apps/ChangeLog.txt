@@ -1,5 +1,58 @@
 TQSL changes
 ============
+2.7.4
+----------
+When a requesting a portable callsign "P5/K1MU" for a DXCC entity outside
+of the US where the base callsign is a US call, emit a warning to the user
+that CEPT and other portable operations are only valid for US Citizens as
+specified in FCC regulations.
+
+Fix issues causing TQSL on Linux to emit a stream of "Gtk-WARNING" messages.
+These were harmless but annoying.
+
+For hams requesting callsign certificate requests for US callsigns, some cases
+where there were empty fields in the ULS data could cause TQSL to block
+submitting a callsign certificate request for a new US-based callsign when
+details such as the address or name are empty in the ULS data and there were no
+existing callsign certificates able to be used to validate the new request.
+TQSL now allows the user to override the ULS data for these initial callsign
+certificate requests.
+
+When a callsign certificate is deleted, don't let the retained private key
+look like an overlapping request. Ignore the private keys if there's no
+certificate already in progress.
+
+Add a Entity and primary subdivision (state) data set to TQSL to permit
+validation of 4-character grid squares as valid for a given entity and
+state combination.
+
+When entering a Gridsquare that doesn't validate, don't allow skipping
+if the grid value changes. Pressing "Next" twice only works if the value
+of the grid doesn't change.
+
+Correct language selection to avoid wxLanguage shifting identifiers.
+
+Detect changes (including changes related to default details) in the Station
+Location editor and ask the user if they would like to save those. The prior
+behavior didn't make it clear when viewing a station location that TQSL had,
+for example, set their CQ Zone but that would not be retained unless the 
+Station Location was saved. (tnx K5GZR)
+
+Detect network connectivity issues and block repeated probes of Logbook
+services for certificate status, etc. This keeps TQSL from stallng for
+several minutes if Logbook is down.
+
+Allow renewal of recently expired callsign certificates.
+
+When upload of a callsign certificate request fails, allow the user to
+save the request so it can be uploaded later rather than delete the request.
+
+Correct the display of modified fields when editing a station location and
+the user attempts to cancel the operation.
+
+Allow an empty location name command line argument to force QTH update mode
+as if "-f update" was specified.
+
 2.7.3
 ----------
 Change "some QSOs suppressed" wording to "some QSOs not processed".

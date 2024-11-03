@@ -689,10 +689,19 @@ tqsl_decodeBase64(const char *input, unsigned char *data, int *datalen) {
 		goto err;
 	}
 	bio = BIO_push(bio64, bio);
+	// OpenSSL always adds a newline; account for cases where the base64 string isn't
+	// newline terminated
 	n = BIO_read(bio, data, *datalen);
 	if (n < 0) {
 		tqslTrace("tqsl_decodeBase64", "BIO_read error %s", tqsl_openssl_error());
 		goto err;
+	}
+	// Completely invalid input means no output.
+	// return an appropriate error
+	if (n == 0 && strlen(input) > 0) {
+		tqslTrace("tqsl_decodeBase64", "Invalid input");
+		tQSL_Error = TQSL_ARGUMENT_ERROR;
+		goto end;
 	}
 	if (BIO_ctrl_pending(bio) != 0) {
 		tqslTrace("tqsl_decodeBase64", "ctrl_pending err %s", tqsl_openssl_error());

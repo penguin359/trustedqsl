@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8 FATAL_ERROR)
+cmake_minimum_required (VERSION 3.14.7 FATAL_ERROR)
 
 project(TrustedQSL)
 
@@ -98,15 +98,23 @@ endif()
 # Get version number
 
 file(STRINGS "apps/tqslversion.ver" TQSLVERSION)
-string(REGEX REPLACE "([0-9]+)\\.([0-9]+)\\.([0-9]+)" "\\1" TQSL_VERSION_MAJOR ${TQSLVERSION})
-string(REGEX REPLACE "([0-9]+)\\.([0-9]+)\\.([0-9]+)" "\\2" TQSL_VERSION_MINOR ${TQSLVERSION})
-string(REGEX REPLACE "([0-9]+)\\.([0-9]+)\\.([0-9]+)" "\\3" TQSL_VERSION_UPDATE ${TQSLVERSION})
+string(REGEX REPLACE "([0-9]+)\\.([0-9]+)\\.([0-9.]+)" "\\1" TQSL_VERSION_MAJOR ${TQSLVERSION})
+string(REGEX REPLACE "([0-9]+)\\.([0-9]+)\\.([0-9.]+)" "\\2" TQSL_VERSION_MINOR ${TQSLVERSION})
+string(REGEX REPLACE "([0-9]+)\\.([0-9]+)\\.([0-9.]+)" "\\3" TQSL_VERSION_UPDATE ${TQSLVERSION})
 
 # Handle case where version number does not have an update i.e. 2.0
 if (TQSL_VERSION_MAJOR STREQUAL ${TQSLVERSION}) 
 	string(REGEX REPLACE "([0-9]+)\\.([0-9]+)" "\\1" TQSL_VERSION_MAJOR ${TQSLVERSION})
 	string(REGEX REPLACE "([0-9]+)\\.([0-9]+)" "\\2" TQSL_VERSION_MINOR ${TQSLVERSION})
 	set(TQSL_VERSION_UPDATE "0")
+endif()
+
+# Handle case where there's a patch (fourth number)
+if (TQSL_VERSION_UPDATE MATCHES "[0-9]+\\.[0-9]+")
+	string(REGEX REPLACE "([0-9]+)\\.([0-9]+)" "\\2" TQSL_VERSION_PATCH ${TQSL_VERSION_UPDATE})
+	string(REGEX REPLACE "([0-9]+)\\.([0-9]+)" "\\1" TQSL_VERSION_UPDATE ${TQSL_VERSION_UPDATE})
+else()
+	SET(TQSL_VERSION_PATCH "")
 endif()
 
 #get build # with git
@@ -155,10 +163,18 @@ if (NOT TQSL_VERSION_UPDATE)
 	set(TQSL_VERSION_UPDATE 0)
 endif()
 
+if (NOT TQSL_VERSION_PATCH)
+	set(TQSL_VERSION_PATCH 0)
+endif()
+
 IF(TQSL_VERSION_UPDATE AND NOT TQSL_VERSION_UPDATE EQUAL 0) 
 	set(TQSLVERSION "${TQSL_VERSION_MAJOR}.${TQSL_VERSION_MINOR}.${TQSL_VERSION_UPDATE}")
 else()
 	set(TQSLVERSION "${TQSL_VERSION_MAJOR}.${TQSL_VERSION_MINOR}")
+endif()
+if (NOT TQSL_VERSION_PATCH EQUAL 0)
+	set(TQSLVERSION "${TQSL_VERSION_MAJOR}.${TQSL_VERSION_MINOR}.${TQSL_VERSION_UPDATE}.{TQSL_VERSION_PATCH}")
+	
 endif()
 
 if(WIN32)
