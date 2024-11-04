@@ -45,7 +45,7 @@ if(APPLE)
 	set(MACOSX_BUNDLE_GUI_IDENTIFIER "org.arrl.tqsl")
 	set(MACOSX_BUNDLE_LONG_VERSION_STRING "TQSL V ${TQSLVERSION} build ${BUILD}")
 	set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${TQSLVERSION}")
-	set(MACOSX_BUNDLE_COPYRIGHT "Copyright 2001-2023 American Radio Relay League")
+	set(MACOSX_BUNDLE_COPYRIGHT "Copyright 2001-2024 American Radio Relay League")
 
 	set(MACOSX_BUNDLE_ICON_FILE ${OSX_ICONFILE})
 	SET_SOURCE_FILES_PROPERTIES(${OSX_ICONFILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
@@ -95,7 +95,7 @@ target_link_libraries(tqsl ${TQSLLIBNAME}
 if(WIN32)
 	set(UPDATER_SRC tqslupdater.cpp)
 	add_executable(tqslupdater WIN32 ${UPDATER_SRC} ${TQSL_HDR})
-	target_link_libraries(tqslupdater ${wxWidgets_LIBRARIES} ${CURL_LIBRARIES} ${OPENSSL_LIBRARIES})
+	target_link_libraries(tqslupdater ${wxWidgets_LIBRARIES} ${CURL_LIBRARIES} ${OPENSSL_LIBRARIES} Crypt32)
 endif()
 
 if(NOT APPLE AND NOT WIN32)
@@ -134,6 +134,7 @@ if(NOT APPLE AND NOT WIN32)
 	install(FILES lang/zh_CN/tqslapp.mo DESTINATION ${CMAKE_INSTALL_DATADIR}/locale/zh_CN/LC_MESSAGES)
 	install(FILES languages.dat DESTINATION ${CMAKE_INSTALL_DATADIR}/TrustedQSL)
 	install(FILES cab_modes.dat DESTINATION ${CMAKE_INSTALL_DATADIR}/TrustedQSL)
+	install(FILES vuccgrids.dat DESTINATION ${CMAKE_INSTALL_DATADIR}/TrustedQSL)
 #
 # Flatpak doesn't come with installed wxWidgets localizations
 # so add them in

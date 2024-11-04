@@ -3,6 +3,9 @@ TQSLLIB changes
 
 2.5
 ---
+Detect missing newlines on base64 strings during decode (OpenSSL
+encoding always includes a newline, but not all encoders do.)
+
 When loading callsign certificates when the user's computer is set to
 an incorrect date, TQSL would not explain the error "Trusted root
 certificate: certificate is not yet valid". TQSL now detects a root
