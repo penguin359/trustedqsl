@@ -698,6 +698,7 @@ tqsl_createCertRequest(const char *filename, TQSL_CERT_REQ *userreq,
 
 		if ((b64 = tqsl_sign_base64_data(req->signer, cp)) == NULL) {
 			fclose(out);
+			out = NULL;
 			tqslTrace("tqsl_createCertRequest", "tqsl_sign_base64 error %s", tqsl_openssl_error());
 			goto end;
 		}
@@ -716,6 +717,7 @@ tqsl_createCertRequest(const char *filename, TQSL_CERT_REQ *userreq,
 		tQSL_Error = TQSL_SYSTEM_ERROR;
 		tQSL_Errno = errno;
 		tqslTrace("tqsl_createCertRequest", "write error %d", errno);
+		out = NULL;
 		goto end;
 	}
 	out = NULL;
@@ -886,6 +888,79 @@ tqsl_isCertificateExpired(tQSL_Cert cert, int *status) {
 		tqsl_get_asn1_date(ctm, &cert_na);
 		if (tqsl_compareDates(&cert_na, &d) < 0) {
 			*status = true;
+			return 0;
+		}
+	}
+	return 0;
+}
+
+DLLEXPORT int CALLCONVENTION
+tqsl_isCertificateRenewable(tQSL_Cert cert, int *status) {
+	static int window = 180;		// Allow renewal out to 180 days
+	tqslTrace("tqsl_isCertificateRenewable", NULL);
+	if (tqsl_init())
+		return 1;
+	if (cert == NULL) {
+		window = *status;
+		return 0;
+	}
+	if (cert == NULL || status == NULL || !tqsl_cert_check(TQSL_API_TO_CERT(cert), false)) {
+		tqslTrace("tqsl_isCertificateRenewable", "arg error cert=0x%lx status=0x%lx", cert, status);
+		tQSL_Error = TQSL_ARGUMENT_ERROR;
+		if (status) *status = false;
+		return 1;
+	}
+
+	// If there's a newer one, can't renew this
+	int superceded;
+	if (tqsl_isCertificateSuperceded(cert, &superceded) == 0 && superceded) {
+		*status = false;
+		return 0;
+	}
+
+	// Is it expired? If not, OK to renew.
+	int expired;
+	if (tqsl_isCertificateExpired(cert, &expired) == 0 && !expired) {
+		*status = false;
+		return 0;
+	}
+
+	// Also for keyonly
+	int keyonly;
+	if (tqsl_getCertificateKeyOnly(cert, &keyonly) == 0 && keyonly) {
+		*status = false;
+		return 0;
+	}
+
+	long serial = 0;
+	tqsl_getCertificateSerial(cert, &serial);
+	int sts = tqsl_getCertificateStatus(serial);
+	if (sts == TQSL_CERT_STATUS_INV) {
+		*status = true;
+		return 0;
+	}
+	*status = false;
+	/* Check for expired */
+	time_t t = time(0);
+	struct tm *tm = gmtime(&t);
+	tQSL_Date d;
+	d.year = tm->tm_year + 1900;
+	d.month = tm->tm_mon + 1;
+	d.day = tm->tm_mday;
+	const ASN1_TIME *ctm;
+	if ((ctm = X509_get_notAfter(TQSL_API_TO_CERT(cert)->cert)) == NULL) {
+		*status = true;
+		return 0;
+	} else {
+		tQSL_Date cert_na;
+		tqsl_get_asn1_date(ctm, &cert_na);
+		int diff = 0;
+		if (!tqsl_subtractDates(&cert_na, &d, &diff)) {
+			if (diff < window) {
+				*status = true;
+			} else {
+				*status = false;
+			}
 			return 0;
 		}
 	}
@@ -3720,7 +3795,7 @@ tqsl_filter_cert_list(STACK_OF(X509) *sk, const char *callsign, int dxcc,
 		/* Check for expired unless asked not to */
 		if (ok && !(flags & TQSL_SELECT_CERT_EXPIRED)) {
 			int exp = false;
-			if (!tqsl_isCertificateExpired(TQSL_OBJ_TO_API(cp), &exp)) {
+			if (!tqsl_isCertificateRenewable(TQSL_OBJ_TO_API(cp), &exp)) {
 				if (exp) {
 					ok = 0;
 				}
@@ -5714,7 +5789,7 @@ DLLEXPORT int CALLCONVENTION
 tqsl_saveCallsignLocationInfo(const char *callsign, const char *json) {
 	FILE *out;
 
-	if (callsign == NULL || json == NULL) {
+	if (callsign == NULL) {
 		tqslTrace("tqsl_saveCallsinLocationInfo", "arg error callsign=0x%lx, json=0x%lx", callsign, json);
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
 		return 1;
@@ -5722,6 +5797,9 @@ tqsl_saveCallsignLocationInfo(const char *callsign, const char *json) {
 	char fixcall[256];
 	char path[TQSL_MAX_PATH_LEN];
 	size_t size = sizeof path;
+#ifdef _WIN32
+	wchar_t* wfilename;
+#endif
 
 	tqsl_clean_call(callsign, fixcall, sizeof fixcall);
 	strncpy(path, tQSL_BaseDir, size);
@@ -5732,10 +5810,21 @@ tqsl_saveCallsignLocationInfo(const char *callsign, const char *json) {
 #endif
 	strncat(path, fixcall, size - strlen(path));
 	strncat(path, ".json", size - strlen(path));
+
+	if (json == NULL) { // Delete the file
+#ifdef _WIN32
+		wfilename = utf8_to_wchar(path);
+		_wunlink(wfilename);
+		free_wchar(wfilename);
+#else
+		unlink(path);
+#endif
+		return 0;
+	}
 	/* Try opening the output stream */
 
 #ifdef _WIN32
-	wchar_t* wfilename = utf8_to_wchar(path);
+	wfilename = utf8_to_wchar(path);
 	if ((out = _wfopen(wfilename, TQSL_OPEN_WRITE)) == NULL) {
 		free_wchar(wfilename);
 #else

@@ -50,6 +50,7 @@ CRQWiz::CRQWiz(TQSL_CERT_REQ *crq, tQSL_Cert xcert, wxWindow *parent, wxHtmlHelp
 	tqsl_selectCertificates(NULL, &ncerts, NULL, 0, NULL, NULL, 0);
 	validcerts = (ncerts > 0);
 	nprov = 1;
+	networkError = false;
 	tqsl_getNumProviders(&nprov);
 	providerPage = new CRQ_ProviderPage(this, _crq);
 	signPage = new CRQ_SignPage(this, _crq);
@@ -518,7 +519,11 @@ void
 CRQ_NamePage::Preset(CRQ_CallsignPage *ip) {
 	wxString s;
 	string t;
-	SaveAddressInfo(_parent->callsign.ToUTF8(), _parent->dxcc);
+	if (!_parent->networkError) {
+		if (SaveAddressInfo(_parent->callsign.ToUTF8(), _parent->dxcc) < 0) {	// Timeout, net error
+			_parent->networkError = true;
+		}
+	}
 	if (!_parent->name.IsEmpty()) {
 		tc_name->SetValue(_parent->name);
 	} else if (get_address_field(_parent->callsign.ToUTF8(), "name", t) == 0) {
@@ -990,7 +995,7 @@ CRQ_CallsignPage::validate() {
 
 	_parent->callsign.MakeUpper();
 	tqsl_selectCertificates(&certlist, &ncert, _parent->callsign.ToUTF8(), _parent->dxcc, 0,
-				&(_parent->provider), TQSL_SELECT_CERT_WITHKEYS);
+				&(_parent->provider), 0);
 	if (!_parent->_crq && ncert > 0) {
 		char cert_before_buf[40], cert_after_buf[40];
 		for (int i = 0; i < ncert; i++) {
@@ -1148,14 +1153,21 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 		}
 	}
 
+	_parent->goodULSData = false;
 	// Is this in the ULS?
-	if (valMsg.Len() == 0 && _parent->usa && !_parent->onebyone && isUSCallsign(callsign)) {
+	if (valMsg.IsEmpty() && _parent->usa && !_parent->onebyone && isUSCallsign(callsign)) {
 		wxString name, attn, addr1, city, state, zip, update;
-		int stat = GetULSInfo(callsign.ToUTF8(), name, attn, addr1, city, state, zip, update);
+		int stat;
+		if (_parent->networkError) {
+			stat = 3;		// reflect network error
+		} else {
+			stat = GetULSInfo(callsign.ToUTF8(), name, attn, addr1, city, state, zip, update);
+		}
 		// handle portable/home and home/portable
-		if (stat == 2 && !wxIsEmpty(suffix)) {
+		if (stat == 2 && !wxIsEmpty(suffix) && !_parent->networkError) {
 			stat = GetULSInfo(suffix.ToUTF8(), name, attn, addr1, city, state, zip, update);
 		}
+		int stat2 = 0;
 		switch (stat) {
 			case 0:
 				_parent->validusa = true;		// Good data returned
@@ -1165,11 +1177,11 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 				_parent->namePage->setName(name);
 
 				if (addr1 == wxT("null"))
-					addr1 = wxT("");
+					addr1 = _parent->addr1;
 				if (attn == wxT("null")) {
 					attn = wxT("");
 					_parent->addr1 = addr1;
-					_parent->addr2 = wxT(".");
+					_parent->addr2 = wxT("");
 					_parent->namePage->setAddr1(addr1);
 					_parent->namePage->setAddr2(attn);
 				} else {
@@ -1180,27 +1192,30 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 				}
 
 				if (city == wxT("null"))
-					city = wxT("");
+					city = _parent->city;
 				_parent->city = city;
 				_parent->namePage->setCity(city);
 
 				if (state == wxT("null"))
-					state = wxT("");
+					state = _parent->state;
 				_parent->state = state;
 				_parent->namePage->setState(state);
 
 				if (zip == wxT("null"))
-					zip = wxT("");
+					zip = _parent->zip;
 				_parent->zip = zip;
 				_parent->namePage->setZip(zip);
 
 				_parent->country = wxT("USA");
 				_parent->namePage->setCountry(_parent->country);
+				if (!_parent->name.IsEmpty() && !_parent->addr1.IsEmpty() && !_parent->city.IsEmpty()) {
+					_parent->goodULSData = true;
+				}
 				break;
 			case 1:
 				break;						// Error reading ULS info
 			case 2:
-				int stat2 = GetULSInfo("W1AW", name, attn, addr1, city, state, zip, update);
+				stat2 = GetULSInfo("W1AW", name, attn, addr1, city, state, zip, update);
 				if (stat2 == 2)					// Also nothing for a good call
 					break;
 				if (hasEndDate) {				// Allow former calls
@@ -1209,10 +1224,17 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 				}
 				valMsg = wxString::Format(_("The callsign %s is not currently registered in the FCC ULS database as of %s.\nIf this is a newly registered call, you must wait at least one business day for it to be valid. Please enter a currently valid callsign."), callsign.c_str(), update.c_str());
 				break;
+			case 3:
+				_parent->networkError = true;			// Error reading
+				break;
 		}
 	}
 
-	if (valMsg.Len() == 0) {
+	// Is this potentially CEPT ?
+	if (valMsg.IsEmpty() && !_parent->usa && !_parent->onebyone && isUSCallsign(callsign)) {
+		wxMessageBox(_("If you are using a US callsign outside of the US persuant to CEPT, IARP or other Reciprocity arrangements, FCC rules require you to be a US Citizen."), _("Warning"), wxOK | wxICON_WARNING, this);
+	}
+	if (valMsg.IsEmpty()) {
 		// If this call has a slash, then it may be a portable call from
 		// outside the US. We really can't tell at this point so just
 		// let it go.
@@ -1231,6 +1253,7 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 			return false;
 		}
 
+		_parent->forceSigning = true;
 		wxString msg = _("You have selected DXCC Entity NONE");
 			msg += wxT("\n\n");
 			msg += _("QSO records signed using the Certificate will not be valid for DXCC award credit (but will be valid for other applicable awards). If the Certificate is to be used for signing QSOs from maritime/marine mobile, shipboard, or air mobile operations, that is the correct selection. Otherwise, you probably should use the \"Back\" button to return to the DXCC page after clicking \"OK\"");
@@ -1242,6 +1265,7 @@ CRQ_CallsignPage::TransferDataFromWindow() {
 			wxMessageBox(msg, _("TQSL Error"), wxOK | wxICON_ERROR, this);
 			return false;
 		}
+		_parent->forceSigning = true;
 	}
 
 	if (ok && _parent->forceSigning) {
@@ -1277,10 +1301,6 @@ static bool
 cleanString(wxString &str) {
 	str.Trim();
 	str.Trim(FALSE);
-	int idx;
-	while ((idx = str.Find(wxT("  "))) > 0) {
-		str.Remove(idx, 1);
-	}
 	return str.IsEmpty();
 }
 
@@ -1294,20 +1314,29 @@ CRQ_NamePage::validate() {
 	_parent->addr1 = tc_addr1->GetValue();
 	_parent->city = tc_city->GetValue();
 
-	if (cleanString(_parent->name))
+	if (cleanString(_parent->name)) {
 		valMsg = _("You must enter your name");
-	if (valMsg.Len() == 0 && cleanString(_parent->addr1))
+	} else if (cleanString(_parent->addr1)) {
 		valMsg = _("You must enter your address");
-	if (valMsg.Len() == 0 && cleanString(_parent->city))
+	} else if (cleanString(_parent->city)) {
 		valMsg = _("You must enter your city");
+	}
 	tc_status->SetLabel(valMsg);
-	if (!valMsg.IsEmpty())
+	if (!valMsg.IsEmpty()) {
+		tc_name->Enable(true);
+		tc_addr1->Enable(true);
+		tc_addr2->Enable(true);
+		tc_city->Enable(true);
+		tc_state->Enable(true);
+		tc_zip->Enable(true);
+		tc_country->Enable(true);
 		return 0;
+	}
 	//
 	// If this is not a renewal, and it's in the USA, and there's no certs to sign it with,
-	// then this is an initial certificate and must match the FCC database. Say so.
+	// and we got a valid ULS address, then this is an initial certificate and must match the FCC database. Say so.
 	//
-	if (!_parent->renewal && _parent->validusa && !_parent->validcerts) {
+	if (_parent->goodULSData && !_parent->renewal && _parent->validusa && !_parent->validcerts) {
 		tc_status->SetLabel(_("This address must match the FCC ULS database.\nIf this address information is incorrect, please correct your FCC record."));
 		tc_name->Enable(false);
 		tc_addr1->Enable(false);
@@ -1333,7 +1362,7 @@ CRQ_NamePage::TransferDataFromWindow() {
 
 	bool ok;
 	validate();
-	if (valMsg.Len() == 0) {
+	if (valMsg.IsEmpty()) {
 		ok = true;
 	} else {
 		wxMessageBox(valMsg, _("Error"), wxOK | wxICON_ERROR, this);
@@ -1387,7 +1416,7 @@ CRQ_EmailPage::TransferDataFromWindow() {
 	tqslTrace("CRQ_EmailPage::TransferDataFromWindow", NULL);
 	bool ok;
 	validate();
-	if (valMsg.Len() == 0) {
+	if (valMsg.IsEmpty()) {
 		ok = true;
 	} else {
 		wxMessageBox(valMsg, _("Error"), wxOK | wxICON_ERROR, this);
@@ -1422,7 +1451,7 @@ CRQ_PasswordPage::TransferDataFromWindow() {
 	tqslTrace("CRQ_PasswordPage::TransferDataFromWindow", NULL);
 	bool ok;
 	validate();
-	if (valMsg.Len() == 0) {
+	if (valMsg.IsEmpty()) {
 		ok = true;
 	} else {
 		wxMessageBox(valMsg, _("Error"), wxOK | wxICON_ERROR, this);
@@ -1437,7 +1466,7 @@ CRQ_SignPage::OnPageChanging(wxWizardEvent& ev) {
 	tqslTrace("CRQ_SignPage::OnPageChanging", "Direction=", ev.GetDirection());
 
 	validate();
-	if (valMsg.Len() > 0 && ev.GetDirection()) {
+	if (!valMsg.IsEmpty() && ev.GetDirection()) {
 		ev.Veto();
 		wxMessageBox(valMsg, _("TQSL Error"), wxOK | wxICON_ERROR, this);
 	}
