@@ -323,6 +323,7 @@ CertTree::OnRightDown(wxMouseEvent& event) {
 		wxMenu *cm;
 		int window = DEFAULT_CERT_FUZZ;
 		wxConfig::Get()->Read(wxT("RenewalWindow"), &window, DEFAULT_CERT_FUZZ);
+		// Null cert sets the renewal window
 		tqsl_isCertificateRenewable(NULL, &window);
 		if (cert) {
 			tqsl_getCertificateKeyOnly(cert, &keyonly);

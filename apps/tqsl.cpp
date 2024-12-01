@@ -1006,6 +1006,7 @@ MyFrame::SaveWindowLayout() {
 		GetPosition(&x, &y);
 #ifdef __WXGTK__
 		GetClientSize(&w, &h);
+		h += 27;  // Fudge for menubar. Stops window shrink.
 #else
 		GetSize(&w, &h);
 #endif

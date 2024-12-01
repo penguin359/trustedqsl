@@ -52,7 +52,7 @@
 	    "sources" : [
 		{
 		    "type" : "archive",
-        	    "url" : "https://www.rickmurphy.net/lotw/tqsl-2.7.4.tar.gz",
+        	    "url" : "https://www.rickmurphy.net/lotw/tqsl-2.7.5.tar.gz",
         	    "sha256" : "09af4fb32b633efad4e2ef9bff1ea921b41cf020cd588ea134cea317ad0176cf"
 	  	}
 	    ]

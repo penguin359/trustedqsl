@@ -299,6 +299,7 @@ tqsl_init() {
 // Work around ill-considered decision by Fedora to stop allowing
 // certificates with MD5 signatures
 	setenv("OPENSSL_ENABLE_MD5_VERIFY", "1", 0);
+	setenv("OPENSSL_ENABLE_SHA1_SIGNATURES", "1", 0);
 #endif
 
 	/* OpenSSL API tends to change between minor version numbers, so make sure
