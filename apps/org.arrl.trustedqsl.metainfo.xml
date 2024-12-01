@@ -68,6 +68,9 @@
      See https://www.freedesktop.org/software/appstream/docs/chap-AppStream-Misc.html#sect-AppStream-Misc-VerCmp
     -->
     <releases>
+	<release version="2.7.5" date="2024-11-17">
+	    <description><p>Allow renewing certs that have not expired. Case fold ADIF fields such as US_STATE. Fix window size growing.</p></description>
+	</release>
 	<release version="2.7.4" date="2024-10-24">
 	    <description><p>Fixes for empty addr fields, handle server down more gracefully, allow renewal of expired callsign certificates.</p></description>
 	</release>

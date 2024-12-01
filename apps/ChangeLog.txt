@@ -1,5 +1,13 @@
 TQSL changes
 ============
+2.7.5
+----------
+Handle cert renewals - 2.7.4 had a regression where an unexpired callsign
+certificate could not be renewed.
+
+Uppercase fields in ADIF records so Logbook doesn't have "VA" and "va"
+in confirmations.
+
 2.7.4
 ----------
 When a requesting a portable callsign "P5/K1MU" for a DXCC entity outside

@@ -925,9 +925,11 @@ static void parse_adif_qso(TQSL_CONVERTER *conv, int *saveErr, TQSL_ADIF_GET_FIE
 			conv->rec.band_set = true;
 			strncpy(conv->rec.band, resdata, sizeof conv->rec.band);
 		} else if (!strcasecmp(result.name, "MODE") && resdata) {
+			tqsl_strtoupper(resdata);
 			conv->rec.mode_set = true;
 			strncpy(conv->rec.mode, resdata, sizeof conv->rec.mode);
 		} else if (!strcasecmp(result.name, "SUBMODE") && resdata) {
+			tqsl_strtoupper(resdata);
 			strncpy(conv->rec.submode, resdata, sizeof conv->rec.submode);
 		} else if (!strcasecmp(result.name, "FREQ") && resdata) {
 			conv->rec.band_set = true;
@@ -941,12 +943,14 @@ static void parse_adif_qso(TQSL_CONVERTER *conv, int *saveErr, TQSL_ADIF_GET_FIE
 		} else if (!strcasecmp(result.name, "BAND_RX") && resdata) {
 			strncpy(conv->rec.rxband, resdata, sizeof conv->rec.rxband);
 		} else if (!strcasecmp(result.name, "SAT_NAME") && resdata) {
+			tqsl_strtoupper(resdata);
 			// Two-Line Elements (TLEs) call this AO-07, LoTW wants AO-7.
 			if (!strcasecmp(resdata, "AO-07"))
 				strncpy(conv->rec.satname, "AO-7", sizeof conv->rec.satname);
 			else
 				strncpy(conv->rec.satname, resdata, sizeof conv->rec.satname);
 		} else if (!strcasecmp(result.name, "PROP_MODE") && resdata) {
+			tqsl_strtoupper(resdata);
 			strncpy(conv->rec.propmode, resdata, sizeof conv->rec.propmode);
 		} else if (!strcasecmp(result.name, "QSO_DATE") && resdata) {
 			conv->rec.date_set = true;
@@ -961,6 +965,7 @@ static void parse_adif_qso(TQSL_CONVERTER *conv, int *saveErr, TQSL_ADIF_GET_FIE
 			if (conv->ignore_secs)
 				conv->rec.time.second = 0;
 		} else if (!strcasecmp(result.name, "MY_CNTY") && resdata) {
+			tqsl_strtoupper(resdata);
 			char *p = strstr(resdata, ",");			// Find the comma in "VA,Fairfax"
 			if (p) {
 				*p++ = '\0';
@@ -985,6 +990,7 @@ static void parse_adif_qso(TQSL_CONVERTER *conv, int *saveErr, TQSL_ADIF_GET_FIE
 		} else if (!strcasecmp(result.name, "MY_GRIDSQUARE") && resdata) {
 			strncpy(conv->rec.my_gridsquare, resdata, sizeof conv->rec.my_gridsquare);
 		} else if (!strcasecmp(result.name, "MY_IOTA") && resdata) {
+			tqsl_strtoupper(resdata);
 			strncpy(conv->rec.my_iota, resdata, sizeof conv->rec.my_iota);
 		} else if (!strcasecmp(result.name, "MY_ITU_ZONE") && resdata) {
 			char *endptr;
@@ -995,6 +1001,7 @@ static void parse_adif_qso(TQSL_CONVERTER *conv, int *saveErr, TQSL_ADIF_GET_FIE
 				strncpy(conv->rec.my_itu_zone, resdata, sizeof conv->rec.my_itu_zone);
 			}
 		} else if (!strcasecmp(result.name, "MY_STATE") && resdata) {
+			tqsl_strtoupper(resdata);
 			strncpy(conv->rec.my_state, resdata, sizeof conv->rec.my_state);
 		} else if (!strcasecmp(result.name, "MY_VUCC_GRIDS") && resdata) {
 			strncpy(conv->rec.my_vucc_grids, resdata, sizeof conv->rec.my_vucc_grids);

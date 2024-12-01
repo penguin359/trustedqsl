@@ -921,7 +921,7 @@ tqsl_isCertificateRenewable(tQSL_Cert cert, int *status) {
 	// Is it expired? If not, OK to renew.
 	int expired;
 	if (tqsl_isCertificateExpired(cert, &expired) == 0 && !expired) {
-		*status = false;
+		*status = true;
 		return 0;
 	}
 
@@ -3795,7 +3795,7 @@ tqsl_filter_cert_list(STACK_OF(X509) *sk, const char *callsign, int dxcc,
 		/* Check for expired unless asked not to */
 		if (ok && !(flags & TQSL_SELECT_CERT_EXPIRED)) {
 			int exp = false;
-			if (!tqsl_isCertificateRenewable(TQSL_OBJ_TO_API(cp), &exp)) {
+			if (!tqsl_isCertificateExpired(TQSL_OBJ_TO_API(cp), &exp)) {
 				if (exp) {
 					ok = 0;
 				}
