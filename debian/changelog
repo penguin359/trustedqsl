@@ -1,3 +1,10 @@
+trustedqsl (2.7.4-1ppa1~ubuntu22.10) kinetic; urgency=medium
+
+  * Taking maintainership to provide backports as Ubuntu PPA
+  * Updated dependencies to match those provided in the official Ubuntu release
+
+ -- Loren M. Lang <lorenl@north-winds.org>  Sat, 14 Dec 2024 01:23:01 -0800
+
 trustedqsl (2.7.4-1) unstable; urgency=medium
 
   * New upstream version 2.7.4
