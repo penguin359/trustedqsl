@@ -1,3 +1,20 @@
+trustedqsl (2.7.4-1ppa1~ubuntu16.04) xenial; urgency=medium
+
+  * Taking maintainership to provide backports as Ubuntu PPA
+  * Updated dependencies to match those provided in the official Ubuntu release
+  * Fixed errors/warnings with lintian overrides
+  * Updated Standard version to match distro
+  * Fixed build dependency version for debhelper-compat
+  * Updated Standard version to match distro
+  * Fixed build dependency version for debhelper-compat and wxWidgets
+  * Added compat version for debhelper needed on older versions
+  * Added patch for supporting older CMake (<3.14) on Ubuntu with SQLite3
+  * pkgconf is now required to build
+  * Support older CMake versions
+  * Fix compatibility with cURL on this release of Ubuntu
+
+ -- Loren M. Lang <lorenl@north-winds.org>  Sun, 15 Dec 2024 01:39:39 -0800
+
 trustedqsl (2.7.4-1) unstable; urgency=medium
 
   * New upstream version 2.7.4
