@@ -1,1 +1,2 @@
 0001-Added-minimal-CMake-module-for-finding-SQLite3-with-.patch
+reduce-cmake-version-requirement.diff
