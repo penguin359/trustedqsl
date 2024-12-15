@@ -8,11 +8,9 @@ version of cURL found in older Ubuntu releases.
  apps/tqsl.cpp | 22 +++++++++++-----------
  1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/apps/tqsl.cpp b/apps/tqsl.cpp
-index 0a5fbc6..4e38183 100644
 --- a/apps/tqsl.cpp
 +++ b/apps/tqsl.cpp
-@@ -2836,16 +2836,16 @@ retry_upload:
+@@ -2852,16 +2852,16 @@
  	errorbuf[0] = '\0';
  	curl_easy_setopt(curlReq, CURLOPT_ERRORBUFFER, errorbuf);
  
@@ -37,7 +35,7 @@ index 0a5fbc6..4e38183 100644
  
  	intptr_t retval;
  
-@@ -2868,8 +2868,8 @@ retry_upload:
+@@ -2884,8 +2884,8 @@
  			upload = new UploadDialog(this, wxString(_("Uploading Callsign Certificate")), wxString(_("Uploading Callsign Certificate Request...")));
  		}
  
@@ -48,7 +46,7 @@ index 0a5fbc6..4e38183 100644
  		curl_easy_setopt(curlReq, CURLOPT_NOPROGRESS, 0);
  
  		UploadThread thread(curlReq, upload);
-@@ -2983,7 +2983,7 @@ retry_upload:
+@@ -2999,7 +2999,7 @@
  	}
  	if (frame && upload) upload->Destroy();
  
