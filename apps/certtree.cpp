@@ -318,14 +318,18 @@ CertTree::OnRightDown(wxMouseEvent& event) {
 		tQSL_Cert cert = GetItemData(id)->getCert();
 		int keyonly = 1;
 		int superseded = 1;
-		int expired = 1;
+		int renewable = 1;
 		int enable = 1;
 		wxMenu *cm;
+		int window = DEFAULT_CERT_FUZZ;
+		wxConfig::Get()->Read(wxT("RenewalWindow"), &window, DEFAULT_CERT_FUZZ);
+		// Null cert sets the renewal window
+		tqsl_isCertificateRenewable(NULL, &window);
 		if (cert) {
 			tqsl_getCertificateKeyOnly(cert, &keyonly);
                 	tqsl_isCertificateSuperceded(cert, &superseded);
-                	tqsl_isCertificateExpired(cert, &expired);
-			if (expired || superseded) {
+                	tqsl_isCertificateRenewable(cert, &renewable);
+			if (!renewable || superseded) {
 				enable = 0;
 			}
 			char callsign[129];

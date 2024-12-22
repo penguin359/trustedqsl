@@ -32,7 +32,6 @@
 using std::vector;
 using std::ofstream;
 using std::ios;
-using std::cerr;
 using std::endl;
 
 #define TQSL_ID_LOW 6000

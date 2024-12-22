@@ -2,7 +2,7 @@
                                   tqsl.cpp
                              -------------------
     begin                : Mon Nov 4 2002
-    copyright            : (C) 2002-2023 by ARRL and the TrustedQSL Developers
+    copyright            : (C) 2002-2024 by ARRL and the TrustedQSL Developers
     author               : Jon Bloom
     email                : jbloom@arrl.org
  ***************************************************************************/
@@ -168,6 +168,8 @@ static bool verifyCA = true;
 static FILE *curlLogFile;
 static CURL *curlReq;
 
+static FILE *origStderr;
+
 static int lock_db(bool wait);
 static void unlock_db(void);
 int get_address_field(const char *callsign, const char *field, string& result);
@@ -183,7 +185,7 @@ static void exitNow(int status, bool quiet) {
 				 __("TQSLLib Error"),
 				 __("Error opening input file"),
 				 __("Error opening output file"),
-				 __("No QSOs written"),
+				 __("No QSOs to upload"),
 				 __("Some QSOs not processed"),
 				 __("Command Syntax Error"),
 				 __("LoTW Connection Failed"),
@@ -203,7 +205,7 @@ static void exitNow(int status, bool quiet) {
 		}
 		wxLogMessage(msg);
 	} else {
-		cerr << "Final Status: " << errors[stat] << "(" << status << ")" << endl;
+		fprintf(origStderr, "Final Status: %s(%d)\n", errors[stat], status);
 		tqslTrace(NULL, "Final Status: %s", errors[stat]);
 	}
 	exit(status);
@@ -779,7 +781,7 @@ void LogList::DoLogString(const wxChar *szString, time_t) {
 #ifdef _WIN32
 		fwprintf(stderr, L"%ls\n", szString);
 #else
-		fprintf(stderr, "%ls\n", szString);
+		fprintf(origStderr, "%ls\n", szString);
 #endif
 		return;
 	}
@@ -815,7 +817,7 @@ void LogStderr::DoLogString(const wxChar *szString, time_t) {
 #ifdef _WIN32
 	fwprintf(stderr, L"%ls\n", szString);
 #else
-	fprintf(stderr, "%ls\n", szString);
+	fprintf(origStderr, "%ls\n", szString);
 #endif
 	return;
 }
@@ -1002,7 +1004,12 @@ MyFrame::SaveWindowLayout() {
 	wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
 	if (!IsIconized()) {
 		GetPosition(&x, &y);
+#ifdef __WXGTK__
+		GetClientSize(&w, &h);
+		h += 27;  // Fudge for menubar. Stops window shrink.
+#else
 		GetSize(&w, &h);
+#endif
 		if (w >= MAIN_WINDOW_MIN_WIDTH && h >= MAIN_WINDOW_MIN_HEIGHT) {
 			config->Write(wxT("MainWindowX"), x);
 			config->Write(wxT("MainWindowY"), y);
@@ -2350,7 +2357,7 @@ abortSigning:
 		throw TQSLException(msg.c_str());
 	}
 	if (!cancelled && out_of_range > 0)
-		wxLogMessage(_("%s: %d QSO records were outside the selected date range"),
+		wxLogMessage(_("%s: %d QSOs were outside the selected date range"),
 			infile.c_str(), out_of_range);
 	if (duplicates > 0) {
 		if (cancelled || aborted) {
@@ -2642,7 +2649,7 @@ int MyFrame::UploadLogFile(tQSL_Location loc, const wxString& infile, bool compr
 	tqslTrace("MyFrame::UploadLogFile", "Log converted, status = %d, numrecs=%d", status, numrecs);
 
 	if (numrecs == 0) {
-		wxLogMessage(_("No records to upload"));
+		wxLogMessage(_("No QSOs to upload"));
 		if (status == TQSL_EXIT_CANCEL || status == TQSL_EXIT_QSOS_SUPPRESSED)
 			return status;
 		else
@@ -2977,7 +2984,7 @@ retry_upload:
 			wxLogMessage(_("%s: Unable to upload. The network is down or the LoTW site is too busy."), infile.c_str());
 			wxLogMessage(_("Please try uploading the %s later."), fileType.c_str());
 			retval = TQSL_EXIT_CONNECTION_FAILED;
-		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
+		} else if (retval == CURLE_SSL_CONNECT_ERROR || retval == CURLE_OPERATION_TIMEDOUT) {
 			wxLogMessage(_("%s: Unable to connect to the upload site."), infile.c_str());
 			wxLogMessage(_("Please try uploading the %s later."), fileType.c_str());
 			retval = TQSL_EXIT_CONNECTION_FAILED;
@@ -3166,7 +3173,6 @@ wxString GetUpdatePlatformString() {
 		else //just 32-bit only
 			ret = wxT("win32");
 	#endif
-
 #elif defined(__APPLE__) && defined(__MACH__) //osx has universal binaries
 	ret = wxT("osx");
 
@@ -3399,6 +3405,7 @@ retry:
 	curl_easy_setopt(curlReq, CURLOPT_WRITEFUNCTION, &file_recv);
 	curl_easy_setopt(curlReq, CURLOPT_WRITEDATA, configFile);
 
+	curl_easy_setopt(curlReq, CURLOPT_CONNECTTIMEOUT, 60);
 	curl_easy_setopt(curlReq, CURLOPT_FAILONERROR, 1); //let us find out about a server issue
 
 	char errorbuf[CURL_ERROR_SIZE];
@@ -3478,6 +3485,7 @@ retry:
 	curl_easy_setopt(curlReq, CURLOPT_WRITEFUNCTION, &file_recv);
 	curl_easy_setopt(curlReq, CURLOPT_WRITEDATA, updateFile);
 
+	curl_easy_setopt(curlReq, CURLOPT_CONNECTTIMEOUT, 60);
 	curl_easy_setopt(curlReq, CURLOPT_FAILONERROR, 1); //let us find out about a server issue
 
 	char errorbuf[CURL_ERROR_SIZE];
@@ -3557,6 +3565,7 @@ tqsl_checkCertStatus(long serial, wxString& result) {
 	curl_easy_setopt(curlReq, CURLOPT_WRITEFUNCTION, &FileUploadHandler::recv);
 	curl_easy_setopt(curlReq, CURLOPT_WRITEDATA, &handler);
 
+	curl_easy_setopt(curlReq, CURLOPT_CONNECTTIMEOUT, 60);
 	curl_easy_setopt(curlReq, CURLOPT_FAILONERROR, 1); //let us find out about a server issue
 
 	char errorbuf[CURL_ERROR_SIZE];
@@ -3662,6 +3671,7 @@ MyFrame::DoCheckExpiringCerts(bool noGUI) {
 	d.month = tm->tm_mon + 1;
 	d.day = tm->tm_mday;
 	tQSL_Date exp;
+	bool networkError = false;
 
 	for (int i = 0; i < nc; i ++) {
 		ei->cert = clist[i];
@@ -3679,7 +3689,12 @@ MyFrame::DoCheckExpiringCerts(bool noGUI) {
 			report_error(&ei);
 			continue;
 		}
-		SaveAddressInfo(callsign, dxcc);
+		// Don't keep retrying when multiple certs
+		if (!networkError) {
+			if (SaveAddressInfo(callsign, dxcc) < 0) {
+				networkError = true;
+			}
+		}
 
 		int expired = 0;
 		tqsl_isCertificateExpired(clist[i], &expired);
@@ -3912,9 +3927,10 @@ retry:
 	curl_easy_setopt(curlReq, CURLOPT_WRITEDATA, &handler);
 
 	if (silent) { // if there's a problem, we don't want the program to hang while we're starting it
-		curl_easy_setopt(curlReq, CURLOPT_CONNECTTIMEOUT, 120);
+		curl_easy_setopt(curlReq, CURLOPT_CONNECTTIMEOUT, 30);
+	} else {
+		curl_easy_setopt(curlReq, CURLOPT_CONNECTTIMEOUT, 60);
 	}
-
 	curl_easy_setopt(curlReq, CURLOPT_LOW_SPEED_TIME, 60);	// Abort if not making at least 30 bytes/sec.
 	curl_easy_setopt(curlReq, CURLOPT_LOW_SPEED_LIMIT, 30);
 
@@ -4019,7 +4035,7 @@ retry:
 				ri->errorText = wxString(_("Unable to check for updates. The network is down or the LoTW site is too busy."));
 				ri->errorText += wxT("\n");
 				ri->errorText += _("Please try again later.");
-			} else if (retval == CURLE_SSL_CONNECT_ERROR) {
+			} else if (retval == CURLE_SSL_CONNECT_ERROR || retval == CURLE_OPERATION_TIMEDOUT) {
 				networkError = true;
 				ri->error = true;
 				ri->errorText = wxString(_("Unable to connect to the update site."));
@@ -4054,7 +4070,7 @@ retry:
 			ri->errorText = wxString(_("Unable to check for updates. The network is down or the LoTW site is too busy."));
 			ri->errorText += wxT("\n");
 			ri->errorText += _("Please try again later.");
-		} else if (retval == CURLE_SSL_CONNECT_ERROR) {
+		} else if (retval == CURLE_SSL_CONNECT_ERROR || retval == CURLE_OPERATION_TIMEDOUT) {
 			networkError = true;
 			ri->error = true;
 			ri->errorText = wxString(_("Unable to connect to the update site."));
@@ -4116,6 +4132,7 @@ SaveAddressInfo(const char *callsign, int dxcc) {
 		return 1;
 	}
 
+#ifdef USE_ADDRESS_INFO
 	bool needToCleanUp = false;
 	char url[512];
 	strncpy(url, (wxString::Format(wxT("https://lotw.arrl.org/tqsl-setup.php?callsign=%hs&dxcc=%d"), callsign, dxcc)).ToUTF8(), sizeof url);
@@ -4131,6 +4148,7 @@ SaveAddressInfo(const char *callsign, int dxcc) {
 	curl_easy_setopt(curlReq, CURLOPT_WRITEFUNCTION, &FileUploadHandler::recv);
 	curl_easy_setopt(curlReq, CURLOPT_WRITEDATA, &handler);
 
+	curl_easy_setopt(curlReq, CURLOPT_CONNECTTIMEOUT, 60);
 	curl_easy_setopt(curlReq, CURLOPT_FAILONERROR, 1); //let us find out about a server issue
 
 	char errorbuf[CURL_ERROR_SIZE];
@@ -4151,16 +4169,23 @@ SaveAddressInfo(const char *callsign, int dxcc) {
 			tqslTrace("SaveAddressInfo", "callsign=%s, result = %s", callsign, handler.s.c_str());
 			tqsl_saveCallsignLocationInfo(callsign, handler.s.c_str());
 		}
+	} else if (retval == CURLE_SSL_CONNECT_ERROR || retval == CURLE_OPERATION_TIMEDOUT) {
+		tqslTrace("save_address_info", "cURL Error during cert status check: %s (%s)\n", curl_easy_strerror((CURLcode)retval), errorbuf);
+		return -1;
 	} else {
 		tqslTrace("save_address_info", "cURL Error during cert status check: %s (%s)\n", curl_easy_strerror((CURLcode)retval), errorbuf);
 		return 1;
 	}
-
 	return 0;
+#else
+	tqsl_saveCallsignLocationInfo(callsign, NULL);
+	return 0;
+#endif
 }
 
 int
 get_address_field(const char *callsign, const char *field, string& result) {
+#ifdef USE_ADDRESS_INFO
 	typedef map<string, string>LocMap;
 	static LocMap locInfo;
 
@@ -4274,6 +4299,9 @@ get_address_field(const char *callsign, const char *field, string& result) {
 	}
 	result = temp;
 	return 0;
+#else
+	return 1;
+#endif
 }
 
 /*
@@ -4281,6 +4309,7 @@ get_address_field(const char *callsign, const char *field, string& result) {
  * Returns: 0 - Success
  * 	    1 - Unable to check
  *	    2 - Not found
+ *	    3 - Not reachable
  */
 int
 GetULSInfo(const char *callsign, wxString &name, wxString &attn, wxString &street, wxString &city, wxString &state, wxString &zip, wxString &updateDate) {
@@ -4304,6 +4333,7 @@ GetULSInfo(const char *callsign, wxString &name, wxString &attn, wxString &stree
 	curl_easy_setopt(curlReq, CURLOPT_WRITEFUNCTION, &FileUploadHandler::recv);
 	curl_easy_setopt(curlReq, CURLOPT_WRITEDATA, &handler);
 
+	curl_easy_setopt(curlReq, CURLOPT_CONNECTTIMEOUT, 60);
 	curl_easy_setopt(curlReq, CURLOPT_FAILONERROR, 1); //let us find out about a server issue
 
 	char errorbuf[CURL_ERROR_SIZE];
@@ -4337,17 +4367,19 @@ GetULSInfo(const char *callsign, wxString &name, wxString &attn, wxString &stree
 			if (strcmp(root[wxT("callsign")].AsString().ToUTF8(), callsign) != 0)
 				return 1;
 
-			name = root[wxT("name")].AsString();
-			attn = root[wxT("attention")].AsString();
-			street = root[wxT("street")].AsString();
-			city = root[wxT("city")].AsString();
-			state = root[wxT("state")].AsString();
-			zip = root[wxT("zip")].AsString();
-			updateDate = root[wxT("ULS Last Updated")].AsString();
+			name = root[wxT("name")].AsString().Trim().Trim(FALSE);
+			attn = root[wxT("attention")].AsString().Trim().Trim(FALSE);
+			street = root[wxT("street")].AsString().Trim().Trim(FALSE);
+			city = root[wxT("city")].AsString().Trim().Trim(FALSE);
+			state = root[wxT("state")].AsString().Trim().Trim(FALSE);
+			zip = root[wxT("zip")].AsString().Trim().Trim(FALSE);
+			updateDate = root[wxT("ULS Last Updated")].AsString().Trim().Trim(FALSE);
 			return 0;
 		} else {
 			return 2;	// Not valid
 		}
+	} else if (retval == CURLE_SSL_CONNECT_ERROR || retval == CURLE_OPERATION_TIMEDOUT) {
+		return 3;
 	} else {
 		tqslTrace("GetULSInfo", "cURL Error %d during ULS check: %s (%s)\n", retval, curl_easy_strerror((CURLcode)retval), errorbuf);
 		return 1;
@@ -5333,19 +5365,32 @@ QSLApp::GUIinit(bool checkUpdates, bool quiet) {
 	config->Read(wxT("MainWindowHeight"), &h, 600);
 	config->Read(wxT("MainWindowMaximized"), &maximized, false);
 	if (w < MAIN_WINDOW_MIN_WIDTH) w = MAIN_WINDOW_MIN_WIDTH;
-	if (h < MAIN_WINDOW_MIN_HEIGHT) w = MAIN_WINDOW_MIN_HEIGHT;
+	if (h < MAIN_WINDOW_MIN_HEIGHT) h = MAIN_WINDOW_MIN_HEIGHT;
 
 	frame = new MyFrame(wxT("TQSL"), x, y, w, h, checkUpdates, quiet, locale);
-	frame->SetMinSize(wxSize(MAIN_WINDOW_MIN_WIDTH, MAIN_WINDOW_MIN_HEIGHT));
+	frame->SetMinSize(wxSize(w, h));
+
+#ifdef __WXGTK__
+/* 
+ * GTK spews messages to stderr. No way to stop it. So...
+ */
+	int oldStderr = dup(STDERR_FILENO);
+	int null_fd = open("/dev/null", O_WRONLY);
+	dup2(null_fd, STDERR_FILENO);
+	origStderr = fdopen(oldStderr, "a");
+#else
+	origStderr = stderr;
+#endif
 	if (maximized)
 		frame->Maximize();
-#ifdef __WIN32
+#ifdef _WIN32
 	if (!quiet) {
 		HWND window = frame->GetHWND();
 
 		// If the window isn't visible, force it to be visible
 		if (MonitorFromWindow(window, MONITOR_DEFAULTTONULL) == NULL)
 			frame->CenterOnScreen();
+	}
 #endif
 	if (checkUpdates)
 		frame->FirstTime();
@@ -5556,11 +5601,6 @@ QSLApp::OnInit() {
 		lang = wxLANGUAGE_DEFAULT;
 	}
 
-	// If this is (wx2) Chinese, map to Simplified
-	if (lang == 43) {			// wxLANGUAGE_CHINESE
-		lang = (wxLanguage) 44;		// wxLANGUAGE_CHINESE_SIMPLIFIED
-	}
-
 	for (lng = 0; (unsigned) lng < langIds.size(); lng++) {
 		if (lang == langIds[lng])
 			break;
@@ -5643,7 +5683,7 @@ QSLApp::OnInit() {
 		return true;
 	}
 
-	tQSL_Location loc = 0;
+	tQSL_Location loc = NULL;
 	wxString locname;
 	bool suppressdate = false;
 	int action = TQSL_ACTION_UNSPEC;
@@ -5842,14 +5882,18 @@ QSLApp::OnInit() {
 	if (parser.Found(wxT("l"), &locname)) {
 		locname.Trim(true);			// clean up whitespace
 		locname.Trim(false);
-		tqsl_endStationLocationCapture(&loc);
-		if (tqsl_getStationLocation(&loc, locname.ToUTF8())) {
-			if (quiet) {
-				wxLogError(getLocalizedErrorString());
-				exitNow(TQSL_EXIT_COMMAND_ERROR, quiet);
-			} else {
-				wxMessageBox(getLocalizedErrorString(), ErrorTitle, wxOK | wxICON_ERROR | wxCENTRE, frame);
-				return false;
+		if (locname.IsEmpty()) {
+			logverify = TQSL_LOC_UPDATE;	// force update mode
+		} else {
+			tqsl_endStationLocationCapture(&loc);
+			if (tqsl_getStationLocation(&loc, locname.ToUTF8())) {
+				if (quiet) {
+					wxLogError(getLocalizedErrorString());
+					exitNow(TQSL_EXIT_COMMAND_ERROR, quiet);
+				} else {
+					wxMessageBox(getLocalizedErrorString(), ErrorTitle, wxOK | wxICON_ERROR | wxCENTRE, frame);
+					return false;
+				}
 			}
 		}
 	}
@@ -6496,8 +6540,55 @@ void MyFrame::CRQWizard(wxCommandEvent& event) {
 	wiz.SetPageSize(size);
 
 */
-
 	if (wiz.RunWizard()) {
+		TQSL_CERT_REQ newreq;
+		strncpy(newreq.providerName, wiz.provider.organizationName, sizeof newreq.providerName);
+		strncpy(newreq.providerUnit, wiz.provider.organizationalUnitName, sizeof newreq.providerUnit);
+		strncpy(newreq.callSign, wiz.callsign.ToUTF8(), sizeof newreq.callSign);
+		strncpy(newreq.name, wiz.name.ToUTF8(), sizeof newreq.name);
+		strncpy(newreq.address1, wiz.addr1.ToUTF8(), sizeof newreq.address1);
+		strncpy(newreq.address2, wiz.addr2.ToUTF8(), sizeof newreq.address2);
+		strncpy(newreq.city, wiz.city.ToUTF8(), sizeof newreq.city);
+		strncpy(newreq.state, wiz.state.ToUTF8(), sizeof newreq.state);
+		strncpy(newreq.postalCode, wiz.zip.ToUTF8(), sizeof newreq.postalCode);
+		if (wiz.country.IsEmpty())
+			strncpy(newreq.country, "USA", sizeof newreq.country);
+		else
+			strncpy(newreq.country, wiz.country.ToUTF8(), sizeof newreq.country);
+		strncpy(newreq.emailAddress, wiz.email.ToUTF8(), sizeof newreq.emailAddress);
+		strncpy(newreq.password, wiz.password.ToUTF8(), sizeof newreq.password);
+		newreq.dxccEntity = wiz.dxcc;
+		newreq.qsoNotBefore = wiz.qsonotbefore;
+		newreq.qsoNotAfter = wiz.qsonotafter;
+		newreq.signer = wiz.cert;
+		if (newreq.signer) {
+			char buf[40];
+			void *call = 0;
+			if (!tqsl_getCertificateCallSign(newreq.signer, buf, sizeof(buf)))
+				call = &buf;
+			while (tqsl_beginSigning(newreq.signer, 0, getPassword, call)) {
+				if (tQSL_Error != TQSL_PASSWORD_ERROR) {
+					if (tQSL_Error == TQSL_CUSTOM_ERROR && (tQSL_Errno == ENOENT || tQSL_Errno == EPERM)) {
+						snprintf(tQSL_CustomError, sizeof tQSL_CustomError,
+							"Can't open the private key file for %s: %s", static_cast<char *>(call), strerror(tQSL_Errno));
+					}
+					wxLogError(getLocalizedErrorString());
+					deleteRequest(newreq.callSign, newreq.dxccEntity);
+					return;
+				}
+				// Try signing with the unicode version of the password
+				if (tqsl_beginSigning(newreq.signer, unipwd, NULL, call) == 0) {
+					// If OK, signing is ready to go.
+					break;
+				}
+				if (tQSL_Error != TQSL_PASSWORD_ERROR) {
+					deleteRequest(newreq.callSign, newreq.dxccEntity);
+					return;
+				} else {
+					wxLogError(getLocalizedErrorString());
+				}
+			}
+		}
 		// Save or upload?
 		wxString file = flattenCallSign(wiz.callsign) + wxT(".") + wxT(TQSL_CRQ_FILE_EXT);
 		bool upload = false;
@@ -6527,64 +6618,16 @@ void MyFrame::CRQWizard(wxCommandEvent& event) {
 				return;
 			}
 		}
-		TQSL_CERT_REQ req;
-		strncpy(req.providerName, wiz.provider.organizationName, sizeof req.providerName);
-		strncpy(req.providerUnit, wiz.provider.organizationalUnitName, sizeof req.providerUnit);
-		strncpy(req.callSign, wiz.callsign.ToUTF8(), sizeof req.callSign);
-		strncpy(req.name, wiz.name.ToUTF8(), sizeof req.name);
-		strncpy(req.address1, wiz.addr1.ToUTF8(), sizeof req.address1);
-		strncpy(req.address2, wiz.addr2.ToUTF8(), sizeof req.address2);
-		strncpy(req.city, wiz.city.ToUTF8(), sizeof req.city);
-		strncpy(req.state, wiz.state.ToUTF8(), sizeof req.state);
-		strncpy(req.postalCode, wiz.zip.ToUTF8(), sizeof req.postalCode);
-		if (wiz.country.IsEmpty())
-			strncpy(req.country, "USA", sizeof req.country);
-		else
-			strncpy(req.country, wiz.country.ToUTF8(), sizeof req.country);
-		strncpy(req.emailAddress, wiz.email.ToUTF8(), sizeof req.emailAddress);
-		strncpy(req.password, wiz.password.ToUTF8(), sizeof req.password);
-		req.dxccEntity = wiz.dxcc;
-		req.qsoNotBefore = wiz.qsonotbefore;
-		req.qsoNotAfter = wiz.qsonotafter;
-		req.signer = wiz.cert;
-		if (req.signer) {
-			char buf[40];
-			void *call = 0;
-			if (!tqsl_getCertificateCallSign(req.signer, buf, sizeof(buf)))
-				call = &buf;
-			while (tqsl_beginSigning(req.signer, 0, getPassword, call)) {
-				if (tQSL_Error != TQSL_PASSWORD_ERROR) {
-					if (tQSL_Error == TQSL_CUSTOM_ERROR && (tQSL_Errno == ENOENT || tQSL_Errno == EPERM)) {
-						snprintf(tQSL_CustomError, sizeof tQSL_CustomError,
-							"Can't open the private key file for %s: %s", static_cast<char *>(call), strerror(tQSL_Errno));
-					}
-					wxLogError(getLocalizedErrorString());
-					deleteRequest(req.callSign, req.dxccEntity);
-					return;
-				}
-				// Try signing with the unicode version of the password
-				if (tqsl_beginSigning(req.signer, unipwd, NULL, call) == 0) {
-					// If OK, signing is ready to go.
-					break;
-				}
-				if (tQSL_Error != TQSL_PASSWORD_ERROR) {
-					deleteRequest(req.callSign, req.dxccEntity);
-					return;
-				} else {
-					wxLogError(getLocalizedErrorString());
-				}
-			}
-		}
-		req.renew = renew ? 1 : 0;
-		if (tqsl_createCertRequest(file.ToUTF8(), &req, 0, 0)) {
+		newreq.renew = renew ? 1 : 0;
+		if (tqsl_createCertRequest(file.ToUTF8(), &newreq, 0, 0)) {
 			wxString msg = getLocalizedErrorString();
-			if (req.signer)
-				tqsl_endSigning(req.signer);
+			if (newreq.signer)
+				tqsl_endSigning(newreq.signer);
 			wxLogError(msg);
 			char m[500];
 			strncpy(m, msg.ToUTF8(), sizeof m);
 			wxMessageBox(wxString::Format(_("Error creating callsign certificate request: %hs"), m), _("Error creating Callsign Certificate Request"), wxOK | wxICON_EXCLAMATION, this);
-			deleteRequest(req.callSign, req.dxccEntity);
+			deleteRequest(newreq.callSign, newreq.dxccEntity);
 			return;
 		}
 		if (upload) {
@@ -6597,7 +6640,7 @@ void MyFrame::CRQWizard(wxCommandEvent& event) {
 #endif
 			if (!in) {
 				wxLogError(_("Error opening certificate request file %s: %hs"), file.c_str(), strerror(errno));
-				deleteRequest(req.callSign, req.dxccEntity);
+				deleteRequest(newreq.callSign, newreq.dxccEntity);
 			} else {
 				string contents;
 				in.seekg(0, ios::end);
@@ -6610,9 +6653,22 @@ void MyFrame::CRQWizard(wxCommandEvent& event) {
 				retval = UploadFile(file, file.ToUTF8(), 0, reinterpret_cast<void *>(const_cast<char *>(contents.c_str())),
 							contents.size(), fileType);
 				if (retval != 0) {
-					wxLogError(_("Your certificate request did not upload properly"));
-					wxLogError(_("Please try again."));
-					deleteRequest(req.callSign, req.dxccEntity);
+					wxLogError(_("Your certificate request did not upload properly."));
+					if (wxMessageBox(_("Your upload appears to have failed.\nDo you want to save this request for uploading later?"), _("Retry?"), wxYES_NO | wxICON_QUESTION, this) == wxYES) {
+						// Where to put it?
+						wxString wildcard = _("tQSL Cert Request files (*.");
+						wildcard += wxString::FromUTF8(TQSL_CRQ_FILE_EXT ")|*." TQSL_CRQ_FILE_EXT);
+						wildcard += _("|All files (") + wxString::FromUTF8(ALLFILESWILD ")|" ALLFILESWILD);
+						file = wxFileSelector(_("Save request"), wxT(""), file, wxT(TQSL_CRQ_FILE_EXT), wildcard,
+									wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+						if (file.IsEmpty()) {
+							wxLogMessage(_("Request cancelled"));
+							deleteRequest(wiz.callsign.ToUTF8(), wiz.dxcc);
+							return;
+						}
+					} else {
+						deleteRequest(newreq.callSign, newreq.dxccEntity);
+					}
 				}
 			}
 		} else {
@@ -6652,8 +6708,8 @@ void MyFrame::CRQWizard(wxCommandEvent& event) {
                 	wxConfig::Get()->Write(wxT("RequestRecord"), requestRecord);
                 	wxConfig::Get()->Flush();
 		}
-		if (req.signer)
-			tqsl_endSigning(req.signer);
+		if (newreq.signer)
+			tqsl_endSigning(newreq.signer);
 		cert_tree->Build(CERTLIST_FLAGS);
 		CertTreeReset();
 	}
@@ -6684,8 +6740,12 @@ void MyFrame::OnCertTreeSel(wxTreeEvent& event) {
 	wxTreeItemId id = event.GetItem();
 	CertTreeItemData *data = reinterpret_cast<CertTreeItemData *>(cert_tree->GetItemData(id));
 	if (data) {
+		int window = DEFAULT_CERT_FUZZ;
+		wxConfig::Get()->Read(wxT("RenewalWindow"), &window, DEFAULT_CERT_FUZZ);
+		tqsl_isCertificateRenewable(NULL, &window);
 		int keyonly = 0;
 		int expired = 0;
+		int renewable = 0;
 		int superseded = 0;
 		int deleted = 0;
 		char call[40];
@@ -6693,6 +6753,7 @@ void MyFrame::OnCertTreeSel(wxTreeEvent& event) {
 		wxString callSign = wxString::FromUTF8(call);
 		tqsl_getCertificateKeyOnly(data->getCert(), &keyonly);
 		tqsl_isCertificateExpired(data->getCert(), &expired);
+		tqsl_isCertificateRenewable(data->getCert(), &renewable);
 		tqsl_isCertificateSuperceded(data->getCert(), &superseded);
 		tqsl_getDeletedCallsignCertificates(NULL, &deleted, call);
 		tqslTrace("MyFrame::OnCertTreeSel", "call=%s", call);
@@ -6720,7 +6781,7 @@ void MyFrame::OnCertTreeSel(wxTreeEvent& event) {
 		name = _("Display the Callsign Certificate properties for");
 		name  += wxT(" ") + callSign;
 		cert_prop_button->SetName(name);
-		if (!(keyonly || expired || superseded)) {
+		if (renewable) {
 			cert_renew_label->SetLabel(nl + _("Renew the Callsign Certificate for") +wxT(" ") + callSign);
 			cert_renew_label->Wrap(w - 10);
 			name = _("Renew the Callsign Certificate for");
@@ -6730,9 +6791,9 @@ void MyFrame::OnCertTreeSel(wxTreeEvent& event) {
 			cert_renew_label->SetLabel(nl + _("Renew a Callsign Certificate"));
 			cert_renew_button->SetName(wxT("Renew a Callsign Certificate"));
 		}
-		cert_menu->Enable(tc_c_Renew, !(keyonly || expired || superseded));
+		cert_menu->Enable(tc_c_Renew, renewable != 0);
 		cert_menu->Enable(tc_c_Undelete, deleted != 0);
-		cert_renew_button->Enable(!(keyonly || expired || superseded));
+		cert_renew_button->Enable(renewable != 0);
 	} else {
 		CertTreeReset();
 	}

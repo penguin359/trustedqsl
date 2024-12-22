@@ -91,6 +91,8 @@ class CRQWiz : public ExtWizard {
 	tQSL_Cert cert;
 	TQSL_CERT_REQ *_crq;
 	bool forceSigning;	// Portable call, non-US. Require signing
+	bool networkError;	// Got a network error - timeout, etc.
+	bool goodULSData;	// Got ULS info and it's complete
 
  private:
 	CRQ_Page *_first;
