@@ -15,19 +15,19 @@
 #include "sysconfig.h"
 #endif
 
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
 	#pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-	#include "wx/wx.h"
+	#include <wx/wx.h>
 #endif
 
-#include "tqsllib.h"
+#include <wx/treectrl.h>
 
-#include "wx/treectrl.h"
+#include "tqsllib.h"
 #include "wxutil.h"
 
 class LocTreeItemData : public wxTreeItemData {

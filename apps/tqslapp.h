@@ -32,6 +32,7 @@
 enum {
 	tm_f_import = 7000,
 	tm_f_import_compress,
+	tm_f_test_signing,
 	tm_f_upload,
 	tm_f_compress,
 	tm_f_uncompress,
@@ -49,8 +50,10 @@ enum {
 	tm_h_contents,
 	tm_h_about,
 	tm_h_update,
+	tm_h_sync,
 	bg_updateCheck,
-	bg_expiring
+	bg_expiring,
+	tmr_db
 };
 
 // Action values
@@ -66,6 +69,7 @@ enum {
 
 #define TQSL_CD_MSG TQSL_ID_LOW
 #define TQSL_CD_CANBUT TQSL_ID_LOW+1
+#define TQSL_DB_CANBUT TQSL_ID_LOW+2
 
 #define CERTLIST_FLAGS TQSL_SELECT_CERT_WITHKEYS | TQSL_SELECT_CERT_SUPERCEDED | TQSL_SELECT_CERT_EXPIRED
 // Exit codes
@@ -84,7 +88,22 @@ enum {
 	TQSL_EXIT_CONNECTION_FAILED = 11,
 	TQSL_EXIT_UNKNOWN = 12,
 	TQSL_EXIT_BUSY = 13,
-	TQSL_EXIT_UPLOADED_ALREADY = 14
+	TQSL_EXIT_UPLOADED_ALREADY = 14,
+	TQSL_EXIT_BAD_PASSPHRASE = 15
+};
+
+// types of signed log files
+enum {
+	TQSL_UNCOMPRESSED_FILE,
+	TQSL_COMPRESSED_FILE,
+	TQSL_TEST_SIGNING
+};
+
+// Sign type
+enum {
+	TQSL_SIGN_LOG = 0,	// Normal signing
+	TQSL_TEST_LOG = 1,	// Test log only
+	TQSL_UPLOAD_ONLY = 2	// Populate upload database only
 };
 
 bool tqsl_checkCertStatus(long serial, wxString& result);
@@ -98,8 +117,9 @@ class MyFrame : public wxFrame {
 	void EditStationLocation(wxCommandEvent& event);
 	void EnterQSOData(wxCommandEvent& event);
 	void EditQSOData(wxCommandEvent& event);
-	void ProcessQSODataFile(bool upload, bool compressed);
+	void ProcessQSODataFile(bool upload, int compressed);
 	void ImportQSODataFile(wxCommandEvent& event);
+	void TestSignQSODataFile(wxCommandEvent& event);
 	void UploadQSODataFile(wxCommandEvent& event);
 	void SaveWindowLayout(void);
 	void OnExit(TQ_WXCLOSEEVENT& event);
@@ -114,11 +134,12 @@ class MyFrame : public wxFrame {
 #endif
 	void OnPreferences(wxCommandEvent& event);
 	void OnSaveConfig(wxCommandEvent& event);
+	void DoRestoreConfig(wxString& filename);
 	void OnLoadConfig(wxCommandEvent& event);
 	void LoadDupes(void);
-	int ConvertLogFile(tQSL_Location loc, const wxString& infile, const wxString& outfile, bool compress = false, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, int logverify = -1, const char *password = NULL, const char *defcall = NULL);
+	int ConvertLogFile(tQSL_Location loc, const wxString& infile, const wxString& outfile, int compress = TQSL_UNCOMPRESSED_FILE, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, int logverify = -1, const char *password = NULL, const char *defcall = NULL);
 	tQSL_Location SelectStationLocation(const wxString& title = wxT(""), const wxString& okLabel = _("OK"), bool editonly = false);
-	int ConvertLogToString(tQSL_Location loc, const wxString& infile, wxString& output, int& n, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, int logverify = -1, const char* password = NULL, const char* defcall = NULL);
+	int ConvertLogToString(tQSL_Location loc, const wxString& infile, wxString& output, int& n, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, int logverify = -1, const char* password = NULL, const char* defcall = NULL, int signtype = TQSL_SIGN_LOG);
 	int UploadLogFile(tQSL_Location loc, const wxString& infile, bool compress = false, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, int logverify = -1, const char* password = NULL, const char *defcall = NULL);
 	int UploadFile(const wxString& infile, const char* filename, int numrecs, void *content, size_t clen, const wxString& fileType);
 
@@ -128,6 +149,7 @@ class MyFrame : public wxFrame {
 #if defined(_WIN32) || defined(__APPLE__)
 	void UpdateTQSL(wxString& url);
 #endif
+	void DoLoTWSync(wxCommandEvent&);
 	void DoCheckExpiringCerts(bool noGUI = false);
 	void OnExpiredCertFound(wxCommandEvent& event);
 

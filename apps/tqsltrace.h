@@ -1,7 +1,7 @@
 /***************************************************************************
                           tqsltrace.h  -  description
                              -------------------
-          copyright (C) 2013-2017 by ARRL and the TrustedQSL Developers
+          copyright (C) 2013-2025 by ARRL and the TrustedQSL Developers
  ***************************************************************************/
 
 #ifndef __tqslltrace_h

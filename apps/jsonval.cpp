@@ -16,7 +16,7 @@
 #endif
 
 // For compilers that support precompilation, includes "wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
 #pragma hdrstop
@@ -25,6 +25,8 @@
 #include <wx/log.h>
 #include <wx/debug.h>
 #include <wx/arrimpl.cpp>
+
+#include <string>
 
 #include "jsonval.h"
 

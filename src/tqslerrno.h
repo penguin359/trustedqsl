@@ -44,7 +44,7 @@
 #define TQSL_PKCS12_ERROR 34	///< There is an error parsing the .p12 file
 #define TQSL_CERT_TYPE_ERROR 35	///< The certificate type is invalid
 #define TQSL_DATE_OUT_OF_RANGE 36	///< The date is out of the valid range
-#define TQSL_DUPLICATE_QSO 37	///< This QSO is already uploaded
+#define TQSL_DUPLICATE_QSO 37	///< This QSO is previously signed
 #define TQSL_DB_ERROR 38	///< The dupe database could not be accessed
 #define TQSL_LOCATION_NOT_FOUND 39	///< The station location is invalid
 #define TQSL_CALL_NOT_FOUND 40	///< The callsign could not be located
@@ -55,6 +55,8 @@
 #define TQSL_CERT_MISMATCH 45	///< Callsign Certificate does not match QSO details
 #define TQSL_LOCATION_MISMATCH 46	///< Station Location does not match QSO details
 #define TQSL_NEW_UPLOAD_DB 47		///< New upload database created, try to re-load it
+#define TQSL_INCONSISTENT_GRID 48	///< Gridsquare inconsistent with location
+#define TQSL_INVALID_ADIF 49		///< ADIF field value is invalid
 
 #define TQSL_CERT_NOT_FOUND_INVALID 0x10000	///< Certificate is invalid
 #define TQSL_CERT_NOT_FOUND_EXPIRED 0x20000	///< Certificate has expired

@@ -14,6 +14,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <string>
 #include "tqsllib.h"
 
 using std::string;

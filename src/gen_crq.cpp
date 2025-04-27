@@ -15,17 +15,17 @@
 #include "sysconfig.h"
 #endif
 
-#include <iostream>
-#include <cstdio>
-#include <cstdlib>
-#include <string>
 #include <unistd.h>
-#include <exception>
 #ifdef HAVE_GETOPT_H
 	#include <getopt.h>
 #endif
 #include <string.h>
 #include <stdlib.h>
+#include <exception>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
 #include "tqsllib.h"
 #include "tqslexc.h"
 

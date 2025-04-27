@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2024 The TrustedQSL Developers -->
+<!-- Copyright 2025 The TrustedQSL Developers -->
 <component type="desktop-application">
     <metadata_license>0BSD</metadata_license>
     <project_license>BSD-4-Clause</project_license>
@@ -68,6 +68,9 @@
      See https://www.freedesktop.org/software/appstream/docs/chap-AppStream-Misc.html#sect-AppStream-Misc-VerCmp
     -->
     <releases>
+	<release version="2.8" date="2025-04-17">
+	    <description><p>Make callsign certs prefix-aware. Validate MY_ fields in ADIF input when in update mode.</p></description>
+	</release>
 	<release version="2.7.5" date="2024-11-17">
 	    <description><p>Allow renewing certs that have not expired. Case fold ADIF fields such as US_STATE. Fix window size growing.</p></description>
 	</release>

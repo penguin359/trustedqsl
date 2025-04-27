@@ -8,21 +8,22 @@
     revision             : $Id: qsodatadialog.cpp,v 1.7 2013/03/01 12:59:37 k1mu Exp $
  ***************************************************************************/
 
-#include "qsodatadialog.h"
+#ifdef HAVE_CONFIG_H
+#include "sysconfig.h"
+#endif
+
+#include <wx/valgen.h>
+#include <wx/spinctrl.h>
+#include <wx/statline.h>
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <algorithm>
 
-#ifdef HAVE_CONFIG_H
-#include "sysconfig.h"
-#endif
-
+#include "qsodatadialog.h"
 #include "tqslvalidator.h"
-#include "wx/valgen.h"
-#include "wx/spinctrl.h"
-#include "wx/statline.h"
 #include "tqsllib.h"
 #include "tqslexcept.h"
 #include "tqsltrace.h"

@@ -1,7 +1,7 @@
 {
     "app-id" : "org.arrl.trustedqsl",
     "runtime" : "org.freedesktop.Platform",
-    "runtime-version" : "23.08",
+    "runtime-version" : "24.08",
     "sdk" : "org.freedesktop.Sdk",
     "command" : "tqsl",
     "finish-args" : [
@@ -52,8 +52,8 @@
 	    "sources" : [
 		{
 		    "type" : "archive",
-        	    "url" : "https://www.rickmurphy.net/lotw/tqsl-2.7.5.tar.gz",
-        	    "sha256" : "09af4fb32b633efad4e2ef9bff1ea921b41cf020cd588ea134cea317ad0176cf"
+        	    "url" : "https://www.rickmurphy.net/lotw/tqsl-2.8.tar.gz",
+        	    "sha256" : "2280b54ea9d879ebe4d5c7373ae4a74440353abdff6a5534cade9fc7e810ebd5"
 	  	}
 	    ]
 	}

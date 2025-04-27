@@ -23,6 +23,8 @@
 #include <wx/debug.h>
 #include <wx/log.h>
 
+#include <cstdio>
+
 #if defined(JSONDEBUG)
 static const wxChar* writerTraceMask = _T("traceWriter");
 #endif

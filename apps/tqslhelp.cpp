@@ -5,7 +5,7 @@
  ***************************************************************************/
 
 //Derived from wxWidgets fs_inet.cpp
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -19,14 +19,14 @@
 #if wxUSE_FILESYSTEM && wxUSE_FS_INET
 
 #ifndef WXPRECOMP
-    #include "wx/module.h"
+    #include <wx/module.h>
 #endif
 
-#include "wx/wfstream.h"
-#include "wx/url.h"
-#include "wx/filesys.h"
-#include "wx/utils.h"
-#include "wx/mstream.h"
+#include <wx/wfstream.h>
+#include <wx/url.h>
+#include <wx/filesys.h>
+#include <wx/utils.h>
+#include <wx/mstream.h>
 #include "tqslhelp.h"
 #include "tqsltrace.h"
 

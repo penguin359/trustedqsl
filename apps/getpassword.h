@@ -15,17 +15,17 @@
 #include "sysconfig.h"
 #endif
 
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
 	#pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-	#include "wx/wx.h"
+	#include <wx/wx.h>
 #endif
 
-#include "wx/wxhtml.h"
+#include <wx/wxhtml.h>
 
 class GetPasswordDialog : public wxDialog {
  public:
@@ -65,6 +65,28 @@ class GetNewPasswordDialog : public wxDialog {
 	wxTextCtrl *_pw1, *_pw2;
 	wxButton *_okbut;
 	wxStaticText *_pwstatus;
+	DECLARE_EVENT_TABLE()
+};
+
+class GetUserAndPasswordDialog : public wxDialog {
+ public:
+	GetUserAndPasswordDialog(wxWindow *parent, const wxString& title = _("Enter your Logbook of the World user and password"),
+		const wxString& message = _("Enter password"),
+		wxHtmlHelpController *help = 0, wxString helpfile = wxT(""));
+	wxString Username() { return _username; }
+	wxString Password() { return _password; }
+	virtual bool TransferDataFromWindow();
+ private:
+	void OnOk(wxCommandEvent&);
+	void OnCancel(wxCommandEvent&);
+	void OnHelp(wxCommandEvent&);
+
+	wxHtmlHelpController *_help;
+	wxString _helpfile;
+	wxString _username;
+	wxString _password;
+	wxTextCtrl *_un;
+	wxTextCtrl *_pw;
 	DECLARE_EVENT_TABLE()
 };
 

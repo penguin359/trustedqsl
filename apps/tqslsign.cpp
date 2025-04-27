@@ -23,21 +23,24 @@
 #endif
 
 #ifndef WX_PRECOMP
-	#include "wx/wx.h"
+	#include <wx/wx.h>
 #endif
 
 #include <wx/wxhtml.h>
 #include <wx/wfstream.h>
 #include <wx/cmdline.h>
-#include "wxutil.h"
 
-#include <iostream>
-#include <fstream>
-#include <memory>
 #ifdef _WIN32
 	#include <io.h>
 #endif
 #include <zlib.h>
+
+#include <iostream>
+#include <fstream>
+#include <memory>
+#include <string>
+
+#include "wxutil.h"
 #include "tqslwiz.h"
 #include "tqslerrno.h"
 #include "tqslexcept.h"

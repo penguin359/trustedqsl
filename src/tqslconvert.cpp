@@ -11,24 +11,26 @@
 
 #define TQSLLIB_DEF
 
-#include "tqsllib.h"
-
 #include "tqslconvert.h"
+
 #include <stdio.h>
 #include <errno.h>
 #include <sys/stat.h>
 #include <signal.h>
-#include "tqslerrno.h"
+#include <ctype.h>
+#include <locale.h>
+#include <sqlite3.h>
 #include <cstring>
 #include <string>
 #include <vector>
 #include <map>
 #include <algorithm>
-#include <ctype.h>
 #include <set>
-#include <sqlite3.h>
+#include <cstdio>
 
-#include <locale.h>
+#include "tqslerrno.h"
+#include "tqsllib.h"
+
 //#include <iostream>
 
 #ifndef _WIN32
@@ -91,6 +93,7 @@ class TQSL_CONVERTER {
 	bool ignore_secs;
 	bool ignore_calls;
 	bool need_ident_rec;
+	bool dupes_only;
 	char *appName;
 	int dxcc;
 	bool newstation;
@@ -99,7 +102,7 @@ class TQSL_CONVERTER {
 };
 
 #if !defined(__APPLE__) && !defined(_WIN32) && !defined(__clang__)
-        #pragma GCC diagnostic ignored "-Wformat-truncation"
+#pragma GCC diagnostic ignored "-Wformat-truncation"
 #endif
 
 inline TQSL_CONVERTER::TQSL_CONVERTER()  : sentinel(0x4445) {
@@ -119,6 +122,7 @@ inline TQSL_CONVERTER::TQSL_CONVERTER()  : sentinel(0x4445) {
 	allow_dupes = true; //by default, don't change existing behavior (also helps with commit)
 	ignore_secs = false;	// Use full time
 	ignore_calls = false;	// Use calls in adif file
+	dupes_only = false;	// Not just writing tracking records
 	memset(&rec, 0, sizeof rec);
 	memset(&start, 0, sizeof start);
 	memset(&end, 0, sizeof end);
@@ -285,6 +289,15 @@ static tqsl_adifFieldDefinitions adif_qso_record_fields[] = {
 };
 
 static void
+tqsl_db_get_errstr(TQSL_CONVERTER *conv) {
+	if (sqlite3_errcode(conv->seendb) == SQLITE_BUSY) {
+		strncpy(tQSL_CustomError, "The uploads database is busy. You must exit any running copies of TQSL to be able to sign a log", sizeof tQSL_CustomError);
+	} else {
+              		strncpy(tQSL_CustomError, sqlite3_errmsg(conv->seendb), sizeof tQSL_CustomError);
+	}
+}
+
+static void
 close_db(TQSL_CONVERTER *conv) {
 	tqslTrace("close_db", NULL);
 
@@ -292,7 +305,7 @@ close_db(TQSL_CONVERTER *conv) {
 		if (SQLITE_OK != sqlite3_exec(conv->seendb, "END;", NULL, NULL, NULL)) {
                 	tQSL_Error = TQSL_DB_ERROR;
                 	tQSL_Errno = errno;
-                	strncpy(tQSL_CustomError, sqlite3_errmsg(conv->seendb), sizeof tQSL_CustomError);
+			tqsl_db_get_errstr(conv);
                 	tqslTrace("close_db", "Error ending transaction: %s", tQSL_CustomError);
 		}
 		conv->txn = false;
@@ -301,7 +314,7 @@ close_db(TQSL_CONVERTER *conv) {
 		if (SQLITE_OK != sqlite3_close(conv->seendb)) {
                 	tQSL_Error = TQSL_DB_ERROR;
                 	tQSL_Errno = errno;
-                	strncpy(tQSL_CustomError, sqlite3_errmsg(conv->seendb), sizeof tQSL_CustomError);
+			tqsl_db_get_errstr(conv);
                 	tqslTrace("close_db", "Error closing database: %s", tQSL_CustomError);
 		}
 		// close files and clean up converters, if any
@@ -745,8 +758,7 @@ reopen:
 					if (SQLITE_OK != dbret) {
                 				tQSL_Error = TQSL_DB_ERROR;
                 				tQSL_Errno = errno;
-						snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "DB Error %s - %s",
-                						sqlite3_errmsg(conv->seendb), err_msg);
+						tqsl_db_get_errstr(conv);
                 				tqslTrace("open_db", "Error creating table: %s", tQSL_CustomError);
 						break;
 					} else {
@@ -968,15 +980,21 @@ static void parse_adif_qso(TQSL_CONVERTER *conv, int *saveErr, TQSL_ADIF_GET_FIE
 			tqsl_strtoupper(resdata);
 			char *p = strstr(resdata, ",");			// Find the comma in "VA,Fairfax"
 			if (p) {
+				char *p1 = p;
 				*p++ = '\0';
 				strncpy(conv->rec.my_cnty_state, resdata, sizeof conv->rec.my_cnty_state);
 				while (isspace(*p)) p++;		// Skip spaces and comma
 				strncpy(conv->rec.my_county, p, sizeof conv->rec.my_county);
+				*p1 = ',';				// Put the comma back
 			} else {
 				strncpy(conv->rec.my_county, resdata, sizeof conv->rec.my_county);
 			}
 		} else if (!strcasecmp(result.name, "MY_COUNTRY") && resdata) {
-			strncpy(conv->rec.my_country, resdata, sizeof conv->rec.my_country);
+			if (strcasecmp(resdata, "United States") == 0) {
+				strncpy(conv->rec.my_country, "UNITED STATES OF AMERICA", sizeof conv->rec.my_country);
+			} else {
+				strncpy(conv->rec.my_country, resdata, sizeof conv->rec.my_country);
+			}
 		} else if (!strcasecmp(result.name, "MY_CQ_ZONE") && resdata) {
 			char *endptr;
 			long zone = strtol(resdata, &endptr, 10);
@@ -1045,19 +1063,24 @@ static void parse_adif_qso(TQSL_CONVERTER *conv, int *saveErr, TQSL_ADIF_GET_FIE
 	return;
 }
 
-static int check_station(TQSL_CONVERTER *conv, const char *field, char *my, size_t len, const char *errfmt, bool update) {
+static int check_station(TQSL_CONVERTER *conv, const char *field, const char *my_field, char *my, size_t len, const char *errfmt, bool update) {
 //
 // UPDATE is a boolean that when a change is made, that change
 // is propagated to the downstream values. STATE -> COUNTY and STATE->ZONES
 //
 	char val[256];
 	char label[256];
-	bool provinceFixed = false;
+	const char *newProvince = NULL;
 	bool oblastFixed = false;
 	// CA_PROVINCE can be QC but TQSL lookup expects PQ
 	if (!strcasecmp(field, "CA_PROVINCE") && !strcasecmp(my, "QC")) {
-		provinceFixed = true;
+		newProvince = "PQ";
 		strncpy(my, "PQ", len);
+	}
+	// CA_PROVINCE can be NL but TQSL lookup expects NF
+	if (!strcasecmp(field, "CA_PROVINCE") && !strcasecmp(my, "NL")) {
+		newProvince = "NF";
+		strncpy(my, "NF", len);
 	}
 
 	// RU_OBLAST can be YR but TQSL lookup expects JA
@@ -1083,8 +1106,8 @@ static int check_station(TQSL_CONVERTER *conv, const char *field, char *my, size
 				if (res == -1) {
 					conv->rec_done = true;
 					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, errfmt, my, val);
-					tQSL_Error = TQSL_LOCATION_MISMATCH | 0x1000;
-					set_tagline(conv, field);
+					tQSL_Error = TQSL_LOCATION_MISMATCH | TQSL_MSG_FLAGGED;
+					set_tagline(conv, my_field);
 					return 1;
 				}
 				// -2 means that the label matched, so use that
@@ -1095,15 +1118,15 @@ static int check_station(TQSL_CONVERTER *conv, const char *field, char *my, size
 				conv->newstation = true;
 			} else if (strlen(val) > 0) {
 				conv->rec_done = true;
-				if (provinceFixed) {
-					strncpy(my, "QC", len);
+				if (newProvince) {
+					strncpy(my, newProvince, len);
 				}
 				if (oblastFixed) {
 					strncpy(my, "YR", len);
 				}
 				snprintf(tQSL_CustomError, sizeof tQSL_CustomError, errfmt, val, my);
 				tQSL_Error = TQSL_LOCATION_MISMATCH;
-				set_tagline(conv, field);
+				set_tagline(conv, my_field);
 				return 1;
 			} else {
 				tqsl_setLocationField(conv->loc, field, my);
@@ -1165,11 +1188,13 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 			if (conv->rec.my_country[0] != 0) {
 				int num_dxcc = 0;
 				tqsl_getNumDXCCEntity(&num_dxcc);
-				const char *entity;
+				const char *entity = NULL;
 				int ent_num;
+				bool found = false;
 				for (int i = 0; i < num_dxcc; i++) {
 					tqsl_getDXCCEntity(i, &ent_num, &entity);
-					if (strcasecmp(entity, conv->rec.my_country) == 0) {
+					if (entity && strcasecmp(entity, conv->rec.my_country) == 0) {
+						found = true;
 						// Consistent DXCC ?
 						if (conv->rec.my_dxcc == 0) {
 							conv->rec.my_dxcc = ent_num;
@@ -1187,6 +1212,13 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 						}
 						break;
 					}
+				}
+				if (!found) {	// Country name is bogus
+					conv->rec_done = true;
+					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "MY_COUNTRY|%s", conv->rec.my_country);
+					tQSL_Error = TQSL_INVALID_ADIF;
+					set_tagline(conv, "MY_COUNTRY");
+					return 0;
 				}
 			}
 			// Normalize the grids
@@ -1441,7 +1473,8 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 	}
 
 	// Lookup cert - start with conv->dxcc
-	int targetdxcc = conv->dxcc;
+	int targetdxcc;
+	targetdxcc = conv->dxcc;
 
 	// If we're in update mode, use the DXCC from the log
 	if (conv->location_handling == TQSL_LOC_UPDATE) {
@@ -1451,13 +1484,20 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 	}
 
 	bool anyfound;
-	int cidx = find_matching_cert(conv, targetdxcc, &anyfound);
+	int cidx;
+	cidx = find_matching_cert(conv, targetdxcc, &anyfound);
 	if (cidx < 0) {
 		conv->rec_done = true;
-		const char *entName;
-		tqsl_getDXCCEntityName(targetdxcc, &entName);
+		const char *entName = NULL;
+		if (tqsl_getDXCCEntityName(targetdxcc, &entName) || entName == NULL) {
+			set_tagline(conv, "MY_DXCC");
+			snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "MY_DXCC|%d", conv->rec.my_dxcc);
+			conv->rec.my_dxcc = 0;
+			tQSL_Error = TQSL_INVALID_ADIF;
+			return 0;
+		}
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "%s|%s", conv->callsign, entName);
-		tQSL_Error = TQSL_CERT_NOT_FOUND | 0x1000;
+		tQSL_Error = TQSL_CERT_NOT_FOUND | TQSL_MSG_FLAGGED;
 		if (anyfound) {
 			tQSL_Error = TQSL_CERT_DATE_MISMATCH;
 			set_tagline(conv, "QSO_DATE");
@@ -1517,11 +1557,11 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 					tqsl_updateStationLocationCapture(conv->loc);
 				} else {
 					conv->rec_done = true;
-					const char *d1, *d2;
+					const char *d1, *d2 = NULL;
 					tqsl_getDXCCEntityName(conv->dxcc, &d1);
 					tqsl_getDXCCEntityName(conv->rec.my_dxcc, &d2);
 
-					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "DXCC Entity|%s (%d)|%s (%d)", d1, conv->dxcc, d2, conv->rec.my_dxcc);
+					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "DXCC Entity|%s (%d)|%s (%d)", d1 ? d1 : "Invalid", conv->dxcc, d2 ? d2 : "Invalid", conv->rec.my_dxcc);
 					set_tagline(conv, "MY_DXCC");
 					tQSL_Error = TQSL_CERT_MISMATCH;
 					return 0;
@@ -1544,6 +1584,14 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 			unsigned int stnLen = strlen(val);
 			unsigned int logLen = strlen(conv->rec.my_gridsquare);
 			unsigned int compareLen = (stnLen < logLen ? stnLen : logLen);
+			char locstate[50];
+			locstate[0] = '\0';
+			tqsl_getLocationField(conv->loc, "US_STATE", locstate, sizeof locstate);
+			int ent;
+			tqsl_getLocationDXCCEntity(conv->loc, &ent);
+			int consistentGrid;
+			char grid4[5];
+
 			if (strstr(val, ",") || strstr(conv->rec.my_gridsquare, ",")) {	// If it's a corner/edge
 				vector<string>stngrids;
 				vector<string>qsogrids;
@@ -1557,19 +1605,59 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 					sort(stngrids.begin(), stngrids.end());
 					sort(qsogrids.begin(), qsogrids.end());
 					for (size_t i = 0; i < nstn; i++) {
-						if (stngrids[i] != qsogrids[i]) {
+						char reformatted[TQSL_GRID_MAX + 1];
+						if (tqsl_verifyGridFormat(qsogrids[i].c_str(), false, reformatted, sizeof reformatted)) {
+							conv->rec_done = true;
+							snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Gridsquare|%s", conv->rec.my_gridsquare);
+							set_tagline(conv, "GRIDSQUARE");
+							tQSL_Error = TQSL_INVALID_ADIF;
+							return 0;
+						} else {
+							qsogrids[i] = string(reformatted);
+						}
+						strncpy(grid4, qsogrids[i].c_str(), 4);
+						grid4[4] = '\0';	// truncate to four
+						if (!tqsl_validateVUCCGrid(ent, locstate, grid4, &consistentGrid)) {
+							if (consistentGrid == 0) { // Not valid for Entity and PAS
+								set_tagline(conv, "MY_VUCC_GRIDS");
+								tQSL_Error = TQSL_INCONSISTENT_GRID | consistentGrid;
+								conv->rec_done = true;
+								return 0;
+							}
+						}
+						if (strcasecmp(stngrids[i].c_str(), qsogrids[i].c_str())) {
 							compareLen = 99; // Doesn't match, so error out if appropriate
 							break;
 						}
 					}
 					compareLen = 0;			// Matches.
 				}
-			}
-			if (conv->location_handling == TQSL_LOC_UPDATE) {
-				okgrid = (strcasecmp(conv->rec.my_gridsquare, val) == 0);
 			} else {
-				okgrid = (compareLen == 0 || strncasecmp(conv->rec.my_gridsquare, val, compareLen) == 0);
+				/* Single gridsquare */
+				if (tqsl_verifyGridFormat(conv->rec.my_gridsquare, true, conv->rec.my_gridsquare, sizeof conv->rec.my_gridsquare)) {
+					conv->rec_done = true;
+					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Gridsquare|%s", conv->rec.my_gridsquare);
+					set_tagline(conv, "GRIDSQUARE");
+					tQSL_Error = TQSL_INVALID_ADIF;
+					return 0;
+				}
+				strncpy(grid4, conv->rec.my_gridsquare, 4);
+				grid4[4] = '\0';	// truncate to four
+				if (!tqsl_validateVUCCGrid(ent, locstate, grid4, &consistentGrid)) {
+					if (consistentGrid == 0) { // Not valid for Entity and PAS
+						set_tagline(conv, "GRIDSQUARE");
+						tQSL_Error = TQSL_INCONSISTENT_GRID | consistentGrid;
+						conv->rec_done = true;
+						return 0;
+					}
+				}
 			}
+			/*
+ 			 * FT8 four-char grid handling.
+			 * For station location set to AA01aa and FT8 saying AA01
+			 * Treat that as a match
+			 */
+			okgrid = (compareLen == 0 || strncasecmp(conv->rec.my_gridsquare, val, compareLen) == 0);
 			if (!okgrid) {
 				if (conv->location_handling == TQSL_LOC_UPDATE) {
 					tqsl_setLocationField(conv->loc, "GRIDSQUARE", conv->rec.my_gridsquare);
@@ -1586,56 +1674,142 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 						return 0;
 					}
 				}
+			} else { // Grid is OK
+				check_station(conv, "GRIDSQUARE", "MY_GRIDSQUARE", conv->rec.my_gridsquare, sizeof conv->rec.my_gridsquare, "Gridsquare|%s|%s", false);
 			}
 		}
 
 		switch (conv->dxcc) {
+			int ok;
 			case 6:		// Alaska
 			case 110:	// Hawaii
 			case 291:	// Cont US
-				if (check_station(conv, "US_STATE", conv->rec.my_state, sizeof conv->rec.my_state, "US State|%s|%s", true)) return 0;
-				if (check_station(conv, "US_COUNTY", conv->rec.my_county, sizeof conv->rec.my_county, "US County|%s|%s", false)) return 0;
+				ok = check_station(conv, "US_STATE", "MY_STATE", conv->rec.my_state, sizeof conv->rec.my_state, "US State|%s|%s", true);
+				if (ok == -1) {
+					conv->rec_done = true;
+					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "MY_STATE|%s", conv->rec.my_state);
+					tQSL_Error = TQSL_INVALID_ADIF;
+					set_tagline(conv, "MY_STATE");
+				}
+				if (ok) {
+					return 0;
+				}
+				if (check_station(conv, "US_COUNTY", "MY_CNTY", conv->rec.my_county, sizeof conv->rec.my_county, "US County|%s|%s", false)) return 0;
 				break;
 			case 1:		// Canada
-				if (check_station(conv, "CA_PROVINCE", conv->rec.my_state, sizeof conv->rec.my_state, "CA Province|%s|%s", true)) return 0;
+				ok = check_station(conv, "CA_PROVINCE", "MY_STATE", conv->rec.my_state, sizeof conv->rec.my_state, "CA Province|%s|%s", true);
+				if (ok == -1) {
+					conv->rec_done = true;
+					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "MY_STATE|%s", conv->rec.my_state);
+					tQSL_Error = TQSL_INVALID_ADIF;
+					set_tagline(conv, "MY_STATE");
+				}
+				if (ok) {
+					return 0;
+				}
 				break;
 			case 15:	// Asiatic Russia
 			case 54:	// European Russia
 			case 61:	// FJL
 			case 125:	// Juan Fernandez
 			case 151:	// Malyj Vysotskij
-				if (check_station(conv, "RU_OBLAST", conv->rec.my_state, sizeof conv->rec.my_state, "RU Oblast|%s|%s", true)) return 0;
+				ok = check_station(conv, "RU_OBLAST", "MY_STATE", conv->rec.my_state, sizeof conv->rec.my_state, "RU Oblast|%s|%s", true);
+				if (ok == -1) {
+					conv->rec_done = true;
+					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "MY_STATE|%s", conv->rec.my_state);
+					tQSL_Error = TQSL_INVALID_ADIF;
+					set_tagline(conv, "MY_STATE");
+				}
+				if (ok) {
+					return 0;
+				}
 				break;
 			case 318:	// China
-				if (check_station(conv, "CN_PROVINCE", conv->rec.my_state, sizeof conv->rec.my_state, "CN Province|%s|%s", true)) return 0;
+				ok = check_station(conv, "CN_PROVINCE", "MY_STATE", conv->rec.my_state, sizeof conv->rec.my_state, "CN Province|%s|%s", true);
+				if (ok == -1) {
+					conv->rec_done = true;
+					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "MY_STATE|%s", conv->rec.my_state);
+					tQSL_Error = TQSL_INVALID_ADIF;
+					set_tagline(conv, "MY_STATE");
+				}
+				if (ok) {
+					return 0;
+				}
 				break;
 			case 150:	// Australia
-				if (check_station(conv, "AU_STATE", conv->rec.my_state, sizeof conv->rec.my_state, "AU State|%s|%s", true)) return 0;
+				ok = check_station(conv, "AU_STATE", "MY_STATE", conv->rec.my_state, sizeof conv->rec.my_state, "AU State|%s|%s", true);
+				if (ok == -1) {
+					conv->rec_done = true;
+					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "MY_STATE|%s", conv->rec.my_state);
+					tQSL_Error = TQSL_INVALID_ADIF;
+					set_tagline(conv, "MY_STATE");
+				}
+				if (ok) {
+					return 0;
+				}
 				break;
 			case 339:	// Japan
-				if (check_station(conv, "JA_PREFECTURE", conv->rec.my_state, sizeof conv->rec.my_state, "JA Prefecture|%s|%s", true)) return 0;
-				if (check_station(conv, "JA_CITY_GUN_KU", conv->rec.my_county, sizeof conv->rec.my_county, "JA City/Gun/Ku|%s|%s", false)) return 0;
+				ok = check_station(conv, "JA_PREFECTURE", "MY_STATE", conv->rec.my_state, sizeof conv->rec.my_state, "JA Prefecture|%s|%s", true);
+				if (ok == -1) {
+					conv->rec_done = true;
+					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "MY_STATE|%s", conv->rec.my_state);
+					tQSL_Error = TQSL_INVALID_ADIF;
+					set_tagline(conv, "MY_STATE");
+				}
+				if (ok) {
+					return 0;
+				}
+				if (check_station(conv, "JA_CITY_GUN_KU", "MY_CNTY", conv->rec.my_county, sizeof conv->rec.my_county, "JA City/Gun/Ku|%s|%s", false)) return 0;
 				break;
 			case 5:		// Finland
-				if (check_station(conv, "FI_KUNTA", conv->rec.my_state, sizeof conv->rec.my_state, "FI Kunta|%s|%s", true)) return 0;
+				ok = check_station(conv, "FI_KUNTA", "MY_STATE", conv->rec.my_state, sizeof conv->rec.my_state, "FI Kunta|%s|%s", true);
+				if (ok == -1) {
+					conv->rec_done = true;
+					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "MY_STATE|%s", conv->rec.my_state);
+					tQSL_Error = TQSL_INVALID_ADIF;
+					set_tagline(conv, "MY_COUNTRY");
+				}
+				if (ok) {
+					return 0;
+				}
 				break;
 		}
 
-		if (check_station(conv, "ITUZ", conv->rec.my_itu_zone, sizeof conv->rec.my_itu_zone, "ITU Zone|%s|%s", false)) return 0;
-		if (check_station(conv, "CQZ", conv->rec.my_cq_zone, sizeof conv->rec.my_cq_zone, "CQ Zone|%s|%s", false)) return 0;
-		if (check_station(conv, "IOTA", conv->rec.my_iota, sizeof conv->rec.my_iota, "IOTA|%s|%s", false)) return 0;
-
+		if (check_station(conv, "ITUZ", "MY_ITU_ZONE", conv->rec.my_itu_zone, sizeof conv->rec.my_itu_zone, "ITU Zone|%s|%s", false)) return 0;
+		if (check_station(conv, "CQZ", "MY_CQ_ZONE", conv->rec.my_cq_zone, sizeof conv->rec.my_cq_zone, "CQ Zone|%s|%s", false)) return 0;
+		if (conv->rec.my_iota[0] != '\0') {
+			// IOTA identifiers: AF-123 form.
+			int num = strtol(conv->rec.my_iota + 3, NULL, 10);
+			if ((num == 0) ||
+			    (strlen(conv->rec.my_iota) != 6) ||
+			    (strncmp(conv->rec.my_iota, "AF-", 3) &&
+			     strncmp(conv->rec.my_iota, "AN-", 3) &&
+			     strncmp(conv->rec.my_iota, "AS-", 3) &&
+			     strncmp(conv->rec.my_iota, "EU-", 3) &&
+			     strncmp(conv->rec.my_iota, "NA-", 3) &&
+			     strncmp(conv->rec.my_iota, "OC-", 3) &&
+			     strncmp(conv->rec.my_iota, "SA-", 3))) {
+				conv->rec_done = true;
+				snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "MY_IOTA|%s", conv->rec.my_iota);
+				tQSL_Error = TQSL_INVALID_ADIF;
+				set_tagline(conv, "MY_IOTA");
+				return 0;
+			}
+			if (check_station(conv, "IOTA", "MY_IOTA", conv->rec.my_iota, sizeof conv->rec.my_iota, "IOTA|%s|%s", false)) return 0;
+		}
+		char locstate[5];
+		locstate[0] = '\0';
 		if (conv->rec.my_cnty_state[0] != '\0') {
-			char locstate[5];
 			tqsl_getLocationField(conv->loc, "US_STATE", locstate, sizeof locstate);
 			if (strcasecmp(conv->rec.my_cnty_state, locstate)) {		// County does not match state
 				conv->rec_done = true;
 				snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "US County State|%s|%s", conv->rec.my_cnty_state, locstate);
 				set_tagline(conv, "US_STATE");
-				tQSL_Error = TQSL_LOCATION_MISMATCH | 0x1000;
+				tQSL_Error = TQSL_LOCATION_MISMATCH | TQSL_MSG_FLAGGED;
 				return 0;
 			}
 		}
+
 		if (conv->newstation) {
 			conv->newstation = false;
 			conv->loc_uid++;
@@ -1650,6 +1824,8 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 
 	const char *grec = tqsl_getGABBItCONTACTData(conv->certs[conv->cert_idx], conv->loc, &(conv->rec),
 		conv->loc_uid, signdata, sizeof(signdata));
+	if (!grec && conv->dupes_only)
+		grec = "";
 	if (grec) {
 		conv->rec_done = true;
 		if (!conv->allow_dupes) {
@@ -1692,13 +1868,14 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 						remove_db(conv->dbpath);
 						free(conv->dbpath);
 					}
+					tqsl_db_get_errstr(conv);
 					tQSL_Error = TQSL_DB_ERROR;
 					return 0;
 				}
 				return 0;
 			} else if (rc < 0) {
 				//non-zero return, but not "not found" - thus error
-				strncpy(tQSL_CustomError, sqlite3_errmsg(conv->seendb), sizeof tQSL_CustomError);
+				tqsl_db_get_errstr(conv);
 				if (SQLITE_NOTADB == rc) {		// This isn't a database
 					close_db(conv);
 					remove_db(conv->dbpath);
@@ -1771,7 +1948,7 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 				del_dbrec(conv->seendb, dupekey);
 			} else if (rc < 0) {
 				//non-zero return, but not "not found" - thus error
-				strncpy(tQSL_CustomError, sqlite3_errmsg(conv->seendb), sizeof tQSL_CustomError);
+				tqsl_db_get_errstr(conv);
 				if (SQLITE_NOTADB == rc) {		// Not a database
 					close_db(conv);
 					remove_db(conv->dbpath);
@@ -1785,7 +1962,7 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 			int dbput_err;
 			dbput_err = put_dbrec(conv->seendb, dupekey, reinterpret_cast<const char *>(stnloc));
 			if (0 != dbput_err) {
-				strncpy(tQSL_CustomError, sqlite3_errmsg(conv->seendb), sizeof tQSL_CustomError);
+				tqsl_db_get_errstr(conv);
 				if (SQLITE_NOTADB == dbput_err) {
 					close_db(conv);
 					remove_db(conv->dbpath);
@@ -1891,6 +2068,15 @@ tqsl_setConverterAppName(tQSL_Converter convp, const char *app) {
 }
 
 DLLEXPORT int CALLCONVENTION
+tqsl_setConverterDupesOnly(tQSL_Converter convp, int dupesOnly) {
+	TQSL_CONVERTER *conv;
+	if (!(conv = check_conv(convp)))
+		return 1;
+	conv->dupes_only = (dupesOnly != 0);
+	return 0;
+}
+
+DLLEXPORT int CALLCONVENTION
 tqsl_setConverterQTHDetails(tQSL_Converter convp, int logverify) {
 	TQSL_CONVERTER *conv;
 	if (!(conv = check_conv(convp)))
@@ -1964,7 +2150,7 @@ tqsl_getDuplicateRecords(tQSL_Converter convp, char *key, char *data, int keylen
     	}
 	const unsigned char* result = sqlite3_column_text(conv->bulk_read, 1);
 	if (!result) {
-		strncpy(tQSL_CustomError, sqlite3_errmsg(conv->seendb), sizeof tQSL_CustomError);
+		tqsl_db_get_errstr(conv);
 		tQSL_Error = TQSL_DB_ERROR;
 		tQSL_Errno = errno;
 		return 1;
@@ -1999,21 +2185,21 @@ tqsl_getDuplicateRecordsV2(tQSL_Converter convp, char *key, char *data, int keyl
 	}
 	if (SQLITE_ROW != rc) {
 		sqlite3_finalize(conv->bulk_read);
-		strncpy(tQSL_CustomError, sqlite3_errmsg(conv->seendb), sizeof tQSL_CustomError);
+		tqsl_db_get_errstr(conv);
 		tQSL_Error = TQSL_DB_ERROR;
 		tQSL_Errno = errno;
 		return 1;
     	}
 	const unsigned char* rkey = sqlite3_column_text(conv->bulk_read, 0);
 	if (!rkey) {
-		strncpy(tQSL_CustomError, sqlite3_errmsg(conv->seendb), sizeof tQSL_CustomError);
+		tqsl_db_get_errstr(conv);
 		tQSL_Error = TQSL_DB_ERROR;
 		tQSL_Errno = errno;
 		return 1;
 	}
 	const unsigned char* rdata = sqlite3_column_text(conv->bulk_read, 1);
 	if (!rdata) {
-		strncpy(tQSL_CustomError, sqlite3_errmsg(conv->seendb), sizeof tQSL_CustomError);
+		tqsl_db_get_errstr(conv);
 		tQSL_Error = TQSL_DB_ERROR;
 		tQSL_Errno = errno;
 		return 1;
@@ -2044,7 +2230,7 @@ tqsl_putDuplicateRecord(tQSL_Converter convp, const char *key, const char *data,
 	int status = put_dbrec(conv->seendb, key, data);
 
 	if (0 != status) {
-		strncpy(tQSL_CustomError, sqlite3_errmsg(conv->seendb), sizeof tQSL_CustomError);
+		tqsl_db_get_errstr(conv);
 		tQSL_Error = TQSL_DB_ERROR;
 		tQSL_Errno = errno;
 		return 1;

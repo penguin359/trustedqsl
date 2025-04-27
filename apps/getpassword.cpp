@@ -23,6 +23,12 @@
 #define GPW_ID_OK GPW_ID_LOW+2
 #define GPW_ID_CAN GPW_ID_LOW+3
 #define GPW_ID_HELP GPW_ID_LOW+4
+#define GPW_ID_OK2 GPW_ID_LOW+5
+#define GPW_ID_UN GPW_ID_LOW+6
+#define GPW_ID_PW3 GPW_ID_LOW+7
+#define GPW_ID_OK3 GPW_ID_LOW+8
+#define GPW_ID_CAN2 GPW_ID_LOW+9
+#define GPW_ID_HELP2 GPW_ID_LOW+10
 
 BEGIN_EVENT_TABLE(GetPasswordDialog, wxDialog)
 	EVT_BUTTON(GPW_ID_OK, GetPasswordDialog::OnOk)
@@ -174,6 +180,80 @@ GetNewPasswordDialog::OnCancel(wxCommandEvent&) {
 void
 GetNewPasswordDialog::OnHelp(wxCommandEvent&) {
 	tqslTrace("GetNewPasswordDialog::OnHelp", NULL);
+	if (_help && !_helpfile.IsEmpty())
+		_help->Display(_helpfile);
+}
+
+BEGIN_EVENT_TABLE(GetUserAndPasswordDialog, wxDialog)
+	EVT_BUTTON(GPW_ID_OK3, GetUserAndPasswordDialog::OnOk)
+	EVT_BUTTON(GPW_ID_CAN2, GetUserAndPasswordDialog::OnCancel)
+	EVT_BUTTON(GPW_ID_HELP2, GetUserAndPasswordDialog::OnHelp)
+END_EVENT_TABLE()
+
+GetUserAndPasswordDialog::GetUserAndPasswordDialog(wxWindow *parent, const wxString& title,
+	const wxString& message, wxHtmlHelpController *help, wxString helpfile)
+	: wxDialog(parent, -1, title), _help(help), _helpfile(helpfile) {
+	tqslTrace("GetUserAndPassword::GetUserAndPasswordDialog", "parent=%lx, title=%s, message=%s", reinterpret_cast<void *>(parent), S(title), S(helpfile));
+
+	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
+	wxSize sz = getTextSize(this);
+	int em_w = sz.GetWidth();
+	wxStaticText *st = new wxStaticText(this, -1, message);
+	st->Wrap(em_w * 40);
+	sizer->Add(st, 1, wxALL|wxEXPAND, 10);
+	wxBoxSizer *userSizer = new wxBoxSizer(wxHORIZONTAL);
+	userSizer->Add(new wxStaticText(this, -1, _("LoTW Username:")), 0, wxLEFT|wxRIGHT|wxALIGN_CENTRE, 10);
+	_un = new wxTextCtrl(this, GPW_ID_UN, wxT(""), wxDefaultPosition, wxSize(em_w * 15, -1));
+	userSizer->Add(_un, 0, wxLEFT|wxRIGHT, 10);
+	sizer->Add(userSizer);
+	wxBoxSizer *pwdSizer = new wxBoxSizer(wxHORIZONTAL);
+	pwdSizer->Add(new wxStaticText(this, -1, _("LoTW Password:")), 0, wxLEFT|wxRIGHT|wxALIGN_CENTRE, 10);
+	_pw = new wxTextCtrl(this, GPW_ID_PW3, wxT(""), wxDefaultPosition, wxSize(em_w*15, -1), wxTE_PASSWORD);
+	pwdSizer->Add(_pw, 0, wxLEFT|wxRIGHT, 10);
+	sizer->Add(pwdSizer);
+
+	wxBoxSizer *butsizer = new wxBoxSizer(wxHORIZONTAL);
+	wxButton *okButton = new wxButton(this, GPW_ID_OK3, _("OK"));
+	butsizer->Add(okButton, 0, 0, 0);
+	okButton->SetDefault();
+	butsizer->Add(new wxButton(this, GPW_ID_CAN2, _("Cancel")), 0, wxLEFT, 200);
+	if (_help && !_helpfile.IsEmpty())
+		butsizer->Add(new wxButton(this, GPW_ID_HELP2, _("Help")), 0, wxLEFT, 20);
+
+	sizer->Add(butsizer, 0, wxALL|wxALIGN_CENTER, 10);
+
+	SetAutoLayout(TRUE);
+	SetSizer(sizer);
+
+	sizer->Fit(this);
+	sizer->SetSizeHints(this);
+	CentreOnParent();
+}
+
+bool
+GetUserAndPasswordDialog::TransferDataFromWindow() {
+	tqslTrace("GetUserAndPasswordDialog::TransferDataFromWindow", NULL);
+	_username = _un->GetValue();
+	_password = _pw->GetValue();
+	return true;
+}
+
+void
+GetUserAndPasswordDialog::OnOk(wxCommandEvent&) {
+	tqslTrace("GetUserAndPasswordDialog::OnOk", NULL);
+	if (TransferDataFromWindow())
+		EndModal(wxID_OK);
+}
+
+void
+GetUserAndPasswordDialog::OnCancel(wxCommandEvent&) {
+	tqslTrace("GetUserAndPasswordDialog::OnCancel", NULL);
+	EndModal(wxID_CANCEL);
+}
+
+void
+GetUserAndPasswordDialog::OnHelp(wxCommandEvent&) {
+	tqslTrace("GetUserAndPasswordDialog::OnHelp", NULL);
 	if (_help && !_helpfile.IsEmpty())
 		_help->Display(_helpfile);
 }

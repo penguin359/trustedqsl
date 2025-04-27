@@ -54,9 +54,9 @@ any exception QSOs. This is the recommended behavior for command line
 applications but is not the default action for compatibility reasons.
 
 Using "-a all" instructs tqsl to process all QSOs, ignoring previously
-uploaded QSOs and invalid callsigns. QSOs outside the range of valid dates for the selected
-station certificate will not be signed, as they would not be accepted by
-Logbook.
+uploaded QSOs and invalid callsigns. QSOs outside the range of valid dates
+for the selected station certificate will not be signed, as they would not
+be accepted by Logbook.
 
 
   -b            Set begin date for the QSO date filter.
@@ -99,6 +99,9 @@ ADIF "MY_" fields, or use an minimal Station Location with no
 QTH data. If no station location is provided on the command line, 
 (the "-l" option specifies the station location name), an empty station
 location is used which has no callsign or QTH data.
+
+  -i <file>     Import a TQSL file. This can be a public key (tq6) file,
+                a key container (p12), or a backup (tbk) file.
 
   -l <str>      Select Station Location.
 
@@ -203,6 +206,8 @@ provides information on success or failure using the following values:
        12 - Unknown error
        13 - The TQSL upload tracking database is locked.
        14 - Already uploaded QSOs were detected
+       15 - An incorrect passprhase was used while loading a P12 file from
+            the command line
 
 This exit status is also written to stderr in a format that can be parsed
 by the calling application. The last output from tqsl will be of the format
@@ -224,7 +229,8 @@ Examples of output follows:
 06:05:56 PM: /home/rmurphy/k1mu.tq8 is ready to be emailed or uploaded.
 Note: TQSL assumes that this file will be uploaded to LoTW.
 Resubmitting these QSOs will cause them to be reported as duplicates.
-06:05:56 PM: Final Status: Some QSOs were previously uploaded or out of date range (9)
+06:05:56 PM: Final Status: Some QSOs were previously uploaded or out of
+             date range (9)
 
 An example usage for signing a log would be
 
