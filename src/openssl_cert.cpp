@@ -164,7 +164,6 @@
 #include <openssl/opensslv.h>
 #include <openssl/bn.h>
 #include <openssl/rsa.h>
-#include <openssl/pkcs12.h>
 
 /* Ugly workaround for Openssl 1.0 bug per:
  * http://rt.openssl.org/Ticket/Display.html?user=guest&pass=guest&id=2123
@@ -179,6 +178,9 @@
 #undef d2i_ASN1_SET
 #undef ASN1_seq_unpack
 #undef ASN1_seq_pack
+
+#include <cstdio>
+#include <utility>
 
 #ifdef __cplusplus
 extern "C" {
@@ -873,8 +875,16 @@ tqsl_isCertificateExpired(tQSL_Cert cert, int *status) {
 	}
 	*status = false;
 	/* Check for expired */
+	struct tm *tm;
+#ifdef _WIN32
+	__time32_t t = _time32(0);
+	tm = _gmtime32(&t);
+#else
 	time_t t = time(0);
-	struct tm *tm = gmtime(&t);
+	struct tm tmr;
+	tm = &tmr;
+	tm = gmtime_r(&t, tm);
+#endif
 	tQSL_Date d;
 	d.year = tm->tm_year + 1900;
 	d.month = tm->tm_mon + 1;
@@ -941,8 +951,16 @@ tqsl_isCertificateRenewable(tQSL_Cert cert, int *status) {
 	}
 	*status = false;
 	/* Check for expired */
+	struct tm *tm;
+#ifdef _WIN32
+	__time32_t t = _time32(0);
+	tm = _gmtime32(&t);
+#else
 	time_t t = time(0);
-	struct tm *tm = gmtime(&t);
+	struct tm tmr;
+	tm = &tmr;
+	tm = gmtime_r(&t, tm);
+#endif
 	tQSL_Date d;
 	d.year = tm->tm_year + 1900;
 	d.month = tm->tm_mon + 1;
@@ -1173,8 +1191,10 @@ tqsl_selectCertificates(tQSL_Cert **certlist, int *ncerts,
 
 	*ncerts = (selcerts ? sk_X509_num(selcerts) : 0) + keylist.size();
 	tqslTrace("tqsl_selectCertificates", "ncerts=%d", *ncerts);
-	if (certlist == NULL)		// Only want certificate count
+	if (certlist == NULL) {		// Only want certificate count
+		rval = 0;
 		goto end;
+	}
 	*certlist = reinterpret_cast<tQSL_Cert *>(tqsl_calloc(*ncerts, sizeof(tQSL_Cert)));
 	if (selcerts != NULL) {
 		for (i = 0; i < sk_X509_num(selcerts); i++) {
@@ -5014,7 +5034,7 @@ err:
 	// Handle corrupted key
 	}  else if (ERR_GET_LIB(e) == ERR_LIB_OSSL_DECODER && ERR_GET_REASON(e) == ERR_R_UNSUPPORTED) {
 		ERR_clear_error();
-		strncpy(tQSL_ErrorFile, "Private key file is corrupt", sizeof tQSL_ErrorFile);
+		strncpy(tQSL_ErrorFile, "Private key file is corrupt or the passphrase is incorrect", sizeof tQSL_ErrorFile);
 		tQSL_Error = TQSL_FILE_SYNTAX_ERROR;
 #endif
 	} else {
@@ -5161,10 +5181,17 @@ again:
 		break;
 	}
 	/* Check for expired */
+	struct tm *tm;
+#ifdef _WIN32
+	__time32_t t = _time32(0);
+	tm = _gmtime32(&t);
+#else
 	time_t t;
 	t = time(0);
-	struct tm *tm;
-	tm = gmtime(&t);
+	struct tm tmr;
+	tm = &tmr;
+	tm = gmtime_r(&t, tm);
+#endif
 	tQSL_Date d;
 	d.year = tm->tm_year + 1900;
 	d.month = tm->tm_mon + 1;

@@ -2,7 +2,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH TQSL 5 "August  28, 2013"
+.TH TQSL 5 "February  3, 2025"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -21,6 +21,10 @@ TQSL \- digitally sign amateur radio contact logs
 .SH SYNOPSIS
 .B tqsl
 .RI \-i\ [ certificate-file ] "" ...
+.br
+.B tqsl
+.RI \-s\ [ station location ] "" ...
+.br
 .PP
 .B tqsl
 .RI [ OPTIONS ]
@@ -48,59 +52,103 @@ documentation is also available:
 \fBtqsl\fP accepts these command line options:
 
 .TP
-.B \-b \fIbegin_date\fP and \-e \fIend_date\fP
+.B \-a, \-\-action= \fIaction\fP [\fBabort\fR, \fBall\fR, \fBcompliant\fR, or \fBask\fR ]
+Specify a default dialog action when non-compliant QSOs are detected (these
+are cases with invalid callsigns, QSOs already uploaded, for examples. The
+option value \fIabort\fR causes TQSL to abort signing when an invalid QSO is
+processed. \fIall\fR causes all QSOs to be signed, ignoring errors. 
+\fIcompliant\fR indicates that invalid QSOs should be skipped, and \fIask\fR
+asks the user how to proceed.
+
+.TP
+.B \-b, \-\-begindate= \fIbegin_date\fP and \-e, \-\-enddate= \fIend_date\fP
 Supply a start date and end date for QSOs to be signed. If present, any QSOs
 before the begin date will be ignored, and any after the end date will be
 ignored. If either begin or end are omitted, then the corresponding limit is
 ignored. You should specify \fI-d\fP with this option to suppress the normal
 date range dialog as these options will override the user-specified dates if
 given.
+
 .TP
-.B \-d
+.B \-c, \-\-callsign= \fIcallsign\fR
+Specify the default callsign for log signing.
+
+.TP
+.B \-d, \-\-nodate
 Suppress date-range dialog. If present, the QSO date-range dialog will not be
 shown for files that follow this option on the command line.
 
 .TP
-.B \-l \fIlocation_name\fP
+.B \-f,\-\-verify=\fIoption\fR [\fBignore\fR, \fBreportl\fR, or \fBupdate\fR ]
+Specify QSO verification action for QTH details. This option controls how location
+information in an ADIF file is handled. Using \fIignore\fR indicates that TQSL should
+ignore location data.  Using \fIreport\fR causes TQSL to report any discrepancies
+between the currently selected \fIStation Location\fR and the ADIF location
+information.  Using \fIupdaate\fR causes the new location details from the
+ADIF file to be used, overriding the \fIStation Location\fR details.
+
+.TP
+.B \-h, \-\-help
+Displays command line usage summary.
+
+.TP
+.B \-i, \-\-import= filename
+Import a certificate - either a signed response (.tq6) or a certificate
+stored with a private key in PKCS#12 format (.p12).
+
+.TP
+.B \-l, \-\-location=  \fIlocation_name\fP
 Selects an existing station location. This location will be used for the
 commands that follow. If the station location doesn't exist, \fBtqsl\fP will
 just exit.
 
 .TP
-.B \-o \fIoutput_file\fP
+.B \-n, \-\-updates
+Check for updates to TQSL, the configuration file, and for certificate
+expiration.
+
+.TP
+.B \-o, \-\-outut= \fIoutput_file\fP
 Writes the resulting signed log file to \fIoutput_file\fP instead of a default
 name based on the input \fIlog-file\fP name.
 
 .TP
-.B \-s
+.B \-p, \-\-password= \fIpassword\fR
+Specify the pasphrase for the callsign certificate being used to sign a log.
+
+.TP
+.B \-s, \-\-editlocation location-name
 Add or edit station location. If there is a preceding -l option the specified
 location will be edited. If there is no preceding -l option, a new station
 location is being added.
 
 .TP
-.BR \-x " (or) " \-q
-Exit \fBtqsl\fP. If this argument is used it should be the last one on the
-command line. If this argument is not present, \fBtqsl\fP will begin normal
-operation after successfully processing all command-line arguments.
+.B \-t, \-\-diagnose= filename
+Open a diagnostic trace file at startup. This file will log internal TQSL
+function calls for debugging purposes.
 
 .TP
-.B \-u
+.B \-u, \-\-upload
 Upload log file. If this argument is used, the input files will be signed
 then automatically uploaded to the Logbook of the World web site for
 processing.
 
 .TP
-.B \-v
+.B \-v, \-\-version
 Display the version number of \fBtqsl\fP and exit.
 
 .TP
-.B \-i filename
-Import a certificate - either a signed response (.tq6) or a certificate
-stored with a private key in PKCS#12 format (.p12).
+.B \-w, \-\-wipe
+Delete the contact upload database. This should be used only for cases
+where that database has become corrupted, typically due to Oracle
+BerkeleyDB misbehavior.
+
 .TP
-.B \-t filename
-Open a diagnostic trace file at startup. This file will log internal TQSL
-function calls for debugging purposes.
+.BR \-x, \-\-batch " (or) " \-q, \-\-quiet
+Exit \fBtqsl\fP. If this argument is used it should be the last one on the
+command line. If this argument is not present, \fBtqsl\fP will begin normal
+operation after successfully processing all command-line arguments.
+
 .TP
 .B log-files
 Any command-line parameter that is not an option or an option's argument will

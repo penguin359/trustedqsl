@@ -22,21 +22,23 @@
     #include <windows.h>
     #include <direct.h>
     #include <Shlobj.h>
+    #define strtok_r strtok_s
 #else
 #include <unistd.h>
 #endif
-#ifdef __APPLE__
-#include <CoreFoundation/CFBundle.h>
-#endif
-#include <string>
-using std::string;
-
 #include <openssl/err.h>
 #include <openssl/objects.h>
 #include <openssl/evp.h>
 #if OPENSSL_VERSION_MAJOR >= 3
 #include <openssl/provider.h>
 #endif
+
+#ifdef __APPLE__
+#include <CoreFoundation/CFBundle.h>
+#endif
+#include <cstdio>
+#include <string>
+using std::string;
 
 #include "tqslerrno.h"
 #include "adif.h"
@@ -116,7 +118,7 @@ static const char *error_strings[] = {
 	"PKCS#12 file not TQSL compatible",			/* TQSL_PKCS12_ERROR */
 	"Callsign Certificate not TQSL compatible",		/* TQSL_CERT_TYPE_ERROR */
 	"Date out of range",					/* TQSL_DATE_OUT_OF_RANGE */
-	"Already Uploaded QSO detected",			/* TQSL_DUPLICATE_QSO */
+	"Previously Signed QSO detected",			/* TQSL_DUPLICATE_QSO */
 	"Database error",					/* TQSL_DB_ERROR */
 	"The selected station location could not be found",	/* TQSL_LOCATION_NOT_FOUND */
 	"The selected callsign could not be found",		/* TQSL_CALL_NOT_FOUND */
@@ -126,6 +128,8 @@ static const char *error_strings[] = {
 	"This Callsign Certificate could not be installed", 	/* TQSL_CERT_ERROR */
 	"Callsign Certificate does not match QSO details", 	/* TQSL_CERT_MISMATCH */
 	"Station Location does not match QSO details", 		/* TQSL_LOCATION_MISMATCH */
+	"Gridsquare is inconsistent with Station Location", 	/* TQSL_INCONSISTENT_GRID */
+	"ADIF field has invalid contents", 			/* TQSL_INVALID_ADIF */
 	/* note - dupe table in wxutil.cpp */
 };
 
@@ -175,7 +179,8 @@ static int pmkdir(const char *path, int perm) {
 	tqslTrace("pmkdir", "path=%s", path);
 	int nleft = sizeof npath - 1;
 	strncpy(dpath, path, sizeof dpath);
-	cp = strtok(dpath, "/\\");
+	char *state = NULL;
+	cp = strtok_r(dpath, "/\\", &state);
 	npath[0] = 0;
 	while (cp) {
 		if (strlen(cp) > 0 && cp[strlen(cp)-1] != ':') {
@@ -191,7 +196,7 @@ static int pmkdir(const char *path, int perm) {
 			strncat(npath, cp, nleft);
 			nleft -= strlen(cp);
 		}
-		cp = strtok(NULL, "/\\");
+		cp = strtok_r(NULL, "/\\", &state);
 	}
 	return 0;
 }
@@ -297,8 +302,7 @@ tqsl_init() {
 
 #if !defined(_WIN32) && !defined(__APPLE__)
 // Work around ill-considered decision by Fedora to stop allowing
-// certificates with MD5 signatures
-	setenv("OPENSSL_ENABLE_MD5_VERIFY", "1", 0);
+// certificates with SHA-1 signatures
 	setenv("OPENSSL_ENABLE_SHA1_SIGNATURES", "1", 0);
 #endif
 
@@ -563,7 +567,7 @@ tqsl_getErrorString_v(int err) {
 			return buf;
 		}
 		snprintf(buf, sizeof buf,
-			"This file is related to a callsign certificate request from some other computer. You can only open this on the computer system logged in as the user that request the callsign certificate for %s.",
+			"This file is related to a callsign certificate request from some other computer. You can only open this on the computer system logged in as the user that requested the callsign certificate for %s.",
 			tQSL_ImportCall);
 		tQSL_ImportCall[0] = '\0';
 		return buf;
@@ -577,9 +581,10 @@ tqsl_getErrorString_v(int err) {
 	}
 	if (err == TQSL_CERT_MISMATCH || err == TQSL_LOCATION_MISMATCH) {
 		const char *fld, *cert, *qso;
-		fld = strtok(tQSL_CustomError, "|");
-		cert = strtok(NULL, "|");
-		qso = strtok(NULL, "|");
+		char *state = NULL;
+		fld = strtok_r(tQSL_CustomError, "|", &state);
+		cert = strtok_r(NULL, "|", &state);
+		qso = strtok_r(NULL, "|", &state);
 		if (qso == NULL) {		// Nothing in the cert
 			qso = cert;
 			cert = "none";
@@ -590,18 +595,20 @@ tqsl_getErrorString_v(int err) {
 			fld, cert, qso);
 		return buf;
 	}
-	if (err == (TQSL_LOCATION_MISMATCH | 0x1000)) {
+	if (err == (TQSL_LOCATION_MISMATCH | TQSL_MSG_FLAGGED)) {
 		const char *fld, *val;
-		fld = strtok(tQSL_CustomError, "|");
-		val = strtok(NULL, "|");
+		char *state = NULL;
+		fld = strtok_r(tQSL_CustomError, "|", &state);
+		val = strtok_r(NULL, "|", &state);
 		snprintf(buf, sizeof buf, "This log has invalid QSO information.\nThe log being signed has '%s' set to value '%s' which is not valid", fld, val);
 		return buf;
 	}
-	if (err == (TQSL_CERT_NOT_FOUND | 0x1000)) {
+	if (err == (TQSL_CERT_NOT_FOUND | TQSL_MSG_FLAGGED)) {
 		const char *call, *ent;
 		err = TQSL_CERT_NOT_FOUND;
-		call = strtok(tQSL_CustomError, "|");
-		ent = strtok(NULL, "|");
+		char *state = NULL;
+		call = strtok_r(tQSL_CustomError, "|", &state);
+		ent = strtok_r(NULL, "|", &state);
 		snprintf(buf, sizeof buf, "There is no valid callsign certificate for %s in entity %s available. This QSO cannot be signed", call, ent);
 		return buf;
 	}

@@ -16,14 +16,14 @@
 #include "sysconfig.h"
 #endif
 
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
 	#pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-	#include "wx/wx.h"
+	#include <wx/wx.h>
 #endif
 
 #include <wx/intl.h>
@@ -46,6 +46,7 @@
 wxSize getTextSize(wxWindow *win);
 wxString wrapString(wxWindow *win, wxString in, int length);
 wxString urlEncode(wxString& str);
+wxString passwordEncode(wxString& str);
 int utf8_to_ucs2(const char *in, char *out, size_t buflen);
 int getPasswordFromUser(wxString& result, const wxString& message, const wxString& caption, const wxString& defaultValue, wxWindow *parent);
 wxString getLocalizedErrorString(void);

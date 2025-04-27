@@ -9,8 +9,7 @@
  ***************************************************************************/
 
 
-#define TQSLLIB_DEF
-
+#include "cabrillo.h"
 #include <ctype.h>
 #include <errno.h>
 #include <stdlib.h>
@@ -18,7 +17,6 @@
 #include <cstring>
 #include <map>
 #include <string>
-#include "tqsllib.h"
 #include "tqslerrno.h"
 
 #include "winstrdefs.h"
@@ -126,6 +124,10 @@ struct TQSL_CABRILLO {
 };
 
 #define CAST_TQSL_CABRILLO(p) ((struct TQSL_CABRILLO *)p)
+
+#ifdef _WIN32
+#define strtok_r strtok_s
+#endif
 
 static TQSL_CABRILLO *
 check_cabrillo(tQSL_Cabrillo cabp) {
@@ -409,8 +411,9 @@ mode_xlat(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp) {
 						break;
 					}
 				}
-				char *mode = strtok(modebuf, ",");
-				char *map = strtok(NULL, ",");
+				char *state = NULL;
+				char *mode = strtok_r(modebuf, ",", &state);
+				char *map = strtok_r(NULL, ",", &state);
 				if (mode && map)
 					modes[tqsl_strtoupper(mode)] = tqsl_strtoupper(map);
 			}
@@ -434,8 +437,9 @@ mode_xlat(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp) {
 						break;
 					}
 				}
-				char *mode = strtok(modebuf, ",");
-				char *map = strtok(NULL, ",");
+				char *state = NULL;
+				char *mode = strtok_r(modebuf, ",", &state);
+				char *map = strtok_r(NULL, ",", &state);
 				if (mode && map)
 					modes[tqsl_strtoupper(mode)] = tqsl_strtoupper(map);
 			}
@@ -552,9 +556,10 @@ tqsl_beginCabrillo(tQSL_Cabrillo *cabp, const char *filename) {
 		while ((cp = fgets_cab(cab->rec, sizeof cab->rec, cab->fp)) != 0) {
 			cab->line_no++;
 			char *vp;
+			char *state = NULL;
 			if ((vp = tqsl_parse_cabrillo_record(cab->rec)) != 0
 				&& !strcmp(cab->rec, "CONTEST")
-				&& strtok(vp, " \t\r\n") != 0) {
+				&& strtok_r(vp, " \t\r\n", &state) != 0) {
 				terrno = TQSL_CABRILLO_UNKNOWN_CONTEST;
 				int callfield, contest_type;
 				if (tqsl_getCabrilloMapEntry(vp, &callfield, &contest_type)) {
@@ -669,11 +674,12 @@ tqsl_getCabrilloField(tQSL_Cabrillo cabp, tqsl_cabrilloField *field, TQSL_CABRIL
 			if (cab->datap != 0) {
 				if (!strcasecmp(cab->rec, "QSO")) {
 					cab->field_idx = 0;
-					char *fieldp = strtok(cab->datap, " \t\r\n");
+					char *state = NULL;
+					char *fieldp = strtok_r(cab->datap, " \t\r\n", &state);
 					memset(cab->fields, 0, sizeof cab->fields);
 					for (int i = 0; fieldp && i < static_cast<int>(sizeof cab->fields / sizeof cab->fields[0]); i++) {
 						cab->fields[i] = fieldp;
-						fieldp = strtok(0, " \t\r\n");
+						fieldp = strtok_r(0, " \t\r\n", &state);
 					}
 					break;
 				} else if (!strcasecmp(cab->rec, "END-OF-LOG")) {

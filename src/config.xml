@@ -1,4 +1,4 @@
-<tqslconfig majorversion="11" minorversion="29">
+<tqslconfig majorversion="11" minorversion="31">
      <adifmap>
        <adifmode adif-mode="AM" mode="AM">AM</adifmode>
        <adifmode adif-mode="ARDOP" mode="ARDOP">ARDOP</adifmode>
@@ -7701,6 +7701,7 @@
        <satellite name="AISAT1" startDate="2019-04-07">AISAT-1 AMSAT India APRS Digipeater</satellite>
        <satellite name="AO-10" startDate="1983-06-16">AMSAT-OSCAR 10</satellite>
        <satellite name="AO-109" startDate="2021-07-20">AMSAT-OSCAR 109</satellite>
+       <satellite name="AO-123" startDate="2024-11-04">ASRTU-OSCAR 123</satellite>
        <satellite endDate="1996-12-07" name="AO-13" startDate="1988-06-15">AMSAT-OSCAR 13</satellite>
        <satellite name="AO-16" startDate="1990-01-22">AMSAT-OSCAR 16</satellite>
        <satellite endDate="1994-09-16" name="AO-21" startDate="1991-01-29">OSCAR 21/RS-14</satellite>
@@ -7773,6 +7774,7 @@
        <satellite endDate="1985-12-16" name="RS-8" startDate="1981-12-17">Radio Sputnik 8</satellite>
        <satellite endDate="1999-07-28" name="SAREX" startDate="1990-12-02">Shuttle Amateur Radio Experiment (SAREX) Digipeater</satellite>
        <satellite name="SO-121" startDate="2023-11-11">Hades-D</satellite>
+       <satellite name="SO-124" startDate="2025-01-14">Hades-R</satellite>
        <satellite endDate="2001-06-10" name="SO-35" startDate="1999-02-23">Sunsat-OSCAR 35</satellite>
        <satellite name="SO-41" startDate="2000-09-26">Saudi-OSCAR 41</satellite>
        <satellite name="SO-50" startDate="2002-12-20">Saudi-OSCAR 50</satellite>

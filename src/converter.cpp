@@ -12,13 +12,15 @@
 #include "sysconfig.h"
 #endif
 
-#include <iostream>
-#include <fstream>
-#include <cstdlib>
 #include <unistd.h>
 #ifdef HAVE_GETOPT_H
 	#include <getopt.h>
 #endif
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+#include <string>
+#include <cstdio>
 #include "tqsllib.h"
 #include "tqslerrno.h"
 #include "tqslconvert.h"

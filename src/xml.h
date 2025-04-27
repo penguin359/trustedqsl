@@ -11,11 +11,11 @@
 #ifndef __xml_h
 #define __xml_h
 
+#include <expat.h>
 #include <string>
 #include <map>
 #include <vector>
 #include <utility>
-#include <expat.h>
 
 using std::pair;
 using std::string;
@@ -183,6 +183,6 @@ XMLElement::getNextAttribute(string& key, string& attr) {
 
 ostream& operator<< (ostream& stream, XMLElement& el);
 
-}	// namespace tqsllib
+}  // namespace tqsllib
 
-#endif // __xml_h
+#endif  // __xml_h

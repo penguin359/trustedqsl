@@ -15,17 +15,16 @@
 #ifndef QSODATADIALOG_H
 #define QSODATADIALOG_H
 
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
 	#pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-	#include "wx/wx.h"
+	#include <wx/wx.h>
 #endif
 
-#include "tqsllib.h"
 #include <wx/bmpbuttn.h>
 #include <wx/textctrl.h>
 #include <wx/wxhtml.h>
@@ -33,6 +32,8 @@
 #include <vector>
 #include <map>
 #include <string>
+
+#include "tqsllib.h"
 
 using std::vector;
 using std::map;

@@ -28,6 +28,8 @@
 	#include <limits.h>
 #endif
 
+#include <cstdio>
+
 #include "adif.h"
 #include "cabrillo.h"
 
@@ -78,6 +80,8 @@
 #define TQSL_CERT_CB_LOADED          0x400	///< Cert loaded callback
 #define TQSL_CERT_CB_SERIAL          0x800	///< User cert serial callback
 #define TQSL_CERT_CB_RESULT_TYPE(x)  ((x) & 0x0f00) ///< Result type mask
+
+#define TQSL_MSG_FLAGGED             0x1000	///< Alt message handling flag
 
 typedef void * tQSL_Cert;		///< Opaque certificate type
 typedef void * tQSL_Location;		///< Opaque location type
@@ -1228,8 +1232,8 @@ DLLEXPORT int CALLCONVENTION tqsl_saveCallsignLocationInfo(const char *callsign,
 /** Retrieve the json results for a given callsign location Detail. */
 DLLEXPORT int CALLCONVENTION tqsl_getCallsignLocationInfo(const char *callsign, char **buf);
 
-#define TQSL_VALID_VUCC_ENT 1			///< Grid is valid for DXCC Entity
-#define TQSL_VALID_VUCC_PAS 2			///< Grid is valid for Primary Administrative Subdivision (State, etc.)
+#define TQSL_VALID_VUCC_ENT 0x2000		///< Grid is valid for DXCC Entity
+#define TQSL_VALID_VUCC_PAS 0x4000		///< Grid is valid for Primary Administrative Subdivision (State, etc.)
 
 /** Validate that a given four-character gridsquare is acceptable for entity and primary administrative subdivision */
 DLLEXPORT int CALLCONVENTION tqsl_validateVUCCGrid(int entity, const char *pas, const char *grid, int *result);
@@ -1423,6 +1427,19 @@ DLLEXPORT const char* CALLCONVENTION tqsl_getGABBItCONTACT(tQSL_Cert cert, tQSL_
   */
 DLLEXPORT const char* CALLCONVENTION tqsl_getGABBItCONTACTData(tQSL_Cert cert, tQSL_Location loc, TQSL_QSO_RECORD *qso,
 	int stationuid, char *signdata, int sdlen);
+
+#define GRID_ERROR_INVALID_FIELD 2		///< Field - first two chars - is invalid
+#define GRID_ERROR_INVALID_SQUARE 3		///< Square - second two chars - is invalid
+#define GRID_ERROR_INVALID_SUBSQUARE 4		///< Subsquare - third pair - is invalid
+#define GRID_ERROR_INVALID_SUBSUBSQUARE 5	///< Sub-subsquare - fourth pair etc. - is invalid
+#define GRID_ERROR_INVALID_FORMAT 6		///< Format error
+
+/** Check and normalize a Maidenhead Gridsquare
+  * \li \c grid is the input string
+  * \li \c twelve is true if 12 character grids are allowed
+  * \li \c newGrid gets the resulting edited grid
+ */
+DLLEXPORT int CALLCONVENTION tqsl_verifyGridFormat(const char *grid, int twelve, char* newGrid, int newlen);
 
 /** @} */
 

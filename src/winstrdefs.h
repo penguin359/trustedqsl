@@ -1,3 +1,4 @@
+/* Copyright (C) 2025 The TrustedQSL Developers */
 #ifndef WINSTRDEFS_H
 #define WINSTRDEFS_H
 

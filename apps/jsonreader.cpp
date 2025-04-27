@@ -22,7 +22,7 @@
 #include <wx/debug.h>
 #include <wx/log.h>
 
-
+#include <cstdio>
 
 /*! \class wxJSONReader
  \brief The JSON parser
