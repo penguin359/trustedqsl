@@ -1,7 +1,8 @@
 Source: trustedqsl
 Maintainer: Debian Hamradio Maintainers <debian-hams@lists.debian.org>
 Uploaders: Christoph Berg <myon@debian.org>,
-           tony mancill <tmancill@debian.org>
+           tony mancill <tmancill@debian.org>,
+           Loren M. Lang <lorenl@north-winds.org>
 Section: hamradio
 Priority: optional
 Build-Depends: cmake,
