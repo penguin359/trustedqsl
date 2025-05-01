@@ -11,23 +11,30 @@
 #ifndef __tqslwiz_h
 #define __tqslwiz_h
 
+#include <cstdio>
+#include <string>
+
 #ifdef HAVE_CONFIG_H
 #include "sysconfig.h"
 #endif
 
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
 	#pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-	#include "wx/wx.h"
+	#include <wx/wx.h>
 #endif
 
+#include <wx/radiobox.h>
+#include <wx/odcombo.h>
+
+#include <vector>
+#include <map>
+
 #include "extwizard.h"
-#include "wx/radiobox.h"
-#include "wx/odcombo.h"
 
 #include "certtree.h"
 
@@ -35,9 +42,6 @@
 	#define ADIF_BOOLEAN // Hack!
 #endif
 #include "tqsllib.h"
-
-#include <vector>
-#include <map>
 
 using std::map;
 using std::vector;

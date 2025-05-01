@@ -19,9 +19,9 @@
 #include <wx/filename.h>
 #include <wx/treectrl.h>
 #include <wx/textctrl.h>
+#include <vector>
 #include "tqsllib.h"
 #include "tqslerrno.h"
-#include <vector>
 
 #if wxMAJOR_VERSION == 3 && wxMINOR_VERSION > 0
 #define WX31		// wxWidgets isn't done until stuff doesn't run
@@ -87,6 +87,44 @@ urlEncode(wxString& str) {
 	str.Replace(wxT("<"), wxT("&lt;"), true);
 	str.Replace(wxT(">"), wxT("&gt;"), true);
 	return str;
+}
+
+// Encode password for url
+wxString
+passwordEncode(wxString& pw) {
+	pw.Replace(wxT(" "), wxT("%20"), true);
+	pw.Replace(wxT("!"), wxT("%21"), true);
+	pw.Replace(wxT("\""), wxT("%22"), true);
+	pw.Replace(wxT("#"), wxT("%23"), true);
+	pw.Replace(wxT("$"), wxT("%24"), true);
+	pw.Replace(wxT("%"), wxT("%25"), true);
+	pw.Replace(wxT("&"), wxT("%26"), true);
+	pw.Replace(wxT("'"), wxT("%27"), true);
+	pw.Replace(wxT("("), wxT("%28"), true);
+	pw.Replace(wxT(")"), wxT("%2A"), true);
+	pw.Replace(wxT("+"), wxT("%2B"), true);
+	pw.Replace(wxT(","), wxT("%2C"), true);
+	pw.Replace(wxT("-"), wxT("%2D"), true);
+	pw.Replace(wxT("."), wxT("%2E"), true);
+	pw.Replace(wxT("/"), wxT("%2F"), true);
+	pw.Replace(wxT(":"), wxT("%3A"), true);
+	pw.Replace(wxT(";"), wxT("%3B"), true);
+	pw.Replace(wxT("<"), wxT("%3C"), true);
+	pw.Replace(wxT("="), wxT("%3D"), true);
+	pw.Replace(wxT(">"), wxT("%3E"), true);
+	pw.Replace(wxT("?"), wxT("%3F"), true);
+	pw.Replace(wxT("@"), wxT("%40"), true);
+	pw.Replace(wxT("["), wxT("%5B"), true);
+	pw.Replace(wxT("\\"), wxT("%5C"), true);
+	pw.Replace(wxT("]"), wxT("%5D"), true);
+	pw.Replace(wxT("^"), wxT("%5E"), true);
+	pw.Replace(wxT("_"), wxT("%5F"), true);
+	pw.Replace(wxT("."), wxT("%60"), true);
+	pw.Replace(wxT("{"), wxT("%7B"), true);
+	pw.Replace(wxT("|"), wxT("%7C"), true);
+	pw.Replace(wxT("}"), wxT("%7D"), true);
+	pw.Replace(wxT("~"), wxT("%7E"), true);
+	return pw;
 }
 
 // Convert UTF-8 string to UCS-2 (MS Unicode default)
@@ -157,7 +195,7 @@ static const char *error_strings[] = {
 	__("PKCS#12 file not TQSL compatible"),			/* TQSL_PKCS12_ERROR */
 	__("Callsign Certificate not TQSL compatible"),		/* TQSL_CERT_TYPE_ERROR */
 	__("Date out of range"),				/* TQSL_DATE_OUT_OF_RANGE */
-	__("Already Uploaded QSO detected"),			/* TQSL_DUPLICATE_QSO */
+	__("Previously Signed QSO detected"),			/* TQSL_DUPLICATE_QSO */
 	__("Database error"),					/* TQSL_DB_ERROR */
 	__("The selected station location could not be found"),	/* TQSL_LOCATION_NOT_FOUND */
 	__("The selected callsign could not be found"),		/* TQSL_CALL_NOT_FOUND */
@@ -167,9 +205,16 @@ static const char *error_strings[] = {
 	__("Callsign certificate could not be installed"),	/* TQSL_CERT_ERROR */
 	__("Callsign Certificate does not match QSO details"),	/* TQSL_CERT_MISMATCH */
 	__("Station Location does not match QSO details"),	/* TQSL_LOCATION_MISMATCH */
+	__("New DB"),						/* TQSL_NEW_UPLOAD_DB */
+	__("Gridsquare is inconsistent with Station Location"),	/* TQSL_INCONSISTENT_GRID */
+	__("ADIF field has invalid contents"),			/* TQSL_INVALID_ADIF */
 	__("This Callsign Certificate cannot be installed as the first date where it is valid is in the future. Check if your computer is set to the proper date.\n\n"),
-        __("This Callsign Certificate cannot be installed as it has expired. Check if your computer is set to the proper date and that this is the latest Callsign Certificate.\n\n"),
+        __("This Callsign Certificate cannot be installed as it has expired. Check if your computer is set to the proper date and that this is the latest Callsign Certificate.\n\n")
 };
+
+#ifdef _WIN32
+#define strtok_r strtok_s
+#endif
 
 static wxString
 getLocalizedErrorString_v(int err) {
@@ -258,12 +303,12 @@ getLocalizedErrorString_v(int err) {
 		static_cast<int>(sizeof error_strings / sizeof error_strings[0])) {
 		return wxString::Format(_("Invalid error code: %d"), err);
 	}
-
 	if (err == TQSL_CERT_MISMATCH || err == TQSL_LOCATION_MISMATCH) {
 		const char *fld, *cert, *qso;
-		fld = strtok(tQSL_CustomError, "|");
-		cert = strtok(NULL, "|");
-		qso = strtok(NULL, "|");
+		char *state = NULL;
+		fld = strtok_r(tQSL_CustomError, "|", &state);
+		cert = strtok_r(NULL, "|", &state);
+		qso = strtok_r(NULL, "|", &state);
 		if (qso == NULL) {		// Nothing in the cert
 			qso = cert;
 			cert = "none";
@@ -276,21 +321,31 @@ getLocalizedErrorString_v(int err) {
 		composed = composed + wxT("\n") + wxString::Format(_("The %s '%hs' has value '%hs' while QSO has '%hs'"), tp.c_str(), fld, cert, qso);
 		return composed;
 	}
-	if (err == (TQSL_LOCATION_MISMATCH | 0x1000)) {
+	if (err == (TQSL_LOCATION_MISMATCH | TQSL_MSG_FLAGGED)) {
 		const char *fld, *val;
-		fld = strtok(tQSL_CustomError, "|");
-		val = strtok(NULL, "|");
+		char *state = NULL;
+		fld = strtok_r(tQSL_CustomError, "|", &state);
+		val = strtok_r(NULL, "|", &state);
 	 	wxString composed(_("This log has invalid QSO information"));
 		// TRANSLATORS: This message is for QSO details. For example, 'The log being signed has 'US County' set to Foobar which is not valid'
 		composed = composed + wxT("\n") + wxString::Format(_("The log being signed has '%hs' set to value '%hs' which is not valid"), fld, val);
 		return composed;
 	}
-	if (err == (TQSL_CERT_NOT_FOUND | 0x1000)) {
+	if (err == (TQSL_CERT_NOT_FOUND | TQSL_MSG_FLAGGED)) {
 		err = TQSL_CERT_NOT_FOUND;
 		const char *call, *ent;
-		call = strtok(tQSL_CustomError, "|");
-		ent = strtok(NULL, "|");
+		char *state = NULL;
+		call = strtok_r(tQSL_CustomError, "|", &state);
+		ent = strtok_r(NULL, "|", &state);
 		wxString composed = wxString::Format(_("There is no valid callsign certificate for %hs in entity %hs available. This QSO cannot be signed"), call, ent);
+		return composed;
+	}
+	if (err == TQSL_INVALID_ADIF) {
+		const char *fname, *contents;
+		char *state = NULL;
+		fname = strtok_r(tQSL_CustomError, "|", &state);
+		contents = strtok_r(NULL, "|", &state);
+		wxString composed = wxString::Format(_("ADIF content is not valid. '%hs' is not valid for %hs"), contents, fname);
 		return composed;
 	}
 	return wxGetTranslation(wxString::FromUTF8(error_strings[adjusted_err]));
@@ -505,7 +560,7 @@ wxAccStatus TreeCtrlAx::GetDefaultAction(int WXUNUSED(childId), wxString* action
 // Returns the description for this object or a child.
 wxAccStatus TreeCtrlAx::GetDescription(int childId, wxString *description) {
 	if (childId == wxACC_SELF) {
-		*description = _("Tree Ctrl - use control/option/arrow keys to navigate");
+		*description = wxT("Tree Ctrl - use control/option/arrow keys to navigate");
 	} else {
 		description->Clear();
 	}
@@ -722,7 +777,7 @@ wxAccStatus ComboBoxAx::GetDescription(int childId, wxString *description) {
 		return wxACC_FAIL;
 
 	if (childId == wxACC_SELF) {
-		*description = _("ComboBox - Use the arrow keys to navigate the list. Typing the first letter of an entry will navigate to that entry");
+		*description = wxT("ComboBox - Use the arrow keys to navigate the list. Typing the first letter of an entry will navigate to that entry");
 	} else {
 		*description = ctrl->GetValue();
 	}

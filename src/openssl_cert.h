@@ -47,6 +47,8 @@ unsigned char *ASN1_seq_pack(void *safes, i2d_of_void *i2d,
 #endif /* buggy openssl header */
 #include <openssl/x509.h>
 
+#include <cstdio>
+
 #undef CLIENT_STATIC
 #ifndef LOTW_SERVER
 #define CLIENT_STATIC static

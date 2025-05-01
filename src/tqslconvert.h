@@ -121,6 +121,14 @@ DLLEXPORT int CALLCONVENTION tqsl_setConverterIgnoreCallsigns(tQSL_Converter con
   */
 DLLEXPORT int CALLCONVENTION tqsl_setConverterAppName(tQSL_Converter convp, const char *app);
 
+/** Configure the converter to just write duplicate database records
+  * No signing, etc.
+  *
+  * \c dupesOnly defaults to 0.
+  */
+
+DLLEXPORT int CALLCONVENTION tqsl_setConverterDupesOnly(tQSL_Converter convp, int dupesOnly);
+
 /** Roll back insertions into the duplicates database.
   *
   * This is called when cancelling creating a log, and causes any records

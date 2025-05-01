@@ -15,22 +15,24 @@
 #include "sysconfig.h"
 #endif
 
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
 	#pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-	#include "wx/wx.h"
+	#include <wx/wx.h>
 #endif
 
+#include <wx/radiobox.h>
+
+#include <wx/wxhtml.h>
+#include <wx/combobox.h>
+
+#include <vector>
+
 #include "extwizard.h"
-#include "wx/radiobox.h"
-
-#include "wx/wxhtml.h"
-#include "wx/combobox.h"
-
 #include "certtree.h"
 
 #ifndef ADIF_BOOLEAN
@@ -38,12 +40,22 @@
 #endif
 #include "tqsllib.h"
 
-#include <vector>
-
 using std::vector;
 
 class CRQ_Page;
 class CRQ_NamePage;
+
+enum {
+	CRQ_NOT_SIGNED = 0,		// Not signing at all
+	CRQ_SIGN_MAYBE = 1,		// Not forcing signature
+	CRQ_SIGN_PORTABLE = 2,		// Portable call, must sign
+	CRQ_SIGN_REPLACEMENT = 3,	// Replacement or former call
+	CRQ_SIGN_QSL_MGR = 4,		// QSL manager, Club, DXpedition
+	CRQ_SIGN_1X1 = 5,		// US 1x1
+	CRQ_SIGN_SPC_EVENT = 6,		// Special event
+	CRQ_SIGN_NONE = 7,		// Entity NONE
+	CRQ_SIGN_RENEWAL = 8		// Renewing
+};
 
 class CRQWiz : public ExtWizard {
  public:
@@ -58,12 +70,13 @@ class CRQWiz : public ExtWizard {
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
+	bool ShouldBeSigned(void);	// Should this be signed?
+	bool MustBeSigned(void);	// Should this be signed?
 	bool validcerts;	// True if there are valid certificates
 	int nprov;		// Number of providers
-	bool signIt;		// Should this be signed?
+	int signIt;		// Should this be signed? Why?
 	bool CertPwd;		// Should we prompt for a password?
 	wxCoord maxWidth;	// Width of longest string
-	wxString signPrompt;
 	tQSL_Cert _cert;
 	bool renewal;		// True if this is a renewal
 	// ProviderPage data
@@ -72,6 +85,8 @@ class CRQWiz : public ExtWizard {
 	// CallsignPage data
 	CRQ_Page *callsignPage;
 	wxString callsign;
+	wxString home_call;
+	wxString modifier;
 	tQSL_Date qsonotbefore, qsonotafter;
 	bool usa;		// Set true when a US entity
 	bool validusa;		// Set true when currently valid
@@ -86,13 +101,19 @@ class CRQWiz : public ExtWizard {
 	// PasswordPage data
 	CRQ_Page *pwPage;
 	wxString password;
+	// TypePage data
+	CRQ_Page *typePage;
+	int certType;
 	// SignPage data
 	CRQ_Page *signPage;
 	tQSL_Cert cert;
 	TQSL_CERT_REQ *_crq;
-	bool forceSigning;	// Portable call, non-US. Require signing
+	bool portable;		// Portable call
+	int forceSigning;	// Whether or not to force signing
+	bool replacementCall;	// Replacement for existing callsign. Require signing
 	bool networkError;	// Got a network error - timeout, etc.
 	bool goodULSData;	// Got ULS info and it's complete
+	bool expired;		// Set true if the request has an end-date in the past
 
  private:
 	CRQ_Page *_first;
@@ -126,14 +147,16 @@ class CRQ_CallsignPage : public CRQ_Page {
 	virtual const char *validate();
 	virtual CRQ_Page *GetPrev() const;
 	virtual CRQ_Page *GetNext() const;
-
+        void OnShowHide(wxCommandEvent&) { ShowHide(); }
+        void ShowHide();
+	wxCheckBox *tc_showall;
+	bool showAll;			// Set true to show all
  private:
 	wxTextCtrl *tc_call;
 	tqslComboBox *tc_qsobeginy, *tc_qsobeginm, *tc_qsobegind, *tc_dxcc;;
 	tqslComboBox *tc_qsoendy, *tc_qsoendm, *tc_qsoendd;
-	wxStaticText *tc_status;
+	wxStaticText *tc_cs_status;
 	bool initialized;		// Set true when validating makes sense
-	int em_w;
 	CRQWiz *_parent;
 	DECLARE_EVENT_TABLE()
 };
@@ -156,7 +179,7 @@ class CRQ_NamePage : public CRQ_Page {
  private:
 	wxTextCtrl *tc_name, *tc_addr1, *tc_addr2, *tc_city, *tc_state,
 		*tc_zip, *tc_country;
-	wxStaticText *tc_status;
+	wxStaticText *tc_addr_status;
 	bool initialized;
 	CRQWiz *_parent;
 
@@ -173,7 +196,7 @@ class CRQ_EmailPage : public CRQ_Page {
  private:
 	CRQWiz *_parent;
 	wxTextCtrl *tc_email;
-	wxStaticText *tc_status;
+	wxStaticText *tc_em_status;
 	bool initialized;
 
 	DECLARE_EVENT_TABLE()
@@ -188,12 +211,27 @@ class CRQ_PasswordPage : public CRQ_Page {
 	virtual CRQ_Page *GetNext() const;
  private:
 	wxTextCtrl *tc_pw1, *tc_pw2;
-	wxStaticText *tc_status;
+	wxStaticText *tc_pwd_status;
 	bool initialized;
 	CRQWiz *_parent;
 	wxStaticText *fwdPrompt;
 	int em_w;
 	int em_h;
+
+	DECLARE_EVENT_TABLE()
+};
+
+class CRQ_TypePage : public CRQ_Page {
+ public:
+	explicit CRQ_TypePage(CRQWiz *parent);
+	virtual bool TransferDataFromWindow();
+	virtual CRQ_Page *GetPrev() const;
+	virtual CRQ_Page *GetNext() const;
+        // TypePage data
+ private:
+	bool initialized;
+	wxRadioBox *certType;
+	CRQWiz *_parent;
 
 	DECLARE_EVENT_TABLE()
 };
@@ -208,12 +246,12 @@ class CRQ_SignPage : public CRQ_Page {
 	virtual CRQ_Page *GetPrev() const;
  private:
 	CertTree *cert_tree;
-	wxStaticText *tc_status;
+	wxStaticText *tc_sign_status;
 	bool initialized;
 	int em_w;
+	int em_h;
         void OnPageChanging(wxWizardEvent &);
 	CRQWiz *_parent;
-	wxRadioBox *choice;
 	wxStaticText* introText;
 	wxString introContent;
 	DECLARE_EVENT_TABLE()
@@ -223,5 +261,10 @@ inline bool
 CRQWiz::RunWizard() {
 	return wxWizard::RunWizard(_first);
 }
+
+struct prefixlist {
+	int entity;
+	const char *regex;
+};
 
 #endif // __crqwiz_h

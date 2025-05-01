@@ -31,11 +31,11 @@ OpenSSL (http://www.openssl.org/) - OpenSSL 1.1.1g was used for TQSL 2.5.5.
 expat 1.x XML parser library (http://expat.sourceforge.net/) - expat 2.2.9
 zlib (http://zlib.net/) zlib 1.2.11
 SQLite3 (https://sqlite.org)
-wxWidgets (http://wxwidgets.org/downloads) - wxWidgets 2.8.12 or wxWidgets 3.1.2
+wxWidgets (http://wxwidgets.org/downloads) - wxWidgets 2.8.12 or 3.1.2
 curl - (http://curl.haxx.se/download.html) - curl 7.70.0
 
-You will need the "developer" versions of these. The version numbers above aren't mandatory, they're just
-what was recenty used.
+You will need the "developer" versions of these. The version numbers above
+aren't mandatory, they're just what was recenty used.
 
 Most Unix and unix-like workstations will have these available. For
 those systems that do not, the packages are easily built. Instructions
@@ -97,16 +97,20 @@ If you choose to build with a different target directory (cmake with a
 pointer to the source), ensure that your build target/current directory is
 empty prior to invoking cmake. Vestiges of older builds can cause issues.
 
+If tqsl reports that it cannot open "libtqsllib.so" then you need to
+include "-DTQSL_RPATH" in the cmake command line. i.e.
+    cmake -DTQSL_RPATH .
+
 ===================================================================
 
 3) Building under Mac OS X
 
-You'll need to have the Mac developer's tools, Xcode 1.5, installed.
+You'll need to have the Mac developer's tools, Xcode, installed.
 
 This is done in much the same manner as building under Linux/Unix, above.
 
-To build a universal binary with compatibility from MacOS 10.4 upwards through
-Mojave, use the following shell script:
+To build a universal binary with compatibility from MacOS 10.10 upwards use
+the following shell script:
 
 #!/bin/sh
 # 
@@ -114,37 +118,39 @@ Mojave, use the following shell script:
 #
 PATH=$HOME/wx3/bin:$PATH
 #
-# Adjust this to where you've installed Berkeley DB 5.x
 #
-bdb=$HOME/bdb
-arch_flags="-arch ppc -arch i386"
+arch_flags="-arch x86_64 -arch arm64"
 #
 # You need to download and install the OSX 10.4 universal SDK
 # to build a universal binary. gcc 4.0 is also needed.
 #
-sdk="/Developer/SDKs/MacOSX10.4u.sdk"
-ver_min="10.4"
+sdk="/Library/Developer/CommandLineTools/SDKs/MacOSX10.12.sdk"
+ver_min="10.10"
 CMAKE_PREFIX_PATH="~/bdb/ ~/wx3/ ~/expat"
 
 cmake  \
-    -DCMAKE_BUILD_TYPE=Debug \
-    -DCMAKE_OSX_ARCHITECTURES="ppc;i386" \
-    -DCMAKE_LINKER=/usr/bin/gcc-4.0 \
-    -DCMAKE_CXX_COMPILER=/usr/bin/c++-4.0 \
-    -DCMAKE_C_COMPILER=/usr/bin/gcc-4.0 \
-    -DCMAKE_OSX_SYSROOT=$sdk \
-    -DCMAKE_CXX_FLAGS=" -I $HOME/bdb/include  -I /usr/include/c++/4.0.0 \
-        -I $sdk/System/Library/Frameworks/Carbon.framework/Headers \
-	-isysroot $sdk  -mmacosx-version-min=$ver_min \
-	-fno-stack-protector $arch_flags"  \
-    -DCMAKE_C_FLAGS=" -I $HOME/bdb/include  -I /usr/include/c++/4.0.0 \
-        -I $sdk/System/Library/Frameworks/Carbon.framework/Headers \
-	-isysroot $sdk  -mmacosx-version-min=$ver_min \
-	-fno-stack-protector $arch_flags"  \
-    -DCMAKE_EXE_LINKER_FLAGS=" -Wl,-syslibroot,$sdk \
-	-mmacosx-version-min=$ver_min  $arch_flags " \
-    -DCMAKE_SHARED_LINKER_FLAGS=" -Wl,-syslibroot,$sdk \
-	-mmacosx-version-min=$ver_min $arch_flags " \
+    -DSQLite3_INCLUDE_DIR=$HOME/sqlite3 \
+    -DSQLite3_LIBRARY=$HOME/sqlite3/sqlite3.a \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DZLIB_INCLUDE_DIR=$HOME/zlib/include \
+    -DZLIB_LIBRARIES=$HOME/zlib/lib/libz.a \
+    -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" \
+    -DCMAKE_OSX_DEPLOYMENT_TARGET=$ver_min \
+    -DOSX_PLATFORM="x86_64/arm64" \
+    -DEXPAT_INCLUDE_DIR=$HOME/expat/include/ \
+    -DEXPAT_LIBRARY=$HOME/expat/lib/libexpat.a \
+    -DOPENSSL_INCLUDE_DIR=$HOME/openssl/include/ \
+    -DOPENSSL_CRYPTO_LIBRARY=$HOME/openssl/lib/libcrypto.a \
+    -DOPENSSL_SSL_LIBRARY=$HOME/openssl/lib/libssl.a \
+    -DCURL_INCLUDE_DIR=$HOME/curl/include/ \
+    -DCURL_LIBRARY=$HOME/curl/lib/libcurl.a \
+    -DCMAKE_CXX_FLAGS="-I $HOME/zlib/include -I $HOME/openssl/include/ \
+         -I $sdk/System/Library/Frameworks/Carbon.framework/Headers \
+         -fno-stack-protector $arch_flags $WARN"  \
+    -DCMAKE_C_FLAGS="-I $sdk/System/Library/Frameworks/Carbon.framework/Headers \
+         -fno-stack-protector $arch_flags $WARN"  \
+    -DCMAKE_EXE_LINKER_FLAGS="$arch_flags -mmacosx-version-min=$ver_min" \
+    -DCMAKE_SHARED_LINKER_FLAGS="$arch_flags -mmacosx-version-min=$ver_min" \
         $* .
 make
 

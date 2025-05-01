@@ -18,8 +18,11 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <zlib.h>
+#ifdef _WIN32
+	#include <fcntl.h>
+#endif
 #ifdef __APPLE__
-#include <CoreFoundation/CFBundle.h>
+	#include <CoreFoundation/CFBundle.h>
 #endif
 #include <cstring>
 #include <fstream>
@@ -31,16 +34,15 @@
 #include <string>
 #include <cctype>
 #include <functional>
+#include <cstdio>
 #include "tqsllib.h"
 #include "tqslerrno.h"
 #include "xml.h"
 #include "openssl_cert.h"
+
 #ifdef _WIN32
 	#include "windows.h"
-	#include <fcntl.h>
 #endif
-
-#include "winstrdefs.h"
 
 using std::string;
 using std::vector;
@@ -53,6 +55,10 @@ using std::endl;
 using std::exception;
 
 static int init_adif_map(void);
+
+#ifdef _WIN32
+#define strtok_r strtok_s
+#endif
 
 namespace tqsllib {
 
@@ -505,10 +511,17 @@ tqsl_load_xml_config() {
 	return 0;
 }
 
-DLLEXPORT int CALLCONVENTION
-tqsl_validateVUCCGrid(int entity, const char *pas, const char *grid, int *result) {
+static VUCCGridList VUCC;
+
+static bool
+initVUCC(void) {
+	static bool failed = false;
+	if (failed)
+		return failed;
+	if (VUCC.size() != 0)
+		return failed;
+
 	FILE *in;
-	*result = 0;
 
 #ifdef _WIN32
 	string path = string(tQSL_RsrcDir) + "\\vuccgrids.dat";
@@ -519,8 +532,9 @@ tqsl_validateVUCCGrid(int entity, const char *pas, const char *grid, int *result
 	string path = string(tQSL_RsrcDir) + "/vuccgrids.dat";
         if ((in = fopen(path.c_str(), "rb")) == NULL) {
 #endif
-		tqslTrace("tqsl_validateVUCCGrid", "Unable to open vuccgrids.dat, %m");
-		return 1;
+		failed = true;
+		tqslTrace("initVUCC", "Unable to open vuccgrids.dat, %m");
+		return failed;
 	}
 	char buf[100];
 	char *cp;
@@ -529,40 +543,64 @@ tqsl_validateVUCCGrid(int entity, const char *pas, const char *grid, int *result
 		for (l--; l > 0 && isspc(buf[l]); l--) {
 			buf[l] = '\0';
 		}
-		char *dxcc = strtok(buf, ",");
+		char *state = NULL;
+		char *dxcc = strtok_r(buf, ",", &state);
 		if (!dxcc) {					// parse error
 			fclose(in);
-			tqslTrace("tqsl_validateVUCCGrid", "invalid input - no tokens");
-			return 1;
+			tqslTrace("initVUCC", "invalid input - no tokens");
+			failed = true;
+			return failed;
 		}
 		int ent = strtol(dxcc, NULL, 10);
 		if (ent == 0 && errno == EINVAL) {		// Bad input
 			fclose(in);
-			tqslTrace("tqsl_validateVUCCGrid", "invalid input - no an identity number %s", dxcc);
-			return 1;
+			tqslTrace("initVUCC", "invalid input - not an entity number %s", dxcc);
+			failed = true;
+			return failed;
 		}
-		if (ent < entity) continue;
-		if (ent > entity) break;
-		char *thispas = strtok(NULL, ",");
+		char *thispas = strtok_r(NULL, ",", &state);
 		if (thispas == NULL) {
-			tqslTrace("tqsl_validateVUCCGrid", "invalid input - no PAS");
+			tqslTrace("initVUCC", "invalid input - no PAS");
+			failed = true;
 			fclose(in);
-			return 1;
+			return failed;
 		}
-		char *thisgrid = strtok(NULL, ",");
-		if (thisgrid == NULL) {
-			tqslTrace("tqsl_validateVUCCGrid", "invalid input - no grid");
-			fclose(in);
-			return 1;
+		char *thisgrid = strtok_r(NULL, ",", &state);
+		if (thisgrid == NULL) {				// No PAS
+			thisgrid = thispas;
+			thispas = NULL;
 		}
-		if (!strcmp(grid, thisgrid)) {			// Valid grid for this entity
+		if (ent != 9999) {	// Header
+			VUCC.push_back(VUCCgrid(ent, thispas, thisgrid));
+		}
+	}
+	fclose(in);
+	return failed;
+}
+
+DLLEXPORT int CALLCONVENTION
+tqsl_validateVUCCGrid(int entity, const char *pas, const char *grid, int *result) {
+	*result = 0;
+
+	if (initVUCC()) {		// fnf or corrupt
+		*result = TQSL_VALID_VUCC_PAS|TQSL_VALID_VUCC_ENT;
+		return 0;
+	}
+	for (size_t i = 0; i < VUCC.size(); i++) {
+		if (VUCC[i].ent() < entity) continue;
+		if (VUCC[i].ent() > entity) break;
+		if (!strcmp(grid, VUCC[i].grid())) {			// Valid grid for this entity
 			tqslTrace("tqsl_validateVUCCGrid", "matches entity");
 			*result |= TQSL_VALID_VUCC_ENT;
-			if (strlen(pas) == 0) {			// and empty PAS
+			if (pas == NULL || strlen(pas) == 0) {			// and empty PAS
 				*result |= TQSL_VALID_VUCC_PAS;
 				break;
 			}
-			if (!strcmp(pas, thispas)) {		// Plus valid grid for this PAS
+			if (VUCC[i].pas() == NULL || strlen(VUCC[i].pas()) == 0) {// No PAS for this grid/ent
+				*result |= TQSL_VALID_VUCC_PAS;
+				break;
+			}
+			if (pas && VUCC[i].pas() && (!strcmp(pas, VUCC[i].pas()))) {		// Plus valid grid for this PAS
 				tqslTrace("tqsl_validateVUCCGrid", "matches PAS and entity");
 				*result |= TQSL_VALID_VUCC_PAS;
 				break;
@@ -572,7 +610,74 @@ tqsl_validateVUCCGrid(int entity, const char *pas, const char *grid, int *result
 	if (*result == 0) {
 		tqslTrace("tqsl_validateVUCCGrid", "Grid not found");
 	}
-	fclose(in);
+	return 0;
+}
+
+DLLEXPORT int CALLCONVENTION
+tqsl_verifyGridFormat(const char *grid, int twelve, char* newGrid, int newlen) {
+	if (grid == NULL) {
+		return 1;
+	}
+	string gtest = string(grid);
+	// Uppercase and remove whitespace
+
+	gtest = string_toupper(gtest);
+	trim(gtest);
+	// Truncate to size limit
+	gtest = gtest.substr(0, twelve?  12 : 6);
+	switch (gtest.size()) {
+		case 4:
+		case 6:
+			break;
+		case 8:
+		case 10:
+		case 12:
+			if (twelve)
+				break;
+		default:
+			// Not long enough yet or too long.
+			return GRID_ERROR_INVALID_FORMAT;
+	}
+
+	// Field - range A-R
+	if (gtest[0] < 'A' || gtest[0] > 'R')
+		return GRID_ERROR_INVALID_FIELD;
+
+	if (gtest[1] < 'A' || gtest[1] > 'R')
+		return GRID_ERROR_INVALID_FIELD;
+
+	if (gtest[2] < '0' || gtest[2] > '9')
+		return GRID_ERROR_INVALID_SQUARE;
+
+	if (gtest[3] < '0' || gtest[3] > '9')
+		return GRID_ERROR_INVALID_SUBSQUARE;
+
+	if (gtest.size() > 4) {
+		if (gtest[4] < 'A' || gtest[4] > 'X')
+			return GRID_ERROR_INVALID_SUBSQUARE;
+		if (gtest[5] < 'A' || gtest[5] > 'X')
+			return GRID_ERROR_INVALID_SUBSQUARE;
+	}
+	if (gtest.size() > 6) {
+		if (gtest[6] < '0' || gtest[6] > '9')
+			return GRID_ERROR_INVALID_SUBSUBSQUARE;
+		if (gtest[7] < '0' || gtest[7] > '9')
+			return GRID_ERROR_INVALID_SUBSUBSQUARE;
+	}
+	if (gtest.size() > 8) {
+		if (gtest[8] < 'A' || gtest[8] > 'X')
+			return GRID_ERROR_INVALID_SUBSUBSQUARE;
+		if (gtest[9] < 'A' || gtest[9] > 'X')
+			return GRID_ERROR_INVALID_SUBSUBSQUARE;
+	}
+	if (gtest.size() > 10) {
+		if (gtest[10] < '0' || gtest[10] > '9')
+			return GRID_ERROR_INVALID_SUBSUBSQUARE;
+		if (gtest[11] < '0' || gtest[11] > '9')
+			return GRID_ERROR_INVALID_SUBSUBSQUARE;
+	}
+	strncpy(newGrid, gtest.c_str(), newlen);
+	newGrid[newlen - 1] = '\0';
 	return 0;
 }
 
@@ -1576,7 +1681,8 @@ static bool inMap(int cqvalue, int ituvalue, bool cqz, bool ituz, const char *ma
 	}
 
 	char *mapcopy = strdup(map);
-	char *mapPart = strtok(mapcopy, ",");
+	char *state = NULL;
+	char *mapPart = strtok_r(mapcopy, ",", &state);
 	while (mapPart) {
 		sscanf(mapPart, "%d:%d", &itu, &cq);
 		if (cqz && ituz) {
@@ -1591,7 +1697,7 @@ static bool inMap(int cqvalue, int ituvalue, bool cqz, bool ituz, const char *ma
 			result = true;
 			break;
 		}
-		mapPart = strtok(NULL, ",");
+		mapPart = strtok_r(NULL, ",", &state);
 	}
 	free(mapcopy);
 	return result;
@@ -1735,11 +1841,12 @@ update_page(int page, TQSL_LOCATION *loc) {
 				if (dxcc_test) {
 					vector<string> &entlist = p.hash[call];
 					char *parse_dxcc = strdup(dxcc_test);
-					char *cp = strtok(parse_dxcc, ",");
+					char *state = NULL;
+					char *cp = strtok_r(parse_dxcc, ",", &state);
 					while (cp) {
 						if (find(entlist.begin(), entlist.end(), string(cp)) == entlist.end())
 							entlist.push_back(cp);
-						cp = strtok(0, ",");
+						cp = strtok_r(0, ",", &state);
 					}
 					free(parse_dxcc);
 				}
@@ -3951,7 +4058,7 @@ tqsl_setLocationField(tQSL_Location locp, const char *field, const char *buf) {
 			if (pf->gabbi_name == field) {
 				bool found = false;
 				bool adifVal = false;
-				pf->cdata = string(buf).substr(0, pf->data_len);
+				pf->cdata = string(buf);
 				if (pf->flags & TQSL_LOCATION_FIELD_UPPER)
 					pf->cdata = string_toupper(pf->cdata);
 
@@ -3990,7 +4097,10 @@ tqsl_setLocationField(tQSL_Location locp, const char *field, const char *buf) {
 //							pf->idata = item.ivalue;
 //						}
 					}
-				} else if (pf->data_type == TQSL_LOCATION_FIELD_INT) {
+				} else {
+					found = true;
+				}
+				if (pf->data_type == TQSL_LOCATION_FIELD_INT) {
 					pf->idata = strtol(buf, NULL, 10);
 				}
 				tqsl_setStationLocationCapturePage(loc, old_page);

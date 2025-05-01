@@ -16,6 +16,7 @@
 
 #include <string>
 using std::string;
+#include <cstdio>
 
 #include "wxutil.h"
 #include "tqsltrace.h"
@@ -267,6 +268,7 @@ TQSLWizLocPage::UpdateFields(int noupdate_field) {
 					tqsl_setLocationFieldCharData(loc, i, s.c_str());
 					 tx->ChangeValue(wxString::FromUTF8(s.c_str()));
 					forced[gabbi_name] = callsign;
+					gridFromDB = true;
 				}
 			}
 			if (strcmp(gabbi_name, "ITUZ") == 0) {
@@ -366,9 +368,6 @@ TQSLWizLocPage::UpdateFields(int noupdate_field) {
 				char buf[256];
 				tqsl_getLocationFieldCharData(loc, i, buf, sizeof buf);
 				tx->ChangeValue(wxString::FromUTF8(buf));
-				if (strcmp(gabbi_name, "GRIDSQUARE") == 0) {
-					gridFromDB = true;
-				}
 			}
 		} else if (in_type == TQSL_LOCATION_FIELD_BADZONE) {
 			int len;
@@ -717,6 +716,7 @@ TQSLWizLocPage::TQSLWizLocPage(TQSLWizard *_parent, tQSL_Location locp)
 	allowBadGrid = false;
 	gridChanged = false;
 	gridFromDB = false;
+
 	tqsl_getStationLocationCapturePage(loc, &loc_page);
 	wxScreenDC sdc;
 	int label_w = 0;
@@ -1033,54 +1033,43 @@ TQSLWizLocPage::validate() {
 			string gridlist;
 			get_address_field(callsign, "grids", gridlist);
 			wxString editedGrids = wxT("");
+			bool oneGrid = false;
 			// Split the user-provided grid list (comma delimited set)
 			wxStringTokenizer grids(gridVal, wxT(","));	// Comma-separated list of squares
+			if (grids.CountTokens() == 1) {			// Not a list
+				oneGrid = true;
+			}
 			while (grids.HasMoreTokens()) {
 				wxString grid = grids.GetNextToken().Trim().Trim(false);
-				// Truncate to six character field
-				grid = grid.Left(6);
-				if (grid[0] <= 'z' && grid[0] >= 'a')
-					grid[0] = grid[0] - 'a' + 'A';	// Upper case first two
-				if (grid.size() > 1 && (grid[1] <= 'z' && grid[1] >= 'a'))
-					grid[1] = grid[1] - 'a' + 'A';
-				if (grid[0] < 'A' || grid[0] > 'R') {
-					if (valMsg.IsEmpty())
-						valMsg = wxString::Format(_("%s: Invalid Grid Square Field"), grid.c_str());
-				}
-				if (grid.size() > 1 && (grid[1] < 'A' || grid[1] > 'R')) {
-					if (valMsg.IsEmpty())
-						valMsg = wxString::Format(_("%s: Invalid Grid Square Field"), grid.c_str());
-				}
-				if (grid.size() > 2 && (grid[2] < '0' || grid[2] > '9')) {
-					if (valMsg.IsEmpty())
-						valMsg = wxString::Format(_("%s: Invalid Grid Square"), grid.c_str());
-				}
-				if (grid.size() < 4) {
-					if (valMsg.IsEmpty())
-						valMsg = wxString::Format(_("%s: Invalid Grid Square"), grid.c_str());
-				}
-				if (grid[3] < '0' || grid[3] > '9') {
-					if (valMsg.IsEmpty())
-						valMsg = wxString::Format(_("%s: Invalid Grid Square"), grid.c_str());
-				}
-
-				if (grid.size() > 4 && (grid[4] <= 'Z' && grid[4] >= 'A'))
-					grid[4] = grid[4] - 'A' + 'a';	// Lower case subsquare
-				if (grid.size() > 5 && (grid[5] <= 'Z' && grid[5] >= 'A'))
-					grid[5] = grid[5] - 'A' + 'a';
-
-				if (grid.size() > 4 && (grid[4] < 'a' || grid[4] > 'x')) {
-					if (valMsg.IsEmpty())
-						valMsg = wxString::Format(_("%s: Invalid Subsquare"), grid.c_str());
-				}
-				if (grid.size() > 5 && (grid[5] < 'a' || grid[5] > 'x')) {
-					if (valMsg.IsEmpty())
-						valMsg = wxString::Format(_("%s: Invalid Subsquare"), grid.c_str());
-				}
-				if (grid.size() != 6 && grid.size() != 4) {
-					// Not long enough yet or too long.
-					if (valMsg.IsEmpty())
-						valMsg = wxString::Format(_("%s: Invalid Grid Square"), grid.c_str());
+				// if only one grid, allow twelve. Else 6 characters
+				char newGrid[TQSL_GRID_MAX + 1];
+				int res = tqsl_verifyGridFormat(grid.ToUTF8(), oneGrid, newGrid, sizeof newGrid);
+				switch (res) {
+					case 0:				// No error
+						grid = wxString::FromUTF8(newGrid);
+						break;
+					case 1:				// API error
+						break;
+					case GRID_ERROR_INVALID_FIELD:
+						if (valMsg.IsEmpty())
+							valMsg = wxString::Format(_("%s: Invalid Grid Field"), grid.c_str());
+						break;
+					case GRID_ERROR_INVALID_SQUARE:
+						if (valMsg.IsEmpty())
+							valMsg = wxString::Format(_("%s: Invalid Grid Square"), grid.c_str());
+						break;
+					case GRID_ERROR_INVALID_SUBSQUARE:
+						if (valMsg.IsEmpty())
+							valMsg = wxString::Format(_("%s: Invalid Grid Subsquare"), grid.c_str());
+						break;
+					case GRID_ERROR_INVALID_SUBSUBSQUARE:
+						if (valMsg.IsEmpty())
+							valMsg = wxString::Format(_("%s: Invalid Grid Sub-subsquare"), grid.c_str());
+						break;
+					case GRID_ERROR_INVALID_FORMAT:
+						if (valMsg.IsEmpty())
+							valMsg = wxString::Format(_("%s: Invalid Gridsquare Format"), grid.c_str());
+						break;
 				}
 #ifdef USE_LOC_FOR_GRID
 				if (valMsg.IsEmpty() && !gridlist.empty() && !gridFromDB) {

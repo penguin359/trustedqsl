@@ -15,11 +15,7 @@
 #ifndef __extwizard_h
 #define __extwizard_h
 
-#ifdef HAVE_CONFIG_H
-#include "sysconfig.h"
-#endif
-
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 #include "wxutil.h"
 
 #ifdef __BORLANDC__
@@ -27,11 +23,11 @@
 #endif
 
 #ifndef WX_PRECOMP
-	#include "wx/wx.h"
+	#include <wx/wx.h>
 #endif
 
-#include "wx/wizard.h"
-#include "wx/wxhtml.h"
+#include <wx/wizard.h>
+#include <wx/wxhtml.h>
 
 class ExtWizard_Page;
 

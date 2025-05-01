@@ -1,68 +1,96 @@
 # TrustedQSL
-# Copyright (C) 2015-2023 The American Radio Relay League
+# Copyright (C) 2015-2025 The American Radio Relay League
 # This file is distributed under the same license as the tqsl package.
 # Rick Murphy/K1MU.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: TQSL V2.7\n"
+"Project-Id-Version: TQSL V2.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-17 09:09-0400\n"
-"PO-Revision-Date: 2022-03-02 09:09+0300\n"
+"POT-Creation-Date: 2025-02-16 18:01-0500\n"
+"PO-Revision-Date: 2025-02-18 12:28+0300\n"
 "Last-Translator: Oguzhan Kayhan\n"
 "Language-Team: \n"
 "Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.5\n"
 
-#: certtree.cpp:104 tqsl.cpp:1513 tqsl.cpp:6818
+#: certtree.cpp:80 certtree.cpp:110 tqsl.cpp:1548 tqsl.cpp:7099
 msgid "Callsign Certificates"
 msgstr "Çağrı Adı Sertifikaları"
 
-#: certtree.cpp:107
+#: certtree.cpp:113
 msgid "Error while accessing certificate store"
 msgstr "Sertifika Deposuna ulaşırken sorun oluştu"
 
-#: certtree.cpp:113
+#: certtree.cpp:119
 msgid "Error parsing certificate for issuer"
 msgstr "Sertifikayı veren için ayrıştırma hatası"
 
-#: certtree.cpp:118
+#: certtree.cpp:124
 msgid "Error parsing certificate for call sign"
 msgstr "Çağrı Adı için sertifika ayrıştırma hatası"
 
-#: certtree.cpp:125
+#: certtree.cpp:131
 msgid "Error parsing certificate for DXCC entity"
 msgstr "DXCC girdisi için sertifika ayrıştırma hatası"
 
-#: certtree.cpp:156 certtree.cpp:199
+#: certtree.cpp:186 certtree.cpp:252
 msgid "Active, usable certificates"
 msgstr "Aktif, kullanılabilir sertifikalar"
 
-#: certtree.cpp:169
-msgid "Invalid, unusable"
-msgstr "Geçersiz, kullanılamaz"
+#: certtree.cpp:202
+msgid "Unusable: Missing Private Key"
+msgstr "Kullanılamaz: Eksik Özel Anahtar"
 
-#: certtree.cpp:175
-msgid "Certificates that are awaiting ARRL approval"
-msgstr "ARRL onayı bekleyen sertifikalar"
+#: certtree.cpp:218
+msgid "Incomplete Certificates - requires a matching TQ6"
+msgstr "Tamamlanmamış Sertifikalar - eşleşen bir TQ6 gerektirir"
 
-#: certtree.cpp:181
+#: certtree.cpp:232
 msgid "Certificates replaced with a newer one"
 msgstr "Yenisi ile değiştirilmiş sertifikalar"
 
-#: certtree.cpp:187
+#: certtree.cpp:240
 msgid "Certificates that have expired"
 msgstr "Süresi dolmuş sertifikalar"
 
-#: crqwiz.cpp:103
+#: crqwiz.cpp:45
+msgid "This callsign replaces my existing callsign"
+msgstr "Bu çağrı işareti mevcut çağrı işaretimin yerini alıyor"
+
+#: crqwiz.cpp:46
+msgid "This is my former callsign"
+msgstr "Bu benim eski çağrı işaretim"
+
+#: crqwiz.cpp:47
+msgid "I am the QSL manager for this callsign"
+msgstr "Bu çağrı işareti için QSL yöneticisiyim"
+
+#: crqwiz.cpp:48
+msgid "This is a club callsign"
+msgstr "Bu bir kulüp çağrı işareti"
+
+#: crqwiz.cpp:49
+msgid "This is a DXpedition callsign"
+msgstr "Bu bir DXpedition çağrı işareti"
+
+#: crqwiz.cpp:50
+msgid "This is a special event callsign"
+msgstr "Bu özel bir etkinlik çağrı işaretidir"
+
+#: crqwiz.cpp:51
+msgid "None of these apply"
+msgstr "Bunların hiçbiri geçerli değil"
+
+#: crqwiz.cpp:263
 msgid "This will create a new Callsign Certificate request file."
 msgstr "Bu menü yeni Çağrı Adı Sertifikası yaratacaktır."
 
-#: crqwiz.cpp:105
+#: crqwiz.cpp:265
 msgid ""
 "Once you supply the requested information and the request file has been "
 "created, you must send the request file to the certificate issuer."
@@ -70,39 +98,39 @@ msgstr ""
 "Gerekli bilgiler doldurulup, istek dosyası yaratıldıktan sonra, istek "
 "dosyasını sertifika sağlayıcıya göndermeniz gerekmektedir."
 
-#: crqwiz.cpp:112
+#: crqwiz.cpp:272
 msgid "Certificate Issuer:"
 msgstr "Sertifika Sağlayıcısı:"
 
-#: crqwiz.cpp:121 crqwiz.cpp:1153 crqwiz.cpp:1268 crqwiz.cpp:1322
-#: crqwiz.cpp:1357 loadcertwiz.cpp:130 loadcertwiz.cpp:296 loadcertwiz.cpp:371
-#: loadcertwiz.cpp:373 tqsl.cpp:2899 tqsl.cpp:3363 tqsl.cpp:3378 tqsl.cpp:3442
-#: tqsl.cpp:3457 tqsl.cpp:5493 tqsl.cpp:7223 tqsl.cpp:7441 tqsl_prefs.cpp:1039
-#: tqsl_prefs.cpp:1046 tqslwiz.cpp:1103 tqslwiz.cpp:1194
+#: crqwiz.cpp:283 crqwiz.cpp:1665 crqwiz.cpp:1787 crqwiz.cpp:1841
+#: crqwiz.cpp:1876 loadcertwiz.cpp:130 loadcertwiz.cpp:305 loadcertwiz.cpp:380
+#: loadcertwiz.cpp:382 tqsl.cpp:3009 tqsl.cpp:3472 tqsl.cpp:3488 tqsl.cpp:3552
+#: tqsl.cpp:3568 tqsl.cpp:5714 tqsl.cpp:7504 tqsl.cpp:7722 tqsl_prefs.cpp:1046
+#: tqsl_prefs.cpp:1053 tqslwiz.cpp:1267 tqslwiz.cpp:1374
 msgid "Error"
 msgstr "Hata"
 
-#: crqwiz.cpp:156
+#: crqwiz.cpp:318
 msgid "Email: "
 msgstr "Email: "
 
-#: crqwiz.cpp:158
+#: crqwiz.cpp:320
 msgid "URL: "
 msgstr "Web Adresi: "
 
-#: crqwiz.cpp:194
+#: crqwiz.cpp:365
 msgid "DXCC entity:"
 msgstr "DXCC Girdisi:"
 
-#: crqwiz.cpp:198
+#: crqwiz.cpp:369
 msgid "Call sign:"
 msgstr "Çağrı Adı:"
 
-#: crqwiz.cpp:256
+#: crqwiz.cpp:448
 msgid "Date of the first QSO you made or will make using this callsign:"
 msgstr "Bu çağrı işareti ile yaptığınız ilk QSO tarihi:"
 
-#: crqwiz.cpp:304
+#: crqwiz.cpp:502
 msgid ""
 "Date of the last QSO you made or will make using this callsign:\n"
 "(Leave this date blank if this is still your valid callsign.)"
@@ -110,39 +138,35 @@ msgstr ""
 "Bu çağrı işareti ile yaptığınız son QSO tarihi \n"
 "(Hala aktif bir çağrı işareti ise boş bırakınız)"
 
-#: crqwiz.cpp:342
-msgid "Please select a Callsign Certificate to validate your request."
-msgstr "İsteğinizi doğrulama amacıyla lütfen Çağrı adı sertifikasını seçiniz."
-
-#: crqwiz.cpp:374
+#: crqwiz.cpp:582
 msgid "Zip/Postal"
 msgstr "Posta Kodu"
 
-#: crqwiz.cpp:379 stationdial.cpp:70
+#: crqwiz.cpp:587 stationdial.cpp:70
 msgid "Name"
 msgstr "İsim"
 
-#: crqwiz.cpp:403
+#: crqwiz.cpp:613
 msgid "Address"
 msgstr "Adres"
 
-#: crqwiz.cpp:429
+#: crqwiz.cpp:643
 msgid "City"
 msgstr "Şehir"
 
-#: crqwiz.cpp:442 stationdial.cpp:362 stationdial.cpp:373
+#: crqwiz.cpp:658 stationdial.cpp:362 stationdial.cpp:373
 msgid "State"
 msgstr "Eyalet"
 
-#: crqwiz.cpp:464 crqwiz.cpp:467
+#: crqwiz.cpp:684 crqwiz.cpp:687
 msgid "Country"
 msgstr "Ülke"
 
-#: crqwiz.cpp:556
+#: crqwiz.cpp:786
 msgid "Your e-mail address"
 msgstr "E-posta adresiniz"
 
-#: crqwiz.cpp:569
+#: crqwiz.cpp:801
 msgid ""
 "Note: The e-mail address you provide here is the address to which the issued "
 "Certificate will be sent. Make sure it's the correct address!"
@@ -150,7 +174,7 @@ msgstr ""
 "Not: Yaratılacak sertifika, verdiğiniz bu e-posta adresine gönderilecektir. "
 "Doğru adres olduğuna emin olunuz!"
 
-#: crqwiz.cpp:612
+#: crqwiz.cpp:847
 msgid ""
 "You may protect this Callsign Certificate using a passphrase. If you are "
 "using a computer system that is shared with others, you should specify a "
@@ -161,22 +185,22 @@ msgstr ""
 "bilgisayarı başkaları ile ortak kullanıyorsanız, parola kullanmanız tavsiye "
 "edilir. Eğer kişisel bilgisayarınız ise, parola kullanmanıza gerek yoktur."
 
-#: crqwiz.cpp:617 crqwiz.cpp:642
+#: crqwiz.cpp:852 crqwiz.cpp:881
 msgid ""
 "Leave the passphrase blank and click 'Next' unless you want to use a "
 "passphrase."
 msgstr ""
 "Eğer parola kullanmak istemiyorsanız, alanı boş bırakıp 'Devam' a basın."
 
-#: crqwiz.cpp:621
+#: crqwiz.cpp:856
 msgid "Passphrase:"
 msgstr "Parola:"
 
-#: crqwiz.cpp:625
+#: crqwiz.cpp:862
 msgid "Enter the passphrase again for verification:"
 msgstr "Doğrulamak için parolayı tekrar giriniz:"
 
-#: crqwiz.cpp:629
+#: crqwiz.cpp:868
 msgid ""
 "DO NOT lose the passphrase you choose! You will be unable to use the "
 "Certificate without this passphrase!"
@@ -184,78 +208,82 @@ msgstr ""
 "Parolanızı unutmayın. Parolayı unutmanız durumunda bu sertifikayı "
 "kullanamazsınız!"
 
-#: crqwiz.cpp:647
+#: crqwiz.cpp:886
 msgid ""
 "Leave the passphrase blank and click 'Finish' unless you want to use a "
 "passphrase."
 msgstr ""
 "Şifre kullanmak istemiyorsanız, şifre kısmını boş bırakıp 'Bitir' e basın."
 
-#: crqwiz.cpp:683
+#: crqwiz.cpp:917
+msgid "What is this Callsign Certificate for?"
+msgstr "Bu Çağrı İşareti Sertifikası ne için?"
+
+#: crqwiz.cpp:1007
+msgid ""
+"Since you have no Callsign Certificates, you must submit an 'Unsigned' "
+"certificate request. This will allow you to create your initial Callsign "
+"Certificate for LoTW use. Click 'Finish' to complete this Callsign "
+"Certificate request."
+msgstr ""
+"Herhangi bir Çağrı İşareti Sertifikasına sahip olmadığınız için, 'İmzasız' "
+"bir sertifika isteği göndermelisiniz. Bu, LoTW kullanımı için ilk Çağrı "
+"İşareti Sertifikanızı oluşturmanıza izin verecektir. Bu Çağrı İşareti "
+"Sertifikası isteğini tamamlamak için 'Bitir' e tıklayın."
+
+#: crqwiz.cpp:1025
+msgid ""
+"This Callsign Certificate request requires approval using an existing "
+"Callsign Certificate."
+msgstr ""
+"Bu Çağrı İşareti Sertifikası isteği, mevcut bir Çağrı İşareti Sertifikası "
+"kullanılarak onay gerektirir."
+
+#: crqwiz.cpp:1028
 msgid ""
 "Is this new certificate for a callsign where you already have a LoTW "
 "account, and you want the QSOs for this call to be added to an existing LoTW "
 "account? "
 msgstr ""
+"Bu yeni sertifika, zaten bir LoTW hesabınız olan bir çağrı işareti için mi "
+"ve bu çağrı işareti için QSO'ların mevcut bir LoTW hesabına eklenmesini mi "
+"istiyorsunuz?"
 
-#: crqwiz.cpp:685
+#: crqwiz.cpp:1030
 msgid ""
-"If so, choose a callsign below for the primary LoTW account. If not, choose "
-"'No', and a new LoTW account will be set up for these QSOs."
+"If so, choose a callsign below for the primary LoTW account. If not, click "
+"'Finish', and a new LoTW account will be set up for these QSOs."
 msgstr ""
+"Eğer öyleyse, birincil LoTW hesabı için aşağıdan bir çağrı işareti seçin. "
+"Değilse, 'Bitir' e tıklayın ve bu QSO'lar için yeni bir LoTW hesabı "
+"oluşturulacaktır."
 
-#: crqwiz.cpp:688
+#: crqwiz.cpp:1033
 msgid ""
 "CAUTION: Mixing QSOs for unrelated callsigns into one LoTW account can cause "
 "issues with handling awards."
 msgstr ""
+"DİKKAT: İlişkisiz çağrı işaretleri için QSO'ları tek bir LoTW hesabında "
+"birleştirmek, ödül işlemlerinde sorunlara neden olabilir."
 
-#: crqwiz.cpp:697
-msgid ""
-"This is a Club call, I'm the QSL manager for this call, or this is a "
-"DXpedition call"
-msgstr ""
-
-#: crqwiz.cpp:697
-msgid "No, Create a new LoTW account for this call"
-msgstr ""
-
-#: crqwiz.cpp:697
-msgid "Yes, Save these QSOs into an existing LoTW account"
-msgstr ""
-
-#: crqwiz.cpp:699
-msgid "Add QSOs for the new callsign to an existing LoTW account?"
-msgstr ""
-
-#: crqwiz.cpp:716
-msgid "Since you have no callsign certificates, you must "
-msgstr ""
-
-#: crqwiz.cpp:738
-msgid ""
-"This portable callsign request requires approval using an existing callsign "
-"certificate"
-msgstr ""
-
-#: crqwiz.cpp:780
+#: crqwiz.cpp:1126
 #, c-format
 msgid "The callsign is too long. Only %d characters are allowed."
 msgstr "Çağrı İşareti çok uzun. Sadece %d karaktere izin verilmektedir."
 
-#: crqwiz.cpp:818
+#: crqwiz.cpp:1223
 msgid "You must enter a valid call sign."
 msgstr "Geçerli bir çağrı işareti girin."
 
-#: crqwiz.cpp:839
+#: crqwiz.cpp:1326
 msgid "You must select a DXCC entity."
 msgstr "Geçerli bir DXCC girdisi girin."
 
-#: crqwiz.cpp:870
+#: crqwiz.cpp:1357
 msgid "QSO begin date: You must choose proper values for Year, Month and Day."
 msgstr "QSO Başlangıç tarihi. Yıl, Ay ve Gün bilgilerini doğru giriniz."
 
-#: crqwiz.cpp:874
+#: crqwiz.cpp:1361
 msgid ""
 "QSO end date: You must either choose proper values for Year, Month and Day "
 "or leave all three blank."
@@ -263,12 +291,11 @@ msgstr ""
 "QSO  bitiş  tarihi. Yıl, Ay ve Gün bilgilerini doğru giriniz, ya da üçünü de "
 "boş bırakınız."
 
-#: crqwiz.cpp:879
+#: crqwiz.cpp:1366
 msgid "QSO end date cannot be before QSO begin date."
 msgstr "QSO bitiş tarihi, başlangıç tarihinden önce olamaz."
 
-#: crqwiz.cpp:911
-#, c-format
+#: crqwiz.cpp:1398
 msgid ""
 "The date of your first QSO is before the first valid date (%hs) of the "
 "selected DXCC Entity %hs"
@@ -276,15 +303,13 @@ msgstr ""
 "İlk QSO'nuzun tarihi  geçerli bu girdi için geçerli ilk qso tarihinden (%hs) "
 "öncedir.  %hs"
 
-#: crqwiz.cpp:915
-#, c-format
+#: crqwiz.cpp:1402
 msgid ""
 "The date of your first QSO is after the last valid date (%hs) of the "
 "selected DXCC Entity %hs"
 msgstr "İlk QSO tarihiniz son geçerli QSO tarihinden (%hs)  öncedir. %hs"
 
-#: crqwiz.cpp:919
-#, c-format
+#: crqwiz.cpp:1406
 msgid ""
 "The date of your last QSO is before the first valid date (%hs) of the "
 "selected DXCC Entity %hs"
@@ -292,26 +317,40 @@ msgstr ""
 "İlk QSO'nuzun tarihi  geçerli bu girdi için geçerli ilk qso tarihinden (%hs) "
 "öncedir.  %hs"
 
-#: crqwiz.cpp:923
-#, c-format
+#: crqwiz.cpp:1410
 msgid ""
 "The date of your last QSO is after the last valid date (%hs) of the selected "
 "DXCC Entity %hs"
 msgstr "Son QSO tarihiniz son geçerli QSO tarihinden (%hs)  öncedir. %hs"
 
+#: crqwiz.cpp:1433
+msgid "US 1x1 callsigns must start with W, K, or N"
+msgstr "ABD 1x1 çağrı işaretleri W, K veya N ile başlamalıdır"
+
+#: crqwiz.cpp:1437
+msgid "US 1x1 callsigns must have a number as the second character"
+msgstr "ABD 1x1 çağrı işaretlerinin ikinci karakteri bir sayı olmalıdır"
+
+#: crqwiz.cpp:1441
+msgid "US 1x1 callsigns must end in letters A-Z excluding 'X'"
+msgstr "ABD 1x1 çağrı işaretleri 'X' hariç A-Z harfleri ile bitmelidir"
+
+#: crqwiz.cpp:1447
+msgid "US 1x1 callsign requests must provide an end date"
+msgstr "ABD 1x1 çağrı işareti istekleri bir bitiş tarihi belirtmelidir"
+
 #. TRANSLATORS: first argument is callsign (%s), second is the related DXCC entity name (%hs)
-#: crqwiz.cpp:969
-#, c-format
+#: crqwiz.cpp:1492
 msgid ""
 "You have an overlapping Certificate for %s (DXCC=%hs) having QSO dates: "
 msgstr "%s için çakışan QSO tarihleri sahip bir sertifika var (DXCC =%hs) "
 
 #. TRANSLATORS: here "to" separates two dates in a date range
-#: crqwiz.cpp:971
+#: crqwiz.cpp:1494
 msgid " to "
 msgstr " kime "
 
-#: crqwiz.cpp:980
+#: crqwiz.cpp:1503
 #, c-format
 msgid ""
 "You have already requested a Callsign Certificate for %s and can not request "
@@ -320,7 +359,7 @@ msgstr ""
 "%s için zaten bir sertifika isteği yapmışsınız. LOTW görevlileri tarafından "
 "işleme alınana kadar yenisi için istek yapamazsınız."
 
-#: crqwiz.cpp:982 crqwiz.cpp:1022
+#: crqwiz.cpp:1505 crqwiz.cpp:1545
 msgid ""
 "Please wait until you receive an e-mail bearing your requested Callsign "
 "Certificate."
@@ -328,7 +367,7 @@ msgstr ""
 "Lütfen  istediğiniz çağrı işaretine ait Sertifika dosyası e-postası gelene "
 "kadar bekleyiniz."
 
-#: crqwiz.cpp:984
+#: crqwiz.cpp:1507
 #, c-format
 msgid ""
 "If you are sure that the earlier request is now invalid you should delete "
@@ -337,30 +376,52 @@ msgstr ""
 "Önceki isteğin artık geçersiz olduğundan eminseniz %s için bekleyen Callsign "
 "sertifikasını silmeniz gerekir."
 
-#: crqwiz.cpp:1020
+#: crqwiz.cpp:1543
 #, c-format
 msgid ""
 "You have already requested more than three Callsign Certificates for %s in "
 "the past 24 hours. You should submit a request only once, then wait for that "
-"request to processed by LoTW Staff. This may take several business days."
+"request to be processed by LoTW Staff. This may take several business days."
 msgstr ""
-"Son 24 saat içinde %s çağrı işareti için üç istekte bulundunuz. İsteği "
-"sadece bir kere yapmalı, daha sonra LoTW personeli tarafından bu başvurunun "
-"incelenmesini beklemelisiniz. Bu işlem bir kaç gün sürebilir."
+"Son 24 saat içinde %s için zaten üçten fazla Çağrı İşareti Sertifikası talep "
+"ettiniz. Talebinizi yalnızca bir kez göndermeli ve ardından LoTW ekibinin bu "
+"talebi işlemesini beklemelisiniz. Bu işlem birkaç iş günü sürebilir."
 
-#: crqwiz.cpp:1140
+#: crqwiz.cpp:1639
+msgid ""
+"You cannot request a Callsign Certificate for a former callsign unless you "
+"hold a valid Callsign Certificate to be used to verify that request."
+msgstr ""
+"Geçmiş bir çağrı işareti için Çağrı İşareti Sertifikası talep edemezsiniz, "
+"unless geçerli bir Çağrı İşareti Sertifikasına sahip olup bu talebi "
+"doğrulamak için kullanabiliyorsanız."
+
+#: crqwiz.cpp:1644
 #, c-format
 msgid ""
-"The callsign %s is not currently registered in the FCC ULS database as of "
-"%s.\n"
+"The callsign %s is not currently registered in the FCC ULS database.\n"
 "If this is a newly registered call, you must wait at least one business day "
 "for it to be valid. Please enter a currently valid callsign."
 msgstr ""
-"%s çağrı işareti FCC ULS veritabanında %s itibari ile kayıtlı değildir.\n"
-"Eğer yeni kayıt olunmuş ise, en az bir gün bekleyip tekrar deneyin. Lütfen "
-"geçerli bir çağrı işareti girin."
+"Çağrı işareti %s şu anda FCC ULS veritabanında kayıtlı değildir.\n"
+"Eğer bu yeni kayıtlı bir çağrı işaretiyse, geçerli olması için en az bir iş "
+"günü beklemeniz gerekmektedir. Lütfen geçerli bir çağrı işareti girin."
 
-#: crqwiz.cpp:1158
+#: crqwiz.cpp:1654
+msgid ""
+"If you are using a US callsign outside of the US persuant to CEPT, IARP or "
+"other Reciprocity arrangements, FCC rules require you to be a US Citizen."
+msgstr ""
+"Eğer CEPT, IARP veya diğer karşılıklı tanıma anlaşmaları kapsamında ABD "
+"dışında bir ABD çağrı işareti kullanıyorsanız, FCC kurallarına göre ABD "
+"vatandaşı olmanız gerekmektedir."
+
+#: crqwiz.cpp:1654 crqwiz.cpp:1706 loadcertwiz.cpp:218 tqsl.cpp:6234
+#: tqsl.cpp:7050 tqsl.cpp:7178 tqsl_prefs.cpp:448
+msgid "Warning"
+msgstr "Uyarı"
+
+#: crqwiz.cpp:1670
 msgid ""
 "You cannot select DXCC Entity NONE as you must sign any request for entity "
 "NONE and you have no valid Callsign Certificates that you can use to sign "
@@ -370,16 +431,16 @@ msgstr ""
 "için kullanabileceğiniz geçerli bir çağrı işareti sertifikanız yok. Bu "
 "sebeple DXCC için NONE seçemezsiniz."
 
-#: crqwiz.cpp:1159 crqwiz.cpp:1171 crqwiz.cpp:1179 crqwiz.cpp:1371 tqsl.cpp:157
-#: tqsl.cpp:184
+#: crqwiz.cpp:1671 crqwiz.cpp:1684 crqwiz.cpp:1693 crqwiz.cpp:1890 tqsl.cpp:155
+#: tqsl.cpp:193
 msgid "TQSL Error"
 msgstr "TQSL hatası"
 
-#: crqwiz.cpp:1163
+#: crqwiz.cpp:1676
 msgid "You have selected DXCC Entity NONE"
 msgstr "DXCC girdisini YOK olarak seçtiniz"
 
-#: crqwiz.cpp:1165
+#: crqwiz.cpp:1678
 msgid ""
 "QSO records signed using the Certificate will not be valid for DXCC award "
 "credit (but will be valid for other applicable awards). If the Certificate "
@@ -395,11 +456,11 @@ msgstr ""
 "\"Tamam \" tıklandıktan sonra DXCC sayfasına dönmek için  \"Gerik \" "
 "düğmesini kullanmalısınız"
 
-#: crqwiz.cpp:1166 stationdial.cpp:458
+#: crqwiz.cpp:1679 stationdial.cpp:458
 msgid "TQSL Warning"
 msgstr "TQSL Uyarı"
 
-#: crqwiz.cpp:1170
+#: crqwiz.cpp:1683
 msgid ""
 "You cannot request a certificate for a 1x1 callsign as you must sign those "
 "requests, but you have no valid Callsign Certificates that you can use to "
@@ -408,14 +469,17 @@ msgstr ""
 "1x1 çağrı işareti için istek yapamazsınız. Çünkü bu işlem için geçerli bir "
 "sertifikanız bulunmamaktadır."
 
-#: crqwiz.cpp:1178
+#: crqwiz.cpp:1692
 msgid ""
 "You cannot request a certificate for a portable callsign as you must sign "
 "those requests, but you have no valid Callsign Certificates that you can use "
 "to sign this request."
 msgstr ""
+"Portable çağrı işareti için sertifika talep edemezsiniz çünkü bu istekleri "
+"imzalamanız gerekiyor, ancak bu isteği imzalamak için kullanabileceğiniz "
+"geçerli bir Çağrı İşareti Sertifikasına sahip değilsiniz."
 
-#: crqwiz.cpp:1185
+#: crqwiz.cpp:1699
 msgid ""
 "You have chosen a QSO end date for this Callsign Certificate. The 'QSO end "
 "date' should ONLY be set if that date is the date when that callsign's "
@@ -425,7 +489,7 @@ msgstr ""
 "tarihi ' yalnızca bu tarih, amatör lisansının süresi dolduğunda veya lisans "
 "yeni bir çağrı işareti ile  değiştirildiğinde ayarlanmalıdır."
 
-#: crqwiz.cpp:1187
+#: crqwiz.cpp:1701
 msgid ""
 "If you set an end date, you will not be able to sign QSOs past that date, "
 "even if the Callsign Certificate itself is still valid."
@@ -433,7 +497,7 @@ msgstr ""
 "Bir bitiş tarihi girerseniz,  sertifika geçerli olsa bile bu tarihten sonra "
 "yeni QSO ekleyemezsiniz."
 
-#: crqwiz.cpp:1189
+#: crqwiz.cpp:1703
 msgid ""
 "If you still hold this callsign (or if you plan to renew the license for the "
 "callsign), you should not set a 'QSO end date'."
@@ -441,28 +505,23 @@ msgstr ""
 "Eğer hala bu çağrı işaretini kullanıyorsanız, \"QSO Bitiş Tarihi\" "
 "girmemeniz gerekmektedir."
 
-#: crqwiz.cpp:1191
+#: crqwiz.cpp:1705
 msgid "Do you really want to keep this 'QSO end date'?"
 msgstr "Bu \"QSO bitiş tarihi\"'ni saklamak istiyor musunuz?"
 
-#: crqwiz.cpp:1192 loadcertwiz.cpp:209 tqsl.cpp:5989 tqsl.cpp:6769
-#: tqsl.cpp:6897 tqsl_prefs.cpp:429
-msgid "Warning"
-msgstr "Uyarı"
-
-#: crqwiz.cpp:1227
+#: crqwiz.cpp:1737
 msgid "You must enter your name"
 msgstr "Adınızı girmelisiniz"
 
-#: crqwiz.cpp:1229
+#: crqwiz.cpp:1739
 msgid "You must enter your address"
 msgstr "Adresinizi girmelisiniz"
 
-#: crqwiz.cpp:1231
+#: crqwiz.cpp:1741
 msgid "You must enter your city"
 msgstr "Şehrinizi girmelisiniz"
 
-#: crqwiz.cpp:1240
+#: crqwiz.cpp:1759
 msgid ""
 "This address must match the FCC ULS database.\n"
 "If this address information is incorrect, please correct your FCC record."
@@ -470,48 +529,62 @@ msgstr ""
 "Bu adres FCC ULS veritabanı ile uyumlu olmalıdır.\n"
 "Eğer adres bilgisi yanlış ise, lütfen FCC kaydınızı güncelleyin."
 
-#: crqwiz.cpp:1309
+#: crqwiz.cpp:1828
 msgid "You must enter a valid email address"
 msgstr "Geçerli bir e-posta adresi girmelisiniz"
 
-#: crqwiz.cpp:1344
+#: crqwiz.cpp:1863
 msgid "The two copies of the passphrase do not match."
 msgstr "İki şifre birbirine uymamaktadır."
 
-#: crqwiz.cpp:1385
+#: crqwiz.cpp:1904
 msgid "Click 'Finish' to complete this Callsign Certificate request."
 msgstr "Çağrı adı Sertifika isteğinizi \"Bitir\" e basarak tamamlayınız."
 
-#: crqwiz.cpp:1394
+#: crqwiz.cpp:1910
 msgid ""
-"Please select a callsign certificate for the account where you would like "
+"Please select a Callsign Certificate for the account where you would like "
 "the QSOs to be stored"
 msgstr ""
+"Lütfen QSO'ların saklanmasını istediğiniz hesap için bir Çağrı İşareti "
+"Sertifikası seçin"
 
-#: crqwiz.cpp:1400
-#, c-format
-msgid "QSOs for %hs will be stored in the LoTW account for %s."
+#: crqwiz.cpp:1913 crqwiz.cpp:1920
+msgid ""
+"Please select the Callsign Certificate for your current personal callsign to "
+"validate your request."
 msgstr ""
+"Doğrulama amacıyla, Lütfen şu an kullandığınız çağrı işaretinize ait "
+"sertifikayı seçiniz."
+
+#: crqwiz.cpp:1915 crqwiz.cpp:1922
+msgid "Please select a Callsign Certificate to validate this request"
+msgstr "Lütfen bu isteği doğrulamak için bir Çağrı İşareti Sertifikası seçin"
+
+#: crqwiz.cpp:1929
+msgid "QSOs for %hs will be stored in the LoTW account for %s."
+msgstr "%hs için QSO'lar, %s için LoTW hesabında saklanacaktır."
 
 #. TRANSLATORS: This is part of an deleted DXCC entity name
 #: dxcc.cpp:49
 msgid "DELETED"
 msgstr "SİLİNDİ"
 
-#: getpassword.cpp:48 getpassword.cpp:121 qsodatadialog.cpp:388 tqsl.cpp:437
-#: tqsl_prefs.cpp:64 tqsl_prefs.cpp:283 tqsl_prefs.cpp:1012 stationdial.h:46
-#: tqslapp.h:117
+#: getpassword.cpp:48 getpassword.cpp:121 qsodatadialog.cpp:387 tqsl.cpp:452
+#: tqsl_prefs.cpp:70 tqsl_prefs.cpp:289 tqsl_prefs.cpp:1019 stationdial.h:46
+#: tqslapp.h:132
 msgid "OK"
 msgstr "Tamam"
 
-#: getpassword.cpp:51 getpassword.cpp:124 qsodatadialog.cpp:387
-#: stationdial.cpp:225 tqsl.cpp:298 tqsl.cpp:353 tqsl.cpp:438 tqsl.cpp:562
-#: tqsl.cpp:622 tqsl_prefs.cpp:67 tqsl_prefs.cpp:286 tqsl_prefs.cpp:1015
+#: getpassword.cpp:51 getpassword.cpp:124 qsodatadialog.cpp:386
+#: stationdial.cpp:225 tqsl.cpp:309 tqsl.cpp:364 tqsl.cpp:453 tqsl.cpp:577
+#: tqsl.cpp:637 tqsl.cpp:1987 tqsl_prefs.cpp:73 tqsl_prefs.cpp:292
+#: tqsl_prefs.cpp:1022
 msgid "Cancel"
 msgstr "İptal"
 
-#: getpassword.cpp:53 getpassword.cpp:126 qsodatadialog.cpp:386
-#: stationdial.cpp:223 tqsl_prefs.cpp:61
+#: getpassword.cpp:53 getpassword.cpp:126 qsodatadialog.cpp:385
+#: stationdial.cpp:223 tqsl_prefs.cpp:67
 msgid "Help"
 msgstr "Yardım"
 
@@ -559,15 +632,15 @@ msgstr "Güvenilir kök sertifikası"
 msgid "Certificate Authority certificate"
 msgstr "Sertifika Yetkilisi sertifikası"
 
-#: loadcertwiz.cpp:124 wxutil.cpp:259
+#: loadcertwiz.cpp:124 wxutil.cpp:278
 msgid "Callsign Certificate"
 msgstr "Çağrı adı sertifikası"
 
-#: loadcertwiz.cpp:159
+#: loadcertwiz.cpp:168
 msgid "Enter a passphrase for this callsign certificate."
 msgstr "Bu sertifika için bir parola giriniz."
 
-#: loadcertwiz.cpp:161
+#: loadcertwiz.cpp:170
 msgid ""
 "If you are using a computer system that is shared with others, you should "
 "specify a passphrase to protect this certificate. However, if you are using "
@@ -577,24 +650,24 @@ msgstr ""
 "bilgisayarı başkaları ile ortak kullanıyorsanız, parola kullanmanız tavsiye "
 "edilir. Eğer kişisel bilgisayarınız ise, parola kullanmanıza gerek yoktur."
 
-#: loadcertwiz.cpp:163
+#: loadcertwiz.cpp:172
 msgid ""
 "This passphrase will have to be entered each time you use this callsign "
 "certificate for signing or when saving the key."
 msgstr "Bu şifre her log imzalama işlemi sırasında kullanılacaktır."
 
-#: loadcertwiz.cpp:165 tqsl.cpp:6712
+#: loadcertwiz.cpp:174 tqsl.cpp:6983
 msgid ""
 "Leave the passphrase blank and click 'OK' unless you want to use a "
 "passphrase."
 msgstr ""
 "Eğer parola kullanmak istemiyorsanız, alanı boş bırakıp 'Devam' a basın."
 
-#: loadcertwiz.cpp:167
+#: loadcertwiz.cpp:176
 msgid "New Passphrase"
 msgstr "Yeni şifre"
 
-#: loadcertwiz.cpp:206
+#: loadcertwiz.cpp:215
 msgid ""
 "You will not be able to use this tq6 file to recover your callsign "
 "certificate if it gets lost. For security purposes, you should back up your "
@@ -604,11 +677,11 @@ msgstr ""
 "kullanamazsınız. Güvenlik amacıyla, başka bir yerde  sertifikanızı "
 "yedeklemeniz gerekir."
 
-#: loadcertwiz.cpp:208
+#: loadcertwiz.cpp:217
 msgid "Would you like to back up your callsign certificate now?"
 msgstr "Çağrı adı sertifikanızı şimdi yedeklemek ister misiniz?"
 
-#: loadcertwiz.cpp:244
+#: loadcertwiz.cpp:253
 msgid ""
 "Callsign Certificate container files (*.p12,*.P12;*.tq6;*.TQ6)|*.p12;*.P12;*."
 "tq6;*.TQ6"
@@ -616,39 +689,39 @@ msgstr ""
 "Çağrıişareti sertifika depolama dosyaları (*.p12,*.P12;*.tq6;*.TQ6)|*.p12;*."
 "P12;*.tq6;*.TQ6"
 
-#: loadcertwiz.cpp:246
+#: loadcertwiz.cpp:255
 msgid "Callsign Certificate container files (*.p12,*.tq6))|*.p12;*.tq6"
 msgstr "Çağrıişareti sertifika depolama dosyaları (*.p12,*.tq6))|*.p12;*.tq6"
 
-#: loadcertwiz.cpp:248 tqsl.cpp:4399
+#: loadcertwiz.cpp:257 tqsl.cpp:4545
 msgid "|All files (*.*)|*.*"
 msgstr "|Tüm dosyalar (*.*)|*.*"
 
-#: loadcertwiz.cpp:252
+#: loadcertwiz.cpp:261
 msgid "Select Certificate File"
 msgstr "Sertifika dosyasını seçiniz"
 
-#: loadcertwiz.cpp:296 loadcertwiz.cpp:371 tqsl.cpp:5960
+#: loadcertwiz.cpp:305 loadcertwiz.cpp:380 tqsl.cpp:6202
 msgid "This file is not a valid P12 file"
 msgstr "Bu dosya geçerli bir p12 dosyası değildir"
 
-#: loadcertwiz.cpp:312
+#: loadcertwiz.cpp:321
 msgid "Loading complete"
 msgstr "Yükleme tamamlandı"
 
-#: loadcertwiz.cpp:327
+#: loadcertwiz.cpp:336
 msgid "No status information available"
 msgstr "Durum bilgisi mevcut değil"
 
-#: loadcertwiz.cpp:334
+#: loadcertwiz.cpp:343
 msgid "Enter the passphrase to unlock the .p12 file:"
 msgstr "P12 dosyasını açmak için şifre girin:"
 
-#: loadcertwiz.cpp:368 tqsl.cpp:2197
+#: loadcertwiz.cpp:377 tqsl.cpp:2275
 msgid "Passphrase error"
 msgstr "Şifre hatası"
 
-#: loctree.cpp:86 tqsl.cpp:1412 tqsl.cpp:6928
+#: loctree.cpp:93 tqsl.cpp:1441 tqsl.cpp:7209
 msgid "Station Locations"
 msgstr "İstasyon yeri"
 
@@ -700,84 +773,68 @@ msgstr "Propagasyon Tipi:"
 msgid "Satellite:"
 msgstr "Uydu:"
 
-#: qsodatadialog.cpp:355
-msgid "Go to the first QSO in this log"
-msgstr "Bu kayıttaki ilk QSO ya gidin"
-
-#: qsodatadialog.cpp:359
-msgid "Go to the previous QSO in this log"
-msgstr "Bu kayıttaki bir önceki QSO ya gidin"
-
-#: qsodatadialog.cpp:367
-msgid "Go to the next QSO in this log"
-msgstr "Bu kayıttaki bir sonraki QSO ya gidin"
-
-#: qsodatadialog.cpp:371
-msgid "Go to the last QSO in this log"
-msgstr "Bu kayıttaki sonQSO ya gidin"
-
-#: qsodatadialog.cpp:378
+#: qsodatadialog.cpp:375
 msgid "Add QSO"
 msgstr "QSO Ekle"
 
-#: qsodatadialog.cpp:380 stationdial.cpp:218 tqsl_prefs.cpp:176
-#: tqsl_prefs.cpp:819
+#: qsodatadialog.cpp:379 stationdial.cpp:218 tqsl_prefs.cpp:182
+#: tqsl_prefs.cpp:837
 msgid "Delete"
 msgstr "Sil"
 
-#: qsodatadialog.cpp:506
+#: qsodatadialog.cpp:505
 msgid "QSO Frequency is invalid"
 msgstr "Geçersiz QSO Frekansı"
 
-#: qsodatadialog.cpp:506 qsodatadialog.cpp:513 qsodatadialog.cpp:522
-#: qsodatadialog.cpp:529 qsodatadialog.cpp:539 qsodatadialog.cpp:544
-#: qsodatadialog.cpp:549 qsodatadialog.cpp:554 tqslvalidator.cpp:77
+#: qsodatadialog.cpp:505 qsodatadialog.cpp:512 qsodatadialog.cpp:521
+#: qsodatadialog.cpp:528 qsodatadialog.cpp:538 qsodatadialog.cpp:543
+#: qsodatadialog.cpp:548 qsodatadialog.cpp:553 tqslvalidator.cpp:77
 msgid "QSO Data Error"
 msgstr "QSO Bilgi Hatası"
 
-#: qsodatadialog.cpp:513
+#: qsodatadialog.cpp:512
 msgid "QSO Frequency is out of range for the selected band"
 msgstr "QSO frekansı seçilen band için geçerli değil"
 
-#: qsodatadialog.cpp:522
+#: qsodatadialog.cpp:521
 msgid "QSO RX Frequency is invalid"
 msgstr "Geçersiz QSO RX frekansı"
 
-#: qsodatadialog.cpp:529
+#: qsodatadialog.cpp:528
 msgid "QSO RX Frequency is out of range for the selected band"
 msgstr "QSO RX frekansı seçilen band için geçerli değil"
 
-#: qsodatadialog.cpp:539
+#: qsodatadialog.cpp:538
 msgid "You must select a band or enter a frequency"
 msgstr "Ya band seçmeli, ya da frekans girmelisiniz"
 
-#: qsodatadialog.cpp:544
+#: qsodatadialog.cpp:543
 msgid "Call Sign cannot be empty"
 msgstr "Çağrı Adı boş olamaz"
 
-#: qsodatadialog.cpp:549
+#: qsodatadialog.cpp:548
 msgid "'Satellite' propagation mode selected, so a Satellite must be chosen"
 msgstr "Uydu Propagasyon seçildi. Bir uydu seçmelisiniz"
 
-#: qsodatadialog.cpp:554
+#: qsodatadialog.cpp:553
 msgid "Satellite choice requires that Propagation Mode be 'Satellite'"
 msgstr ""
 "Uydu seçeneği, propagasyon modunun da uydu olarak seçilmesini gerektirir."
 
-#: qsodatadialog.cpp:571
+#: qsodatadialog.cpp:570
 #, c-format
 msgid "QSO Data: Invalid Mode ignored - %s"
 msgstr "QSO Data: Geçersiz Mod Yoksayıldı %s"
 
-#: qsodatadialog.cpp:593
+#: qsodatadialog.cpp:592
 msgid "No QSO records"
 msgstr "QSO kaydı Bulunamadı"
 
-#: qsodatadialog.cpp:607
+#: qsodatadialog.cpp:606
 msgid "Save File"
 msgstr "Dosya Kaydet"
 
-#: qsodatadialog.cpp:609 tqsl.cpp:1892
+#: qsodatadialog.cpp:608 tqsl.cpp:1925
 msgid ""
 "ADIF files (*.adi;*.adif;*.ADI;*.ADIF)|*.adi;*.adif;*.ADI;*.ADIF|All files "
 "(*.*)|*.*"
@@ -785,35 +842,35 @@ msgstr ""
 "ADIF Dosyaları (*.adi;*.adif;*.ADI;*.ADIF)|*.adi;*.adif;*.ADI;*.ADIF|All "
 "files (*.*)|*.*"
 
-#: qsodatadialog.cpp:611 tqsl.cpp:1894
+#: qsodatadialog.cpp:610 tqsl.cpp:1927
 msgid "ADIF files (*.adi;*.adif)|*.adi;*.adif|All files (*.*)|*.*"
 msgstr ""
 "ADIF dosyaları (*.adi;*.adif;*.ADI;*.ADIF)|*.adi;*.adif;*.ADI;*.ADIF|All "
 "files (*.*)|*.*"
 
-#: qsodatadialog.cpp:700
+#: qsodatadialog.cpp:699
 #, c-format
 msgid "Wrote %d QSO records to %s"
 msgstr "%d QSO kaydı %s  'a yazıldı"
 
-#: qsodatadialog.cpp:753
+#: qsodatadialog.cpp:752
 msgid "The file has not been saved. Should the QSOs be saved?"
 msgstr "Bu dosya kaydedilmedi.  QSO'lar kaydedilsin mi?"
 
-#: qsodatadialog.cpp:753
+#: qsodatadialog.cpp:752
 msgid "Confirm Close"
 msgstr "Kapatmayı onaylayın"
 
-#: qsodatadialog.cpp:877
+#: qsodatadialog.cpp:876
 msgid "One QSO Record"
 msgstr "Bir QSO Kaydı"
 
-#: qsodatadialog.cpp:879
+#: qsodatadialog.cpp:878
 #, c-format
 msgid "%d QSO Records"
 msgstr "%d QSO Kaydı"
 
-#: stationdial.cpp:56 tqsl.cpp:6259
+#: stationdial.cpp:56 tqsl.cpp:6508
 msgid "&Properties"
 msgstr "&Özellikler"
 
@@ -845,7 +902,7 @@ msgstr "Seçili İstasyon Yeri"
 msgid "New..."
 msgstr "Yeni..."
 
-#: stationdial.cpp:214 tqsl_prefs.cpp:817
+#: stationdial.cpp:214 tqsl_prefs.cpp:835
 msgid "Edit..."
 msgstr "Değiştir..."
 
@@ -916,66 +973,72 @@ msgid ""
 msgstr ""
 "Göreceğiniz ekranda \"Yeni\" düğmesine basıp istasyon lokasyonu belirleyin."
 
-#: tqsl.cpp:180
+#: tqsl.cpp:189
 msgid "Success"
 msgstr "Başarılı"
 
-#: tqsl.cpp:181
+#: tqsl.cpp:190
 msgid "User Cancelled"
 msgstr "Kullanıcı İptal Edildi"
 
-#: tqsl.cpp:182
+#: tqsl.cpp:191
 msgid "Upload Rejected"
 msgstr "Yükleme başarısız"
 
-#: tqsl.cpp:183
+#: tqsl.cpp:192
 msgid "Unexpected LoTW Response"
 msgstr "Beklenmedik LOTW Sorunu"
 
-#: tqsl.cpp:185
+#: tqsl.cpp:194
 msgid "TQSLLib Error"
 msgstr "TQSLLib Hatası"
 
-#: tqsl.cpp:186
+#: tqsl.cpp:195
 msgid "Error opening input file"
 msgstr "Giriş dosyası açılamıyor"
 
-#: tqsl.cpp:187
+#: tqsl.cpp:196
 msgid "Error opening output file"
 msgstr "Çıkış dosyası açılamıyor"
 
-#: tqsl.cpp:188
-msgid "No QSOs written"
-msgstr "Yazılan QSO yok"
+#: tqsl.cpp:197 tqsl.cpp:2720
+msgid "No QSOs to upload"
+msgstr "Yüklemek için herhangi bir QSO yok."
 
-#: tqsl.cpp:189
-msgid "Some QSOs suppressed"
-msgstr "Bazı QSO'lar yok sayıldı"
+#: tqsl.cpp:198
+msgid "Some QSOs not processed"
+msgstr "Bazı QSOs işlenmedi."
 
-#: tqsl.cpp:190
+#: tqsl.cpp:199
 msgid "Command Syntax Error"
 msgstr "Komut yazım hatası"
 
-#: tqsl.cpp:191
+#: tqsl.cpp:200
 msgid "LoTW Connection Failed"
 msgstr "LOTW ye bağlanılamadı"
 
-#: tqsl.cpp:192
+#: tqsl.cpp:201
 msgid "Unknown"
 msgstr "Bilinmiyor"
 
-#: tqsl.cpp:193
-msgid "The duplicates database is locked"
-msgstr "Çift kayıt veritabanı kilitlendi"
+#: tqsl.cpp:202
+msgid "The TQSL upload tracking database is locked"
+msgstr "TQSL yükleme izleme veritabanı kilitli"
 
-#: tqsl.cpp:199
-#, c-format
+#: tqsl.cpp:203
+msgid "Previously signed QSOs were detected"
+msgstr "Daha önce imzalanmış QSOs tespit edildi"
+
+#: tqsl.cpp:204
+msgid "Incorrect passphrase when importing P12 file"
+msgstr "P12 dosyası içe aktarılırken yanlış şifre girildi"
+
+#: tqsl.cpp:210
 msgid "Final Status: %hs (%d)"
 msgstr "Son Durum: %hs (%d)"
 
 #. TRANSLATORS: this is followed by the callsign and entity name
-#: tqsl.cpp:249
-#, c-format
+#: tqsl.cpp:260
 msgid ""
 "Enter the passphrase to unlock the callsign certificate for %hs -- %hs\n"
 "(This is the passphrase you made up when you installed the callsign "
@@ -984,35 +1047,35 @@ msgstr ""
 "Sertifikayı açmak için şifreyi giriniz. %hs -- %hs\n"
 "(Bu şifre sertifikayı kurarken kullandığınız şifredir.)"
 
-#: tqsl.cpp:260 tqsl.cpp:7423 getpassword.h:32 getpassword.h:33
+#: tqsl.cpp:271 tqsl.cpp:7704 getpassword.h:32 getpassword.h:33
 msgid "Enter passphrase"
 msgstr "Şifre girin"
 
-#: tqsl.cpp:291
+#: tqsl.cpp:302
 msgid "Signing QSO Data"
 msgstr "QSO Bilgisini imzalıyor"
 
-#: tqsl.cpp:294
+#: tqsl.cpp:305
 msgid "Converting "
 msgstr "Çeviriyor "
 
-#: tqsl.cpp:294
+#: tqsl.cpp:305
 msgid "to TQSL format"
 msgstr "tQSL formatına"
 
-#: tqsl.cpp:316
+#: tqsl.cpp:327
 msgid "Uploading Signed Data"
 msgstr "İmzalanmış bilgiler gönderiliyor"
 
-#: tqsl.cpp:316
+#: tqsl.cpp:327
 msgid "Uploading signed log data..."
 msgstr "İmzalanmış log bilgileri gönderiliyor..."
 
-#: tqsl.cpp:410
+#: tqsl.cpp:421
 msgid "QSO Date Range"
 msgstr "QSO Tarih aralığı"
 
-#: tqsl.cpp:413
+#: tqsl.cpp:424
 msgid ""
 "You may set the starting and/or ending QSO dates in order to select QSOs "
 "from the input file."
@@ -1020,7 +1083,7 @@ msgstr ""
 "Giriş dosyasından QSO 'ları seçmek için başlangıç ve/veya bitiş QSO "
 "tarihlerini ayarlayabilirsiniz."
 
-#: tqsl.cpp:415
+#: tqsl.cpp:426
 msgid ""
 "QSOs prior to the starting date or after the ending date will not be signed "
 "or included in the output file."
@@ -1028,79 +1091,84 @@ msgstr ""
 "QSOs başlangıç tarihinden önce veya bitiş tarihinden sonra imzalanmaz veya "
 "çıktı dosyasına dahil edilmez."
 
-#: tqsl.cpp:417
+#: tqsl.cpp:428
 msgid "You may leave either date (or both dates) blank."
 msgstr "Tek veya her iki tarihi de boş bırakabilirsiniz."
 
-#: tqsl.cpp:425
+#: tqsl.cpp:436
 msgid "Start Date (YYYY-MM-DD)"
 msgstr "Başlangıç Tarihi (YYYY-AA-GG)"
 
-#: tqsl.cpp:430
+#: tqsl.cpp:443
 msgid "End Date (YYYY-MM-DD)"
 msgstr "Bitiş Tarihi (YYYY-AA-GG)"
 
-#: tqsl.cpp:455
+#: tqsl.cpp:470
 msgid "Start date is invalid"
 msgstr "Başlangıç tarihi geçersiz"
 
-#: tqsl.cpp:463
+#: tqsl.cpp:478
 msgid "End date is invalid"
 msgstr "Bitiş tarihi geçersiz"
 
-#: tqsl.cpp:503
-msgid "Already Uploaded QSOs Detected"
-msgstr "Daha önceden yüklenmiş QSO'lar tespit edildi"
+#: tqsl.cpp:518
+msgid "Previously Signed QSOs Detected"
+msgstr "Daha önce imzalanmış QSOs tespit edildi"
 
-#: tqsl.cpp:509
+#: tqsl.cpp:524
 #, c-format
 msgid ""
-"This log contains %d QSO(s) which appear to have already been signed for "
+"This log contains %d QSO(s) which appear to have been previously signed for "
 "upload to LoTW, and no new QSOs."
-msgstr "Bu log %d  adet zaten imzalanmış QSO içermektedir. Yeni QSO yoktur."
+msgstr ""
+"Bu kayıt, daha önce LoTW'ye yüklenmek üzere imzalanmış gibi görünen %d QSO "
+"içermektedir ve yeni QSO bulunmamaktadır."
 
-#: tqsl.cpp:511
+#: tqsl.cpp:526
 msgid "Click 'Cancel' to abandon processing this log file (Recommended)."
 msgstr ""
 "Bu log dosyasının işlenmesini durdurmak için \"İPTAL\" e basın (Tavsiye "
 "edilir)"
 
-#: tqsl.cpp:513 tqsl.cpp:523 tqsl.cpp:530
+#: tqsl.cpp:528 tqsl.cpp:538 tqsl.cpp:545
 msgid ""
-"Click 'Re-Upload QSOs' to re-process this log while allowing already "
-"uploaded QSOs."
+"Click 'Re-Upload QSOs' to re-process this log while allowing previously "
+"signed QSOs."
 msgstr ""
-"Daha önce yüklenmiş QSO'ları tekrar yüklemek için 'QSO'ları Tekrar Yükle' "
-"'yi seçiniz."
+"Daha önce imzalanmış QSOs'na izin vererek bu kaydı yeniden işlemek için "
+"'QSOs'u Yeniden Yükle'ye tıklayın."
 
-#: tqsl.cpp:517
+#: tqsl.cpp:532
 #, c-format
 msgid ""
-"This log contains %d QSO(s) which appear to have already been signed for "
+"This log contains %d QSO(s) which appear to have been previously signed for "
 "upload to LoTW, and %d QSOs which are new."
-msgstr "Bu log %d  adet zaten imzalanmış QSO içermektedir. Yeni %d QSO vardır."
+msgstr ""
+"Bu kayıt, daha önce LoTW'ye yüklenmek üzere imzalanmış gibi görünen %d QSO "
+"ve yeni olan %d QSO içermektedir."
 
-#: tqsl.cpp:519 tqsl.cpp:526
+#: tqsl.cpp:534 tqsl.cpp:541
 msgid ""
-"Click 'New QSOs Only' to sign normally, without the already uploaded QSOs "
+"Click 'New QSOs Only' to sign normally, without the previously signed QSOs "
 "(Recommended)."
 msgstr ""
-"'Sadece Yeni QSO'lar' seçeneğini seçerek, sadece yeni QSO'ları yükleyin "
-"(Tavsiye edilen)."
+"Daha önce imzalanmış QSOs olmadan normal şekilde imzalamak için 'Sadece Yeni "
+"QSOs' seçeneğine tıklayın (Tavsiye edilir)."
 
-#: tqsl.cpp:521 tqsl.cpp:528
+#: tqsl.cpp:536 tqsl.cpp:543
 msgid "Click 'Cancel' to abandon processing this log file."
 msgstr "Bu log dosyasının işlenmesini durdurmak için \"İPTAL\" e basın ."
 
-#: tqsl.cpp:524
+#: tqsl.cpp:539
 #, c-format
 msgid ""
-"This log contains %d QSO(s) which appear to have already been signed for "
+"This log contains %d QSO(s) which appear to have been previously signed for "
 "upload to LoTW, and one QSO which is new."
 msgstr ""
-"Bu log %d  adet zaten imzalanmış QSO içermektedir. Bir adet  yeni QSO vardır."
+"Bu kayıt, daha önce LoTW'ye yüklenmek üzere imzalanmış gibi görünen %d QSO "
+"ve bir yeni QSO içermektedir."
 
-#: tqsl.cpp:541
+#: tqsl.cpp:556
 msgid ""
 "The log file you are uploading using your QSO Logging system consists "
 "entirely of previously uploaded QSOs that create unnecessary work for LoTW. "
@@ -1113,7 +1181,7 @@ msgstr ""
 "programınızın ayarlarını ya da güncellemesinin olup olmadığını kontrol "
 "ederek bu durumu düzeltiniz."
 
-#: tqsl.cpp:543
+#: tqsl.cpp:558
 msgid ""
 "In the meantime, please note that some loggers may exhibit strange behavior "
 "if an option other than 'Re-Upload QSOs' is clicked. Choosing 'Cancel' is "
@@ -1127,7 +1195,7 @@ msgstr ""
 "boş dosya yükleyebilir. Bu yüzden eski prgramlarda 'İptal' seçeneği de "
 "güvenle kullanılabilir"
 
-#: tqsl.cpp:546
+#: tqsl.cpp:561
 msgid ""
 "The log file you are uploading using your QSO Logging system includes some "
 "previously uploaded QSOs that create unnecessary work for LoTW. There may be "
@@ -1137,7 +1205,7 @@ msgstr ""
 "Yüklemekte olduğunuz log dosyası daha önceden yüklenmiş bazı loglar "
 "içermektedir."
 
-#: tqsl.cpp:548
+#: tqsl.cpp:563
 msgid ""
 "In the meantime, please note that some loggers may exhibit strange behavior "
 "if an option other than 'Re-Upload QSOs' is clicked. 'New QSOs Only' is "
@@ -1153,7 +1221,7 @@ msgstr ""
 "boş dosya yükleyebilir. Bu yüzden eski prgramlarda 'İptal' seçeneği de "
 "güvenle kullanılabilir"
 
-#: tqsl.cpp:550
+#: tqsl.cpp:565
 msgid ""
 "Choosing 'Cancel' is usually safe, but a defective logger not checking the "
 "status messages reported by TrustedQSL may produce strange (but harmless) "
@@ -1161,332 +1229,342 @@ msgid ""
 "QSOs as 'sent'"
 msgstr "Emin olmadığınız durumlarda \"İPTAL\" seçeneğini seçiniz"
 
-#: tqsl.cpp:561
+#: tqsl.cpp:576
 msgid "New QSOs Only"
 msgstr "Sadece Yeni QSO'ları Yükle"
 
-#: tqsl.cpp:563
+#: tqsl.cpp:578
 msgid "Re-Upload QSOs"
 msgstr "QSO'Ları Yeniden Yükle"
 
-#: tqsl.cpp:588
+#: tqsl.cpp:603
 msgid ""
-"The only reason to re-sign already uploaded QSOs is if a previous upload was "
-"not processed by LoTW, either because it was never uploaded, or there was a "
-"server failure"
+"The only reason to re-sign previously signed QSOs is if a previous upload "
+"was not processed by LoTW, either because it was never uploaded, or there "
+"was a server failure"
 msgstr ""
-"Daha önce yüklenmiş QSO'ları yeniden yüklemek sadece gönderilmiş dosyalar "
-"LOTW ye erişmemişse ya da geçici bir sunucu hatası alınmışsa gereklidir"
+"Daha önce imzalanmış QSOs'u yeniden imzalamanın tek nedeni, önceki "
+"yüklemenin LoTW tarafından işlenmemiş olmasıdır; bu, yükleme yapılmamışsa "
+"veya bir sunucu hatası nedeniyle işlem yapılmamışsa geçerlidir."
 
-#: tqsl.cpp:590
+#: tqsl.cpp:605
 msgid "Are you sure you want to proceed? Click 'No' to review the choices"
 msgstr "Devam etmek istiyor musunuz? Tekrar incelemek için 'Hayır' seçin"
 
-#: tqsl.cpp:591
+#: tqsl.cpp:606
 msgid "Are you sure?"
 msgstr "Emin misiniz?"
 
-#: tqsl.cpp:614
+#: tqsl.cpp:629
 msgid "Errors Detected"
 msgstr "Hata  Tespit edildi"
 
-#: tqsl.cpp:621
+#: tqsl.cpp:636
 msgid "Ignore"
 msgstr "Yoksay"
 
-#: tqsl.cpp:663
-#, c-format
+#: tqsl.cpp:678
 msgid ""
 "Your custom mode map %s conflicts with the standard mode definition for %hs "
 "and was deleted."
 msgstr ""
 "Yaratılan özel mod dosyasu %s standart mod %hs ile çakıştığından silinmiştir."
 
-#: tqsl.cpp:938
-#, c-format
+#: tqsl.cpp:955
 msgid "Error renaming backup file %s: %hs"
 msgstr "Yedekleme dosyası adı değiştiriliyor %s: %hs"
 
-#: tqsl.cpp:1069 tqsl.cpp:1088
+#: tqsl.cpp:1091 tqsl.cpp:1110
 msgid "Checking for TQSL updates..."
 msgstr "TQSL Güncellemeler Kontrol Ediliyor..."
 
-#: tqsl.cpp:1135
+#: tqsl.cpp:1157
 msgid "Sign and &upload ADIF or Cabrillo File..."
 msgstr "ADIF veya Cabrillo Dosyasını imzala ve yükle."
 
-#: tqsl.cpp:1136
+#: tqsl.cpp:1158
 msgid "&Sign and save ADIF or Cabrillo file..."
 msgstr "ADIF veya Cabrillo Dosyasını &İmzala ve Kaydet."
 
-#: tqsl.cpp:1138
+#: tqsl.cpp:1159
+msgid "&Test Signing an ADIF or Cabrillo file..."
+msgstr "&Yedek İstasyon Konumları, Sertifikalar ve Tercihler..."
+
+#: tqsl.cpp:1161
 msgid "&Backup Station Locations, Certificates, and Preferences..."
-msgstr "Lokasyon, Sertifika ve Özellikleri &Yedekle..."
+msgstr "&Lokasyon, Sertifika ve Özellikleri &Yedekle..."
 
-#: tqsl.cpp:1139
+#: tqsl.cpp:1162
 msgid "&Restore Station Locations, Certificates, and Preferences..."
-msgstr "Lokasyon, Sertifika ve Özellikleri &Yedekle..."
+msgstr "&Lokasyon, Sertifika ve Özellikleri &Yedekle..."
 
-#: tqsl.cpp:1141
+#: tqsl.cpp:1164
 msgid "Create &New ADIF file..."
 msgstr "Yeni ADIF dosyası yarat."
 
-#: tqsl.cpp:1142
+#: tqsl.cpp:1165
 msgid "&Edit existing ADIF file..."
-msgstr "Mevcut ADIF dosyalarını &düzenle."
+msgstr "&Mevcut ADIF dosyalarını &düzenle."
 
-#: tqsl.cpp:1145
+#: tqsl.cpp:1168
 msgid "&Preferences..."
 msgstr "&Özellikler."
 
-#: tqsl.cpp:1147
+#: tqsl.cpp:1170
 msgid "Display or Modify &Preferences..."
-msgstr "&Özellikleri Görüntüle/Değiştir."
+msgstr "Özellikleri Görüntüle/Değiştir."
 
-#: tqsl.cpp:1150 tqsl.cpp:7000 tqsl.cpp:7002
+#: tqsl.cpp:1173 tqsl.cpp:7281 tqsl.cpp:7283
 msgid "Language"
 msgstr "Dil"
 
-#: tqsl.cpp:1152
+#: tqsl.cpp:1175
 msgid "Dia&gnostic Mode"
 msgstr "Tanı(Diagnostic)  Modu"
 
-#: tqsl.cpp:1157 tqslupdater.cpp:110
+#: tqsl.cpp:1180 tqslupdater.cpp:111
 msgid "E&xit TQSL\tAlt-X"
 msgstr "E&xit TQSL\tAlt-X"
 
-#: tqsl.cpp:1162
+#: tqsl.cpp:1185
 msgid "&Display Station Location Properties"
 msgstr "İstasyon Lokasyon bilgilerini göster"
 
-#: tqsl.cpp:1164
+#: tqsl.cpp:1187
 msgid "&Edit Station Location"
 msgstr "İstasyon Yeri &Güncelle"
 
-#: tqsl.cpp:1165
+#: tqsl.cpp:1188
 msgid "&Add Station Location"
 msgstr "İstasyon Yeri &Ekle"
 
-#: tqsl.cpp:1171
+#: tqsl.cpp:1194
 msgid "&Restore a Deleted Station Location"
 msgstr "Silinmiş Bir İstasyon Yeri kurtar"
 
-#: tqsl.cpp:1184
+#: tqsl.cpp:1207
 msgid "&Contents"
 msgstr "&İçerik"
 
-#: tqsl.cpp:1186
+#: tqsl.cpp:1209
 msgid "Display &Documentation"
 msgstr "Dokümantasyonu Göster"
 
-#: tqsl.cpp:1191
+#: tqsl.cpp:1214
 msgid "Check for &Updates..."
 msgstr "&Güncellemeleri Kontrol Et."
 
-#: tqsl.cpp:1193
+#: tqsl.cpp:1216
 msgid "&About"
 msgstr "&Hakkında"
 
-#: tqsl.cpp:1196 tqsl_prefs.cpp:98
+#: tqsl.cpp:1219 tqsl_prefs.cpp:104
 msgid "&File"
 msgstr "&Dosya"
 
-#: tqsl.cpp:1197
+#: tqsl.cpp:1220
 msgid "&Station Location"
 msgstr "&İstasyon Yeri"
 
-#: tqsl.cpp:1198
+#: tqsl.cpp:1221
 msgid "Callsign &Certificate"
 msgstr "Çağrı adı ve &Sertifika"
 
-#: tqsl.cpp:1199
+#: tqsl.cpp:1222
 msgid "&Help"
 msgstr "&Yardım"
 
-#: tqsl.cpp:1214 tqsl.cpp:1304
+#: tqsl.cpp:1237 tqsl.cpp:1322
 msgid "Log Operations"
 msgstr "Log İşlemleri"
 
-#: tqsl.cpp:1221 tqsl.cpp:1523
+#: tqsl.cpp:1244 tqsl.cpp:1560
 msgid "Status Log"
 msgstr "Durum Kaydı"
 
-#: tqsl.cpp:1243 tqsl.cpp:1248
+#: tqsl.cpp:1270
 msgid "Sign a log and upload it automatically to LoTW"
 msgstr "Bir log dosyasını imzalayıp, otomatik olarak LOTW'ye yükleyin"
 
-#: tqsl.cpp:1260 tqsl.cpp:1264
+#: tqsl.cpp:1285
 msgid "Sign a log and save it for uploading later"
 msgstr "Bir log dosyasını imzalayıp, daha sonra yüklemek için kaydedin"
 
-#: tqsl.cpp:1277 tqsl.cpp:1281
+#: tqsl.cpp:1301
 msgid "Create an ADIF file for signing and uploading"
 msgstr "İmzalamak ve yüklemek için Bir ADIF dosyası yaratın"
 
-#: tqsl.cpp:1293 tqsl.cpp:1297
+#: tqsl.cpp:1316
 msgid "Log in to the Logbook of the World Site"
 msgstr "LOTW Web sitesine Giriniz"
 
-#: tqsl.cpp:1329
+#: tqsl.cpp:1354
 msgid "Select a Station Location to process      "
 msgstr "İlerlemek için İstasyon Yeri Seç "
 
-#: tqsl.cpp:1360
+#: tqsl.cpp:1387
 msgid "Create a new Station Location"
 msgstr "Yeni İstasyon Yeri Oluştur"
 
-#: tqsl.cpp:1375 tqsl.cpp:6840 tqsl.cpp:6841
+#: tqsl.cpp:1402 tqsl.cpp:7121
 msgid "Edit a Station Location"
 msgstr "İstasyon Yeri Güncelle"
 
-#: tqsl.cpp:1391 tqsl.cpp:6842 tqsl.cpp:6843
+#: tqsl.cpp:1419 tqsl.cpp:7123
 msgid "Delete a Station Location"
 msgstr "İstasyon Yeri Sil"
 
-#: tqsl.cpp:1407 tqsl.cpp:6844 tqsl.cpp:6845
+#: tqsl.cpp:1436 tqsl.cpp:7125
 msgid "Display Station Location Properties"
 msgstr "İlerlemek için Çağrı Adı Sertifikası Göster"
 
-#: tqsl.cpp:1433 tqsl.cpp:6606
+#: tqsl.cpp:1464 tqsl.cpp:6867
 msgid "Select a Callsign Certificate to process"
 msgstr "İlerlemek için Çağrı Adı Sertifikası Seç"
 
-#: tqsl.cpp:1459
+#: tqsl.cpp:1492
 msgid "Load a Callsign Certificate"
 msgstr "Çağrı Adı Sertifikası Yükle"
 
-#: tqsl.cpp:1476 tqsl.cpp:6598 tqsl.cpp:6599
+#: tqsl.cpp:1509 tqsl.cpp:6859
 msgid "Save a Callsign Certificate"
 msgstr "Çağrı Adı Sertifikası Kaydet"
 
-#: tqsl.cpp:1492 tqsl.cpp:6403 tqsl.cpp:6600 tqsl.cpp:6601 tqsl.cpp:6656
-#: tqsl.cpp:6657
+#: tqsl.cpp:1526 tqsl.cpp:6652 tqsl.cpp:6861 tqsl.cpp:6928
 msgid "Renew a Callsign Certificate"
 msgstr "Çağrı Adı Sertifikası Yenile"
 
-#: tqsl.cpp:1508
+#: tqsl.cpp:1543
 msgid "Display a Callsign Certificate's Properties"
 msgstr "Sertifika ve Özellikleri göster"
 
-#: tqsl.cpp:1540 tqsl.cpp:1681 tqsl.cpp:1711
+#: tqsl.cpp:1577 tqsl.cpp:1714 tqsl.cpp:1744
 msgid "Add Station Location"
 msgstr "İstasyon Konumunu Ekle"
 
-#: tqsl.cpp:1630
+#: tqsl.cpp:1663
 msgid "About"
 msgstr "Hakkında"
 
-#: tqsl.cpp:1643
+#: tqsl.cpp:1676
 msgid "Log File"
 msgstr "Log Dosyası"
 
-#: tqsl.cpp:1644
+#: tqsl.cpp:1677
 msgid "Log files (*.log)|*.log|All files (*.*)|*.*"
 msgstr "Log files (*.log)|*.log|All files (*.*)|*.*"
 
-#: tqsl.cpp:1651
-#, c-format
+#: tqsl.cpp:1684
 msgid "Error opening diagnostic log %s: %hs"
 msgstr "Diagnostic log dosyasını açarken hata:  %s: %hs"
 
-#: tqsl.cpp:1652
+#: tqsl.cpp:1685
 msgid "Log File Error"
 msgstr "Log Dosyası Hatası"
 
 #. TRANSLATORS: uncommon error - error in a station location, followed by the ignore message that follows.
-#: tqsl.cpp:1739 tqsl.cpp:3076 tqsl.cpp:6961
+#: tqsl.cpp:1772 tqsl.cpp:3186 tqsl.cpp:7242
 msgid "The invalid data was ignored."
 msgstr "Geçersiz bilgi yok sayıldı."
 
-#: tqsl.cpp:1740
+#: tqsl.cpp:1773
 msgid "Location data error"
 msgstr "Lokasyon Data hatası"
 
-#: tqsl.cpp:1744 tqsl.cpp:1771 tqsl.cpp:3081 tqsl.cpp:6966
-#, c-format
+#: tqsl.cpp:1777 tqsl.cpp:1804 tqsl.cpp:3191 tqsl.cpp:7247
 msgid "Edit Station Location : %hs - %s"
 msgstr "İstasyon Yeri güncelle: %hs - %s"
 
-#: tqsl.cpp:1780 tqsl.cpp:5895
+#: tqsl.cpp:1813 tqsl.cpp:6127
 msgid "Edit Station Location"
 msgstr "İstasyon Yeri güncelle"
 
-#: tqsl.cpp:1780 tqsl.cpp:7271 tqsl.cpp:7373 tqsl_prefs.cpp:95
+#: tqsl.cpp:1813 tqsl.cpp:7552 tqsl.cpp:7654 tqsl_prefs.cpp:101
 msgid "Close"
 msgstr "Kapat"
 
-#: tqsl.cpp:1890
+#: tqsl.cpp:1923
 msgid "Open File"
 msgstr "Dosya Aç"
 
-#: tqsl.cpp:2007
+#: tqsl.cpp:2078
 msgid "Please choose a callsign for this Station Location"
 msgstr "Bu istasyon lokasyonu için bir çağrı işareti seçin"
 
-#: tqsl.cpp:2008
+#: tqsl.cpp:2079
 msgid "Select Callsign"
 msgstr "Çağrı Adını Seçin"
 
-#: tqsl.cpp:2039
+#: tqsl.cpp:2111
 msgid "There are no valid callsign certificates for callsign"
 msgstr "Bu çağrı işareti için geçerli sertifika dosyası bulunamadı"
 
-#: tqsl.cpp:2041
+#: tqsl.cpp:2113
 msgid "in entity"
 msgstr "dXCC Girdisi"
 
-#: tqsl.cpp:2043
+#: tqsl.cpp:2115
 msgid "Signing aborted."
 msgstr "İmzalama işlemi iptal edildi."
 
-#: tqsl.cpp:2054
-#, c-format
+#: tqsl.cpp:2126
 msgid "Signing using Callsign %hs, DXCC Entity %hs"
 msgstr "%hs Çağrı adı ile, %hs DXCC bilgisi ile imzalanıyor"
 
-#: tqsl.cpp:2074
-msgid ""
-"TQSL must wait for other running copies of TQSL to exit before signing..."
-msgstr ""
-"İmzalamadan önce TQSL diğer açık TQSL programlarının kapanmasını "
-"bekleyecektir..."
+#: tqsl.cpp:2146
+msgid "Another copy of TQSL is signing a log"
+msgstr "Başka bir TQSL kopyası bir kaydı imzalıyor"
 
-#: tqsl.cpp:2102 tqsl.cpp:2346
+#: tqsl.cpp:2147
+msgid ""
+"TQSL must wait for other running copies of TQSL to exit before signing ..."
+msgstr ""
+"TQSL, imzalamadan önce diğer çalışan TQSL kopyalarının çıkmasını "
+"beklemelidir..."
+
+#: tqsl.cpp:2152
+msgid "Aborting due to user cancelling"
+msgstr "Kullanıcı iptali nedeniyle işlemi sonlandırılıyor"
+
+#: tqsl.cpp:2180 tqsl.cpp:2436
 msgid "Cancelled"
 msgstr "İptal edildi"
 
-#: tqsl.cpp:2156 tqsl.cpp:2166
+#: tqsl.cpp:2234 tqsl.cpp:2244
 #, c-format
 msgid "QSOs: %d"
 msgstr "QSO: %d"
 
-#: tqsl.cpp:2158
+#: tqsl.cpp:2236
 #, c-format
-msgid "Already Uploaded: %d"
-msgstr "Daha önce Yüklendi: %d"
+msgid "Previously Signed: %d"
+msgstr "Daha önce İmzalanmış: %d"
 
-#: tqsl.cpp:2160 tqsl.cpp:2170
+#: tqsl.cpp:2238 tqsl.cpp:2248
 #, c-format
 msgid "Errors: %d"
 msgstr "Hata: %d"
 
-#: tqsl.cpp:2168
+#: tqsl.cpp:2246
 #, c-format
-msgid "Already uploaded: %d"
-msgstr "Daha önce yüklendi: %d"
+msgid "Previously signed: %d"
+msgstr "Daha önce İmzalanmış: %d"
 
-#: tqsl.cpp:2177
+#: tqsl.cpp:2255
 msgid ""
 "This log has too many previously uploaded QSOs. Please only upload new QSOs "
 "or break the log into smaller pieces (50,000 QSOs or less)."
 msgstr ""
+"Bu kayıtta çok fazla daha önce yüklenmiş QSO bulunuyor. Lütfen yalnızca yeni "
+"QSOs yükleyin veya kaydı daha küçük parçalara ayırın (50.000 QSO veya daha "
+"az)."
 
-#: tqsl.cpp:2245 tqsl.cpp:2326
+#: tqsl.cpp:2327 tqsl.cpp:2411
 #, c-format
 msgid "on line %d"
 msgstr "satır no %d 'de"
 
-#: tqsl.cpp:2255
+#: tqsl.cpp:2337
 #, c-format
 msgid ""
 "Your QTH Details changed for this QSO.\n"
@@ -1503,146 +1581,175 @@ msgstr ""
 "\n"
 "Lütfen bu değişikliği teyit edin!\n"
 
-#: tqsl.cpp:2277
+#: tqsl.cpp:2359
 msgid "Click 'Ignore' to continue signing this log while ignoring errors."
 msgstr "Hataları yoksayıp devam etmek için 'YOKSAY' a basınız."
 
-#: tqsl.cpp:2279
+#: tqsl.cpp:2361
 msgid "Click 'Cancel' to abandon signing this log."
 msgstr "İmzalamaktan vazgeçmek için 'İPTAL' e basınız."
 
-#: tqsl.cpp:2307
+#: tqsl.cpp:2389
 msgid "Signing cancelled"
 msgstr "İmzalama işlemi iptal edildi"
 
-#: tqsl.cpp:2310
+#: tqsl.cpp:2392
+msgid "Duplicate QSO detected"
+msgstr "Yinelenen QSO tespit edildi"
+
+#: tqsl.cpp:2395
 msgid "Signing aborted"
 msgstr "İmzalama işlemi iptal edildi"
 
-#: tqsl.cpp:2329
+#: tqsl.cpp:2414
 msgid "Signing aborted due to errors"
 msgstr "İmzalama işlemi hatalar yüzünden iptal edildi"
 
-#: tqsl.cpp:2333
+#: tqsl.cpp:2418
 #, c-format
-msgid "%s: %d QSO records were outside the selected date range"
-msgstr "%s: %d QSO seçili tarih aralığının dışında"
+msgid "%s: %d QSOs were outside the selected date range"
+msgstr "%s: %d QSO seçilen tarih aralığının dışında"
 
-#: tqsl.cpp:2365
-msgid "All QSOs are already uploaded; aborted"
-msgstr "Tüm QSO'Lar daha önceden yüklendi. İşlem iptal edildi"
+#: tqsl.cpp:2455
+msgid "All QSOs are previously signed; aborted"
+msgstr "Tüm QSOs daha önce imzalanmış; işlem iptal edildi"
 
-#: tqsl.cpp:2372
+#: tqsl.cpp:2462
 #, c-format
-msgid "%d of %d QSOs are already uploaded; aborted"
-msgstr "%d QSO'dan  %d  tanesi daha önce yüklendi. İptal edildi"
+msgid "%d of %d QSOs are previously signed; aborted"
+msgstr "%d'si %d QSO'nun daha önce imzalanmış; işlem iptal edildi"
 
-#: tqsl.cpp:2389
+#: tqsl.cpp:2479
 #, c-format
-msgid "%s: %d QSO records were already uploaded"
-msgstr "%s: QSO'dan %d adedi daha önce yüklendi"
+msgid "%s: %d QSO records were previously signed"
+msgstr "%s: %d QSO kaydı daha önce imzalanmış"
 
-#: tqsl.cpp:2417
+#: tqsl.cpp:2507
 msgid "Invalid contact - QSO does not specify a Callsign"
 msgstr "Geçersiz kayıt. QSO'nun  Çağrı adı bilgisi yok"
 
-#: tqsl.cpp:2418
+#: tqsl.cpp:2508
 msgid "Invalid contact - QSO does not specify a band or frequency"
 msgstr "Geçersiz kayıt. QSO'nun band veya frekans bilgisi yok"
 
-#: tqsl.cpp:2419
+#: tqsl.cpp:2509
 msgid "Invalid contact - QSO does not specify a mode"
 msgstr "Geçersiz kayıt. QSO'nun mod bilgisi yok"
 
-#: tqsl.cpp:2420
+#: tqsl.cpp:2510
 msgid "Invalid contact - QSO does not specify a date"
 msgstr "Geçersiz kayıt. QSO'nun tarih bilgisi yok"
 
-#: tqsl.cpp:2421
+#: tqsl.cpp:2511
 msgid "Invalid contact - QSO does not specify a time"
 msgstr "Geçersiz kayıt. QSO'nun saat bilgisi yok"
 
-#: tqsl.cpp:2423
+#: tqsl.cpp:2513
 msgid "This callsign certificate is already active and cannot be restored."
 msgstr "Bu Sertifika zaten aktifleştirilmiş. Tekrar geri yüklenemez."
 
-#: tqsl.cpp:2458
+#: tqsl.cpp:2548
 #, c-format
 msgid "Unable to open %s for output"
 msgstr "Çıktı için  %s açılamıyor"
 
-#: tqsl.cpp:2467
+#: tqsl.cpp:2558
 msgid "No records output"
 msgstr "Yüklenecek kayıt yok"
 
-#: tqsl.cpp:2524
+#: tqsl.cpp:2621
 #, c-format
 msgid "%s: wrote %d records to %s"
 msgstr "%s: wrote %d  %s 'ya"
 
-#: tqsl.cpp:2526
+#: tqsl.cpp:2624
 #, c-format
 msgid "%s is ready to be emailed or uploaded."
 msgstr "%s e-posta ile göndermeye veya yüklemeye hazırdır."
 
-#: tqsl.cpp:2527
+#: tqsl.cpp:2625
 msgid "Note: TQSL assumes that this file will be uploaded to LoTW."
 msgstr "Not: TQSL dosyanın LOTW ye yükleneceğini öngörmektedir."
 
-#: tqsl.cpp:2528
+#: tqsl.cpp:2626
 msgid ""
-"Resubmitting these QSOs will cause them to be reported as already uploaded."
+"Resubmitting these QSOs will cause them to be reported as already signed."
 msgstr ""
-"Bu QSO'ları tekrar göndermek, daha önceden yüklendi hatası alınmasına neden "
-"olacaktır."
-
-#: tqsl.cpp:2530
-msgid "To submit the signed log file to LoTW:\n"
-msgstr ""
-
-#: tqsl.cpp:2613
-msgid "No records to upload"
-msgstr "Yüklenecek kayıt yok"
+"Bu QSOs'u yeniden göndermek, onların zaten imzalanmış olarak raporlanmasına "
+"neden olacaktır."
 
 #: tqsl.cpp:2628
+#, c-format
+msgid ""
+"To submit the signed log file to LoTW:\n"
+"1. Move the signed log file to a computer with internet access\n"
+"2. Log in to your LoTW Web Account\n"
+"3. Select the Upload File tab\n"
+"4. Click the Choose File button, and select the signed log file you created "
+"(%s)\n"
+"5. Click the Upload file button\n"
+"\n"
+"Alternatively, you can attach the signed log file to an email message, and "
+"send the message to lotw-logs@arrl.org"
+msgstr ""
+"İmzalanmış dosyaları LoTW'ye yüklemek için:\n"
+"1.İmzalanmış dosyaları internet bağlantısı olan bir bilgisayara aktarın.\n"
+"2. LoTW web sayfasına hesabınızla giriş yapın.\n"
+"3. Dosya yükleme tabına geçin (Upload File)\n"
+"4. Dosya Seç (Choose File)'ı seçin ve buradan imzalanmış log dosyanızı (%s) "
+"işaretleyin.\n"
+"5. Yükle (upload) 'a basın\n"
+"\n"
+"Alternatif olarak imzalanmış dosyanızı lotw-logs@arrl.org adresine email "
+"olarak gönderebilirsiniz"
+
+#: tqsl.cpp:2630
+msgid ""
+"Note: TQSL has not recorded signing these QSOs. You can submit this log file "
+"to LoTW or discard it."
+msgstr ""
+"Not: TQSL, bu QSOs'u imzaladığını kaydetmemiştir. Bu kayıt dosyasını LoTW'ye "
+"gönderebilir veya silebilirsiniz."
+
+#: tqsl.cpp:2735
 msgid "Error compressing before upload"
 msgstr "Yükleme öncesi sıkıştırma başarısız"
 
-#: tqsl.cpp:2734
+#: tqsl.cpp:2842
 msgid "Unable to open ca-bundle.crt. Your TQSL installation is incomplete"
 msgstr "Ca-bundle.crt dosyası açılamadı. TQSL kurulumu tamamlanamadı"
 
-#: tqsl.cpp:2799
+#: tqsl.cpp:2907
 msgid "Error: Could not upload file (CURL Init error)"
 msgstr "Curl Hatası. Dosya yüklenemiyor"
 
-#: tqsl.cpp:2834
+#: tqsl.cpp:2942
 msgid "Attempting to upload one QSO"
 msgstr "Bir QSO yüklenmeye çalışılıyor"
 
-#: tqsl.cpp:2836
+#: tqsl.cpp:2944
 #, c-format
 msgid "Attempting to upload %d QSOs"
 msgstr "%d QSO yüklenmeye çalışılıyor"
 
-#: tqsl.cpp:2839
+#: tqsl.cpp:2947
 #, c-format
 msgid "Attempting to upload %s"
 msgstr "%s yüklenmeye çalışılıyor"
 
-#: tqsl.cpp:2846
+#: tqsl.cpp:2954
 msgid "Uploading Callsign Certificate"
 msgstr "Sertifika yükleniyor"
 
-#: tqsl.cpp:2846
+#: tqsl.cpp:2954
 msgid "Uploading Callsign Certificate Request..."
 msgstr "Sertifika isteği yükleniyor..."
 
-#: tqsl.cpp:2855
+#: tqsl.cpp:2963
 msgid "Could not spawn upload thread!"
 msgstr "Yükleme programı durdurulamadı!"
 
-#: tqsl.cpp:2887
+#: tqsl.cpp:2997
 #, c-format
 msgid ""
 "%s: Log uploaded successfully with result:\n"
@@ -1653,11 +1760,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: tqsl.cpp:2889 tqsl.cpp:2910
+#: tqsl.cpp:2999 tqsl.cpp:3020
 msgid "After reading this message, you may close this program."
 msgstr "Bu mesajı gördükten sonra programı kapatabilirsiniz."
 
-#: tqsl.cpp:2897 tqsl.cpp:2902
+#: tqsl.cpp:3007 tqsl.cpp:3012
 #, c-format
 msgid ""
 "%s uploaded with result:\n"
@@ -1668,7 +1775,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: tqsl.cpp:2899
+#: tqsl.cpp:3009
 #, c-format
 msgid ""
 "%s Uploaded with result:\n"
@@ -1679,32 +1786,32 @@ msgstr ""
 "\n"
 "%s"
 
-#: tqsl.cpp:2909
+#: tqsl.cpp:3019
 #, c-format
 msgid "%s: Log uploaded successfully"
 msgstr "%s: log yüklendi"
 
-#: tqsl.cpp:2912
+#: tqsl.cpp:3022
 #, c-format
 msgid "%s uploaded successfully"
 msgstr "%s başarıyla yüklendi"
 
-#: tqsl.cpp:2919
+#: tqsl.cpp:3029
 #, c-format
 msgid "%s: %s upload was rejected with result \"%s\""
 msgstr "%s: %s yükleme başarısız: \"%s\""
 
-#: tqsl.cpp:2923
+#: tqsl.cpp:3033
 #, c-format
 msgid "%s: %s upload was rejected"
 msgstr "%s: %s yükleme reddedildi"
 
-#: tqsl.cpp:2929
+#: tqsl.cpp:3039
 #, c-format
 msgid "%s: Got an unexpected response on %s upload! Maybe the site is down?"
 msgstr "%s: %s için beklenmedik bir hata oluştu. Belki site çalışmıyordur?"
 
-#: tqsl.cpp:2941
+#: tqsl.cpp:3051
 #, c-format
 msgid ""
 "%s: Unable to upload - either your Internet connection is down or LoTW is "
@@ -1712,42 +1819,40 @@ msgid ""
 msgstr ""
 "%s: Yükleme Yapılamadı.  Internet sorunu ya da LOTW sitesinde Problem var."
 
-#: tqsl.cpp:2942 tqsl.cpp:2946 tqsl.cpp:2950
+#: tqsl.cpp:3052 tqsl.cpp:3056 tqsl.cpp:3060
 #, c-format
 msgid "Please try uploading the %s later."
 msgstr "%s yüklemeyi daha sonra tekrar deneyin."
 
-#: tqsl.cpp:2945
+#: tqsl.cpp:3055
 #, c-format
 msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
 msgstr ""
 "%s: Yükleme Yapılamadı.  Internet sorunu ya da LOTW sitesinde Problem var."
 
-#: tqsl.cpp:2949
+#: tqsl.cpp:3059
 #, c-format
 msgid "%s: Unable to connect to the upload site."
 msgstr "%s: yükleme sunucusuna bağlanılamadı."
 
-#: tqsl.cpp:2953
+#: tqsl.cpp:3063
 #, c-format
 msgid "%s: Upload cancelled"
 msgstr "%s: yükleme iptal edildi"
 
-#: tqsl.cpp:2958
-#, c-format
+#: tqsl.cpp:3068
 msgid "%s: Couldn't upload the file: CURL returned \"%hs\" (%hs)"
 msgstr "%s: Dosya yüklenemedi. CURL şu hata mesajını döndü:  \"%hs\" (%hs)"
 
-#: tqsl.cpp:2971
+#: tqsl.cpp:3081
 msgid "Your upload appears to have failed. Should TQSL try again?"
 msgstr "Güncelleme başarısız. Tekrar deneyelim mi?"
 
-#: tqsl.cpp:2971
+#: tqsl.cpp:3081 tqsl.cpp:6794
 msgid "Retry?"
 msgstr "TEKRAR?"
 
-#: tqsl.cpp:3000
-#, c-format
+#: tqsl.cpp:3110
 msgid ""
 "There are no callsign certificates for callsign %hs. This station location "
 "cannot be edited."
@@ -1755,12 +1860,11 @@ msgstr ""
 "%hs çağrı işareti için sertifika dosyası bulunmuyor. İstasyon lokasyonu "
 "değiştirilemez."
 
-#: tqsl.cpp:3000 tqsl.cpp:3002 tqsl.cpp:3036
+#: tqsl.cpp:3110 tqsl.cpp:3112 tqsl.cpp:3146
 msgid "No Certificate"
 msgstr "Sertifika yok"
 
-#: tqsl.cpp:3002 tqsl.cpp:3022
-#, c-format
+#: tqsl.cpp:3112 tqsl.cpp:3132
 msgid ""
 "There are no current callsign certificates for callsign %hs. This station "
 "location cannot be used to sign a log file."
@@ -1768,8 +1872,7 @@ msgstr ""
 "%hs çağrı işareti için sertifika dosyası bulunmuyor. Bu istasyon için log "
 "imzalama işlemi yapılamaz."
 
-#: tqsl.cpp:3024
-#, c-format
+#: tqsl.cpp:3134
 msgid ""
 "There is a newer callsign certificate for callsign %hs. This station "
 "location cannot be used to sign a log file until the new certificate is "
@@ -1778,8 +1881,7 @@ msgstr ""
 "%hs çağrıadı için yeni bir sertifika bulunmaktadır. Bu istasyon lokasyonu "
 "yeni sertifika kurulana kadar kullanılamaz."
 
-#: tqsl.cpp:3026
-#, c-format
+#: tqsl.cpp:3136
 msgid ""
 "The callsign certificate for callsign %hs has expired. This station location "
 "cannot be used to sign a log file until a valid callsign certificate is "
@@ -1788,24 +1890,24 @@ msgstr ""
 "%hs çağrıadı süresi dolmuştur. Bu istasyon lokasyonu geçerli bir  sertifika "
 "kurulana kadar kullanılamaz."
 
-#: tqsl.cpp:3077 tqsl.cpp:3097 tqsl.cpp:6962
+#: tqsl.cpp:3187 tqsl.cpp:3207 tqsl.cpp:7243
 msgid "Station Location data error"
 msgstr "İstasyon Lokasyon Hatası"
 
-#: tqsl.cpp:3096
+#: tqsl.cpp:3206
 msgid "This should be corrected before signing a log file."
 msgstr "Log dosyası imzalanmadan bu problemin düzeltilmesi gerekmektedir."
 
-#: tqsl.cpp:3267
+#: tqsl.cpp:3376
 msgid "TQSL Update Available"
 msgstr "TQSL Güncellemesi Mevcut"
 
-#: tqsl.cpp:3279
+#: tqsl.cpp:3388
 #, c-format
 msgid "A new TQSL release (V%s) is available!"
 msgstr "Yeni TQSL sürümü (V%s) mevcut!"
 
-#: tqsl.cpp:3281
+#: tqsl.cpp:3390
 #, c-format
 msgid ""
 "An updated TrustedQSL configuration file (V%s) is available!\n"
@@ -1814,45 +1916,43 @@ msgstr ""
 "Güncel TrustedQSL konfigürasyon dosyası (V%s) var!\n"
 "Konfigurasyon dosyası, yeni modlar, DXCC girdileri gibi bilgileri içerir."
 
-#: tqsl.cpp:3289
+#: tqsl.cpp:3398
 msgid "Download from:"
 msgstr "Buradan İndir:"
 
-#: tqsl.cpp:3298
+#: tqsl.cpp:3407
 msgid "More details at:"
 msgstr "Detaylar için:"
 
-#: tqsl.cpp:3306
+#: tqsl.cpp:3415
 msgid "Click 'OK' to install the new version of TQSL, or Cancel to ignore it."
 msgstr ""
 "TQSL güncellemesi için 'TAMAM' a  veya iptal etmek için 'İPTAL' e basın."
 
-#: tqsl.cpp:3311
+#: tqsl.cpp:3420
 msgid ""
 "Click 'OK' to install the new configuration file, or Cancel to ignore it."
 msgstr ""
 "Konfigurasyon güncellemesi için 'TAMAM' a  veya iptal etmek için 'İPTAL' e "
 "basın."
 
-#: tqsl.cpp:3363
-#, c-format
+#: tqsl.cpp:3472
 msgid "Can't open new configuration file %s: %hs"
 msgstr "Yeni konfigürasyon dosyası açılamıyor %s: %hs"
 
-#: tqsl.cpp:3378 tqsl.cpp:3457
-#, c-format
+#: tqsl.cpp:3488 tqsl.cpp:3568
 msgid "Error writing new configuration file %s: %hs"
 msgstr "Yeni konfigürasyon dosyası yazılamıyor %s: %hs"
 
-#: tqsl.cpp:3386
+#: tqsl.cpp:3496
 msgid "Configuration file successfully updated"
 msgstr "Konfigurasyon güncellemesi tamamlandı"
 
-#: tqsl.cpp:3386
+#: tqsl.cpp:3496
 msgid "Update Completed"
 msgstr "Güncelleme tamamlandı"
 
-#: tqsl.cpp:3402 tqsl.cpp:3481
+#: tqsl.cpp:3512 tqsl.cpp:3592
 msgid ""
 "Unable to update - either your Internet connection is down or LoTW is "
 "unreachable."
@@ -1860,91 +1960,87 @@ msgstr ""
 "Güncellemeler kontrol edilemedi.  Internet sorunu ya da LOTW sitesinde "
 "Problem var."
 
-#: tqsl.cpp:3403 tqsl.cpp:3406 tqsl.cpp:3409 tqsl.cpp:3482 tqsl.cpp:3485
-#: tqsl.cpp:3488 tqsl.cpp:3982 tqsl.cpp:3988 tqsl.cpp:3994 tqsl.cpp:4017
-#: tqsl.cpp:4023 tqsl.cpp:4029
+#: tqsl.cpp:3513 tqsl.cpp:3516 tqsl.cpp:3519 tqsl.cpp:3593 tqsl.cpp:3596
+#: tqsl.cpp:3599 tqsl.cpp:4113 tqsl.cpp:4119 tqsl.cpp:4125 tqsl.cpp:4148
+#: tqsl.cpp:4154 tqsl.cpp:4160
 msgid "Please try again later."
 msgstr "Lütfen daha sonra tekrar deneyiniz."
 
-#: tqsl.cpp:3405 tqsl.cpp:3484
+#: tqsl.cpp:3515 tqsl.cpp:3595
 msgid "Unable to update. The network is down or the LoTW site is too busy."
 msgstr "Güncelleme başarısız. Ağ bağlantısı yok , ya da LOTW sitesi meşgul."
 
-#: tqsl.cpp:3408 tqsl.cpp:3487 tqsl.cpp:3992 tqsl.cpp:4027
+#: tqsl.cpp:3518 tqsl.cpp:3598 tqsl.cpp:4123 tqsl.cpp:4158
 msgid "Unable to connect to the update site."
 msgstr "Güncelleme sunucusuna bağlanırken sorun oluştu."
 
-#: tqsl.cpp:3411
+#: tqsl.cpp:3521
 msgid "Error downloading new configuration file:"
 msgstr "Konfigurasyon dosyası indirirken sorun oluştu:"
 
-#: tqsl.cpp:3413 tqsl.cpp:3492 tqsl.cpp:3767
+#: tqsl.cpp:3523 tqsl.cpp:3603 tqsl.cpp:3894
 msgid "Update"
 msgstr "Güncelle"
 
-#: tqsl.cpp:3442
-#, c-format
+#: tqsl.cpp:3552
 msgid "Can't open TQSL update file %s: %hs"
 msgstr "TQSL güncelleme dosyası açılamıyor. %s: %hs"
 
-#: tqsl.cpp:3490
+#: tqsl.cpp:3601
 msgid "Error downloading new file:"
 msgstr "Yeni dosya indirme hatası:"
 
-#: tqsl.cpp:3730
+#: tqsl.cpp:3857
 msgid "Error checking for expired callsign certificates:"
 msgstr "Süresi biten sertifikaları kontrol hatası:"
 
-#: tqsl.cpp:3731
+#: tqsl.cpp:3858
 msgid "Check Error"
 msgstr "Kontrol Hatası"
 
-#: tqsl.cpp:3734
-#, c-format
+#: tqsl.cpp:3861
 msgid "The certificate for %hs expires in %d days."
 msgstr "%hs  için sertifika süresi  %d gün içinde doluyor."
 
-#: tqsl.cpp:3737
-#, c-format
+#: tqsl.cpp:3864
 msgid "The certificate for %hs expires in %d days"
 msgstr "%hs  için sertifika süresi  %d gün içinde doluyor"
 
-#: tqsl.cpp:3739
+#: tqsl.cpp:3866
 msgid "Do you want to renew it now?"
 msgstr "Şimdi yenilemek ister misiniz?"
 
-#: tqsl.cpp:3741
+#: tqsl.cpp:3868
 msgid "Certificate Expiring"
 msgstr "Sertifika süreniz doluyor"
 
-#: tqsl.cpp:3785
+#: tqsl.cpp:3912
 #, c-format
 msgid "A new TQSL release (V%s) is available."
 msgstr "YeniTQSL sürümü (V%s) mevcut."
 
-#: tqsl.cpp:3802
+#: tqsl.cpp:3929
 #, c-format
 msgid "A new TrustedQSL configuration file (V%s) is available."
 msgstr "Yeni bir  TrustedQSL konfigürasyon dosyası (V%s) mevcut."
 
-#: tqsl.cpp:3815
+#: tqsl.cpp:3942
 msgid "Your system is up to date"
 msgstr "Sisteminiz güncel"
 
-#: tqsl.cpp:3817
-#, c-format
+#: tqsl.cpp:3944
 msgid "TQSL Version %hs and Configuration Data Version %s"
 msgstr "TQSL Versiyonu %hs ve KOnfigurasyon Data Versiyonu %s"
 
-#: tqsl.cpp:3819
+#: tqsl.cpp:3946
 msgid "are the newest available"
 msgstr "en yeni sürüm"
 
-#: tqsl.cpp:3820
+#: tqsl.cpp:3947
 msgid "No Updates"
 msgstr "Güncelleme yok"
 
-#: tqsl.cpp:3980 tqsl.cpp:4015
+#: tqsl.cpp:4111 tqsl.cpp:4146
 msgid ""
 "Unable to check for updates - either your Internet connection is down or "
 "LoTW is unreachable."
@@ -1952,7 +2048,7 @@ msgstr ""
 "Güncellemeler kontrol edilemedi.  Internet sorunu ya da LOTW sitesinde "
 "Problem var."
 
-#: tqsl.cpp:3986 tqsl.cpp:4021
+#: tqsl.cpp:4117 tqsl.cpp:4152
 msgid ""
 "Unable to check for updates. The network is down or the LoTW site is too "
 "busy."
@@ -1960,289 +2056,282 @@ msgstr ""
 "Güncellemeler kontrol edilemedi.  Internet sorunu ya da LOTW sitesinde "
 "Problem var."
 
-#: tqsl.cpp:3997
+#: tqsl.cpp:4128
 msgid "Error downloading new version information:"
 msgstr "Yeni versiyon bilgisi indirilemedi:"
 
-#: tqsl.cpp:4032
+#: tqsl.cpp:4163
 msgid "Error downloading update version information:"
 msgstr "Güncelleme versiyon bilgisi yüklenirken hata oluştu:"
 
-#: tqsl.cpp:4336
+#: tqsl.cpp:4482
 msgid "You have no callsign certificates to use to sign a log file."
 msgstr "Log dosyası imzalamak için bir sertifika ya sahip değilsiniz."
 
-#: tqsl.cpp:4338
+#: tqsl.cpp:4484
 msgid "Please install a callsign certificate then try again."
 msgstr "Bir çağrı adı sertifikası yükleyip tekrar deneyin."
 
-#: tqsl.cpp:4339
+#: tqsl.cpp:4485
 msgid "No Callsign Certificates"
 msgstr "Sertifika Yok"
 
-#: tqsl.cpp:4364
+#: tqsl.cpp:4510
 msgid "|ADIF files ("
 msgstr "|ADIF dosyaları ("
 
-#: tqsl.cpp:4376
+#: tqsl.cpp:4522
 msgid "|Cabrillo files ("
 msgstr "|Cabrillo dosyaları ("
 
-#: tqsl.cpp:4379
+#: tqsl.cpp:4525
 msgid "Select file to Sign"
 msgstr "Imzalamak için dosya seçiniz"
 
-#: tqsl.cpp:4395
+#: tqsl.cpp:4541
 msgid "TQSL compressed data files (*.tq8)|*.tq8"
 msgstr "TQSL  sıkıştırılmış dosyalar (*.tq8)|*.tq8"
 
-#: tqsl.cpp:4396
+#: tqsl.cpp:4542
 msgid "TQSL data files (*.tq7)|*.tq7"
 msgstr "TQSL data dosyaları (*.tq7)|*.tq7"
 
-#: tqsl.cpp:4398
+#: tqsl.cpp:4544
 msgid "Select file to write to"
 msgstr "Yazılacak dosya seçin"
 
-#: tqsl.cpp:4414 tqsl.cpp:6018
+#: tqsl.cpp:4560 tqsl.cpp:6263
 msgid "Select Station Location for Signing"
 msgstr "İmzalamak için istasyon seçin"
 
-#: tqsl.cpp:4447
+#: tqsl.cpp:4593
 msgid "Signing abandoned"
 msgstr "İmzalama iptal edildi"
 
-#: tqsl.cpp:4635
+#: tqsl.cpp:4811
 msgid ""
 "TQSL must wait for other running copies of TQSL to exit before backing up..."
 msgstr ""
 "Yedekleme yapılmadan önce TQSL diğer açık TQSL programlarının kapanmasını "
 "bekleyecektir..."
 
-#: tqsl.cpp:4650 tqsl.cpp:5201
-#, c-format
+#: tqsl.cpp:4828 tqsl.cpp:5384
 msgid "Error opening save file %s: %hs"
 msgstr "Kayıt dosyası %s açılamadı: %hs"
 
-#: tqsl.cpp:4666
+#: tqsl.cpp:4844
 msgid "Saving callsign certificates"
 msgstr "Sertifikalar kaydediliyor"
 
-#: tqsl.cpp:4710
-#, c-format
+#: tqsl.cpp:4888
 msgid "Saving callsign certificate for %hs"
 msgstr "%hs için sertifika  kaydediliyor"
 
-#: tqsl.cpp:4743
+#: tqsl.cpp:4921
 msgid "Saving Station Locations"
 msgstr "İstasyon Yeri Kaydediliyor"
 
-#: tqsl.cpp:4759
+#: tqsl.cpp:4937
 msgid "Saving TQSL Preferences"
 msgstr "TQSL Seçimleri kaydediliyor"
 
-#: tqsl.cpp:4773
+#: tqsl.cpp:4951
 msgid "Saving QSOs"
 msgstr "QSOlar kaydeidliyor"
 
-#: tqsl.cpp:4817
+#: tqsl.cpp:4997
 msgid "Save operation complete."
 msgstr "Kayıt işlemi tamamlandı."
 
-#: tqsl.cpp:4826
-#, c-format
+#: tqsl.cpp:5006
 msgid "Error performing automatic backup: %hs"
 msgstr "Otomatik Yedekleme Hatası: %hs"
 
-#: tqsl.cpp:4827
+#: tqsl.cpp:5007
 msgid "Backup Error"
 msgstr "Yedekleme hatası"
 
-#: tqsl.cpp:4829 tqsl.cpp:4848
-#, c-format
+#: tqsl.cpp:5009 tqsl.cpp:5028
 msgid "Backup operation failed: %hs"
 msgstr "Yedekleme Hatası: %hs"
 
-#: tqsl.cpp:4839
+#: tqsl.cpp:5019
 msgid "Enter file to save to"
 msgstr "Kaydetmek için dosya seçin"
 
-#: tqsl.cpp:4840
+#: tqsl.cpp:5020
 msgid "Configuration files (*.tbk)|*.tbk|All files (*.*)|*.*"
 msgstr "Konfigurayon Dosyaları(*.tbk)|*.tbk|All files (*.*)|*.*"
 
-#: tqsl.cpp:4885
-#, c-format
+#: tqsl.cpp:5065
 msgid "Restoring callsign certificate for %hs"
 msgstr "%hs için sertifikalar geri yükleniyor"
 
-#: tqsl.cpp:4931
+#: tqsl.cpp:5111
 msgid "Restoring Preferences"
 msgstr "Tercihler geri yükleniyor"
 
-#: tqsl.cpp:4990
+#: tqsl.cpp:5173
 msgid "Restoring Station Locations"
 msgstr "İstasyon Yeri geri yükleniyor"
 
-#: tqsl.cpp:5011
+#: tqsl.cpp:5194
 msgid "Restoring QSO records"
 msgstr "QSO kayıtları geri yükleniyor"
 
-#: tqsl.cpp:5069
-#, c-format
+#: tqsl.cpp:5252
 msgid "Error importing station locations: %hs"
 msgstr "İstasyon Lokasyon içe aktarım hatası:: %hs"
 
-#: tqsl.cpp:5133
+#: tqsl.cpp:5316
 msgid "Restoring Callsign Certificates"
 msgstr "Sertifikalar geri yükleniyor"
 
-#: tqsl.cpp:5140 tqsl.cpp:5148 tqsl.cpp:5153
-#, c-format
+#: tqsl.cpp:5323 tqsl.cpp:5331 tqsl.cpp:5336
 msgid "Error parsing saved configuration file: %hs"
 msgstr "Kaydedilmiş konfigürasyon dosyası okuma hatası: %hs"
 
-#: tqsl.cpp:5157
+#: tqsl.cpp:5340
 msgid "Restore Complete."
 msgstr "Geri yükleme tamamlandı."
 
-#: tqsl.cpp:5171
-#, c-format
+#: tqsl.cpp:5354
 msgid "Error parsing station location file: %hs"
 msgstr "Kaydedilmiş lokasyon dosyası okuma hatası: %hs"
 
-#: tqsl.cpp:5183
+#: tqsl.cpp:5366
 msgid "Select saved configuration file"
 msgstr "Kaydedilmiş konfigürasyon dosyasını seçin"
 
-#: tqsl.cpp:5184
+#: tqsl.cpp:5367
 msgid "Saved configuration files (*.tbk)|*.tbk"
 msgstr "Konfigurasyon Dosyası (*.tbk)|*.tbk"
 
-#: tqsl.cpp:5214
-#, c-format
+#: tqsl.cpp:5397
 msgid "Restore operation failed: %hs"
 msgstr "Yedekten dönme Hatası: %hs"
 
-#: tqsl.cpp:5466
+#: tqsl.cpp:5687
 msgid "Exit TQSL so I can re-run as a normal user"
 msgstr ""
 "TQSL'den çıkın. Böylece normal kullanıcı olarak tekrar çalıştırılabilir"
 
-#: tqsl.cpp:5467
+#: tqsl.cpp:5688
 msgid "Allow TQSL to continue this time."
 msgstr "Bu sefer TQSL'in devam etmesine izin verin."
 
-#: tqsl.cpp:5468
+#: tqsl.cpp:5689
 msgid "Always allow running as Administrator."
 msgstr "Her zmaan Yönetici olarak çalıştırmaya izin ver."
 
-#: tqsl.cpp:5469
+#: tqsl.cpp:5690
 msgid "TQSL must not be run 'As Administrator'"
 msgstr "TQSL yönetici olarak çalıştırılmamalıdır."
 
-#: tqsl.cpp:5469
+#: tqsl.cpp:5690
 msgid "Administrator Error"
 msgstr "Yönetici Hatası"
 
-#: tqsl.cpp:5617
+#: tqsl.cpp:5833
 msgid "Specify dialog action - abort, all, compliant or ask"
 msgstr "Aksiyonu seçin- iptal, hepsi, uyumlu veya sor"
 
-#: tqsl.cpp:5618
+#: tqsl.cpp:5834
 msgid "Specify start date for QSOs to sign"
 msgstr "İmzalanacak QSO için başlangıç tarihi seçin"
 
-#: tqsl.cpp:5619
+#: tqsl.cpp:5835
 msgid "Specify default callsign for log signing"
 msgstr "İmzalanacak log için çağrı işareti seçin"
 
-#: tqsl.cpp:5620
+#: tqsl.cpp:5836
 msgid "Suppress date range dialog"
 msgstr "QSO Tarih aralığını gizle"
 
-#: tqsl.cpp:5621
+#: tqsl.cpp:5837
 msgid "Specify end date for QSOs to sign"
 msgstr "İmzalanacak QSO için bitiş tarihi seçin"
 
-#: tqsl.cpp:5622
+#: tqsl.cpp:5838
 msgid "Specify QSO verification action - ignore, report or update"
 msgstr "QSO doğrulama işlemini seçiniz. yoksay, raporla, güncelle"
 
-#: tqsl.cpp:5624
+#: tqsl.cpp:5840
 msgid "Display command line help"
 msgstr "Komut satırı yardım dosyasını görüntüle"
 
-#: tqsl.cpp:5625
+#: tqsl.cpp:5841
 msgid "Import a certificate file (.p12 or .tq6)"
 msgstr "Sertifika dosyasını içe aktar (.p12 or .tq6)"
 
-#: tqsl.cpp:5627
+#: tqsl.cpp:5843
 msgid "Selects Station Location"
 msgstr "İstasyon Yeri Seçer"
 
-#: tqsl.cpp:5629
+#: tqsl.cpp:5845
 msgid "Check for updates to tqsl and the configuration file"
 msgstr "TQSL ve Konfigurasyon dosyası güncellemerini kontrol et"
 
-#: tqsl.cpp:5630
+#: tqsl.cpp:5846
 msgid "Output file name (defaults to input name minus extension plus .tq8"
 msgstr "Çıktı dosya adı"
 
-#: tqsl.cpp:5631
+#: tqsl.cpp:5847
 msgid "Passphrase for the signing key"
 msgstr "İmzalamak anahtarı için şifre"
 
-#: tqsl.cpp:5632
+#: tqsl.cpp:5848
 msgid "Quiet Mode - same behavior as -x"
 msgstr "Sessiz mod"
 
-#: tqsl.cpp:5635
+#: tqsl.cpp:5851
 msgid "Edit (if used with -l) or create Station Location"
 msgstr "İstasyon Yeri yaratın ya da güncelleyin"
 
-#: tqsl.cpp:5636
+#: tqsl.cpp:5852
 msgid "File name for diagnostic tracking log"
 msgstr "Tanı dosyası adı"
 
-#: tqsl.cpp:5637
+#: tqsl.cpp:5853
 msgid "Upload after signing instead of saving"
 msgstr "İmzaladıktan sonra kaydetmek yerine sunucuya yükleyin"
 
-#: tqsl.cpp:5638
+#: tqsl.cpp:5854
 msgid "Display the version information and exit"
 msgstr "Versiyon bilgisini gösterip çık"
 
-#: tqsl.cpp:5640
+#: tqsl.cpp:5855
+msgid "Wipe the TQSL uploads database"
+msgstr "TQSL yüklemeleri veritabanını sil"
+
+#: tqsl.cpp:5856
 msgid "Exit after processing log (otherwise start normally)"
 msgstr "Logu işledikten sonra programdan çıkın"
 
-#: tqsl.cpp:5643
+#: tqsl.cpp:5859
 msgid "Input ADIF or Cabrillo log file to sign"
 msgstr "İmzalamak için ADIF veya Cabrillo Dosyasını girin"
 
-#: tqsl.cpp:5817 tqsl.cpp:5820
+#: tqsl.cpp:6049 tqsl.cpp:6052
 #, c-format
 msgid "Start date of %s is invalid"
 msgstr "%s başlangıç tarihi geçersiz"
 
-#: tqsl.cpp:5831 tqsl.cpp:5834
+#: tqsl.cpp:6063 tqsl.cpp:6066
 #, c-format
 msgid "End date of %s is invalid"
 msgstr "%s bitiş tarihi geçersiz"
 
-#: tqsl.cpp:5856
-#, c-format
+#: tqsl.cpp:6088
 msgid "The -a parameter %hs is not recognized"
 msgstr "%hs için -a parametresi tanınmıyor"
 
 #. TRANSLATORS: -f is the command line switch for log QTH handling
-#: tqsl.cpp:5877
-#, c-format
+#: tqsl.cpp:6109
 msgid "The -f parameter %hs is not recognized"
 msgstr "%hs için  -f parametresi tanınmıyor"
 
-#: tqsl.cpp:5958
+#: tqsl.cpp:6190 tqsl.cpp:6196
 msgid ""
 "To import this passphrase protected P12 file, you must pass the passphrase "
 "on the command line"
@@ -2250,11 +2339,11 @@ msgstr ""
 "Şifre ile korunmuş p12 dosyasını içe aktarmak için, komut satırında şifreyi "
 "kullanmalısınız"
 
-#: tqsl.cpp:5973
+#: tqsl.cpp:6218
 msgid "No logfile to sign!"
 msgstr "İmzalanacak Log Dosyası yok!"
 
-#: tqsl.cpp:5989
+#: tqsl.cpp:6234
 msgid ""
 "Warning: The TQSL ADIF editor only processes a limited number of ADIF "
 "fields.\n"
@@ -2265,171 +2354,178 @@ msgstr ""
 "\n"
 "Orijinal bilgilerin bir kısmı bu sırada silinebilir!"
 
-#: tqsl.cpp:6101
+#: tqsl.cpp:6346
 msgid "Please review the introductory documentation before using this program."
 msgstr "Bu programı kullanmadan önce açıklama dokümanlarını okuyun."
 
-#: tqsl.cpp:6102
+#: tqsl.cpp:6347
 msgid "Notice"
 msgstr "Bilgi"
 
-#: tqsl.cpp:6107
+#: tqsl.cpp:6352
 msgid ""
 "You have no callsign certificate installed on this computer with which to "
 "sign log submissions."
 msgstr "Bu bilgisyarda herhangi bir sertifika kurulu değil."
 
-#: tqsl.cpp:6109
+#: tqsl.cpp:6354
 msgid "Would you like to request a callsign certificate now?"
 msgstr "Sertifika başvurusu yapmak ister misiniz?"
 
-#: tqsl.cpp:6110
+#: tqsl.cpp:6356
+msgid "If you are planning to restore from a backup, please choose 'No'."
+msgstr ""
+"Bir yedekten geri yükleme yapmayı planlıyorsanız, lütfen 'Hayır'ı seçin."
+
+#: tqsl.cpp:6357
 msgid "Alert"
 msgstr "Uyarı"
 
-#: tqsl.cpp:6230
+#: tqsl.cpp:6479
 msgid "Display Callsign Certificate &Properties"
 msgstr "Sertifika ve Özellikleri &Göster"
 
-#: tqsl.cpp:6232
+#: tqsl.cpp:6481
 msgid "&Load Callsign Certificate from File"
 msgstr "Dosyadan Sertifika &Yükle"
 
-#: tqsl.cpp:6233
+#: tqsl.cpp:6482
 msgid "&Save Callsign Certificate to File..."
 msgstr "Çağrı Adı Sertifikası &Kaydet..."
 
-#: tqsl.cpp:6237
+#: tqsl.cpp:6486
 msgid "Request &New Callsign Certificate..."
 msgstr "&Yeni Sertifika İsteği Yap..."
 
-#: tqsl.cpp:6238
+#: tqsl.cpp:6487
 msgid "&Renew Callsign Certificate"
 msgstr "Çağrı Adı Sertifikası Y&enile"
 
-#: tqsl.cpp:6243
+#: tqsl.cpp:6492
 msgid "&Delete Callsign Certificate"
 msgstr "Sertifika S&il"
 
-#: tqsl.cpp:6249
+#: tqsl.cpp:6498
 msgid "Restore Deleted Callsign Certificate"
 msgstr "Silinmiş Sertifikayı geri getir"
 
-#: tqsl.cpp:6262
+#: tqsl.cpp:6511
 msgid "&Edit"
 msgstr "D&eğiştir"
 
-#: tqsl.cpp:6264
+#: tqsl.cpp:6513
 msgid "&Delete"
 msgstr "&Sil"
 
-#: tqsl.cpp:6311
+#: tqsl.cpp:6560
 msgid "Load Certificate File"
 msgstr "Sertifika dosyası yükle"
 
-#: tqsl.cpp:6403 crqwiz.h:51
+#: tqsl.cpp:6652 crqwiz.h:63
 msgid "Request a new Callsign Certificate"
 msgstr "Yeni Sertifika İsteği"
 
-#: tqsl.cpp:6436
+#: tqsl.cpp:6732
 msgid "Do you want to upload this certificate request to LoTW now?"
 msgstr "Bu sertifika İsteğini LOTW ye göndermek istiyor musunuz?"
 
-#: tqsl.cpp:6439
+#: tqsl.cpp:6735
 msgid "You do not need an account on LoTW to do this."
 msgstr "Bu işlem için LOTW üzerinde bir hesaba ihtiyacınız yoktur."
 
-#: tqsl.cpp:6441
+#: tqsl.cpp:6737
 msgid "Upload"
 msgstr "Yükle"
 
-#: tqsl.cpp:6451
+#: tqsl.cpp:6747 tqsl.cpp:6796
 msgid "tQSL Cert Request files (*."
 msgstr "tQSL Cert İstek Dosyaları (*."
 
-#: tqsl.cpp:6453
+#: tqsl.cpp:6749 tqsl.cpp:6798
 msgid "|All files ("
 msgstr "|Tüm Dosyalar ("
 
-#: tqsl.cpp:6454
+#: tqsl.cpp:6750 tqsl.cpp:6799
 msgid "Save request"
 msgstr "İsteği kaydet"
 
-#: tqsl.cpp:6457
+#: tqsl.cpp:6753 tqsl.cpp:6802
 msgid "Request cancelled"
 msgstr "İstek iptal edildi"
 
-#: tqsl.cpp:6518
-#, c-format
+#: tqsl.cpp:6766
 msgid "Error creating callsign certificate request: %hs"
 msgstr "Sertifika isteği yaratılamadı: %hs"
 
-#: tqsl.cpp:6518
+#: tqsl.cpp:6766
 msgid "Error creating Callsign Certificate Request"
 msgstr "Sertifika isteği yaratılamadı"
 
-#: tqsl.cpp:6531
-#, c-format
+#: tqsl.cpp:6779
 msgid "Error opening certificate request file %s: %hs"
 msgstr "Sertifika istek dosyası %s: %hs  açmakta problem oluştu"
 
-#: tqsl.cpp:6541 tqsl.cpp:7095 tqsl.cpp:7239
+#: tqsl.cpp:6789 tqsl.cpp:7376 tqsl.cpp:7520
 msgid "Certificate Request"
 msgstr "Sertifika İsteği"
 
-#: tqsl.cpp:6545
-msgid "Your certificate request did not upload properly"
-msgstr "Sertifika talebiniz düzgün şekilde yüklenemedi"
+#: tqsl.cpp:6793
+msgid "Your certificate request did not upload properly."
+msgstr "Sertifika talebiniz doğru şekilde yüklenmedi."
 
-#: tqsl.cpp:6546
-msgid "Please try again."
-msgstr "Lütfen tekrar deneyin."
+#: tqsl.cpp:6794
+msgid ""
+"Your upload appears to have failed.\n"
+"Do you want to save this request for uploading later?"
+msgstr ""
+"Yüklemeniz başarısız olmuş gibi görünüyor.\n"
+"Bu talebi daha sonra yüklemek için kaydetmek ister misiniz?"
 
-#: tqsl.cpp:6551
+#: tqsl.cpp:6812
 msgid "You may now send your new certificate request ("
 msgstr "Şimdi yeni sertifika talebinizi iletebilirsiniz("
 
-#: tqsl.cpp:6556
+#: tqsl.cpp:6817
 msgid "to:"
 msgstr "kime:"
 
-#: tqsl.cpp:6563
+#: tqsl.cpp:6824
 msgid "or "
 msgstr "veya "
 
-#: tqsl.cpp:6564
+#: tqsl.cpp:6825
 msgid "see:"
 msgstr "incele:"
 
-#: tqsl.cpp:6602 tqsl.cpp:6603
+#: tqsl.cpp:6863
 msgid "Display a Callsign Certificate"
 msgstr "Sertifika ve Özellikleri göster"
 
-#: tqsl.cpp:6645 tqsl.cpp:6647
+#: tqsl.cpp:6911 tqsl.cpp:6913
 msgid "Save the Callsign Certificate for"
 msgstr "Çağrı Adı Sertifikası Kaydet"
 
-#: tqsl.cpp:6648 tqsl.cpp:6650
+#: tqsl.cpp:6916 tqsl.cpp:6918
 msgid "Display the Callsign Certificate properties for"
 msgstr "Sertifika ve Özellikleri göster"
 
-#: tqsl.cpp:6652 tqsl.cpp:6654
+#: tqsl.cpp:6922 tqsl.cpp:6924
 msgid "Renew the Callsign Certificate for"
 msgstr "Çağrı Adı Sertifikası Yenile"
 
-#: tqsl.cpp:6698
+#: tqsl.cpp:6969
 msgid "Enter the name for the new Certificate Container file"
 msgstr "Yeni sertifika saklama depo dosyası adını girin"
 
-#: tqsl.cpp:6699
+#: tqsl.cpp:6970
 msgid "Certificate Container files (*.p12)|*.p12|All files (*.*)|*.*"
 msgstr "Sertifika Saklama Dosyası (*.p12)|*.p12|All files (*.*)|*.*"
 
-#: tqsl.cpp:6706
+#: tqsl.cpp:6977
 msgid "Enter the passphrase for the certificate container file."
 msgstr "Yeni sertifika saklama depo dosyası şifresi girin."
 
-#: tqsl.cpp:6708
+#: tqsl.cpp:6979
 msgid ""
 "If you are using a computer system that is shared with others, you should "
 "specify a passphrase to protect this certificate. However, if you are using "
@@ -2439,232 +2535,231 @@ msgstr ""
 "bilgisayarı başkaları ile ortak kullanıyorsanız, parola kullanmanız tavsiye "
 "edilir. Eğer kişisel bilgisayarınız ise, parola kullanmanıza gerek yoktur."
 
-#: tqsl.cpp:6710
+#: tqsl.cpp:6981
 msgid ""
 "You will have to enter the passphrase any time you load the file into "
 "TrustedQSL."
 msgstr ""
 "TrustedQSL'e dosyayı her yükleyişinizde bu şifreyi girmeniz gerekmektedir."
 
-#: tqsl.cpp:6714
+#: tqsl.cpp:6985
 msgid "Certificate Container Passphrase"
 msgstr "Sertifika saklama depo dosyası şifresi"
 
-#: tqsl.cpp:6745
-#, c-format
+#: tqsl.cpp:7026
 msgid "Export to %s failed: %hs"
 msgstr "%s' dışa aktarım yapılamadı: %hs"
 
-#: tqsl.cpp:6747
+#: tqsl.cpp:7028
 #, c-format
 msgid "Certificate saved in file %s"
 msgstr "Sertifika %s dosyasına kaydedildi"
 
-#: tqsl.cpp:6758
+#: tqsl.cpp:7039
 msgid "This will remove the selected callsign certificate from your system."
 msgstr "Bu, sistemde kayıtlı sertifikayı silecektir."
 
-#: tqsl.cpp:6760
+#: tqsl.cpp:7041
 msgid "You will NOT be able to recover it by loading a .TQ6 file."
 msgstr ".TQ6 dosyası ile bu işlemi geri yükleyemezsiniz."
 
-#: tqsl.cpp:6762
+#: tqsl.cpp:7043
 msgid "You WILL be able to recover it from a container (.p12) file,"
 msgstr ".p12 dosyası ile bu işlemi geri yükleyebilirsiniz,"
 
-#: tqsl.cpp:6764
+#: tqsl.cpp:7045
 msgid "if you have created one via the Callsign Certificate menu's"
 msgstr "çağrı İşareti Sertifika menüsü ile bir adet yarattıysanız"
 
-#: tqsl.cpp:6766
+#: tqsl.cpp:7047
 msgid "'Save Callsign Certificate' command."
 msgstr "Çağrı Adı Sertifikası Kaydet komutu."
 
-#: tqsl.cpp:6768
+#: tqsl.cpp:7049
 msgid "Are you sure you want to delete the certificate?"
 msgstr "Bu sertifikayı silmek istediğinize emin misiniz?"
 
-#: tqsl.cpp:6806
+#: tqsl.cpp:7087
 msgid "There are no deleted Callsign Certificates to restore"
 msgstr "Geri yüklenecek sertifika bulunamadı"
 
-#: tqsl.cpp:6806 tqsl.cpp:6916
+#: tqsl.cpp:7087 tqsl.cpp:7197
 msgid "Undelete Error"
 msgstr "Geri getirme hatası"
 
-#: tqsl.cpp:6817
+#: tqsl.cpp:7098
 msgid "Choose a Callsign Certificate to restore"
 msgstr "Geri yüklemek için bir Çağrı Sertifikası seçin"
 
-#: tqsl.cpp:6846
+#: tqsl.cpp:7127
 msgid "Select a Station Location to process"
 msgstr "İlerlemek için İstasyon Yeri Seç"
 
-#: tqsl.cpp:6866 tqsl.cpp:6868
+#: tqsl.cpp:7147
 msgid "Edit Station Location "
 msgstr "İstasyon Yeri Güncelle "
 
-#: tqsl.cpp:6869 tqsl.cpp:6871
+#: tqsl.cpp:7150
 msgid "Delete Station Location "
 msgstr "İstasyon Yeri sil "
 
-#: tqsl.cpp:6872 tqsl.cpp:6874
+#: tqsl.cpp:7153
 msgid "Display Station Location Properties for "
 msgstr "İstasyon bilgilerini göster "
 
-#: tqsl.cpp:6894
+#: tqsl.cpp:7175
 msgid "This will remove this station location from your system."
 msgstr "Bu Lokasyon bilgisayarıızdan silinecek."
 
-#: tqsl.cpp:6896
+#: tqsl.cpp:7177
 msgid "Are you sure you want to delete this station location?"
 msgstr "Bu istasyon lokasyonunu silmek istediğinize emin misiniz?"
 
-#: tqsl.cpp:6916
+#: tqsl.cpp:7197
 msgid "There are no deleted Station Locations to restore"
 msgstr "Geri yüklenecek İstasyon Lokasyon bilgisi bulunamadı"
 
-#: tqsl.cpp:6927
+#: tqsl.cpp:7208
 msgid "Choose a Station Location to restore"
 msgstr "Geri yüklenecek İstasyon Yeri seçin"
 
-#: tqsl.cpp:6999 tqsl.cpp:7002
+#: tqsl.cpp:7280 tqsl.cpp:7283
 msgid "Please choose language:"
 msgstr "Lütfen Dİl seçin:"
 
-#: tqsl.cpp:7070
+#: tqsl.cpp:7351
 msgid "Certificate Properties"
 msgstr "Sertifika Özellikleri"
 
-#: tqsl.cpp:7073
+#: tqsl.cpp:7354
 msgid "Begins: "
 msgstr "Başlangıç: "
 
-#: tqsl.cpp:7074
+#: tqsl.cpp:7355
 msgid "Expires: "
 msgstr "Bitiş: "
 
-#: tqsl.cpp:7075
+#: tqsl.cpp:7356
 msgid "Organization: "
 msgstr "Organizasyon: "
 
-#: tqsl.cpp:7077
+#: tqsl.cpp:7358
 msgid "Serial: "
 msgstr "Seri No: "
 
-#: tqsl.cpp:7078
+#: tqsl.cpp:7359
 msgid "Operator: "
 msgstr "Operatör: "
 
-#: tqsl.cpp:7079 tqsl.cpp:7298
+#: tqsl.cpp:7360 tqsl.cpp:7579
 msgid "Call sign: "
 msgstr "Çağrı Adı: "
 
-#: tqsl.cpp:7080 tqsl.cpp:7299
+#: tqsl.cpp:7361 tqsl.cpp:7580
 msgid "DXCC Entity: "
 msgstr "DXCC: "
 
-#: tqsl.cpp:7081
+#: tqsl.cpp:7362
 msgid "QSO Start Date: "
 msgstr "QSO Başlangıç Tarihi: "
 
-#: tqsl.cpp:7082
+#: tqsl.cpp:7363
 msgid "QSO End Date: "
 msgstr "QSO Bitiş Tarihi: "
 
-#: tqsl.cpp:7083
+#: tqsl.cpp:7364
 msgid "Passphrase: "
 msgstr "Şifre: "
 
-#: tqsl.cpp:7204
+#: tqsl.cpp:7485
 msgid "Missing from this computer"
 msgstr "Bu bilgisayarda yok"
 
-#: tqsl.cpp:7208 tqsl.cpp:7233
+#: tqsl.cpp:7489 tqsl.cpp:7514
 msgid "Passphrase protected"
 msgstr "Şifre korumalı"
 
-#: tqsl.cpp:7212
+#: tqsl.cpp:7493
 msgid "Private Key not found"
 msgstr "Özel anahtar bulunamadı"
 
-#: tqsl.cpp:7216
+#: tqsl.cpp:7497
 msgid "Unable to read - no permission"
 msgstr "Yetki yok. Okunamıyor"
 
-#: tqsl.cpp:7224
+#: tqsl.cpp:7505
 msgid "<ERROR>"
 msgstr "<HATA>"
 
-#: tqsl.cpp:7227
+#: tqsl.cpp:7508
 msgid "No Private Key"
 msgstr "Özel Anahtar dosyası yok"
 
-#: tqsl.cpp:7230
+#: tqsl.cpp:7511
 msgid "None"
 msgstr "Hiçbiri"
 
-#: tqsl.cpp:7241
+#: tqsl.cpp:7522
 msgid "Awaiting response from ARRL"
 msgstr "ARRL den cevap bekleniyor"
 
-#: tqsl.cpp:7255
+#: tqsl.cpp:7536
 msgid "Replaced"
 msgstr "Değiştirildi"
 
-#: tqsl.cpp:7260
+#: tqsl.cpp:7541
 msgid "Expired"
 msgstr "Siresi Dolmuş"
 
-#: tqsl.cpp:7295
+#: tqsl.cpp:7576
 msgid "Station Location Properties"
 msgstr "İstasyon Lokasyon Özellikleri"
 
-#: tqsl.cpp:7300
+#: tqsl.cpp:7581
 msgid "Grid Square: "
 msgstr "Grid Square: "
 
-#: tqsl.cpp:7301
+#: tqsl.cpp:7582
 msgid "ITU Zone: "
 msgstr "ITU Zone: "
 
-#: tqsl.cpp:7302
+#: tqsl.cpp:7583
 msgid "CQ Zone: "
 msgstr "CQ Zone: "
 
-#: tqsl.cpp:7303
+#: tqsl.cpp:7584
 msgid "IOTA Locator: "
 msgstr "IOTA Bilgisi: "
 
-#: tqsl.cpp:7304 tqsl.cpp:7311
+#: tqsl.cpp:7585 tqsl.cpp:7592
 msgid "State: "
 msgstr "Eyalet: "
 
-#: tqsl.cpp:7305
+#: tqsl.cpp:7586
 msgid "County: "
 msgstr "İlçe: "
 
-#: tqsl.cpp:7306 tqsl.cpp:7308 tqsl.cpp:7312
+#: tqsl.cpp:7587 tqsl.cpp:7589 tqsl.cpp:7593
 msgid "Park: "
 msgstr "Park: "
 
-#: tqsl.cpp:7307 tqsl.cpp:7310
+#: tqsl.cpp:7588 tqsl.cpp:7591
 msgid "Province: "
 msgstr "İlçe: "
 
-#: tqsl.cpp:7309
+#: tqsl.cpp:7590
 msgid "Oblast: "
 msgstr "Oblast: "
 
-#: tqsl.cpp:7315
+#: tqsl.cpp:7596
 msgid "Verify QTH details: "
 msgstr "QTH ayrıntılarını doğrulayın: "
 
-#: tqsl.cpp:7376
+#: tqsl.cpp:7657
 msgid "Signing File: "
-msgstr ""
+msgstr "Dosya imzalanıyor:"
 
-#: tqsl.cpp:7382
+#: tqsl.cpp:7663
 msgid ""
 "Please verify that this is the correct Station Location for the QSOs being "
 "signed."
@@ -2672,151 +2767,156 @@ msgstr ""
 "İmzalanacak QSO'lar için istasyon lokasyonunun doğru olduğunu lütfen "
 "onaylayın."
 
-#: tqsl.cpp:7385
+#: tqsl.cpp:7666
 msgid "Click 'Cancel' if this is not the correct Station Location."
 msgstr "Eğer doğru istasyon lokasyonu değil ise lütfen 'İptal' e basın."
 
-#: tqsl.cpp:7413
+#: tqsl.cpp:7694
 msgid "Enter the Passphrase to unlock the callsign certificate"
 msgstr "Sertifikayı açmak için şifre giriniz"
 
-#: tqsl_prefs.cpp:50
+#: tqsl_prefs.cpp:56
 msgid "Preferences"
 msgstr "Tercihler"
 
-#: tqsl_prefs.cpp:72
+#: tqsl_prefs.cpp:78
 msgid "Options"
 msgstr "Özellikler"
 
-#: tqsl_prefs.cpp:76
+#: tqsl_prefs.cpp:82
 msgid "Log Handling"
 msgstr "Log kullanımı"
 
-#: tqsl_prefs.cpp:79
+#: tqsl_prefs.cpp:85
 msgid "ADIF Modes"
 msgstr "ADIF modları"
 
-#: tqsl_prefs.cpp:82
+#: tqsl_prefs.cpp:88
 msgid "Cabrillo Specs"
 msgstr "Cabrillo Özellikleri"
 
-#: tqsl_prefs.cpp:85
+#: tqsl_prefs.cpp:91
 msgid "Network Proxy"
 msgstr "Ağ Vekil Sunucu"
 
-#: tqsl_prefs.cpp:166
+#: tqsl_prefs.cpp:172
 msgid "Custom ADIF mode mappings:"
 msgstr "Özelleştirilmiş ADIF Mod eşleştirmeleri:"
 
-#: tqsl_prefs.cpp:175 tqsl_prefs.cpp:816
+#: tqsl_prefs.cpp:181 tqsl_prefs.cpp:834
 msgid "Add..."
 msgstr "Ekle..."
 
-#: tqsl_prefs.cpp:255
+#: tqsl_prefs.cpp:261
 msgid "Add ADIF mode"
 msgstr "ADIF Modu Ekle"
 
-#: tqsl_prefs.cpp:264
+#: tqsl_prefs.cpp:270
 msgid "Add ADIF mode mapping:"
 msgstr "ADIF mod eşleştirmesi Ekle:"
 
-#: tqsl_prefs.cpp:268
+#: tqsl_prefs.cpp:274
 msgid "ADIF Mode:"
 msgstr "ADIF Modu:"
 
-#: tqsl_prefs.cpp:276
+#: tqsl_prefs.cpp:282
 msgid "Resulting TQSL mode:"
 msgstr "TQSL Mode Sonuçları:"
 
-#: tqsl_prefs.cpp:322
+#: tqsl_prefs.cpp:328
 #, c-format
 msgid "This mode definition conflicts with a standard mode definition for %s"
 msgstr "Bu özelleştirilmiş mod %s standart modu ile çakışmaktadır"
 
-#: tqsl_prefs.cpp:323
+#: tqsl_prefs.cpp:329
 msgid "Mode Conflict"
 msgstr "Mod çakışması"
 
-#: tqsl_prefs.cpp:347
+#: tqsl_prefs.cpp:353
 msgid "Allow automatic configuration backup"
 msgstr "Otomatik Yedekleme  izin ver"
 
-#: tqsl_prefs.cpp:351
+#: tqsl_prefs.cpp:357
 msgid "Backup File Folder:"
 msgstr "Yedekleme Klasörü:"
 
-#: tqsl_prefs.cpp:357
+#: tqsl_prefs.cpp:363
 msgid "Select a Folder"
 msgstr "Bir dizin seçin"
 
-#: tqsl_prefs.cpp:364
+#: tqsl_prefs.cpp:370
 msgid "Number of Backups to retain:"
 msgstr "Saklanacak Yedek Sayısı:"
 
-#: tqsl_prefs.cpp:375
+#: tqsl_prefs.cpp:381
 msgid "Open ADIF files in ADIF editor"
 msgstr "ADIF dosyalarını ADIF editöründe aç"
 
-#: tqsl_prefs.cpp:382
+#: tqsl_prefs.cpp:388
 msgid "Display status messages in separate tab"
 msgstr "Durum mesajlarını ayrı bir tab'ta göster"
 
-#: tqsl_prefs.cpp:387
+#: tqsl_prefs.cpp:393
 msgid "Enable passphrases for Callsign Certificates"
 msgstr "Çağrı adı sertifikaları için şifreleri aktive et"
 
-#: tqsl_prefs.cpp:429
+#: tqsl_prefs.cpp:399
+msgid "Export P12 files compatible with Apple Keychain"
+msgstr "Apple Keychain ile uyumlu P12 dosyalarını dışa aktar"
+
+#: tqsl_prefs.cpp:448
 msgid ""
 "Changes to the status message configuration will take affect when TQSL is "
 "restarted"
 msgstr ""
 "Durum mesajı ayarları TQSL yazılımı yeniden başlatılınca uygulanacaktır"
 
-#: tqsl_prefs.cpp:456
+#: tqsl_prefs.cpp:475
 msgid "Cabrillo file extensions:"
 msgstr "Cabrillo Dosya Uzantıları:"
 
-#: tqsl_prefs.cpp:461
+#: tqsl_prefs.cpp:480
 msgid "ADIF file extensions:"
 msgstr "ADIF Dosya uzantıları:"
 
-#: tqsl_prefs.cpp:467
+#: tqsl_prefs.cpp:486
 msgid "Allow nonamateur call signs"
 msgstr "Amatör olmayan çağrı işaretlerine izin ver"
 
-#: tqsl_prefs.cpp:472
+#: tqsl_prefs.cpp:491
 msgid "Prompt for QSO Date range when signing"
 msgstr "İmzalarken QSO Tarih aralığını sor"
 
-#: tqsl_prefs.cpp:477
-msgid "Display details of already uploaded QSOs when signing a log"
-msgstr "İmzalarken daha önceden yüklenmiş QSO'ların detaylarını göster"
+#: tqsl_prefs.cpp:496
+msgid "Display details of previously signed QSOs when signing a log"
+msgstr ""
+"Bir kaydı imzalarken daha önce imzalanmış QSOs'un detaylarını görüntüle"
 
-#: tqsl_prefs.cpp:482
+#: tqsl_prefs.cpp:501
 msgid "Ignore seconds in QSO times"
 msgstr "QSO sürelerindeki saniyeleri kullanma"
 
-#: tqsl_prefs.cpp:487
+#: tqsl_prefs.cpp:506
 msgid "Ignore callsigns in ADIF files"
-msgstr ""
+msgstr "ADIF dosyalarındaki çağrı işaretlerini görmezden gel"
 
-#: tqsl_prefs.cpp:498
+#: tqsl_prefs.cpp:517
 msgid "Ignore QTH details from your log"
 msgstr "Log dosyasındaki QTH detaylarını kullanma"
 
-#: tqsl_prefs.cpp:498
+#: tqsl_prefs.cpp:517
 msgid "Report on QTH differences"
 msgstr "QTH farklarını rapor et"
 
-#: tqsl_prefs.cpp:498
+#: tqsl_prefs.cpp:517
 msgid "Override Station Location with QTH details from your log"
 msgstr "İstasyon lokasyonu verisini log dosyasındaki QTH detaylarından al"
 
-#: tqsl_prefs.cpp:500
+#: tqsl_prefs.cpp:519
 msgid "Handle QTH information in ADIF logs with what action?"
 msgstr "ADIF Loglarındaki QTH bilgileri için hangi işlem yapılmalı?"
 
-#: tqsl_prefs.cpp:687
+#: tqsl_prefs.cpp:706
 msgid ""
 "Use these settings to configure a network proxy for Internet uploads and "
 "downloads. You should only enable a proxy if directed by your network "
@@ -2825,7 +2925,7 @@ msgstr ""
 "Bu ayarları internet üzerinde vekil sunucu tanımı için yapınız. Bu ayarlar "
 "sadece ağ yöneticiniz bu tür ayarlar yapmanızı istemişse gereklidir."
 
-#: tqsl_prefs.cpp:689
+#: tqsl_prefs.cpp:708
 msgid ""
 "Incorrect settings can cause TQSL to be unable to upload logs or check for "
 "updates."
@@ -2833,106 +2933,127 @@ msgstr ""
 "Yanlış ayarlar TQSL'in sunuculara erişmesine engel olur ve log yükleme "
 "işlemi yapılamaz."
 
-#: tqsl_prefs.cpp:695
+#: tqsl_prefs.cpp:714
 msgid "Enable a Network Proxy"
 msgstr "Vekil Sunucuyu etkinleştir"
 
-#: tqsl_prefs.cpp:699
+#: tqsl_prefs.cpp:718
 msgid "Proxy Address:"
 msgstr "Vekil Sunucu Adresi:"
 
-#: tqsl_prefs.cpp:707
+#: tqsl_prefs.cpp:726
 msgid "Port Number:"
 msgstr "Port No:"
 
-#: tqsl_prefs.cpp:714
+#: tqsl_prefs.cpp:733
 msgid "Proxy Type:"
 msgstr "Vekil Sunucu Türü:"
 
-#: tqsl_prefs.cpp:717
+#: tqsl_prefs.cpp:736
 msgid "ProxyType"
 msgstr "Vekil Sunucu Türü"
 
-#: tqsl_prefs.cpp:779
+#: tqsl_prefs.cpp:797
 msgid "Cabrillo CONTEST definitions:"
 msgstr "Cabrillo Yarışma tanımlamaları:"
 
-#: tqsl_prefs.cpp:791 tqsl_prefs.cpp:802
+#: tqsl_prefs.cpp:809 tqsl_prefs.cpp:820
 msgid "CONTEST"
 msgstr "Yarışma"
 
-#: tqsl_prefs.cpp:792 tqsl_prefs.cpp:803
+#: tqsl_prefs.cpp:810 tqsl_prefs.cpp:821
 msgid "Type"
 msgstr "Tür"
 
-#: tqsl_prefs.cpp:793 tqsl_prefs.cpp:804
+#: tqsl_prefs.cpp:811 tqsl_prefs.cpp:822
 msgid "Field"
 msgstr "Alan"
 
-#: tqsl_prefs.cpp:959 tqsl_prefs.h:269
+#: tqsl_prefs.cpp:966 tqsl_prefs.h:272
 msgid "Edit"
 msgstr "Düzenle"
 
-#: tqsl_prefs.cpp:982
+#: tqsl_prefs.cpp:989
 msgid "Contest"
 msgstr "Yarışma"
 
-#: tqsl_prefs.cpp:992
+#: tqsl_prefs.cpp:999
 msgid "Cabrillo CONTEST"
 msgstr "Cabrillo Yarışma"
 
-#: tqsl_prefs.cpp:994
+#: tqsl_prefs.cpp:1001
 msgid "CONTEST Name:"
 msgstr "Yarışma adı:"
 
-#: tqsl_prefs.cpp:1000
+#: tqsl_prefs.cpp:1007
 msgid "Contest type"
 msgstr "Yarışma Tipi"
 
-#: tqsl_prefs.cpp:1005
+#: tqsl_prefs.cpp:1012
 msgid "Call-Worked Field Number:"
 msgstr "Cağrı-Çalışma Alan numarası:"
 
-#: tqsl_prefs.cpp:1039
+#: tqsl_prefs.cpp:1046
 msgid "Contest name cannot be blank"
 msgstr "Yarışma adı boş bırakılamaz"
 
-#: tqsl_prefs.cpp:1045
+#: tqsl_prefs.cpp:1052
 #, c-format
 msgid "Call-worked field must be %d or greater"
 msgstr "Çağrı-Çalışma alan numarası %d veya daha büyük olmalıdır"
 
 #. TRANSLATORS: Invalid date component, such as "Invalid Month: 15"
 #: tqslvalidator.cpp:76
-#, c-format
 msgid "Invalid %hs: \"%hs\""
 msgstr "Geçersiz %hs: \"%hs\""
 
-#: tqslwiz.cpp:283 tqslwiz.cpp:483
+#: tqslwiz.cpp:168 tqslwiz.cpp:1286
+#, c-format
+msgid ""
+"You have changed the following fields in this Station Location: %s\n"
+"Do you want to discard those changes?"
+msgstr ""
+"Bu İstasyon Konumunda aşağıdaki alanları değiştirdiniz: %s\n"
+"Bu değişiklikleri iptal etmek ister misiniz?"
+
+#: tqslwiz.cpp:169 tqslwiz.cpp:1287
+msgid "Changes have not been saved"
+msgstr "Değişiklikler Kaydedilmedi"
+
+#: tqslwiz.cpp:334 tqslwiz.cpp:531
 msgid "[None]"
 msgstr "[YOK]"
 
-#: tqslwiz.cpp:904 tqslwiz.cpp:1040
-#, c-format
+#: tqslwiz.cpp:1024 tqslwiz.cpp:1193
 msgid "You must select a %hs"
 msgstr "%hs seçmelisiniz"
 
-#: tqslwiz.cpp:926 tqslwiz.cpp:930
+#: tqslwiz.cpp:1055
 #, c-format
-msgid "%s: Invalid Grid Square Field"
-msgstr "%s: Geçersiz Grid Square Alanı"
+msgid "%s: Invalid Grid Field"
+msgstr "%s: Geçersiz Grid Alanı"
 
-#: tqslwiz.cpp:934 tqslwiz.cpp:938 tqslwiz.cpp:942 tqslwiz.cpp:961
+#: tqslwiz.cpp:1059
 #, c-format
 msgid "%s: Invalid Grid Square"
 msgstr "%s: Geçersiz Grid Square"
 
-#: tqslwiz.cpp:952 tqslwiz.cpp:956
+#: tqslwiz.cpp:1063
 #, c-format
-msgid "%s: Invalid Subsquare"
-msgstr "%s: Geçersiz Sub Square"
+msgid "%s: Invalid Grid Subsquare"
+msgstr "%s: Geçersiz Grid SubSquare"
 
-#: tqslwiz.cpp:966
+#: tqslwiz.cpp:1067
+#, c-format
+msgid "%s: Invalid Grid Sub-subsquare"
+msgstr "%s: Geçersiz Grid Sub-SubSquare"
+
+#: tqslwiz.cpp:1071
+#, c-format
+msgid "%s: Invalid Gridsquare Format"
+msgstr "%s: Geçersiz Grid Square Formatı"
+
+#: tqslwiz.cpp:1078
 #, c-format
 msgid ""
 "Grid %s is not correct for your QTH. Click 'Next' again to use it anyway."
@@ -2940,12 +3061,29 @@ msgstr ""
 "Girdiğiniz Grid %s QTH'iniz için geçerli değildir. Yine de kullanmak için "
 "\"Devam\" a basınız."
 
-#: tqslwiz.cpp:988
+#: tqslwiz.cpp:1112
+#, c-format
+msgid ""
+"Grid %s is not correct for your DXCC Entity. Click 'Next' again to use it "
+"anyway."
+msgstr ""
+"Grid %s, DXCC Entity'niz için doğru değil. Yine de kullanmak için 'İleri'ye "
+"tekrar tıklayın."
+
+#: tqslwiz.cpp:1115
+#, c-format
+msgid ""
+"Grid %s is not correct for your %s. Click 'Next' again to use it anyway."
+msgstr ""
+"Grid %s, %s için doğru değil. Yine de kullanmak için 'İleri'ye tekrar "
+"tıklayın."
+
+#: tqslwiz.cpp:1141
 #, c-format
 msgid "IOTA value %s is not valid."
 msgstr "IOTA değeri %s geçerli bir değer değildir."
 
-#: tqslwiz.cpp:996
+#: tqslwiz.cpp:1149
 #, c-format
 msgid ""
 "IOTA reference %s is not correct. Must start with AF-, AN-, AS-, EU-, NA-, "
@@ -2954,115 +3092,115 @@ msgstr ""
 "IOTA %s değeri geçerli değildir. AF-, AN-, AS-, EU-, NA-, OC-  SA-  "
 "karakterleri ile başlamalıdır"
 
-#: tqslwiz.cpp:1003
+#: tqslwiz.cpp:1156
 #, c-format
 msgid "IOTA reference %s is not correct. Must have a number after the '-'"
 msgstr ""
 "IOTA değeri %s geçerli bir değer değildir. '-' işaretinden sonra numara "
 "olması gerekmektedir"
 
-#: tqslwiz.cpp:1010
+#: tqslwiz.cpp:1163
 msgid "Invalid zone selections for state"
 msgstr "Eyalet için geçersiz zone seçimi"
 
-#: tqslwiz.cpp:1011
+#: tqslwiz.cpp:1164
 msgid "Invalid zone selections for province"
 msgstr "Bölge için geçersiz zone seçimi"
 
-#: tqslwiz.cpp:1012
+#: tqslwiz.cpp:1165
 msgid "Invalid zone selections for oblast"
 msgstr "Oblast için geçersiz zone seçimi"
 
-#: tqslwiz.cpp:1013
+#: tqslwiz.cpp:1166
 msgid "Invalid zone selections for DXCC entity"
 msgstr "DXCC için geçersiz zone seçimi"
 
-#: tqslwiz.cpp:1137
+#: tqslwiz.cpp:1315
 msgid "Station Data input complete"
 msgstr "İstasyon Bilgilerini tamamlandı"
 
-#: tqslwiz.cpp:1141
+#: tqslwiz.cpp:1319
 msgid "Select or enter name of this station location"
 msgstr "İstasyon yeri girin/seçin"
 
-#: tqslwiz.cpp:1164
+#: tqslwiz.cpp:1342 tqslwiz.cpp:1348
 msgid "Station Location Name"
 msgstr "İstasyon yer adı"
 
-#: tqslwiz.cpp:1206
+#: tqslwiz.cpp:1386
 msgid "Station name must be provided"
 msgstr "İstasyon adı yazılmalı"
 
-#: wxutil.cpp:135
+#: wxutil.cpp:139
 msgid "Memory allocation failure"
 msgstr "Hafiza hatası"
 
-#: wxutil.cpp:136
+#: wxutil.cpp:140
 msgid "Unable to initialize random number generator"
 msgstr "Random Numara Yaratıcı hatası"
 
-#: wxutil.cpp:137
+#: wxutil.cpp:141
 msgid "Invalid argument"
 msgstr "Geçersiz girdi"
 
-#: wxutil.cpp:138
+#: wxutil.cpp:142
 msgid "Operator aborted operation"
 msgstr "İşlem iptal edildi"
 
-#: wxutil.cpp:139
+#: wxutil.cpp:143
 msgid "No Certificate Request matches the selected Callsign Certificate"
 msgstr "Seçilen sertifikayla uyumlu bir çağrı işareti sertifikası bulunamadı"
 
-#: wxutil.cpp:140
+#: wxutil.cpp:144
 msgid "Buffer too small"
 msgstr "Tampon alan çok küçük"
 
-#: wxutil.cpp:141
+#: wxutil.cpp:145
 msgid "Invalid date format"
 msgstr "Geçersiz tarih formatı"
 
-#: wxutil.cpp:142
+#: wxutil.cpp:146
 msgid "Certificate not initialized for signing"
 msgstr "Sertifika aktifleştirilemedi"
 
-#: wxutil.cpp:143
+#: wxutil.cpp:147
 msgid "Passphrase not correct"
 msgstr "Şifre yanlış"
 
-#: wxutil.cpp:144
+#: wxutil.cpp:148
 msgid "Expected name"
 msgstr "Beklenen isim"
 
-#: wxutil.cpp:145
+#: wxutil.cpp:149
 msgid "Name exists"
 msgstr "İsim mevcut"
 
-#: wxutil.cpp:146
+#: wxutil.cpp:150
 msgid "Data for this DXCC entity could not be found"
 msgstr "DXCC için bilgi bulunamadı"
 
-#: wxutil.cpp:147
+#: wxutil.cpp:151
 msgid "Invalid time format"
 msgstr "Geçersiz saat formatı"
 
-#: wxutil.cpp:148
+#: wxutil.cpp:152
 msgid ""
 "QSO date is not within the date range specified on your Callsign Certificate"
 msgstr "QSO tarihi sertifikanızda tanımlı tarih aralığı  ile uyumlu değil"
 
-#: wxutil.cpp:149
+#: wxutil.cpp:153
 msgid "Certificate provider not found"
 msgstr "Sertifika sağlayıcısı bulunamadı"
 
-#: wxutil.cpp:150
+#: wxutil.cpp:154
 msgid "No callsign certificate for key"
 msgstr "Bu anahtar için seritfika yok"
 
-#: wxutil.cpp:151
+#: wxutil.cpp:155
 msgid "Configuration file cannot be opened"
 msgstr "Konfigurasyon dosyası açılamadı"
 
-#: wxutil.cpp:152
+#: wxutil.cpp:156
 msgid ""
 "The private key for this Callsign Certificate is not present on this "
 "computer; you can obtain it by loading a .tbk or .p12 file"
@@ -3070,92 +3208,133 @@ msgstr ""
 "Bu bilgisayarda anahtar sertifika dosyası bulunmuyor. .tbk ya da .p12 "
 "dosyası yükleyerek dosyaya erişebilirsiniz"
 
-#: wxutil.cpp:153
+#: wxutil.cpp:157
 msgid "PKCS#12 file not TQSL compatible"
 msgstr "PKCS#12TQSL ile uyumlu değil"
 
-#: wxutil.cpp:154
+#: wxutil.cpp:158
 msgid "Callsign Certificate not TQSL compatible"
 msgstr "Sertifika TQSL uyumlu değil"
 
-#: wxutil.cpp:155
+#: wxutil.cpp:159
 msgid "Date out of range"
 msgstr "Tarih aralık dışında"
 
-#: wxutil.cpp:156
-msgid "Already Uploaded QSO suppressed"
-msgstr "Daha önceden yüklenmiş QSO'lar gizlendi"
+#: wxutil.cpp:160
+msgid "Previously Signed QSO detected"
+msgstr "Daha önce İmzalanmış QSO tespit edildi"
 
-#: wxutil.cpp:157
+#: wxutil.cpp:161
 msgid "Database error"
 msgstr "Database Hatası"
 
-#: wxutil.cpp:158
+#: wxutil.cpp:162
 msgid "The selected station location could not be found"
 msgstr "Seçilen istasyon bulunamadı"
 
-#: wxutil.cpp:159
+#: wxutil.cpp:163
 msgid "The selected callsign could not be found"
 msgstr "Seçilen çağrı adı bulunamadı"
 
-#: wxutil.cpp:160
+#: wxutil.cpp:164
 msgid "The TQSL configuration file cannot be parsed"
 msgstr "TQSL konfigürasyon dosyası okunamadı"
 
-#: wxutil.cpp:161
+#: wxutil.cpp:165
 msgid "This file can not be processed due to a system error"
 msgstr "Sistem hatası yüzünden işlem yapılamadı"
 
-#: wxutil.cpp:162
+#: wxutil.cpp:166
 msgid "The format of this file is incorrect."
 msgstr "Dosya formatı yanlış."
 
-#: wxutil.cpp:163
+#: wxutil.cpp:167
 msgid "Callsign certificate could not be installed"
 msgstr "Sertifika kurulamadı"
 
-#: wxutil.cpp:164
+#: wxutil.cpp:168
 msgid "Callsign Certificate does not match QSO details"
 msgstr "Çağrı adı sertifikası QSO bilgileri ile uyuşmuyor"
 
-#: wxutil.cpp:165
+#: wxutil.cpp:169
 msgid "Station Location does not match QSO details"
 msgstr "İstasyon lokasyon bilgileri QSO bilgileri ile uyuşmuyor"
 
+#: wxutil.cpp:170
+msgid "New DB"
+msgstr "Yeni DB"
+
+#: wxutil.cpp:171
+msgid "Gridsquare is inconsistent with Station Location"
+msgstr "Gridsquare, İstasyon Konumuyla tutarsız"
+
+#: wxutil.cpp:172
+msgid "ADIF field has invalid contents"
+msgstr "ADIF alanında geçersiz içerik bulunuyor"
+
+#: wxutil.cpp:173
+msgid ""
+"This Callsign Certificate cannot be installed as the first date where it is "
+"valid is in the future. Check if your computer is set to the proper date.\n"
+"\n"
+msgstr ""
+"Bu Çağrı İşareti Sertifikası, geçerli olduğu ilk tarih gelecekte olduğu için "
+"kurulamaz. Bilgisayarınızın doğru tarihe ayarlandığını kontrol edin.\n"
+"\n"
+
 #: wxutil.cpp:174
+msgid ""
+"This Callsign Certificate cannot be installed as it has expired. Check if "
+"your computer is set to the proper date and that this is the latest Callsign "
+"Certificate.\n"
+"\n"
+msgstr ""
+"Bu Çağrı İşareti Sertifikası, süresi dolduğu için kurulamaz. "
+"Bilgisayarınızın doğru tarihe ayarlandığını ve bu sertifikanın en son Çağrı "
+"İşareti Sertifikası olduğunu kontrol edin.\n"
+"\n"
+
+#: wxutil.cpp:187
 msgid "NO ERROR"
 msgstr "HATA YOK"
 
-#: wxutil.cpp:177
+#: wxutil.cpp:190
 msgid "Unknown custom error"
 msgstr "Bilinmeyen hata"
 
-#: wxutil.cpp:183
-#, c-format
+#: wxutil.cpp:197
+msgid ""
+"TQSL is unable to sign QSOs because another instance of TQSL is busy.\n"
+"Terminate any other copies of TQSL and try again."
+msgstr ""
+"TQSL, başka bir TQSL örneği meşgul olduğu için QSOs'u imzalayamıyor. \n"
+"Diğer TQSL kopyalarını sonlandırın ve tekrar deneyin."
+
+#: wxutil.cpp:199
 msgid "Database Error: %hs"
 msgstr "Database Hatası: %hs"
 
-#: wxutil.cpp:188
-#, c-format
+#: wxutil.cpp:201
+msgid "Uploads database error"
+msgstr "Yüklemeler veritabanı hatası"
+
+#: wxutil.cpp:207
 msgid "System error: %hs : %hs"
 msgstr "Sistem hatası: %hs : %hs"
 
-#: wxutil.cpp:192
-#, c-format
+#: wxutil.cpp:211
 msgid "System error: %hs"
 msgstr "Sistem hatası: %hs"
 
-#: wxutil.cpp:200
-#, c-format
+#: wxutil.cpp:219
 msgid "File syntax error: %hs"
 msgstr "Dosya yazım hatası: %hs"
 
-#: wxutil.cpp:204
+#: wxutil.cpp:223
 msgid "File syntax error"
 msgstr "Dosya yazım hatası"
 
-#: wxutil.cpp:240
-#, c-format
+#: wxutil.cpp:259
 msgid ""
 "The private key for callsign %hs serial %ld is not present on this computer; "
 "you can obtain it by loading a .tbk or .p12 file"
@@ -3163,38 +3342,41 @@ msgstr ""
 "%hs çağrı adı için %ld serinolu özel anahtar bulunamadı. .tbk ya da .p12 "
 "dosyası ile yükleyiniz"
 
-#: wxutil.cpp:247
+#: wxutil.cpp:266
 #, c-format
 msgid "Invalid error code: %d"
 msgstr "Geçersiz Hata kodu : %d"
 
-#: wxutil.cpp:261
+#: wxutil.cpp:280
 msgid "Station Location"
 msgstr "İstasyon lokasyonu"
 
 #. TRANSLATORS: This message is for QSO details. For example, 'The Station Location GRIDSQUARE has value FM18ju while QSO has FM18jt'
-#: wxutil.cpp:264
-#, c-format
+#: wxutil.cpp:283
 msgid "The %s '%hs' has value '%hs' while QSO has '%hs'"
 msgstr "%s '%hs' değeri '%hs' iken, QSO'da  '%hs' bilgisi var."
 
-#: wxutil.cpp:271
+#: wxutil.cpp:291
 msgid "This log has invalid QSO information"
 msgstr "Kayıtlarda geçersiz QSO bilgisi mevcut"
 
 #. TRANSLATORS: This message is for QSO details. For example, 'The log being signed has 'US County' set to Foobar which is not valid'
-#: wxutil.cpp:273
-#, c-format
+#: wxutil.cpp:293
 msgid "The log being signed has '%hs' set to value '%hs' which is not valid"
 msgstr ""
 "İmzalanan kayıtlarda %hs değeri %hs olarak ayarlanmış. Bu değer geçerli değil"
 
-#: wxutil.cpp:281
-#, c-format
+#: wxutil.cpp:302
 msgid ""
 "There is no valid callsign certificate for %hs in entity %hs available. This "
 "QSO cannot be signed"
 msgstr ""
+"%hs için %hs varlıklarında geçerli bir çağrı işareti sertifikası "
+"bulunmamaktadır. Bu QSO imzalanamaz."
+
+#: wxutil.cpp:310
+msgid "ADIF content is not valid. '%hs' is not valid for %hs"
+msgstr "ADIF içeriği geçerli değil. '%hs' %hs için geçerli değil."
 
 #: getpassword.h:51
 msgid "New passphrase"
@@ -3204,7 +3386,7 @@ msgstr "Yeni şifre"
 msgid "Enter new passphrase"
 msgstr "Yeni Şifre Girin"
 
-#: qsodatadialog.h:85
+#: qsodatadialog.h:86
 msgid "QSO Data"
 msgstr "QSO Bilgileri"
 
@@ -3216,29 +3398,92 @@ msgstr "Tarih"
 msgid "Time"
 msgstr "Saat"
 
+#~ msgid ""
+#~ "TQSL must wait for other running copies of TQSL to exit before signing..."
+#~ msgstr ""
+#~ "İmzalamadan önce TQSL diğer açık TQSL programlarının kapanmasını "
+#~ "bekleyecektir..."
+
+#~ msgid "The duplicates database is locked"
+#~ msgstr "Çift kayıt veritabanı kilitlendi"
+
+#~ msgid "Already Uploaded QSOs Detected"
+#~ msgstr "Daha önceden yüklenmiş QSO'lar tespit edildi"
+
 #, c-format
 #~ msgid ""
-#~ "To submit the signed log file to LoTW:\n"
-#~ "1. Move the signed log file to a computer with internet access\n"
-#~ "2. Log in to your LoTW Web Account\n"
-#~ "3. Select the Upload File tab\n"
-#~ "4. Click the Choose File button, and select the signed log file you "
-#~ "created (%s)\n"
-#~ "5. Click the Upload file button\n"
-#~ "\n"
-#~ "Alternatively, you can attach the signed log file to an email message, "
-#~ "and send the message to lotw-logs@arrl.org"
+#~ "This log contains %d QSO(s) which appear to have already been signed for "
+#~ "upload to LoTW, and no new QSOs."
+#~ msgstr "Bu log %d  adet zaten imzalanmış QSO içermektedir. Yeni QSO yoktur."
+
+#~ msgid ""
+#~ "Click 'Re-Upload QSOs' to re-process this log while allowing already "
+#~ "uploaded QSOs."
 #~ msgstr ""
-#~ "İmzalanmış dosyaları LoTW'ye yüklemek için:\n"
-#~ "1.İmzalanmış dosyaları internet bağlantısı olan bir bilgisayara aktarın.\n"
-#~ "2. LoTW web sayfasına hesabınızla giriş yapın.\n"
-#~ "3. Dosya yükleme tabına geçin (Upload File)\n"
-#~ "4. Dosya Seç (Choose File)'ı seçin ve buradan imzalanmış log dosyanızı "
-#~ "(%s) işaretleyin.\n"
-#~ "5. Yükle (upload) 'a basın\n"
-#~ "\n"
-#~ "Alternatif olarak imzalanmış dosyanızı lotw-logs@arrl.org adresine email "
-#~ "olarak gönderebilirsiniz"
+#~ "Daha önce yüklenmiş QSO'ları tekrar yüklemek için 'QSO'ları Tekrar Yükle' "
+#~ "'yi seçiniz."
+
+#, c-format
+#~ msgid ""
+#~ "This log contains %d QSO(s) which appear to have already been signed for "
+#~ "upload to LoTW, and %d QSOs which are new."
+#~ msgstr ""
+#~ "Bu log %d  adet zaten imzalanmış QSO içermektedir. Yeni %d QSO vardır."
+
+#~ msgid ""
+#~ "Click 'New QSOs Only' to sign normally, without the already uploaded QSOs "
+#~ "(Recommended)."
+#~ msgstr ""
+#~ "'Sadece Yeni QSO'lar' seçeneğini seçerek, sadece yeni QSO'ları yükleyin "
+#~ "(Tavsiye edilen)."
+
+#, c-format
+#~ msgid ""
+#~ "This log contains %d QSO(s) which appear to have already been signed for "
+#~ "upload to LoTW, and one QSO which is new."
+#~ msgstr ""
+#~ "Bu log %d  adet zaten imzalanmış QSO içermektedir. Bir adet  yeni QSO "
+#~ "vardır."
+
+#~ msgid ""
+#~ "The only reason to re-sign already uploaded QSOs is if a previous upload "
+#~ "was not processed by LoTW, either because it was never uploaded, or there "
+#~ "was a server failure"
+#~ msgstr ""
+#~ "Daha önce yüklenmiş QSO'ları yeniden yüklemek sadece gönderilmiş dosyalar "
+#~ "LOTW ye erişmemişse ya da geçici bir sunucu hatası alınmışsa gereklidir"
+
+#, c-format
+#~ msgid "Already Uploaded: %d"
+#~ msgstr "Daha önce Yüklendi: %d"
+
+#, c-format
+#~ msgid "Already uploaded: %d"
+#~ msgstr "Daha önce yüklendi: %d"
+
+#~ msgid "All QSOs are already uploaded; aborted"
+#~ msgstr "Tüm QSO'Lar daha önceden yüklendi. İşlem iptal edildi"
+
+#, c-format
+#~ msgid "%d of %d QSOs are already uploaded; aborted"
+#~ msgstr "%d QSO'dan  %d  tanesi daha önce yüklendi. İptal edildi"
+
+#, c-format
+#~ msgid "%s: %d QSO records were already uploaded"
+#~ msgstr "%s: QSO'dan %d adedi daha önce yüklendi"
+
+#~ msgid ""
+#~ "Resubmitting these QSOs will cause them to be reported as already "
+#~ "uploaded."
+#~ msgstr ""
+#~ "Bu QSO'ları tekrar göndermek, daha önceden yüklendi hatası alınmasına "
+#~ "neden olacaktır."
+
+#~ msgid "Display details of already uploaded QSOs when signing a log"
+#~ msgstr "İmzalarken daha önceden yüklenmiş QSO'ların detaylarını göster"
+
+#~ msgid "tQSL Certificates"
+#~ msgstr "tQSL Sertifikaları"
 
 #~ msgid "My current personal callsign"
 #~ msgstr "Şu anki geçerli çağrı işareti"
@@ -3278,15 +3523,12 @@ msgstr "Saat"
 #~ msgid "A special event callsign where I am the only operator"
 #~ msgstr "Tek operatör olarak katıldığım özel çağrı işareti"
 
+#~ msgid "Please select a Callsign Certificate to validate your request."
+#~ msgstr ""
+#~ "İsteğinizi doğrulama amacıyla lütfen Çağrı adı sertifikasını seçiniz."
+
 #~ msgid "This Callsign Certificate is for:"
 #~ msgstr "Bu sertifika şu çağrı işareti içindir:"
-
-#~ msgid ""
-#~ "Please select the Callsign Certificate for your current personal callsign "
-#~ "to validate your request."
-#~ msgstr ""
-#~ "Doğrulama amacıyla, Lütfen şu an kullandığınız çağrı işaretinize ait "
-#~ "sertifikayı seçiniz."
 
 #~ msgid ""
 #~ "Please select your club's primary Callsign Certificate to validate your "
@@ -3295,7 +3537,16 @@ msgstr "Saat"
 #~ "İsteğinizi doğrulamak amacıyla, lütfen Klüp istasyon sertifikanızı "
 #~ "seçiniz."
 
-#, c-format
+#~ msgid ""
+#~ "You have already requested more than three Callsign Certificates for %s "
+#~ "in the past 24 hours. You should submit a request only once, then wait "
+#~ "for that request to processed by LoTW Staff. This may take several "
+#~ "business days."
+#~ msgstr ""
+#~ "Son 24 saat içinde %s çağrı işareti için üç istekte bulundunuz. İsteği "
+#~ "sadece bir kere yapmalı, daha sonra LoTW personeli tarafından bu "
+#~ "başvurunun incelenmesini beklemelisiniz. Bu işlem bir kaç gün sürebilir."
+
 #~ msgid ""
 #~ "You are saying that the requested Certificate for %s belongs to the same "
 #~ "person as %hs and are using the selected Certificate to prove %hs's "
@@ -3304,17 +3555,6 @@ msgstr "Saat"
 #~ "%s için istenen sertifikanın%hs olarak aynı kişiye ait olduğunu ve %hs "
 #~ "'nin kimliğini kanıtlamak için seçili sertifikayı kullandığını "
 #~ "söylüyorsunuz."
-
-#, c-format
-#~ msgid ""
-#~ "There is no valid callsign certificate for %hs available. This QSO cannot "
-#~ "be signed"
-#~ msgstr ""
-#~ "%hs için geçerli bir çağrı işareti sertifikası bulunamadı. Bu QSO "
-#~ "imzalanmayacak"
-
-#~ msgid "tQSL Certificates"
-#~ msgstr "tQSL Sertifikaları"
 
 #~ msgid ""
 #~ "Callsign Certificate container files (*.p12;*.P12)|*.p12;*.P12|"
@@ -3330,7 +3570,24 @@ msgstr "Saat"
 #~ "Sertifika depolama dosyaları (*.p12)|*.p12|Sertifika istek dosyaları (*."
 #~ "tq6)|*.tq6"
 
-#, c-format
+#~ msgid "Go to the first QSO in this log"
+#~ msgstr "Bu kayıttaki ilk QSO ya gidin"
+
+#~ msgid "Go to the previous QSO in this log"
+#~ msgstr "Bu kayıttaki bir önceki QSO ya gidin"
+
+#~ msgid "Go to the next QSO in this log"
+#~ msgstr "Bu kayıttaki bir sonraki QSO ya gidin"
+
+#~ msgid "Go to the last QSO in this log"
+#~ msgstr "Bu kayıttaki sonQSO ya gidin"
+
+#~ msgid "No QSOs written"
+#~ msgstr "Yazılan QSO yok"
+
+#~ msgid "Some QSOs suppressed"
+#~ msgstr "Bazı QSO'lar yok sayıldı"
+
 #~ msgid "The file (%s) will be signed using:"
 #~ msgstr "Dosya  (%s)  imzalanacaktır:"
 
@@ -3346,14 +3603,58 @@ msgstr "Saat"
 #~ msgid "TQSL - Confirm signing"
 #~ msgstr "TQSL - İmza Onayı"
 
+#~ msgid "%s: %d QSO records were outside the selected date range"
+#~ msgstr "%s: %d QSO seçili tarih aralığının dışında"
+
+#~ msgid "No records to upload"
+#~ msgstr "Yüklenecek kayıt yok"
+
 #~ msgid "Password protected P12 files cannot be imported on the command line"
 #~ msgstr "Şifre korumalı p12 dosyaları komut satırı üzerinden aktarılamaz"
+
+#~ msgid "Your certificate request did not upload properly"
+#~ msgstr "Sertifika talebiniz düzgün şekilde yüklenemedi"
+
+#~ msgid "Please try again."
+#~ msgstr "Lütfen tekrar deneyin."
 
 #~ msgid "Certificate Request:"
 #~ msgstr "Sertifika İsteği:"
 
 #~ msgid "Allow 'None' for "
 #~ msgstr "İzin Ver "
+
+#~ msgid "%s: Invalid Grid Square Field"
+#~ msgstr "%s: Geçersiz Grid Square Alanı"
+
+#~ msgid "%s: Invalid Subsquare"
+#~ msgstr "%s: Geçersiz Sub Square"
+
+#~ msgid "Already Uploaded QSO suppressed"
+#~ msgstr "Daha önceden yüklenmiş QSO'lar gizlendi"
+
+#~ msgid ""
+#~ "There is no valid callsign certificate for %hs available. This QSO cannot "
+#~ "be signed"
+#~ msgstr ""
+#~ "%hs için geçerli bir çağrı işareti sertifikası bulunamadı. Bu QSO "
+#~ "imzalanmayacak"
+
+#~ msgid "Invalid, unusable"
+#~ msgstr "Geçersiz, kullanılamaz"
+
+#~ msgid "Certificates that are awaiting ARRL approval"
+#~ msgstr "ARRL onayı bekleyen sertifikalar"
+
+#~ msgid ""
+#~ "The callsign %s is not currently registered in the FCC ULS database as of "
+#~ "%s.\n"
+#~ "If this is a newly registered call, you must wait at least one business "
+#~ "day for it to be valid. Please enter a currently valid callsign."
+#~ msgstr ""
+#~ "%s çağrı işareti FCC ULS veritabanında %s itibari ile kayıtlı değildir.\n"
+#~ "Eğer yeni kayıt olunmuş ise, en az bir gün bekleyip tekrar deneyin. "
+#~ "Lütfen geçerli bir çağrı işareti girin."
 
 #~ msgid ""
 #~ "My former personal callsign or a portable modifier for my current callsign"
@@ -3437,7 +3738,6 @@ msgstr "Saat"
 #~ msgid "Password error"
 #~ msgstr "Şifre hatası"
 
-#, c-format
 #~ msgid ""
 #~ "Enter the password to unlock the callsign certificate for %hs -- %hs\n"
 #~ "(This is the password you made up when you installed the callsign "

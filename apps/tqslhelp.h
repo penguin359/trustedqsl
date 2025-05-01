@@ -1,7 +1,7 @@
 /***************************************************************************
                           tqslhelp.h  -  description
                              -------------------
-          copyright (C) 2013-2017 by ARRL and the TrustedQSL Developers
+          copyright (C) 2013-2025 by ARRL and the TrustedQSL Developers
  ***************************************************************************/
 
 // Derived from wxWidgets fs_inet.h
@@ -9,9 +9,9 @@
 #ifndef _tqslhelp_h
 #define _tqslhelp_h
 
-#include "wx/defs.h"
+#include <wx/defs.h>
 
-#include "wx/filesys.h"
+#include <wx/filesys.h>
 
 // ----------------------------------------------------------------------------
 // tqslInternetFSHandler

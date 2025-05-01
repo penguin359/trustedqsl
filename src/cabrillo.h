@@ -11,8 +11,6 @@
 #ifndef __CABRILLO_H
 #define __CABRILLO_H
 
-#include "tqsllib.h"
-
 #undef CLIENT_STATIC
 #ifndef LOTW_SERVER
 #define CLIENT_STATIC static	///< Static linkage
@@ -72,6 +70,9 @@ typedef struct {	///< Cabrillo field
 } tqsl_cabrilloField;
 
 typedef void * tQSL_Cabrillo;	///< Opaque cabrillo log type
+
+#define TQSLLIB_DEF
+#include "tqsllib.h"
 
 #ifdef __cplusplus
 extern "C" {

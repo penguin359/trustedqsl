@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?define UpgradeCode = "BA40FA93-F9D6-44E2-BB81-82B0A676E731" ?>
 <?define BadUpgradeCode = "BA40FA94-F9D6-44E2-BB81-82B0A676E741" ?>
-<?define tqslVersion = "2.7.5" ?>
+<?define tqslVersion = "2.8.1" ?>
 <?define beta = "" ?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -49,6 +49,9 @@
           </Component>
           <Component Id="vuccDatComp" Guid="972886bd-2713-4864-9c6a-263acda95f5b">
             <File Id="vuccDat" Name="vuccgrids.dat" Source="vuccgrids.dat" KeyPath="yes"/>
+          </Component>
+          <Component Id="prefixDatComp" Guid="391D6C10-02A3-4890-A995-224D167E6ABF">
+            <File Id="prefixDat" Name="prefixes.dat" Source="prefixes.dat" KeyPath="yes"/>
           </Component>
           <Component Id="MachineRegKeys" Guid="1A582184-DC79-470D-B322-1D18D1391603">
             <RegistryKey Root="HKLM" Key="Software\TrustedQSL">
@@ -107,6 +110,7 @@
       <ComponentRef Id="CABundleComp"/>
       <ComponentRef Id="cabDatComp"/>
       <ComponentRef Id="vuccDatComp"/>
+      <ComponentRef Id="prefixDatComp"/>
     </Feature>
 
     <Icon Id="tqsl.exe" SourceFile="key.ico"/>
