@@ -7,13 +7,16 @@
     revision             : $Id$
  ***************************************************************************/
 
-#define TQSLLIB_DEF
+//#define TQSLLIB_DEF
+
+#include "adif.h"
 
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <cstdio>
 #ifdef HAVE_CONFIG_H
 #include "sysconfig.h"
 #endif

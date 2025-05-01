@@ -12,8 +12,6 @@
 #include <errno.h>
 #include <sys/stat.h>
 
-#include "tqsl_prefs.h"
-
 #include <wx/wxprec.h>
 #include <wx/object.h>
 #include <wx/wxchar.h>
@@ -46,6 +44,9 @@
 #include <fstream>
 #include <memory>
 #include <string>
+#include <cstdio>
+
+#include "tqsl_prefs.h"
 
 #ifdef HAVE_CONFIG_H
 #include "sysconfig.h"
@@ -296,7 +297,10 @@ MyFrame::DoCheckForUpdates(bool silent, bool noGUI) {
 		while(plats.HasMoreTokens()) {
 			wxString tok = plats.GetNextToken();
 			//see if this token is here
-			if (map.count(tok)) { ourPlatURL=map[tok]; break; }
+			if (map.count(tok)) {
+				ourPlatURL = map[tok];
+				break;
+			}
 		}
 	} else {
 		if (retval == CURLE_COULDNT_RESOLVE_HOST || retval == CURLE_COULDNT_CONNECT) {

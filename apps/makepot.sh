@@ -7,5 +7,5 @@
 xgettext --c++ --default-domain=tqslapp --output=tqslapp.pot \
 	 --keyword=_  --keyword=__ --keyword=i18narg \
 	 --escape --copyright-holder="The TrustedQSL Developers" \
-	 --package-name="TQSL" --package-version="v2.7" \
+	 --package-name="TQSL" --package-version="v2.8" \
 	 --add-comments="TRANSLATORS:" *.cpp *.h

@@ -10,7 +10,6 @@
 #ifndef __ADIF_H
 #define __ADIF_H
 
-#include "tqsllib.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -89,6 +88,9 @@ typedef struct {
 
 
 /* function prototypes */
+
+#define TQSLLIB_DEF
+#include "tqsllib.h"
 
 #ifdef __cplusplus
 extern "C" {

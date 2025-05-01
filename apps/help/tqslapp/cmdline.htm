@@ -64,7 +64,7 @@ When using "-f update", the ideal practice should be to either specify all QTH i
 <TD>Display command line help.</TD></TR>
 
 <TR><TD><code>-i&nbsp;Filename</code></TD>
-<TD>Load a specified <A HREF="files-icons.htm">Callsign Certificate File (.tq6)</A>, a <A HREF="files-icons.htm">Certificate Container File (.p12)</A>, or a <A HREF="configxml.htm">Configuration Data File (Config.tq6)</A> .</TD></TR>
+<TD>Load a specified <A HREF="files-icons.htm">Callsign Certificate File (.tq6)</A>, a <A HREF="files-icons.htm">Certificate Container File (.p12)</A>, a <A HREF="configxml.htm">Configuration Data File (Config.tq6)</A>, or a <A HREF="backuprestore.htm">TQSL Backup File (tqslconfig.tbk)</A> .</TD></TR>
 
 <TR><TD><code>-l&nbsp;Station_Location</code></TD>
 <TD>Select a defined <A HREF="glossary.htm#station_location">Station Location</A> to be used when signing log files. If the specified Station Location contains embedded spaces, it must be 
@@ -183,6 +183,11 @@ where
 <TR><TD><code>9</code></TD><TD>Some QSOs were processed, and some QSOs were ignored because they were already uploaded or out of date range</td></tr>
 <TR><TD><code>10</code></TD><TD>command syntax error</td></tr>
 <TR><TD><code>11</code></TD><TD>LoTW Connection error (no network or LoTW is unreachable)</td></tr>
+<TR><TD><code>12</code></TD><TD>Unknown Error</td></tr>
+<TR><TD><code>13</code></TD><TD>When siging a log, the TQSL upload tracking database was locked</td></tr>
+<TR><TD><code>14</code></TD><TD>Some QSOs in a log being signed were already uploaded</td></tr>
+<TR><TD><code>15</code></TD><TD>When importing a P12 file on the command line, an invalid passphrase was given</td></tr>
+
 </table>
 
 <H5>Status Examples:</H5>

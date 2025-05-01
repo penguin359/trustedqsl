@@ -1,8 +1,27 @@
 TQSLLIB changes
 ===============
 
-2.5
+2.6
 ---
+stop checking validity of an entity name. If MY_COUNTRY doesn't match, ignore
+it.
+
+Fix issue where gridsquares that do not have a secondary subdivision (state,
+province, prefecture) refuse to accept a grid with a non-empty SAS.
+
+Gridsquare settings from MY_GRIDSQUARE and MY_VUCC_GRIDS were not updating
+the active station location when a log is signed in "update" mode. Fix this
+so the gridsquare is properly propagated.
+
+Catch the "Database is locked" error and provide a verbose explanation
+of what causes that and what to do.
+
+Validate some MY_ fields from an ADIF file. Gridsquares, IOTA, 
+COUNTRY. Don't allow CONFUSED to proxy for Colorado for US_STATE.
+
+Fix different Province coding for Newfoundland. ADIF reuires NL, but
+Logbook requires NF.
+
 Detect missing newlines on base64 strings during decode (OpenSSL
 encoding always includes a newline, but not all encoders do.)
 
@@ -14,6 +33,8 @@ correct their computer's date/time.
 
 Permit identical QSOs to be ignored when adding to the uploads database.
 
+2.5
+---
 Allow 3DES, SHA1 for P12 file export for compatibility with Apple Keychain.
 Add an API to permit this downgraded cryptographic suite.
 

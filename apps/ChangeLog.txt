@@ -1,7 +1,78 @@
 TQSL changes
 ============
+2.8.1
+----------
+Correct the Russian translation - the wrong file was being used.
+
+Revert gridsquare checks to repair "No QSOs to sign" errors.
+
+2.8
+----------
+Correct display of Chinese localization on Macs.
+
+Add an item to the Help menu to synchronize the QSO data from LotW so that
+TQSL has consistent information on uploaded QSOs.
+
+Allow import of a backup (.tbk) file using the command line "-i" switch.
+
+Change how TQSL detects multiple attempts to sign a log to ensure that the
+message that it's waiting for other signing to complete is displayed, and
+so that no "Application is not responding" messages are displayed.
+
+Change verbiage from "already uploaded" to "previously signed" to more
+accurately reflect how TQSL detects previously processed QSOs.
+
+Add a "Test sign a log" that does not track signed QSO and creates an
+uncompressed 'tq7' file as output.
+
+When creating a station location, entering a gridsquare that's incorrect
+for the primary administrative subdivision (state, province, etc.) was
+not flagged as an error. Correct this so that the incorrect grid is flagged.
+
+When there's no callsign certificates installed, ask if the operator wants
+to create a new one but state that if you intend to restore from a backup,
+there's no reason to do that.
+
+When backing up and restoring configuration data, don't save or restore
+preferences related to folder locations as those aren't necessarily the
+same across different systems (or with different operating systems).
+
+Fix TQSL crash when an invalid / out-of-range MY_DXCC entity was supplied.
+
+Fix detection of incorrect or inconsistent values for MY_ ADIF fields such
+as MY_GRIDQUARE, MY_STATE, MY_COUNTY, MY_IOTA to ensure that things like
+a grid from outside of the entity and state (province, etc.) are rejected.
+
+Invert the order of the year dropdown for callsign certificates. Starting
+with 1945 means most cases would require a lot of unnecessary scrolling.
+
+When loading P12 file from the command line, and the password is incorrect,
+exit TQSL to let the caller know to get the proper passphrase for the P12
+file.
+
+Validate VUCC grid when updating from MY_VUCC. Allow twelve character grids
+when updating from MY_GRIDSQUARE and in Station Locations.
+
+Fix spurious error when updating IOTA value from MY_IOTA.
+
+Update certificate request handling to provide more detail and better guidance
+about when signing is needed.
+
+When requesting a new callsign certificate, filter the entity list to the
+entities that are appropriate for that callsign. Add a checkbox to disable
+that filter so any entity can be selected in the event the filter gets the
+entity wrong.
+
 2.7.5
 ----------
+For US callsigns, restrict the pulldown menu for callsign certificate requests
+to US entities only. If there was a reliable means of identifying entities
+based on callsign prefixes, this could be done for other entities. But cases
+like FR, FT, make this a hard one to implement.
+
+Don't allow requesting an expired US-based callsign certificate if the user
+doesn't have an existing callsign certificate to validate it.
+
 Handle cert renewals - 2.7.4 had a regression where an unexpired callsign
 certificate could not be renewed.
 

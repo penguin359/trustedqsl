@@ -28,6 +28,9 @@
       <Component Id="cmp0B7A6B37FB0CC3E07D17C451D0035B3A" Directory="dir6F17F3A9FB839342385010C1698DDB65" Guid="*">
         <File Id="fil71670894E28C6E5CC31F223B574C25EB" KeyPath="yes" Source="$(var.helpSrc)\tqslapp\addcertreq.htm" />
       </Component>
+      <Component Id="cmpE31CCA5584BA4A1D9B00DEAC6537C59A" Directory="dir6F17F3A9FB839342385010C1698DDB65" Guid="*">
+        <File Id="fil4AB3A2F487FB413CB923302A85E51AF5" KeyPath="yes" Source="$(var.helpSrc)\tqslapp\addctype.bmp" />
+      </Component>
       <Component Id="cmpB0A01AD41CB7286428AF93AE6E2D65CD" Directory="dir6F17F3A9FB839342385010C1698DDB65" Guid="*">
         <File Id="filAA2AFF375C34C4E8C4F6DEB78DA1F3E8" KeyPath="yes" Source="$(var.helpSrc)\tqslapp\additional-info.htm" />
       </Component>
@@ -369,6 +372,9 @@
       </Component>
       <Component Id="cmpE4A6F21788CA4C08921195A2374B80B4" Directory="dir6F17F3A9FB839342385010C1698DDB65" Guid="*">
         <File Id="filF301F1A09CC041E3904CCBF4AABA9809" KeyPath="yes" Source="$(var.helpSrc)\tqslapp\stnprop.bmp" />
+      </Component>
+      <Component Id="cmp2E5F9F239A724BB388F0DD47FE11C809" Directory="dir6F17F3A9FB839342385010C1698DDB65" Guid="*">
+        <File Id="fil05EC8203C69B4798A70165ADB2E0A6C2" KeyPath="yes" Source="$(var.helpSrc)\tqslapp\sync.htm" />
       </Component>
     </ComponentGroup>
   </Fragment>

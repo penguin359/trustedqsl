@@ -38,6 +38,8 @@ do
     cp apps/ca-bundle.crt $WORKDIR/TrustedQSL/$app.app/Contents/Resources
     cp apps/languages.dat $WORKDIR/TrustedQSL/$app.app/Contents/Resources
     cp apps/cab_modes.dat $WORKDIR/TrustedQSL/$app.app/Contents/Resources
+    cp apps/vuccgrids.dat $WORKDIR/TrustedQSL/$app.app/Contents/Resources
+    cp apps/prefixes.dat $WORKDIR/TrustedQSL/$app.app/Contents/Resources
     for lang in ca_ES de es fi fr hi_IN it ja pl_PL pt ru sv_SE tr_TR zh_CN zh_TW
     do
 	mkdir $WORKDIR/TrustedQSL/$app.app/Contents/Resources/$lang.lproj

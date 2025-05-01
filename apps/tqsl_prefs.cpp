@@ -9,17 +9,19 @@
  ***************************************************************************/
 
 #include "tqsl_prefs.h"
-#include <stdlib.h>
-#include <algorithm>
-#include <utility>
+
 #include <curl/curl.h>
 
-#include "wx/sizer.h"
-#include "wx/button.h"
-#include "wx/stattext.h"
-#include "wx/statbox.h"
-#include "wx/config.h"
+#include <stdlib.h>
 
+#include <wx/sizer.h>
+#include <wx/button.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+#include <wx/config.h>
+
+#include <algorithm>
+#include <utility>
 
 #include "tqsllib.h"
 #include "tqsltrace.h"
@@ -410,6 +412,10 @@ FilePrefs::ShowHide() {
 	dirPick->Enable(autobackup->GetValue());
 }
 
+#ifdef _WIN32
+#define strtok_r strtok_s
+#endif
+
 static wxString
 fix_ext_str(const wxString& oldexts) {
 	static const char *delims = ".,;: ";
@@ -417,12 +423,13 @@ fix_ext_str(const wxString& oldexts) {
 	char *str = new char[oldexts.Length() + 1];
 	strncpy(str, oldexts.ToUTF8(), oldexts.Length() + 1);
 	wxString exts;
-	char *tok = strtok(str, delims);
+	char *state = NULL;
+	char *tok = strtok_r(str, delims, &state);
 	while (tok) {
 		if (!exts.IsEmpty())
 			exts += wxT(" ");
 		exts += wxString::FromUTF8(tok);
-		tok = strtok(NULL, delims);
+		tok = strtok_r(NULL, delims, &state);
 	}
 	return exts;
 }
@@ -486,7 +493,7 @@ LogPrefs::LogPrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm")) {
 	daterange->SetValue(allow);
 	sizer->Add(daterange, 0, wxLEFT|wxRIGHT|wxTOP, 10);
 
-	dispdupes = new wxCheckBox(this, ID_PREF_FILE_DISPLAY_DUPES, _("Display details of already uploaded QSOs when signing a log"));
+	dispdupes = new wxCheckBox(this, ID_PREF_FILE_DISPLAY_DUPES, _("Display details of previously signed QSOs when signing a log"));
 	config->Read(wxT("DispDupes"), &allow, DEFAULT_DISP_DUPES);
 	dispdupes->SetValue(allow);
 	sizer->Add(dispdupes, 0, wxLEFT|wxRIGHT|wxTOP, 10);
@@ -529,7 +536,7 @@ bool LogPrefs::TransferDataFromWindow() {
 	config->Write(wxT("DateRange"), daterange->GetValue());
 	config->Write(wxT("DispDupes"), dispdupes->GetValue());
 	config->Write(wxT("IgnoreSeconds"), ignoresecs->GetValue());
-	config->Write(wxT("IgnoreADIFcallsign"), ignorecall->GetValue());
+	config->Write(wxT("IgnoreADIFCallsign"), ignorecall->GetValue());
 	config->Write(wxT("LogVerify"), handleQTH->GetSelection());
 
 	return true;

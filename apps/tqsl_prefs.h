@@ -11,36 +11,37 @@
 #ifndef __TQSL_PREFS_H
 #define __TQSL_PREFS_H
 
+#include <map>
+#include <vector>
+#include <utility>
+
 #ifdef HAVE_CONFIG_H
 #include "sysconfig.h"
 #endif
 
-#include "wx/wxprec.h"
-#include "wx/object.h"
-#include "wx/config.h"
+#include <wx/wxprec.h>
+#include <wx/object.h>
+#include <wx/config.h>
 
 #ifdef __BORLANDC__
 	#pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-	#include "wx/wx.h"
+	#include <wx/wx.h>
 #endif
 
-#include "wx/dialog.h"
-#include "wx/notebook.h"
-#include "wx/checkbox.h"
-#include "wx/grid.h"
-#include "wx/wxhtml.h"
+#include <wx/dialog.h>
+#include <wx/notebook.h>
+#include <wx/checkbox.h>
+#include <wx/grid.h>
+#include <wx/wxhtml.h>
 #if defined(__APPLE__) || defined(_WIN32)
-#include "wx/filepicker.h"
+#include <wx/filepicker.h>
 #endif
 
 #include "tqslctrls.h"
 #include "wxutil.h"
-
-#include <map>
-#include <vector>
 
 using std::map;
 using std::pair;
