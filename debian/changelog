@@ -1,3 +1,13 @@
+trustedqsl (2.8.1-1ppa1~ubuntu24.04) noble; urgency=medium
+
+  * Freshen years in debian/copyright
+  * Add myself to Uploaders
+  * Bump Standards-Version to 4.7.2
+  * Taking maintainership to provide backports as Ubuntu PPA
+  * Updated Standard version to match distro
+
+ -- Loren M. Lang <lorenl@north-winds.org>  Mon, 05 May 2025 00:28:02 -0700
+
 trustedqsl (2.8.1-1) unstable; urgency=medium
 
   * New upstream version 2.8.1.
