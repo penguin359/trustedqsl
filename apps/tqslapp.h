@@ -112,6 +112,7 @@ class MyFrame : public wxFrame {
  public:
 	MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUpdates, bool quiet, wxLocale* locale);
 
+	virtual ~MyFrame();
 	bool IsQuiet(void) { return _quiet; }
 	void AddStationLocation(wxCommandEvent& event);
 	void EditStationLocation(wxCommandEvent& event);
@@ -139,9 +140,9 @@ class MyFrame : public wxFrame {
 	void LoadDupes(void);
 	int ConvertLogFile(tQSL_Location loc, const wxString& infile, const wxString& outfile, int compress = TQSL_UNCOMPRESSED_FILE, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, int logverify = -1, const char *password = NULL, const char *defcall = NULL);
 	tQSL_Location SelectStationLocation(const wxString& title = wxT(""), const wxString& okLabel = _("OK"), bool editonly = false);
-	int ConvertLogToString(tQSL_Location loc, const wxString& infile, wxString& output, int& n, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, int logverify = -1, const char* password = NULL, const char* defcall = NULL, int signtype = TQSL_SIGN_LOG);
+	int SignLogFile(tQSL_Location loc, const wxString& infile, void* output, bool compressed, int& n, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, int logverify = -1, const char* password = NULL, const char* defcall = NULL, int signtype = TQSL_SIGN_LOG);
 	int UploadLogFile(tQSL_Location loc, const wxString& infile, bool compress = false, bool suppressdate = false, tQSL_Date* startdate = NULL, tQSL_Date* enddate = NULL, int action = TQSL_ACTION_ASK, int logverify = -1, const char* password = NULL, const char *defcall = NULL);
-	int UploadFile(const wxString& infile, const char* filename, int numrecs, void *content, size_t clen, const wxString& fileType);
+	int UploadFile(const wxString& infile, const char* filename, int numrecs, const wxString& fileType);
 
 	void CheckForUpdates(wxCommandEvent&);
 	void DoCheckForUpdates(bool quiet = false, bool noGUI = false);
@@ -221,9 +222,9 @@ int SaveAddressInfo(const char *callsign, int dxcc);
 
 class LocPropDial : public wxDialog {
  public:
-        explicit LocPropDial(wxString locname, bool display, const char *filename = NULL, wxWindow *parent = 0);
-        void closeMe(wxCommandEvent&) { EndModal(wxID_OK); }
-        DECLARE_EVENT_TABLE()
+	explicit LocPropDial(wxString locname, bool display, const char *filename = NULL, wxWindow *parent = 0);
+	void closeMe(wxCommandEvent&) { EndModal(wxID_OK); }
+	DECLARE_EVENT_TABLE()
 };
 
 #endif // __tqslapp_h

@@ -3,6 +3,28 @@ TQSLLIB changes
 
 2.6
 ---
+Fix defect that was keeping MY_GRIDSQUARE from propagating to station
+locations that had empty gridsquare values.
+
+Allow two-character grids (ADIF permits this, even though it is probably
+invalid for awards.
+
+Stop using "%m" format for getting error messages as this is a glibc
+thing and not supported on Windows.
+
+Add missing export definitions for 32-bit tqsslib DLL on Windows. (Thanks
+to Jordi, EA3GCV for reporting this.
+
+Ignore VUCC grid checks for DXCC entity "None".
+
+Correct handling of grid found to be inconsistent to allow a second click
+to properly save that entry.
+
+Sort entity names for station locations such that deleted entities are 
+displayed after active entities.
+
+Fix handling of "NONE" entity. Thanks to DF2UU for the report and fix.
+
 stop checking validity of an entity name. If MY_COUNTRY doesn't match, ignore
 it.
 

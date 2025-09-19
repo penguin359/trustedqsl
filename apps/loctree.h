@@ -65,6 +65,7 @@ class LocTree : public wxTreeCtrl {
  private:
 	int _nloc;
 	wxWindow* tabTo;
+	wxImageList *il;
 	DECLARE_EVENT_TABLE()
 };
 

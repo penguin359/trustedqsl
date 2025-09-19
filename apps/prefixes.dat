@@ -1,408 +1,415 @@
+<prefixes majorversion="1" minorversion="3" updatedate="2025-07-17">
+<!-- 
 // DXCC prefix data. Incomplete,but a starting point.
 // Derived from https://github.com/k0swe/dxcc-json
 // Thanks,K0SWE. Then big-cty.dat from AD1C used to
 // augment the prefixes
 //
-1,^(V[A-GXY]|X[J-KL-O]|C[FGJKYZ]),Canada
-2,,Abu Ail Islands (Deleted)
-3,^(YA|T6),Afghanistan
-4,^3B[67],Agalega & Saint Brandon Islands
-5,^O[F-I]0,Aland Islands
-6,^[AKNW]L,Alaska
-7,^ZA,Albania
-8,^VQ9,Aldabra (Deleted)
-9,^[AKNW]H8,American Samoa
-10,^FT[0-8]Z,Amsterdam & Saint Paul Islands
-11,^VU4,Andaman & Nicobar Islands
-12,^VP2E,Anguilla
-13,^(CE9|KC4|RI1),Antarctica
-14,^EK,Armenia
-15,^(R[089]|R[ACDEFGIJKLMNOQTUVWXYZ][089]|U[089]|U[ABCDEFGHI][089]),Asiatic Russia
-16,^ZL9,New Zealand Subantarctic Islands
-17,^(4M|YV|YW|YX)0,Aves Island
-18,^4[JK],Azerbaijan
-19,^HK0,Bajo Nuevo (Deleted)
-20,^[AKNW]H1,Baker & Howland Islands
-21,^(A[M-O]|E[A-H])6,Balearic Islands
-22,^T8,Palau
-23,,Blenheim Reef (Deleted)
-24,^3Y,Bouvet Island
-25,^ZC5,British North Borneo (Deleted)
-26,^VQ6,British Somaliland (Deleted)
-27,^E[U-W],Belarus
-28,^KZ5,Canal Zone (Deleted)
-29,^(A[M-O]|E[A-H])8,Canary Islands
-30,^PK6,Celebes & Molucca Islands (Deleted)
-31,^T31,Central Kiribati
-32,^(A[M-O]|E[A-H])9,Ceuta & Melilla
-33,^VQ9,Chagos Islands
-34,^Z[LM]7,Chatham Island
-35,^(AX9X|VI9X|VK9X|VZ9X),Christmas Island
-36,^(FO|TX),Clipperton Island
-37,^T[EI]9,Cocos Island
-38,^(AX9C|AX9Y|VI9C|VI9Y|VK9C|VK9Y|VZ9Y),Cocos (Keeling) Islands
-39,^F(H|B8),Comoro Islands (Deleted)
-40,^(S[V-Z]|J4)9,Crete
-41,^FT[0-9]W,Crozet Island
-42,^CR8,Damao, Diu (Deleted)
-43,^[KNW]P5,Desecheo Island
-44,^VQ9,Desroches (Deleted)
-45,^(S[V-Z]|J4)5,Dodecanese
-46,^9[MW][68],East Malaysia
-47,^(3G|C[A-E]|X[Q-R])0,Easter Island
-48,^T32,Eastern Kiribati
-49,^3C,Equatorial Guinea
-50,^(4[A-C]|6[D-J]|X[A-I]),Mexico
-51,^E3,Eritrea
-52,^ES,Estonia
-53,^(9E|9F|ET),Ethiopia
-54,^(U[A-I][1-7]|U1|R[A-Z0-7]),European Russia
-55,^VQ9,Farquhar (Deleted)
-56,^(P[P-Y]0|Z[V-Z]0)Z*F,Fernando de Noronha
-57,^FQ8,French Equatorial Africa (Deleted)
-58,^FI8,French Indo-China (Deleted)
-59,^FF,French West Africa (Deleted)
-60,^C6,Bahamas
-61,^R11F,Franz Josef Land
-62,^8P,Barbados
-63,^(FY|TO),French Guiana
-64,^VP9,Bermuda
-65,^VP2V,British Virgin Islands
-66,^V3,Belize
-67,^FN8,French India (Deleted)
-68,^(8Z5|9K3),Kuwait/Saudi Arabia Neutral Zone (Deleted)
-69,^ZF,Cayman Islands
-70,^(C[LMO]|T4),Cuba
-71,^H[CD]8,Galapagos Islands
-72,^HI,Dominican Republic
-74,^(YS|HU),El Salvador
-75,^4L,Georgia
-76,^T[GD],Guatemala
-77,^J3,Grenada
-78,^(4V|HH),Haiti
-79,^(FG|TO),Guadeloupe
-80,^H[QR],Honduras
-81,^D[A-M],Germany (Deleted)
-82,^6Y,Jamaica
-84,^(FM|TO),Martinique
-85,^PJ,Bonaire,Curacao (Neth Antilles) (Deleted)
-86,^(YN|H[67T]),Nicaragua
-88,^(3[EF]|H[389OP]),Panama
-89,^V[PQ]5,Turks & Caicos Islands
-90,^9[YZ],Trinidad & Tobago
-91,^P4,Aruba
-93,,Geyser Reef (Deleted)
-94,^V2,Antigua & Barbuda
-95,^J7,Dominica
-96,^VP2M,Montserrat
-97,^J6,Saint Lucia
-98,^J8,Saint Vincent
-99,^FT[0-9]G,Glorioso Island
-100,^(L[1-9L-W]|AY|AZ),Argentina
-101,^CR8,Goa (Deleted)
-102,^ZD4,Gold Coast Togoland (Deleted)
-103,^[AKNW]H2,Guam
-104,^CP,Bolivia
-105,^KG4,Guantanamo Bay
-106,^(2U|GP|GU|MP|MU),Guernsey
-107,^3X,Guinea
-108,^(P[P-Y]|Z[V-Z]),Brazil
-109,^J5,Guinea-Bissau
-110,^[AKNW]H[67],Hawaii
-111,^VK0,Heard Island
-112,^(3G|C[A-E]|X[Q-R]),Chile
-113,^EA9,Ifni (Deleted)
-114,^(2D|[GM][DT]),Isle of Man
-115,^I5,Italian Somaliland (Deleted)
-116,^[H5][JK],Colombia
-117,^4U,ITU HQ
-118,^JX,Jan Mayen
-119,^PK[1-3],Java (Deleted)
-120,^H[CD],Ecuador
-122,^(2J|[GM][HJ]),Jersey
-123,^[AKNW]H3,Johnston Island
-124,^(FT[0-9][JE]|TO),Juan de Nova, Europa
-125,^(3G0Z|CA[A-E]0Z|XQ0Z|XR0Z),Juan Fernandez Island
-126,^(R2[FK]|RA2|R[CDEFGJKLMNOQTUVWXYZ]2[FK]|U2[FK]|U[ABCDEFGHI]2),Kaliningrad
-127,^VS9K,Kamaran Islands (Deleted)
-128,^UN1,Karelo-Finnish Rep (Deleted)
-129,^8R,Guyana
-130,^U[N-Q],Kazakhstan
-131,^FT[0-9]X,Kerguelen Island
-132,^ZP,Paraguay
-133,^Z[LM]8,Kermadec Island
-134,^KH5K,Kingman Reef (Deleted)
-135,^EX,Kyrgyzstan
-136,^(4T|O[A-C]),Peru
-137,^(HL|6[K-N]|D[789ST]),Republic of Korea
-138,^[AKNW]H7K,Kure Island
-139,^VS9H,Kuria Muria Island (Deleted)
-140,^PZ,Suriname
-141,^VP8,Falkland Islands
-142,^VU7,Lakshadweep Islands
-143,^XW,Laos
-144,^C[V-X],Uruguay
-145,^YL,Latvia
-146,^LY,Lithuania
-147,^VK9L,Lord Howe Island
-148,^(Y[V-Y]|4M),Venezuela
-149,^(CQ1|CQ8|CR1|CR2|CR8|CS4|CS8|CT8|CU),Azores
-150,^(V[H-K]|AX),Australia
-151,^R1/M,Malyj Vysotskij Island (Deleted)
-152,^XX9,Macao
-153,^(VK0|AX0),Macquarie Island
-154,^4W,Yemen Arab Republic (Deleted)
-155,^VS2,Malaya (Deleted)
-157,^C2,Nauru
-158,^YJ,Vanuatu
-159,^8Q,Maldives
-160,^A3,Tonga
-161,^H[JK]0M,Malpelo Island
-162,^(FK|T8|TX),New Caledonia
-163,^P2,Papua New Guinea
-164,^C9,Manchuria (Deleted)
-165,^3B8,Mauritius Island
-166,^[AKWN]H0,Mariana Islands
-167,^OJ0,Market Reef
-168,^V7,Marshall Islands
-169,^(FH|TO),Mayotte Island
-170,^Z[K-M],New Zealand
-171,^(AX9M|VI9M|VK9M|VZ9M),Mellish Reef
-172,^VP6,Pitcairn Island
-173,^V6,Micronesia
-174,^[AKNW]H4,Midway Island
-175,^(FO|TX),French Polynesia
-176,^3D2,Fiji Islands
-177,^JD1,Minami Torishima
-178,^1M,Minerva Reef (Deleted)
-179,^ER,Moldova
-180,^SV2A,Mount Athos
-181,^C[89],Mozambique
-182,^[KNW]P1,Navassa Island
-183,^PK5,Netherlands Borneo (Deleted)
-184,^JZ0,Netherlands N Guinea (Deleted)
-185,^H4[^0],Solomon Islands
-186,^VO,Newfoundland Labrador (Deleted)
-187,^5U,Niger
-188,^E6,Niue
-189,^(AX9|VI9|VK9),Norfolk Island
-190,^5W,Samoa
-191,^E5,North Cook Islands
-192,^JD1,Ogasawara
-193,^(KR[68]|JR6|KA6),Okinawa (Deleted)
-194,^7J1,Okino Tori-shima (Deleted)
-195,^3C0,Annobon
-196,^(ZC6|4X1),Palestine (Deleted)
-197,^[AKNW]H5,Palmyra & Jarvis Islands
-198,^(P2|VK9),Papua Territory (Deleted)
-199,^3Y,Peter 1 Island
-200,^CR(8|10),Portuguese Timor (Deleted)
-201,^Z[R-U]8,Prince Edward & Marion Islands
-202,^[KNW]P[34],Puerto Rico
-203,^C3,Andorra
-204,^(4[A-C]|6[D-J]|X[A-I])4,Revillagigedo
-205,^ZD8,Ascension Island
-206,^OE,Austria
-207,^3B9,Rodriguez Island
-208,^9U5,Ruanda-Urundi (Deleted)
-209,^O[N-T],Belgium
-210,^9S4,Saar (Deleted)
-211,^CY0,Sable Island
-212,^LZ,Bulgaria
-213,^(FS|TO),Saint Martin
-214,^TK,Corsica
-215,^(5B|C4|H2|P3),Cyprus
-216,^[5H][JK]0,San Andres Island
-217,^(3G|C[A-E]|X[Q-R])0X,San Felix Island
-218,^O[K-M],Czechoslovakia (Deleted)
-219,^S9,Sao Tome & Principe
-220,^VS4,Sarawak (Deleted)
-221,^(O[UVWZ]|5[P-Q]|XP),Denmark
-222,^O[WY],Faroe Islands
-223,^(G|GX|M|2E|2O|MO|2Q|2R|2V|VP|VQ),England
-224,^O[F-J],Finland
-225,^I[SMW]0,Sardinia
-226,^8Z4,Saudi Arabia/Iraq Neutral Zone (Deleted)
-227,^(F|H[W-Y]|T[HMOPQVWX]),France
-228,^(HK0|KP3|KS4),Serrana Bank & Roncador Cay (Deleted)
-229,^(DM|Y[2-9]),German Democratic Republic (Deleted)
-230,^D[A-R],Federal Republic of Germany
-231,^AC3,Sikkim (Deleted)
-232,^(T5|6O),Somalia
-233,^Z[BGQ],Gibraltar
-234,^E5,South Cook Islands
-235,^(VP8|LU),South Georgia Island
-236,^(S[V-Z]|J4),Greece
-237,^(OX|XP),Greenland
-238,^(VP8|VP0|LU),South Orkney Islands
-239,^H[AG],Hungary
-240,^(VP8|LU),South Sandwich Islands
-241,^(VP8|LU|CE9|HF0|4K1|XR9),South Shetland Islands
-242,^TF,Iceland
-243,^VS9[APS],People's Dem Rep of Yemen (Deleted)
-244,^ST0,Southern Sudan (Deleted)
-245,^E[IJ],Ireland
-246,^1A,Sovereign Military Order of Malta
-247,^(9M0|B[MNOPQUVWX]9S|9M2),Spratly Islands
-248,^I,Italy
-249,^V4,Saint Kitts & Nevis
-250,^ZD7,Saint Helena
-251,^(HB0|HE0),Liechtenstein
-252,^CY9,Saint Paul Island
-253,^(P[P-Y]0Z*S|Z[V-Z]0Z*S),Saint Peter and Paul Rocks
-254,^LX,Luxembourg
-255,^PJ,Sint Maarten, Saba, Saint Eustatius (Deleted)
-256,^(CQ[2-3]|CQ9|C[R-S]3|C[R-T]9),Madeira Islands
-257,^9H,Malta
-258,^PK4,Sumatra (Deleted)
-259,^JW,Svalbard
-260,^3A,Monaco
-261,^KS4,Swan Island (Deleted)
-262,^EY,Tajikistan
-263,^P[A-I],Netherlands
-264,^CN2,Tangier (Deleted)
-265,^(2I|[GM][IN]),Northern Ireland
-266,^L[A-N],Norway
-267,^(P2|VK9),Territory of New Guinea (Deleted)
-268,^AC4,Tibet (Deleted)
-269,^(HF|S[N-R]|3Z),Poland
-270,^ZK3,Tokelau Islands
-271,^I1,Trieste (Deleted)
-272,^C[Q-T],Portugal
-273,^(P[P-Y]0Z*T|Z[V-Z]0Z*T),Trindade & Martim Vaz Islands
-274,^ZD9,Tristan da Cunha & Gough Islands
-275,^Y[O-R],Romania
-276,^(FT[0-9]T|TO),Tromelin Island
-277,^(FP|TO),Saint Pierre & Miquelon
-278,^T7,San Marino
-279,^(2A|2M|GM|GS|MA|MM|MS|2S),Scotland
-280,^EZ,Turkmenistan
-281,^(E[A-H]|AM|AN|AO),Spain
-282,^T2,Tuvalu
-283,^ZC4,U K Bases on Cyprus
-284,^(S[A-M]|[78]S),Sweden
-285,^[KNW]P2,US Virgin Islands
-286,^5X,Uganda
-287,^(HB|HE),Switzerland
-288,^(U[5R-Z]|E[M-O]),Ukraine
-289,^4U,United Nations HQ
-291,^(K|W|N|A[A-L]),United States of America
-292,^U[J-M],Uzbekistan
-293,^(3W|XV),Viet Nam
-294,^(2W|2C|GC|GW|MC|MW),Wales
-295,^HV,Vatican City
-296,^(4N|Y[TUZ]),Serbia
-297,^[AKNW]H9,Wake Island
-298,^(FW|TW),Wallis & Futuna Islands
-299,^9[MW][245],West Malaysia
-301,^T30,Western Kiribati
-302,^S0,Western Sahara
-303,^(AX9W|AX9Z|VI9W|VI9Z|VK9W|VK9Z|VZ9W),Willis Island
-304,^A9,Bahrain
-305,^S[2-3],Bangladesh
-306,^A5,Bhutan
-307,^(VQ1|5H1),Zanzibar (Deleted)
-308,^T[IE],Costa Rica
-309,^X[YZ],Myanmar
-312,^XU,Cambodia
-315,^4[PQRS],Sri Lanka
-318,^(3[H-U]|B[0-9]|B[ADG-JLTYZ]),China
-321,^(VR|VS),Hong Kong
-324,^(8[T-Y]|A[T-W]|V[U-W]),India
-327,^(7[A-I]|P[K-O]|Y[B-H]|8[A-I]),Indonesia
-330,^(9[BCD]|E[PQ]),Iran
-333,^(HN[0-9]|YI),Iraq
-336,^4[XZ],Israel
-339,^(J[A-S]|7[J-N]|8[J-N]),Japan
-342,^JY,Jordan
-344,^P[5-9],DPRK (North Korea)
-345,^V8,Brunei
-348,^9K,Kuwait
-354,^OD,Lebanon
-363,^J[T-V],Mongolia
-369,^9N,Nepal
-370,^A4,Oman
-372,^(6[P-S]|A[P-S]),Pakistan
-375,^(D[U-Z]|4[D-I]),Philippines
-376,^A7,Qatar
-378,^(HZ|7Z|8Z),Saudi Arabia
-379,^S7,Seychelles Islands
-381,^(9V|S6),Singapore
-382,^J2,Djibouti
-384,^(6C|YK),Syria
-386,^B[M-QU-X],Taiwan
-387,^(HS|E2),Thailand
-390,^(T[A-C]|YM),Turkey
-391,^A6,United Arab Emirates
-400,^7[RT-Y],Algeria
-401,^D[23],Angola
-402,^(8O|A2),Botswana
-404,^9U,Burundi
-406,^TJ,Cameroon
-408,^TL,Central African Republic
-409,^D4,Cape Verde
-410,^TT,Chad
-411,^D6,Comoros
-412,^TN[0-9],Republic of the Congo
-414,^9[O-T],Democratic Republic of the Congo
-416,^TY,Benin
-420,^TR,Gabon
-422,^C5,The Gambia
-424,^9G,Ghana
-428,^TU[0-9],Cote d'Ivoire
-430,^5[YZ],Kenya
-432,^7P,Lesotho
-434,^(5L|5M|6Z|A8|D5|EL),Liberia
-436,^5A,Libya
-438,^(5R|5S|6X),Madagascar
-440,^7Q,Malawi
-442,^TZ,Mali
-444,^5T,Mauritania
-446,^(CN|5[C-G]),Morocco
-450,^5[NO],Nigeria
-452,^Z2,Zimbabwe
-453,^(FR|TO),Reunion Island
-454,^9X,Rwanda
-456,^6[VW],Senegal
-458,^9L,Sierra Leone
-460,^3D2,Rotuma
-462,^(H5|S4|S8|V9|Z[R-U]),Republic of South Africa
-464,^V5,Namibia
-466,^(6T|6U|ST),Sudan
-468,^3DA,Kingdom of Eswatini
-470,^5[HI],Tanzania
-474,^(3V|TS),Tunisia
-478,^(6A|6B|SS|SU),Egypt
-480,^XT,Burkina Faso
-482,^9[IJ],Zambia
-483,^5V,Togo
-488,^ZS9,Walvis Bay (Deleted)
-489,^3D2,Conway Reef
-490,^T33,Banaba Island
-492,^7O,Yemen
-493,^ZS[01],Penguin Islands (Deleted)
-497,^9A,Croatia
-499,^S5,Slovenia
-501,^(E7|T9),Bosnia-Herzegovina
-502,^Z3,North Macedonia
-503,^O[KL],Czech Republic
-504,^OM,Slovak Republic
-505,^B[M-QU-X]9P,Pratas Island
-506,^BS7,Scarborough Reef
-507,^H40,Temotu Province
-508,^FO,Austral Islands
-509,^FO,Marquesas Islands
-510,^E4,Palestine
-511,^4W,Timor - Leste
-512,^(FK|TX),Chesterfield Islands
-513,^VP6D,Ducie Island
-514,^4O,Montenegro
-515,^[AKNW]H8S,Swains Island
-516,^(FJ|TO),Saint Barthelemy
-517,^PJ2,Curacao
-518,^PJ[078],Sint Maarten
-519,^PJ[56],Saba & Saint Eustatius
-520,^PJ4,Bonaire
-521,^Z8,Republic of South Sudan
-522,^Z6,Republic of Kosovo
-0,,
+// V1.1 2025-05-15 - Add VO as a prefix for Canada
+// V1.2 2025-07-10 - Fix "GB" prefix to be any United Kingdom entity
+// V1.3 2025-07-17 - VK2/VK9/VK0 fixes
+// -->
+    <prefix entity="1" regex="^(V[A-GOXY]|X[J-KL-O]|C[FGJKYZ])" name="Canada" />
+    <prefix entity="2" regex="" name="Abu Ail Islands (Deleted)" />
+    <prefix entity="3" regex="^(YA|T6)" name="Afghanistan" />
+    <prefix entity="4" regex="^3B[67]" name="Agalega &amp; Saint Brandon Islands" />
+    <prefix entity="5" regex="^O[F-I]0" name="Aland Islands" />
+    <prefix entity="6" regex="^[AKNW]L" name="Alaska" />
+    <prefix entity="7" regex="^ZA" name="Albania" />
+    <prefix entity="8" regex="^VQ9" name="Aldabra (Deleted)" />
+    <prefix entity="9" regex="^[AKNW]H8" name="American Samoa" />
+    <prefix entity="10" regex="^FT[0-8]Z" name="Amsterdam &amp; Saint Paul Islands" />
+    <prefix entity="11" regex="^VU4" name="Andaman &amp; Nicobar Islands" />
+    <prefix entity="12" regex="^VP2E" name="Anguilla" />
+    <prefix entity="13" regex="^(CE9|KC4|RI1)" name="Antarctica" />
+    <prefix entity="14" regex="^EK" name="Armenia" />
+    <prefix entity="15" regex="^(R[089]|R[ACDEFGIJKLMNOQTUVWXYZ][089]|U[089]|U[ABCDEFGHI][089])" name="Asiatic Russia" />
+    <prefix entity="16" regex="^ZL9" name="New Zealand Subantarctic Islands" />
+    <prefix entity="17" regex="^(4M|YV|YW|YX)0" name="Aves Island" />
+    <prefix entity="18" regex="^4[JK]" name="Azerbaijan" />
+    <prefix entity="19" regex="^HK0" name="Bajo Nuevo (Deleted)" />
+    <prefix entity="20" regex="^[AKNW]H1" name="Baker &amp; Howland Islands" />
+    <prefix entity="21" regex="^(A[M-O]|E[A-H])6" name="Balearic Islands" />
+    <prefix entity="22" regex="^T8" name="Palau" />
+    <prefix entity="23" regex="" name="Blenheim Reef (Deleted)" />
+    <prefix entity="24" regex="^3Y" name="Bouvet Island" />
+    <prefix entity="25" regex="^ZC5" name="British North Borneo (Deleted)" />
+    <prefix entity="26" regex="^VQ6" name="British Somaliland (Deleted)" />
+    <prefix entity="27" regex="^E[U-W]" name="Belarus" />
+    <prefix entity="28" regex="^KZ5" name="Canal Zone (Deleted)" />
+    <prefix entity="29" regex="^(A[M-O]|E[A-H])8" name="Canary Islands" />
+    <prefix entity="30" regex="^PK6" name="Celebes &amp; Molucca Islands (Deleted)" />
+    <prefix entity="31" regex="^T31" name="Central Kiribati" />
+    <prefix entity="32" regex="^(A[M-O]|E[A-H])9" name="Ceuta &amp; Melilla" />
+    <prefix entity="33" regex="^VQ9" name="Chagos Islands" />
+    <prefix entity="34" regex="^Z[LM]7" name="Chatham Island" />
+    <prefix entity="35" regex="^(AX9X|VI9X|VK9X|VZ9X)" name="Christmas Island" />
+    <prefix entity="36" regex="^(FO|TX)" name="Clipperton Island" />
+    <prefix entity="37" regex="^T[EI]9" name="Cocos Island" />
+    <prefix entity="38" regex="^(AX9C|AX9Y|VI9C|VI9Y|VK9C|VK9Y|VZ9Y)" name="Cocos (Keeling) Islands" />
+    <prefix entity="39" regex="^F(H|B8)" name="Comoro Islands (Deleted)" />
+    <prefix entity="40" regex="^(S[V-Z]|J4)9" name="Crete" />
+    <prefix entity="41" regex="^FT[0-9]W" name="Crozet Island" />
+    <prefix entity="42" regex="^CR8" name="Damao, Diu (Deleted)" />
+    <prefix entity="43" regex="^[KNW]P5" name="Desecheo Island" />
+    <prefix entity="44" regex="^VQ9" name="Desroches (Deleted)" />
+    <prefix entity="45" regex="^(S[V-Z]|J4)5" name="Dodecanese" />
+    <prefix entity="46" regex="^9[MW][68]" name="East Malaysia" />
+    <prefix entity="47" regex="^(3G|C[A-E]|X[Q-R])0" name="Easter Island" />
+    <prefix entity="48" regex="^T32" name="Eastern Kiribati" />
+    <prefix entity="49" regex="^3C" name="Equatorial Guinea" />
+    <prefix entity="50" regex="^(4[A-C]|6[D-J]|X[A-I])" name="Mexico" />
+    <prefix entity="51" regex="^E3" name="Eritrea" />
+    <prefix entity="52" regex="^ES" name="Estonia" />
+    <prefix entity="53" regex="^(9E|9F|ET)" name="Ethiopia" />
+    <prefix entity="54" regex="^(U[A-I][1-7]|U1|R[A-Z0-7])" name="European Russia" />
+    <prefix entity="55" regex="^VQ9" name="Farquhar (Deleted)" />
+    <prefix entity="56" regex="^(P[P-Y]0|Z[V-Z]0)Z*F" name="Fernando de Noronha" />
+    <prefix entity="57" regex="^FQ8" name="French Equatorial Africa (Deleted)" />
+    <prefix entity="58" regex="^FI8" name="French Indo-China (Deleted)" />
+    <prefix entity="59" regex="^FF" name="French West Africa (Deleted)" />
+    <prefix entity="60" regex="^C6" name="Bahamas" />
+    <prefix entity="61" regex="^R11F" name="Franz Josef Land" />
+    <prefix entity="62" regex="^8P" name="Barbados" />
+    <prefix entity="63" regex="^(FY|TO)" name="French Guiana" />
+    <prefix entity="64" regex="^VP9" name="Bermuda" />
+    <prefix entity="65" regex="^VP2V" name="British Virgin Islands" />
+    <prefix entity="66" regex="^V3" name="Belize" />
+    <prefix entity="67" regex="^FN8" name="French India (Deleted)" />
+    <prefix entity="68" regex="^(8Z5|9K3)" name="Kuwait/Saudi Arabia Neutral Zone (Deleted)" />
+    <prefix entity="69" regex="^ZF" name="Cayman Islands" />
+    <prefix entity="70" regex="^(C[LMO]|T4)" name="Cuba" />
+    <prefix entity="71" regex="^H[CD]8" name="Galapagos Islands" />
+    <prefix entity="72" regex="^HI" name="Dominican Republic" />
+    <prefix entity="74" regex="^(YS|HU)" name="El Salvador" />
+    <prefix entity="75" regex="^4L" name="Georgia" />
+    <prefix entity="76" regex="^T[GD]" name="Guatemala" />
+    <prefix entity="77" regex="^J3" name="Grenada" />
+    <prefix entity="78" regex="^(4V|HH)" name="Haiti" />
+    <prefix entity="79" regex="^(FG|TO)" name="Guadeloupe" />
+    <prefix entity="80" regex="^H[QR]" name="Honduras" />
+    <prefix entity="81" regex="^D[A-M]" name="Germany (Deleted)" />
+    <prefix entity="82" regex="^6Y" name="Jamaica" />
+    <prefix entity="84" regex="^(FM|TO)" name="Martinique" />
+    <prefix entity="85" regex="^PJ" name="Bonaire,Curacao (Neth Antilles) (Deleted)" />
+    <prefix entity="86" regex="^(YN|H[67T])" name="Nicaragua" />
+    <prefix entity="88" regex="^(3[EF]|H[389OP])" name="Panama" />
+    <prefix entity="89" regex="^V[PQ]5" name="Turks &amp; Caicos Islands" />
+    <prefix entity="90" regex="^9[YZ]" name="Trinidad &amp; Tobago" />
+    <prefix entity="91" regex="^P4" name="Aruba" />
+    <prefix entity="93" regex="" name="Geyser Reef (Deleted)" />
+    <prefix entity="94" regex="^V2" name="Antigua &amp; Barbuda" />
+    <prefix entity="95" regex="^J7" name="Dominica" />
+    <prefix entity="96" regex="^VP2M" name="Montserrat" />
+    <prefix entity="97" regex="^J6" name="Saint Lucia" />
+    <prefix entity="98" regex="^J8" name="Saint Vincent" />
+    <prefix entity="99" regex="^FT[0-9]G" name="Glorioso Island" />
+    <prefix entity="100" regex="^(L[1-9L-W]|AY|AZ)" name="Argentina" />
+    <prefix entity="101" regex="^CR8" name="Goa (Deleted)" />
+    <prefix entity="102" regex="^ZD4" name="Gold Coast Togoland (Deleted)" />
+    <prefix entity="103" regex="^[AKNW]H2" name="Guam" />
+    <prefix entity="104" regex="^CP" name="Bolivia" />
+    <prefix entity="105" regex="^KG4" name="Guantanamo Bay" />
+    <prefix entity="106" regex="^(2U|GB|GP|GU|MP|MU)" name="Guernsey" />
+    <prefix entity="107" regex="^3X" name="Guinea" />
+    <prefix entity="108" regex="^(P[P-Y]|Z[V-Z])" name="Brazil" />
+    <prefix entity="109" regex="^J5" name="Guinea-Bissau" />
+    <prefix entity="110" regex="^[AKNW]H[67]" name="Hawaii" />
+    <prefix entity="111" regex="^VK(0|9)" name="Heard Island" />
+    <prefix entity="112" regex="^(3G|C[A-E]|X[Q-R])" name="Chile" />
+    <prefix entity="113" regex="^EA9" name="Ifni (Deleted)" />
+    <prefix entity="114" regex="^(2D|[GM][BDT])" name="Isle of Man" />
+    <prefix entity="115" regex="^I5" name="Italian Somaliland (Deleted)" />
+    <prefix entity="116" regex="^[H5][JK]" name="Colombia" />
+    <prefix entity="117" regex="^4U" name="ITU HQ" />
+    <prefix entity="118" regex="^JX" name="Jan Mayen" />
+    <prefix entity="119" regex="^PK[1-3]" name="Java (Deleted)" />
+    <prefix entity="120" regex="^H[CD]" name="Ecuador" />
+    <prefix entity="122" regex="^(2J|[GM][BHJ])" name="Jersey" />
+    <prefix entity="123" regex="^[AKNW]H3" name="Johnston Island" />
+    <prefix entity="124" regex="^(FT[0-9][JE]|TO)" name="Juan de Nova, Europa" />
+    <prefix entity="125" regex="^(3G0Z|CA[A-E]0Z|XQ0Z|XR0Z)" name="Juan Fernandez Island" />
+    <prefix entity="126" regex="^(R2[FK]|RA2|R[CDEFGJKLMNOQTUVWXYZ]2[FK]|U2[FK]|U[ABCDEFGHI]2)" name="Kaliningrad" />
+    <prefix entity="127" regex="^VS9K" name="Kamaran Islands (Deleted)" />
+    <prefix entity="128" regex="^UN1" name="Karelo-Finnish Rep (Deleted)" />
+    <prefix entity="129" regex="^8R" name="Guyana" />
+    <prefix entity="130" regex="^U[N-Q]" name="Kazakhstan" />
+    <prefix entity="131" regex="^FT[0-9]X" name="Kerguelen Island" />
+    <prefix entity="132" regex="^ZP" name="Paraguay" />
+    <prefix entity="133" regex="^Z[LM]8" name="Kermadec Island" />
+    <prefix entity="134" regex="^KH5K" name="Kingman Reef (Deleted)" />
+    <prefix entity="135" regex="^EX" name="Kyrgyzstan" />
+    <prefix entity="136" regex="^(4T|O[A-C])" name="Peru" />
+    <prefix entity="137" regex="^(HL|6[K-N]|D[789ST])" name="Republic of Korea" />
+    <prefix entity="138" regex="^[AKNW]H7K" name="Kure Island" />
+    <prefix entity="139" regex="^VS9H" name="Kuria Muria Island (Deleted)" />
+    <prefix entity="140" regex="^PZ" name="Suriname" />
+    <prefix entity="141" regex="^VP8" name="Falkland Islands" />
+    <prefix entity="142" regex="^VU7" name="Lakshadweep Islands" />
+    <prefix entity="143" regex="^XW" name="Laos" />
+    <prefix entity="144" regex="^C[V-X]" name="Uruguay" />
+    <prefix entity="145" regex="^YL" name="Latvia" />
+    <prefix entity="146" regex="^LY" name="Lithuania" />
+    <prefix entity="147" regex="^VK(9|2)" name="Lord Howe Island" />
+    <prefix entity="148" regex="^(Y[V-Y]|4M)" name="Venezuela" />
+    <prefix entity="149" regex="^(CQ1|CQ8|CR1|CR2|CR8|CS4|CS8|CT8|CU)" name="Azores" />
+    <prefix entity="150" regex="^(V[H-K]|AX)" name="Australia" />
+    <prefix entity="151" regex="^R1/M" name="Malyj Vysotskij Island (Deleted)" />
+    <prefix entity="152" regex="^XX9" name="Macao" />
+    <prefix entity="153" regex="^(VK0|AX0|VK7)" name="Macquarie Island" />
+    <prefix entity="154" regex="^4W" name="Yemen Arab Republic (Deleted)" />
+    <prefix entity="155" regex="^VS2" name="Malaya (Deleted)" />
+    <prefix entity="157" regex="^C2" name="Nauru" />
+    <prefix entity="158" regex="^YJ" name="Vanuatu" />
+    <prefix entity="159" regex="^8Q" name="Maldives" />
+    <prefix entity="160" regex="^A3" name="Tonga" />
+    <prefix entity="161" regex="^H[JK]0M" name="Malpelo Island" />
+    <prefix entity="162" regex="^(FK|T8|TX)" name="New Caledonia" />
+    <prefix entity="163" regex="^P2" name="Papua New Guinea" />
+    <prefix entity="164" regex="^C9" name="Manchuria (Deleted)" />
+    <prefix entity="165" regex="^3B8" name="Mauritius Island" />
+    <prefix entity="166" regex="^[AKWN]H0" name="Mariana Islands" />
+    <prefix entity="167" regex="^OJ0" name="Market Reef" />
+    <prefix entity="168" regex="^V7" name="Marshall Islands" />
+    <prefix entity="169" regex="^(FH|TO)" name="Mayotte Island" />
+    <prefix entity="170" regex="^Z[K-M]" name="New Zealand" />
+    <prefix entity="171" regex="^(AX9M|VI9M|VK9M|VZ9M)" name="Mellish Reef" />
+    <prefix entity="172" regex="^VP6" name="Pitcairn Island" />
+    <prefix entity="173" regex="^V6" name="Micronesia" />
+    <prefix entity="174" regex="^[AKNW]H4" name="Midway Island" />
+    <prefix entity="175" regex="^(FO|TX)" name="French Polynesia" />
+    <prefix entity="176" regex="^3D2" name="Fiji Islands" />
+    <prefix entity="177" regex="^JD1" name="Minami Torishima" />
+    <prefix entity="178" regex="^1M" name="Minerva Reef (Deleted)" />
+    <prefix entity="179" regex="^ER" name="Moldova" />
+    <prefix entity="180" regex="^SV2A" name="Mount Athos" />
+    <prefix entity="181" regex="^C[89]" name="Mozambique" />
+    <prefix entity="182" regex="^[KNW]P1" name="Navassa Island" />
+    <prefix entity="183" regex="^PK5" name="Netherlands Borneo (Deleted)" />
+    <prefix entity="184" regex="^JZ0" name="Netherlands N Guinea (Deleted)" />
+    <prefix entity="185" regex="^H4[^0]" name="Solomon Islands" />
+    <prefix entity="186" regex="^VO" name="Newfoundland Labrador (Deleted)" />
+    <prefix entity="187" regex="^5U" name="Niger" />
+    <prefix entity="188" regex="^E6" name="Niue" />
+    <prefix entity="189" regex="^(AX9|VI9|VK9)" name="Norfolk Island" />
+    <prefix entity="190" regex="^5W" name="Samoa" />
+    <prefix entity="191" regex="^E5" name="North Cook Islands" />
+    <prefix entity="192" regex="^JD1" name="Ogasawara" />
+    <prefix entity="193" regex="^(KR[68]|JR6|KA6)" name="Okinawa (Deleted)" />
+    <prefix entity="194" regex="^7J1" name="Okino Tori-shima (Deleted)" />
+    <prefix entity="195" regex="^3C0" name="Annobon" />
+    <prefix entity="196" regex="^(ZC6|4X1)" name="Palestine (Deleted)" />
+    <prefix entity="197" regex="^[AKNW]H5" name="Palmyra &amp; Jarvis Islands" />
+    <prefix entity="198" regex="^(P2|VK9)" name="Papua Territory (Deleted)" />
+    <prefix entity="199" regex="^3Y" name="Peter 1 Island" />
+    <prefix entity="200" regex="^CR(8|10)" name="Portuguese Timor (Deleted)" />
+    <prefix entity="201" regex="^Z[R-U]8" name="Prince Edward &amp; Marion Islands" />
+    <prefix entity="202" regex="^[KNW]P[34]" name="Puerto Rico" />
+    <prefix entity="203" regex="^C3" name="Andorra" />
+    <prefix entity="204" regex="^(4[A-C]|6[D-J]|X[A-I])4" name="Revillagigedo" />
+    <prefix entity="205" regex="^ZD8" name="Ascension Island" />
+    <prefix entity="206" regex="^OE" name="Austria" />
+    <prefix entity="207" regex="^3B9" name="Rodriguez Island" />
+    <prefix entity="208" regex="^9U5" name="Ruanda-Urundi (Deleted)" />
+    <prefix entity="209" regex="^O[N-T]" name="Belgium" />
+    <prefix entity="210" regex="^9S4" name="Saar (Deleted)" />
+    <prefix entity="211" regex="^CY0" name="Sable Island" />
+    <prefix entity="212" regex="^LZ" name="Bulgaria" />
+    <prefix entity="213" regex="^(FS|TO)" name="Saint Martin" />
+    <prefix entity="214" regex="^TK" name="Corsica" />
+    <prefix entity="215" regex="^(5B|C4|H2|P3)" name="Cyprus" />
+    <prefix entity="216" regex="^[5H][JK]0" name="San Andres Island" />
+    <prefix entity="217" regex="^(3G|C[A-E]|X[Q-R])0X" name="San Felix Island" />
+    <prefix entity="218" regex="^O[K-M]" name="Czechoslovakia (Deleted)" />
+    <prefix entity="219" regex="^S9" name="Sao Tome &amp; Principe" />
+    <prefix entity="220" regex="^VS4" name="Sarawak (Deleted)" />
+    <prefix entity="221" regex="^(O[UVWZ]|5[P-Q]|XP)" name="Denmark" />
+    <prefix entity="222" regex="^O[WY]" name="Faroe Islands" />
+    <prefix entity="223" regex="^(G|GB|GX|M|2E|2O|MO|2Q|2R|2V|VP|VQ)" name="England" />
+    <prefix entity="224" regex="^O[F-J]" name="Finland" />
+    <prefix entity="225" regex="^I[SMW]0" name="Sardinia" />
+    <prefix entity="226" regex="^8Z4" name="Saudi Arabia/Iraq Neutral Zone (Deleted)" />
+    <prefix entity="227" regex="^(F|H[W-Y]|T[HMOPQVWX])" name="France" />
+    <prefix entity="228" regex="^(HK0|KP3|KS4)" name="Serrana Bank &amp; Roncador Cay (Deleted)" />
+    <prefix entity="229" regex="^(DM|Y[2-9])" name="German Democratic Republic (Deleted)" />
+    <prefix entity="230" regex="^D[A-R]" name="Federal Republic of Germany" />
+    <prefix entity="231" regex="^AC3" name="Sikkim (Deleted)" />
+    <prefix entity="232" regex="^(T5|6O)" name="Somalia" />
+    <prefix entity="233" regex="^Z[BGQ]" name="Gibraltar" />
+    <prefix entity="234" regex="^E5" name="South Cook Islands" />
+    <prefix entity="235" regex="^(VP8|LU)" name="South Georgia Island" />
+    <prefix entity="236" regex="^(S[V-Z]|J4)" name="Greece" />
+    <prefix entity="237" regex="^(OX|XP)" name="Greenland" />
+    <prefix entity="238" regex="^(VP8|VP0|LU)" name="South Orkney Islands" />
+    <prefix entity="239" regex="^H[AG]" name="Hungary" />
+    <prefix entity="240" regex="^(VP8|LU)" name="South Sandwich Islands" />
+    <prefix entity="241" regex="^(VP8|LU|CE9|HF0|4K1|XR9)" name="South Shetland Islands" />
+    <prefix entity="242" regex="^TF" name="Iceland" />
+    <prefix entity="243" regex="^VS9[APS]" name="People's Dem Rep of Yemen (Deleted)" />
+    <prefix entity="244" regex="^ST0" name="Southern Sudan (Deleted)" />
+    <prefix entity="245" regex="^E[IJ]" name="Ireland" />
+    <prefix entity="246" regex="^1A" name="Sovereign Military Order of Malta" />
+    <prefix entity="247" regex="^(9M0|B[MNOPQUVWX]9S|9M2)" name="Spratly Islands" />
+    <prefix entity="248" regex="^I" name="Italy" />
+    <prefix entity="249" regex="^V4" name="Saint Kitts &amp; Nevis" />
+    <prefix entity="250" regex="^ZD7" name="Saint Helena" />
+    <prefix entity="251" regex="^(HB0|HE0)" name="Liechtenstein" />
+    <prefix entity="252" regex="^CY9" name="Saint Paul Island" />
+    <prefix entity="253" regex="^(P[P-Y]0Z*S|Z[V-Z]0Z*S)" name="Saint Peter and Paul Rocks" />
+    <prefix entity="254" regex="^LX" name="Luxembourg" />
+    <prefix entity="255" regex="^PJ" name="Sint Maarten, Saba, Saint Eustatius (Deleted)" />
+    <prefix entity="256" regex="^(CQ[2-3]|CQ9|C[R-S]3|C[R-T]9)" name="Madeira Islands" />
+    <prefix entity="257" regex="^9H" name="Malta" />
+    <prefix entity="258" regex="^PK4" name="Sumatra (Deleted)" />
+    <prefix entity="259" regex="^JW" name="Svalbard" />
+    <prefix entity="260" regex="^3A" name="Monaco" />
+    <prefix entity="261" regex="^KS4" name="Swan Island (Deleted)" />
+    <prefix entity="262" regex="^EY" name="Tajikistan" />
+    <prefix entity="263" regex="^P[A-I]" name="Netherlands" />
+    <prefix entity="264" regex="^CN2" name="Tangier (Deleted)" />
+    <prefix entity="265" regex="^(2I|[GM][IBN])" name="Northern Ireland" />
+    <prefix entity="266" regex="^L[A-N]" name="Norway" />
+    <prefix entity="267" regex="^(P2|VK9)" name="Territory of New Guinea (Deleted)" />
+    <prefix entity="268" regex="^AC4" name="Tibet (Deleted)" />
+    <prefix entity="269" regex="^(HF|S[N-R]|3Z)" name="Poland" />
+    <prefix entity="270" regex="^ZK3" name="Tokelau Islands" />
+    <prefix entity="271" regex="^I1" name="Trieste (Deleted)" />
+    <prefix entity="272" regex="^C[Q-T]" name="Portugal" />
+    <prefix entity="273" regex="^(P[P-Y]0Z*T|Z[V-Z]0Z*T)" name="Trindade &amp; Martim Vaz Islands" />
+    <prefix entity="274" regex="^ZD9" name="Tristan da Cunha &amp; Gough Islands" />
+    <prefix entity="275" regex="^Y[O-R]" name="Romania" />
+    <prefix entity="276" regex="^(FT[0-9]T|TO)" name="Tromelin Island" />
+    <prefix entity="277" regex="^(FP|TO)" name="Saint Pierre &amp; Miquelon" />
+    <prefix entity="278" regex="^T7" name="San Marino" />
+    <prefix entity="279" regex="^(2A|2M|GB|GM|GS|MA|MM|MS|2S)" name="Scotland" />
+    <prefix entity="280" regex="^EZ" name="Turkmenistan" />
+    <prefix entity="281" regex="^(E[A-H]|AM|AN|AO)" name="Spain" />
+    <prefix entity="282" regex="^T2" name="Tuvalu" />
+    <prefix entity="283" regex="^ZC4" name="U K Bases on Cyprus" />
+    <prefix entity="284" regex="^(S[A-M]|[78]S)" name="Sweden" />
+    <prefix entity="285" regex="^[KNW]P2" name="US Virgin Islands" />
+    <prefix entity="286" regex="^5X" name="Uganda" />
+    <prefix entity="287" regex="^(HB|HE)" name="Switzerland" />
+    <prefix entity="288" regex="^(U[5R-Z]|E[M-O])" name="Ukraine" />
+    <prefix entity="289" regex="^4U" name="United Nations HQ" />
+    <prefix entity="291" regex="^(K|W|N|A[A-L])" name="United States of America" />
+    <prefix entity="292" regex="^U[J-M]" name="Uzbekistan" />
+    <prefix entity="293" regex="^(3W|XV)" name="Viet Nam" />
+    <prefix entity="294" regex="^(2W|2C|GB|GC|GW|MC|MW)" name="Wales" />
+    <prefix entity="295" regex="^HV" name="Vatican City" />
+    <prefix entity="296" regex="^(4N|Y[TUZ])" name="Serbia" />
+    <prefix entity="297" regex="^[AKNW]H9" name="Wake Island" />
+    <prefix entity="298" regex="^(FW|TW)" name="Wallis &amp; Futuna Islands" />
+    <prefix entity="299" regex="^9[MW][245]" name="West Malaysia" />
+    <prefix entity="301" regex="^T30" name="Western Kiribati" />
+    <prefix entity="302" regex="^S0" name="Western Sahara" />
+    <prefix entity="303" regex="^(AX9W|AX9Z|VI9W|VI9Z|VK9W|VK9Z|VZ9W)" name="Willis Island" />
+    <prefix entity="304" regex="^A9" name="Bahrain" />
+    <prefix entity="305" regex="^S[2-3]" name="Bangladesh" />
+    <prefix entity="306" regex="^A5" name="Bhutan" />
+    <prefix entity="307" regex="^(VQ1|5H1)" name="Zanzibar (Deleted)" />
+    <prefix entity="308" regex="^T[IE]" name="Costa Rica" />
+    <prefix entity="309" regex="^X[YZ]" name="Myanmar" />
+    <prefix entity="312" regex="^XU" name="Cambodia" />
+    <prefix entity="315" regex="^4[PQRS]" name="Sri Lanka" />
+    <prefix entity="318" regex="^(3[H-U]|B[0-9]|B[ADG-JLTYZ])" name="China" />
+    <prefix entity="321" regex="^(VR|VS)" name="Hong Kong" />
+    <prefix entity="324" regex="^(8[T-Y]|A[T-W]|V[U-W])" name="India" />
+    <prefix entity="327" regex="^(7[A-I]|P[K-O]|Y[B-H]|8[A-I])" name="Indonesia" />
+    <prefix entity="330" regex="^(9[BCD]|E[PQ])" name="Iran" />
+    <prefix entity="333" regex="^(HN[0-9]|YI)" name="Iraq" />
+    <prefix entity="336" regex="^4[XZ]" name="Israel" />
+    <prefix entity="339" regex="^(J[A-S]|7[J-N]|8[J-N])" name="Japan" />
+    <prefix entity="342" regex="^JY" name="Jordan" />
+    <prefix entity="344" regex="^P[5-9]" name="DPRK (North Korea)" />
+    <prefix entity="345" regex="^V8" name="Brunei" />
+    <prefix entity="348" regex="^9K" name="Kuwait" />
+    <prefix entity="354" regex="^OD" name="Lebanon" />
+    <prefix entity="363" regex="^J[T-V]" name="Mongolia" />
+    <prefix entity="369" regex="^9N" name="Nepal" />
+    <prefix entity="370" regex="^A4" name="Oman" />
+    <prefix entity="372" regex="^(6[P-S]|A[P-S])" name="Pakistan" />
+    <prefix entity="375" regex="^(D[U-Z]|4[D-I])" name="Philippines" />
+    <prefix entity="376" regex="^A7" name="Qatar" />
+    <prefix entity="378" regex="^(HZ|7Z|8Z)" name="Saudi Arabia" />
+    <prefix entity="379" regex="^S7" name="Seychelles Islands" />
+    <prefix entity="381" regex="^(9V|S6)" name="Singapore" />
+    <prefix entity="382" regex="^J2" name="Djibouti" />
+    <prefix entity="384" regex="^(6C|YK)" name="Syria" />
+    <prefix entity="386" regex="^B[M-QU-X]" name="Taiwan" />
+    <prefix entity="387" regex="^(HS|E2)" name="Thailand" />
+    <prefix entity="390" regex="^(T[A-C]|YM)" name="Turkey" />
+    <prefix entity="391" regex="^A6" name="United Arab Emirates" />
+    <prefix entity="400" regex="^7[RT-Y]" name="Algeria" />
+    <prefix entity="401" regex="^D[23]" name="Angola" />
+    <prefix entity="402" regex="^(8O|A2)" name="Botswana" />
+    <prefix entity="404" regex="^9U" name="Burundi" />
+    <prefix entity="406" regex="^TJ" name="Cameroon" />
+    <prefix entity="408" regex="^TL" name="Central African Republic" />
+    <prefix entity="409" regex="^D4" name="Cape Verde" />
+    <prefix entity="410" regex="^TT" name="Chad" />
+    <prefix entity="411" regex="^D6" name="Comoros" />
+    <prefix entity="412" regex="^TN[0-9]" name="Republic of the Congo" />
+    <prefix entity="414" regex="^9[O-T]" name="Democratic Republic of the Congo" />
+    <prefix entity="416" regex="^TY" name="Benin" />
+    <prefix entity="420" regex="^TR" name="Gabon" />
+    <prefix entity="422" regex="^C5" name="The Gambia" />
+    <prefix entity="424" regex="^9G" name="Ghana" />
+    <prefix entity="428" regex="^TU[0-9]" name="Cote d'Ivoire" />
+    <prefix entity="430" regex="^5[YZ]" name="Kenya" />
+    <prefix entity="432" regex="^7P" name="Lesotho" />
+    <prefix entity="434" regex="^(5L|5M|6Z|A8|D5|EL)" name="Liberia" />
+    <prefix entity="436" regex="^5A" name="Libya" />
+    <prefix entity="438" regex="^(5R|5S|6X)" name="Madagascar" />
+    <prefix entity="440" regex="^7Q" name="Malawi" />
+    <prefix entity="442" regex="^TZ" name="Mali" />
+    <prefix entity="444" regex="^5T" name="Mauritania" />
+    <prefix entity="446" regex="^(CN|5[C-G])" name="Morocco" />
+    <prefix entity="450" regex="^5[NO]" name="Nigeria" />
+    <prefix entity="452" regex="^Z2" name="Zimbabwe" />
+    <prefix entity="453" regex="^(FR|TO)" name="Reunion Island" />
+    <prefix entity="454" regex="^9X" name="Rwanda" />
+    <prefix entity="456" regex="^6[VW]" name="Senegal" />
+    <prefix entity="458" regex="^9L" name="Sierra Leone" />
+    <prefix entity="460" regex="^3D2" name="Rotuma" />
+    <prefix entity="462" regex="^(H5|S4|S8|V9|Z[R-U])" name="Republic of South Africa" />
+    <prefix entity="464" regex="^V5" name="Namibia" />
+    <prefix entity="466" regex="^(6T|6U|ST)" name="Sudan" />
+    <prefix entity="468" regex="^3DA" name="Kingdom of Eswatini" />
+    <prefix entity="470" regex="^5[HI]" name="Tanzania" />
+    <prefix entity="474" regex="^(3V|TS)" name="Tunisia" />
+    <prefix entity="478" regex="^(6A|6B|SS|SU)" name="Egypt" />
+    <prefix entity="480" regex="^XT" name="Burkina Faso" />
+    <prefix entity="482" regex="^9[IJ]" name="Zambia" />
+    <prefix entity="483" regex="^5V" name="Togo" />
+    <prefix entity="488" regex="^ZS9" name="Walvis Bay (Deleted)" />
+    <prefix entity="489" regex="^3D2" name="Conway Reef" />
+    <prefix entity="490" regex="^T33" name="Banaba Island" />
+    <prefix entity="492" regex="^7O" name="Yemen" />
+    <prefix entity="493" regex="^ZS[01]" name="Penguin Islands (Deleted)" />
+    <prefix entity="497" regex="^9A" name="Croatia" />
+    <prefix entity="499" regex="^S5" name="Slovenia" />
+    <prefix entity="501" regex="^(E7|T9)" name="Bosnia-Herzegovina" />
+    <prefix entity="502" regex="^Z3" name="North Macedonia" />
+    <prefix entity="503" regex="^O[KL]" name="Czech Republic" />
+    <prefix entity="504" regex="^OM" name="Slovak Republic" />
+    <prefix entity="505" regex="^B[M-QU-X]9P" name="Pratas Island" />
+    <prefix entity="506" regex="^BS7" name="Scarborough Reef" />
+    <prefix entity="507" regex="^H40" name="Temotu Province" />
+    <prefix entity="508" regex="^FO" name="Austral Islands" />
+    <prefix entity="509" regex="^FO" name="Marquesas Islands" />
+    <prefix entity="510" regex="^E4" name="Palestine" />
+    <prefix entity="511" regex="^4W" name="Timor - Leste" />
+    <prefix entity="512" regex="^(FK|TX)" name="Chesterfield Islands" />
+    <prefix entity="513" regex="^VP6D" name="Ducie Island" />
+    <prefix entity="514" regex="^4O" name="Montenegro" />
+    <prefix entity="515" regex="^[AKNW]H8S" name="Swains Island" />
+    <prefix entity="516" regex="^(FJ|TO)" name="Saint Barthelemy" />
+    <prefix entity="517" regex="^PJ2" name="Curacao" />
+    <prefix entity="518" regex="^PJ[078]" name="Sint Maarten" />
+    <prefix entity="519" regex="^PJ[56]" name="Saba &amp; Saint Eustatius" />
+    <prefix entity="520" regex="^PJ4" name="Bonaire" />
+    <prefix entity="521" regex="^Z8" name="Republic of South Sudan" />
+    <prefix entity="522" regex="^Z6" name="Republic of Kosovo" />
+    <prefix entity="0" regex="" name="" />
+</prefixes>

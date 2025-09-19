@@ -121,18 +121,23 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	topPanel->SetSizer(topSizer);
 }
 
+MyFrame::~MyFrame(void) {
+	cert_tree->DeleteAllItems();
+	loc_tree->DeleteAllItems();
+}
+
 static CURL*
 tqsl_curl_init(const char *logTitle, const char *url, bool newFile) {
 	curlReq = curl_easy_init();
 	if (!curlReq) {
 		return NULL;
 	}
-        DocPaths docpaths(wxT("tqslapp"));
+	DocPaths docpaths(wxT("tqslapp"));
 
 	wxString filename;
 	//set up options
 	curl_easy_setopt(curlReq, CURLOPT_URL, url);
-    curl_easy_setopt(curlReq, CURLOPT_SSL_VERIFYPEER, false);
+	curl_easy_setopt(curlReq, CURLOPT_SSL_VERIFYPEER, false);
 
 	wxString exePath;
 	wxFileName::SplitPath(wxStandardPaths::Get().GetExecutablePath(), &exePath, 0, 0);

@@ -68,7 +68,11 @@ CertTree::CertTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos,
 	wxBitmap folderbm(folder_xpm);
 	wxBitmap expiredbm(expired_xpm);
 	wxBitmap replacedbm(replaced_xpm);
-	wxImageList *il = new wxImageList(16, 16, false, 5);
+	il = new wxImageList(16, 16, false, 5);
+	if (!il) {
+		tqslTrace("CertTree::CertTree", "Out of memory!");
+		return;
+	}
 	il->Add(certbm);
 	il->Add(no_certbm);
 	il->Add(broken_certbm);
@@ -86,10 +90,13 @@ CertTree::~CertTree() {
 	tqslTrace("CertTree::~CertTree", NULL);
 	if (_ncerts >0)
 		tqsl_freeCertificateList(_certs, _ncerts);
+	_certs = NULL;
 	_ncerts = 0;
-}
-
-CertTreeItemData::~CertTreeItemData() {
+	delete il;
+	pktype.clear();
+	isExpired.clear();
+	superceded.clear();
+	keyonly.clear();
 }
 
 typedef pair<wxString, int> certitem;
@@ -112,6 +119,11 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 		if (tQSL_Error != TQSL_SYSTEM_ERROR || tQSL_Errno != ENOENT)
 			displayTQSLError(__("Error while accessing certificate store"));
 	}
+	pktype.resize(_ncerts);
+	isExpired.resize(_ncerts);
+	superceded.resize(_ncerts);
+	keyonly.resize(_ncerts);
+	tqslTrace("CertTree::Build", "Issuer check, %d certs", _ncerts);
 	// Separate certs into lists by issuer
 	for (int i = 0; i < _ncerts; i++) {
 		char issname[129];
@@ -139,6 +151,14 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 		strncat(callsign, entityName, sizeof callsign - strlen(callsign)-1);
 		callsign[sizeof callsign-1] = 0;
 		issuers[wxString::FromUTF8(issname)].push_back(make_pair(wxString::FromUTF8(callsign), i));
+		pktype[i] = tqsl_getCertificatePrivateKeyType(_certs[i]);
+		int tmp;
+		tqsl_isCertificateExpired(_certs[i], &tmp);
+		isExpired[i] = (tmp != 0);
+		tqsl_isCertificateSuperceded(_certs[i], &tmp);
+		superceded[i] = (tmp != 0);
+		tqsl_getCertificateKeyOnly(_certs[i], &tmp);
+		keyonly[i] = (tmp != 0);
 	}
 	// Sort each issuer's list and add items to tree
 	issmap::iterator iss_it;
@@ -157,25 +177,22 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 	komap alreadyPended;
 	komap goodCerts;			// Keep track of calls with good certificates
 
-
+	tqslTrace("CertTree::Build", "Pass 1 - good cert filtering");
 	// First pass, track good certs.
 	for (iss_it = issuers.begin(); iss_it != issuers.end(); iss_it++) {
 		certlist& list = iss_it->second;
 		sort(list.begin(), list.end(), cl_cmp);
 		for (int i = 0; i < static_cast<int>(list.size()); i++) {
-			int keyonly = 1;
-			int exp = 0, sup = 0;
-			int keytype = tqsl_getCertificatePrivateKeyType(_certs[list[i].second]);
-			tqsl_isCertificateExpired(_certs[list[i].second], &exp);
-			tqsl_isCertificateSuperceded(_certs[list[i].second], &sup);
-			tqsl_getCertificateKeyOnly(_certs[list[i].second], &keyonly);
-			if (keytype != TQSL_PK_TYPE_ERR && !keyonly && !sup && !exp) {
+			if (pktype[list[i].second] != TQSL_PK_TYPE_ERR && !keyonly[list[i].second] &&
+				!superceded[list[i].second] && !isExpired[list[i].second]) {
 				wxString callsign = wxString(list[i].first).BeforeFirst(' ');
 				goodCerts[callsign] = 1;
+				tqslTrace("CertTree::Build", "Good cert %s", S(callsign));
 			}
 		}
 	}
 
+	tqslTrace("CertTree::Build", "Pass 2");
 	// Second pass, filter and populate the tree
 	for (iss_it = issuers.begin(); iss_it != issuers.end(); iss_it++) {
 		if (_nissuers > 1) {
@@ -187,14 +204,12 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 		for (int i = 0; i < static_cast<int>(list.size()); i++) {
 			wxString callsign = wxString(list[i].first).BeforeFirst(' ');
 			CertTreeItemData *cert = new CertTreeItemData(_certs[list[i].second]);
-			int keyonly = 1;
-			int exp = 0, sup = 0;
+			if (!cert) {
+				tqslTrace("CertTree::Build", "Out of memory!");
+				return 1;
+			}
 			int icon_type;
-			int keytype = tqsl_getCertificatePrivateKeyType(_certs[list[i].second]);
-			tqsl_isCertificateExpired(_certs[list[i].second], &exp);
-			tqsl_isCertificateSuperceded(_certs[list[i].second], &sup);
-			tqsl_getCertificateKeyOnly(_certs[list[i].second], &keyonly);
-			if (keytype == TQSL_PK_TYPE_ERR) {
+			if (pktype[list[i].second] == TQSL_PK_TYPE_ERR) {
 				if (goodCerts.find(callsign) != goodCerts.end())
 					continue;
 				icon_type = BROKEN_ICON;
@@ -202,16 +217,16 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 					invalid = AppendItem(_nissuers > 1 ? id : rootId, _("Unusable: Missing Private Key"), FOLDER_ICON);
 				AppendItem(invalid, list[i].first, icon_type, -1, cert);
 				invalidCnt++;
-			} else if (keyonly) {
+			} else if (keyonly[list[i].second]) {
 				icon_type = NOCERT_ICON;
 				// Is a request pending for this call?
-                		wxString reqPending = wxConfig::Get()->Read(wxT("RequestPending"));
+				wxString reqPending = wxConfig::Get()->Read(wxT("RequestPending"));
 				wxString callsign = wxString(list[i].first).BeforeFirst(' ');
 
-                		wxStringTokenizer tkz(reqPending, wxT(","));
-                		while (tkz.HasMoreTokens()) {
-                        		wxString pend = tkz.GetNextToken();
-                        		if (pend == callsign) {
+				wxStringTokenizer tkz(reqPending, wxT(","));
+				while (tkz.HasMoreTokens()) {
+					wxString pend = tkz.GetNextToken();
+					if (pend == callsign) {
 						// Only show once
 						if (alreadyPended.find(callsign) == alreadyPended.end()) {
 							if (!pending)
@@ -220,11 +235,11 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 							pendingCnt++;
 							alreadyPended[callsign] = 1;
 						}
-                                		break;
-                        		}
-                		}
+						break;
+					}
+				}
 
-			} else if (sup) {
+			} else if (superceded[list[i].second]) {
 				if (goodCerts.find(callsign) != goodCerts.end())
 					continue;
 				icon_type = REPLACED_ICON;
@@ -232,7 +247,7 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 					replaced = AppendItem(_nissuers > 1 ? id : rootId, _("Certificates replaced with a newer one"), FOLDER_ICON);
 				AppendItem(replaced, list[i].first, icon_type, -1, cert);
 				replacedCnt++;
-			} else if (exp) {
+			} else if (isExpired[list[i].second]) {
 				if (goodCerts.find(callsign) != goodCerts.end())
 					continue;
 				icon_type = EXPIRED_ICON;
@@ -248,6 +263,7 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 		if (id)
 			Expand(id);
 	}
+	tqslTrace("CertTree::Build", "Done loading list");
 	if (!valid)		// Handle the no certificates case
 		valid = AppendItem(_nissuers > 1 ? id : rootId, _("Active, usable certificates"), FOLDER_ICON);
 	Expand(valid);
@@ -256,6 +272,7 @@ CertTree::Build(int flags, const TQSL_PROVIDER *provider) {
 	if (pendingCnt > 0) Expand(pending);
 	if (replacedCnt > 0) Expand(replaced);
 	if (expiredCnt > 0) Expand(expired);
+	tqslTrace("CertTree::Build", "Done , %d certs", _ncerts);
 	return _ncerts;
 }
 
@@ -327,8 +344,8 @@ CertTree::OnRightDown(wxMouseEvent& event) {
 		tqsl_isCertificateRenewable(NULL, &window);
 		if (cert) {
 			tqsl_getCertificateKeyOnly(cert, &keyonly);
-                	tqsl_isCertificateSuperceded(cert, &superseded);
-                	tqsl_isCertificateRenewable(cert, &renewable);
+			tqsl_isCertificateSuperceded(cert, &superseded);
+			tqsl_isCertificateRenewable(cert, &renewable);
 			if (!renewable || superseded) {
 				enable = 0;
 			}

@@ -2312,7 +2312,7 @@ msgstr "删除证书"
 
 #: tqsl.cpp:6498
 msgid "Restore Deleted Callsign Certificate"
-msgstr "回复删除的呼号证书"
+msgstr "恢复删除的呼号证书"
 
 #: tqsl.cpp:6511
 msgid "&Edit"

@@ -42,50 +42,50 @@
 #endif
 
 /* Sizes */
-#define TQSL_MAX_PATH_LEN            PATH_MAX 	///< Max length of a FS path
-#define TQSL_PASSWORD_MAX            80		///< Max password length
-#define TQSL_NAME_ELEMENT_MAX        256	///< Max Org name length
-#define TQSL_CALLSIGN_MAX            20		///< Max callsign length
-#define TQSL_CRQ_NAME_MAX            60		///< Max length of request name
-#define TQSL_CRQ_ADDR_MAX            80		///< Max length of request addr
-#define TQSL_CRQ_CITY_MAX            80		///< Max length of request city
-#define TQSL_CRQ_STATE_MAX           80		///< Max length of request state
-#define TQSL_CRQ_POSTAL_MAX          20		///< Max length of request zip
-#define TQSL_CRQ_COUNTRY_MAX         80		///< Max length of req entity
-#define TQSL_CRQ_EMAIL_MAX           180	///< Max length of req email
-#define TQSL_BAND_MAX                6		///< Max length of a band name
-#define TQSL_MODE_MAX                16		///< Max length of a mode name
-#define TQSL_FREQ_MAX                20		///< Max length of a frequency
-#define TQSL_SATNAME_MAX             20		///< Max length of a sat name
-#define TQSL_PROPMODE_MAX            20		///< Max length of a prop mode
-#define TQSL_STATE_MAX		     30		///< Max length of a state name
-#define TQSL_GRID_MAX		     30		///< Max length of a grid set
-#define TQSL_CNTY_MAX		     30		///< Max length of a county name
-#define TQSL_COUNTRY_MAX	     60		///< Max length of a country name
-#define TQSL_ZONE_MAX		     5		///< Max length of a zone number
-#define TQSL_IOTA_MAX		     10		///< Max length of a IOTA identifier
+#define TQSL_MAX_PATH_LEN	PATH_MAX 	///< Max length of a FS path
+#define TQSL_PASSWORD_MAX	80		///< Max password length
+#define TQSL_NAME_ELEMENT_MAX	256	///< Max Org name length
+#define TQSL_CALLSIGN_MAX	20		///< Max callsign length
+#define TQSL_CRQ_NAME_MAX	60		///< Max length of request name
+#define TQSL_CRQ_ADDR_MAX	80		///< Max length of request addr
+#define TQSL_CRQ_CITY_MAX	80		///< Max length of request city
+#define TQSL_CRQ_STATE_MAX	80		///< Max length of request state
+#define TQSL_CRQ_POSTAL_MAX	20		///< Max length of request zip
+#define TQSL_CRQ_COUNTRY_MAX	80		///< Max length of req entity
+#define TQSL_CRQ_EMAIL_MAX	180		///< Max length of req email
+#define TQSL_BAND_MAX		6		///< Max length of a band name
+#define TQSL_MODE_MAX		16		///< Max length of a mode name
+#define TQSL_FREQ_MAX		20		///< Max length of a frequency
+#define TQSL_SATNAME_MAX	20		///< Max length of a sat name
+#define TQSL_PROPMODE_MAX	20		///< Max length of a prop mode
+#define TQSL_STATE_MAX		30		///< Max length of a state name
+#define TQSL_GRID_MAX		30		///< Max length of a grid set
+#define TQSL_CNTY_MAX		30		///< Max length of a county name
+#define TQSL_COUNTRY_MAX	60		///< Max length of a country name
+#define TQSL_ZONE_MAX		5		///< Max length of a zone number
+#define TQSL_IOTA_MAX		10		///< Max length of a IOTA identifier
 
-#define TQSL_CERT_CB_USER            0		///< Callback is for user cert
-#define TQSL_CERT_CB_CA              1		///< Callback is for CA cert
-#define TQSL_CERT_CB_ROOT            2		///< Callback is for root cert
-#define TQSL_CERT_CB_PKEY            3		///< Callback is for private key
-#define TQSL_CERT_CB_CONFIG          4		///< Callback for config file
-#define TQSL_CERT_CB_CERT_TYPE(x)    ((x) & 0xf) ///< Type of the cert
-#define TQSL_CERT_CB_MILESTONE       0		///< New certificate
-#define TQSL_CERT_CB_RESULT          0x10	///< Cert import result
-#define TQSL_CERT_CB_CALL_TYPE(x)    ((x) & TQSL_CERT_CB_RESULT) ///< Callback type
-#define TQSL_CERT_CB_PROMPT          0		///< Callback prompt
-#define TQSL_CERT_CB_DUPLICATE       0x100	///< Dupe cert callback
-#define TQSL_CERT_CB_ERROR           0x200	///< Error import callback
-#define TQSL_CERT_CB_LOADED          0x400	///< Cert loaded callback
-#define TQSL_CERT_CB_SERIAL          0x800	///< User cert serial callback
+#define TQSL_CERT_CB_USER	0		///< Callback is for user cert
+#define TQSL_CERT_CB_CA		1		///< Callback is for CA cert
+#define TQSL_CERT_CB_ROOT	2		///< Callback is for root cert
+#define TQSL_CERT_CB_PKEY	3		///< Callback is for private key
+#define TQSL_CERT_CB_CONFIG	4		///< Callback for config file
+#define TQSL_CERT_CB_CERT_TYPE(x)	((x) & 0xf) ///< Type of the cert
+#define TQSL_CERT_CB_MILESTONE	0		///< New certificate
+#define TQSL_CERT_CB_RESULT	0x10		///< Cert import result
+#define TQSL_CERT_CB_CALL_TYPE(x)	((x) & TQSL_CERT_CB_RESULT) ///< Callback type
+#define TQSL_CERT_CB_PROMPT	0		///< Callback prompt
+#define TQSL_CERT_CB_DUPLICATE	0x100		///< Dupe cert callback
+#define TQSL_CERT_CB_ERROR	0x200		///< Error import callback
+#define TQSL_CERT_CB_LOADED	0x400		///< Cert loaded callback
+#define TQSL_CERT_CB_SERIAL	0x800		///< User cert serial callback
 #define TQSL_CERT_CB_RESULT_TYPE(x)  ((x) & 0x0f00) ///< Result type mask
 
-#define TQSL_MSG_FLAGGED             0x1000	///< Alt message handling flag
+#define TQSL_MSG_FLAGGED	0x1000		///< Alt message handling flag
 
-typedef void * tQSL_Cert;		///< Opaque certificate type
-typedef void * tQSL_Location;		///< Opaque location type
-typedef char * tQSL_StationDataEnc;	///< Opaque station data type
+typedef void * tQSL_Cert;			///< Opaque certificate type
+typedef void * tQSL_Location;			///< Opaque location type
+typedef char * tQSL_StationDataEnc;		///< Opaque station data type
 
 /** Struct that holds y-m-d */
 typedef struct {
@@ -163,6 +163,7 @@ typedef struct {
 #endif
 	char my_operator[TQSL_CALLSIGN_MAX+1];	///< Operator's callsign
 	char my_iota[TQSL_IOTA_MAX+1];		///< QSO specifies MY_IOTA_
+	bool do_not_sign;			///< Don't sign this QSO
 } TQSL_QSO_RECORD;
 
 /// Base directory for tQSL library working files.
@@ -1474,6 +1475,6 @@ DLLEXPORT void     CALLCONVENTION free_wchar(wchar_t* ptr);
 #endif
 
 /* Useful defines */
-#define TQSL_MAX_PW_LENGTH         32     ///< Password buffer length
+#define TQSL_MAX_PW_LENGTH	32	///< Password buffer length
 
 #endif /* TQSLLIB_H */

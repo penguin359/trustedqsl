@@ -143,9 +143,15 @@ tqsl_signDataBlock
 tqsl_signQSORecord
 tqsl_updateStationLocationCapture
 tqsl_verifyDataBlock
+tqsl_getLocationField
+tqsl_setLocationField
+
 tQSL_ADIF_Error DATA
 tQSL_Cabrillo_Error DATA
 tQSL_CustomError DATA
 tQSL_Errno DATA
 tQSL_Error DATA
 tQSL_ErrorFile DATA
+tQSL_DiagFile DATA
+tQSL_ImportCall DATA
+tQSL_ImportSerial DATA

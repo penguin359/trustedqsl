@@ -135,7 +135,7 @@ static const char *error_strings[] = {
 
 
 #if !defined(__APPLE__) && !defined(_WIN32) && !defined(__clang__)
-        #pragma GCC diagnostic ignored "-Wformat-truncation"
+	#pragma GCC diagnostic ignored "-Wformat-truncation"
 #endif
 
 const char* tqsl_openssl_error(void);
@@ -220,6 +220,7 @@ tqsl_get_rsrc_dir() {
 			string p = string(wpath);
 			if (p[p.length() -1] == '\\')
 				p = p.substr(0, p.length() - 1);
+			if (tQSL_RsrcDir) free(const_cast<char *>(tQSL_RsrcDir));
 			tQSL_RsrcDir = strdup(p.c_str());
 		}
 	}
@@ -242,6 +243,7 @@ tqsl_get_rsrc_dir() {
 			if ((p = path.find("/config.xml")) != string::npos) {
 				path = path.substr(0, p);
 			}
+			if (tQSL_RsrcDir) free(const_cast<char *>(tQSL_RsrcDir));
 			tQSL_RsrcDir = strdup(path.c_str());
 			free(pathCString);
 		}
@@ -256,6 +258,7 @@ tqsl_get_rsrc_dir() {
 	// Check if running as an AppImage
 	char *appdir = getenv("APPDIR");
 	if (appdir == NULL) {
+		if (tQSL_RsrcDir) free(const_cast<char *>(tQSL_RsrcDir));
 		tQSL_RsrcDir = strdup(p.c_str());
 	} else {
 		string p1 = appdir;
@@ -265,11 +268,13 @@ tqsl_get_rsrc_dir() {
 		p1 = p1 + p;
 
 		// Assume APPDIR is probably not an AppImage root
+		if (tQSL_RsrcDir) free(const_cast<char *>(tQSL_RsrcDir));
 		tQSL_RsrcDir = strdup(p.c_str());
 		// See if it's likely to be an AppImage
 		struct stat s;
-                if (stat(p1.c_str(), &s) == 0) {
-                        if (S_ISDIR(s.st_mode)) {
+		if (stat(p1.c_str(), &s) == 0) {
+			if (S_ISDIR(s.st_mode)) {
+				if (tQSL_RsrcDir) free(const_cast<char *>(tQSL_RsrcDir));
 				tQSL_RsrcDir = strdup(p1.c_str());
 			}
 		}
@@ -411,7 +416,7 @@ tqsl_init() {
 		if ((test = _wfopen(path, L"wb")) == NULL) {
 			tQSL_Errno = errno;
 			char *p = wchar_to_utf8(path, false);
-			snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Unable to create files in the TQSL working directory (%s): %m", p);
+			snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Unable to create files in the TQSL working directory (%s): %s", p, strerror(errno));
 			tQSL_Error = TQSL_CUSTOM_ERROR;
 			return 1;
 		}
@@ -423,7 +428,7 @@ tqsl_init() {
 		strncat(path, "/tmp.tmp", sizeof path -strlen(path) - 1);
 		if ((test = fopen(path, "wb")) == NULL) {
 			tQSL_Errno = errno;
-			snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Unable to create files in the TQSL working directory (%s): %m", tQSL_BaseDir);
+			snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Unable to create files in the TQSL working directory (%s): %s", tQSL_BaseDir, strerror(errno));
 			tQSL_Error = TQSL_CUSTOM_ERROR;
 			return 1;
 		}

@@ -1090,8 +1090,8 @@ tqsl_selectCertificates(tQSL_Cert **certlist, int *ncerts,
 	vector< map<string, string> > keylist;
 	vector< map<string, string> >::iterator it;
 	bool keyerror = false;
-	int savedError;
-	int savedErrno;
+	int savedError = 0;
+	int savedErrno = 0;
 
 	tqslTrace("tqsl_selectCertificates", "callsign=%s, dxcc=%d, flags=%d", callsign ? callsign : "NULL", dxcc, flags);
 	if (tqsl_init())
@@ -1203,7 +1203,8 @@ tqsl_selectCertificates(tQSL_Cert **certlist, int *ncerts,
 				tqslTrace("tqsl_selectCertificates", "error making new cert - %s", tqsl_openssl_error());
 				goto end;
 			}
-			cp->cert = X509_dup(x);
+			X509_up_ref(x);
+			cp->cert = x;
 			(*certlist)[i] = TQSL_OBJ_TO_API(cp);
 		}
 	} else {
@@ -1319,7 +1320,9 @@ tqsl_selectCACertificates(tQSL_Cert **certlist, int *ncerts, const char *type) {
 				tqslTrace("tqsl_selectCACertificates", "cert_new error %s", tqsl_openssl_error());
 				goto end;
 			}
-			cp->cert = X509_dup(x);
+			if (cp->cert) X509_free(cp->cert);
+			X509_up_ref(x);
+			cp->cert = x;
 			(*certlist)[i] = TQSL_OBJ_TO_API(cp);
 		}
 	}
@@ -2279,6 +2282,10 @@ tqsl_endSigning(tQSL_Cert cert) {
 		EVP_PKEY_free(TQSL_API_TO_CERT(cert)->key);
 		TQSL_API_TO_CERT(cert)->key = NULL;
 	}
+	if (TQSL_API_TO_CERT(cert)->crq != NULL) {
+		tqsl_free(TQSL_API_TO_CERT(cert)->crq);
+		TQSL_API_TO_CERT(cert)->crq = NULL;
+	}
 	return 0;
 }
 
@@ -3191,7 +3198,7 @@ tqsl_importPKCS12(bool importB64, const char *filename, const char *base64, cons
 #endif
 				else
 #ifdef _WIN32
-			        {
+				 {
 					_wunlink(wbadpath);
 					free_wchar(wpath);
 					free_wchar(wbadpath);
@@ -3349,6 +3356,7 @@ tqsl_make_backup_list(const char* filter, vector<string>& keys) {
 				continue;		// If it's a directory, skip it.
 			}
 		}
+		free_wchar(wfilename);
 #else
 	while ((ent = readdir(dir)) != NULL) {
 		if (ent->d_name[0] == '.')
@@ -3360,13 +3368,17 @@ tqsl_make_backup_list(const char* filter, vector<string>& keys) {
 				continue;		// If it's a directory, skip it.
 		}
 #endif
-		XMLElement xel;
-		int status = xel.parseFile(filename.c_str());
+		XMLElement *xel = new XMLElement;
+		if (!xel) {
+			tqslTrace("tqsl_make_backup_list", "Out of memory!");
+			return 1;
+		}
+		int status = xel->parseFile(filename.c_str());
 		if (status)
 			continue;			// Can't be parsed
 
 		XMLElement cert;
-		xel.getFirstElement(cert);
+		xel->getFirstElement(cert);
 		pair<string, bool> atrval = cert.getAttribute("CallSign");
 		if (atrval.second) {
 			// If the callsign matches, or if the filter is empty, add it.
@@ -3374,6 +3386,7 @@ tqsl_make_backup_list(const char* filter, vector<string>& keys) {
 				keys.push_back(atrval.first);
 			}
 		}
+		delete xel;
 	}
 #ifdef _WIN32
 	_wclosedir(dir);
@@ -3653,6 +3666,7 @@ tqsl_restoreCallsignCertificate(const char *callsign) {
 		unlink(backupPath);
 #endif
 	}
+	xel.clear();
 	return stat;
 }
 
@@ -3794,7 +3808,7 @@ tqsl_filter_cert_list(STACK_OF(X509) *sk, const char *callsign, int dxcc,
 
 	char buf[256], name_buf[256];
 	TQSL_X509_NAME_ITEM item;
-	X509 *x;
+	X509 *x = NULL;
 	STACK_OF(X509) *newsk;
 	int i, ok, len;
 	tQSL_Date qso_date;
@@ -3894,8 +3908,10 @@ tqsl_filter_cert_list(STACK_OF(X509) *sk, const char *callsign, int dxcc,
 				ok = 0;
 		}
 		/* If no check failed, copy this cert onto the new stack */
-		if (ok)
-			sk_X509_push(newsk, X509_dup(x));
+		if (ok) {
+			X509_up_ref(x);
+			sk_X509_push(newsk, x);
+		}
 	}
 	tqsl_free(cp);
 	return newsk;
@@ -5007,13 +5023,31 @@ tqsl_unlock_key(const char *pem, EVP_PKEY **keyp, const char *password, int (*cb
 		ssl_cb = &prompted_password_callback;
 		cb_user = reinterpret_cast<void *>(cb);
 	}
+/*
+ * This used to call PEM_read_bio_RSAPrivateKey() but
+ * that has a memory leak. Leaving the original code
+ *
 	if ((prsa = PEM_read_bio_RSAPrivateKey(bio, NULL, ssl_cb, cb_user)) == NULL) {
 		tqslTrace("tqsl_unlock_key", "PEM_read_bio_RSAPrivateKey err %s", tqsl_openssl_error());
 		goto err;
 	}
+*/
+	EVP_PKEY *pktmp;
+	if ((pktmp = PEM_read_bio_PrivateKey(bio, NULL, ssl_cb, cb_user)) == NULL) {
+		tqslTrace("tqsl_unlock_key", "PEM_read_bio_RSAPrivateKey err %s", tqsl_openssl_error());
+		goto err;
+	}
+
+	if ((prsa = EVP_PKEY_get1_RSA(pktmp)) == NULL) {
+		tqslTrace("tqsl_unlock_key", "PEM_read_bio_RSAPrivateKey err %s", tqsl_openssl_error());
+		EVP_PKEY_free(pktmp);
+		goto err;
+	}
+	EVP_PKEY_free(pktmp);
+
 	if (keyp != NULL) {
 		if ((*keyp = EVP_PKEY_new()) == NULL)
-		goto err;
+			goto err;
 		EVP_PKEY_assign_RSA(*keyp, prsa);
 		prsa = NULL;
 	}
@@ -5294,6 +5328,7 @@ tqsl_make_key_list(vector< map<string, string> > & keys) {
 				continue;		// If it's a directory, skip it.
 			}
 		}
+		free_wchar(wfilename);
 #else
 		struct stat s;
 		if (stat(filename.c_str(), &s) == 0) {
@@ -5334,6 +5369,9 @@ tqsl_make_key_list(vector< map<string, string> > & keys) {
 #endif
 					continue;
 				}
+#ifdef _WIN32
+				free_wchar(wfixcall);
+#endif
 				keys.push_back(fields);
 			}
 			tqsl_close_key_file();
@@ -5494,9 +5532,19 @@ tqsl_cert_status_filename(const char *f = "cert_status.xml") {
 	return s;
 }
 
+static XMLElement* certStatusData = NULL;
+
 static int
-tqsl_load_cert_status_data(XMLElement &xel) {
-	int status = xel.parseFile(tqsl_cert_status_filename().c_str());
+tqsl_load_cert_status_data(void) {
+	if (certStatusData) {
+		return 0;
+	}
+	certStatusData = new XMLElement;
+	if (!certStatusData) {
+		tqslTrace("tqsl_load_cert_status_data", "Out of memory!");
+		return 1;
+	}
+	int status = certStatusData->parseFile(tqsl_cert_status_filename().c_str());
 	if (status) {
 		if (errno == ENOENT) {		// No file is OK
 			tqslTrace("tqsl_load_cert_status_data", "FNF");
@@ -5541,16 +5589,18 @@ tqsl_dump_cert_status_data(XMLElement &xel) {
 		tqslTrace("tqsl_dump_cert_status_data", "write error %s", tQSL_CustomError);
 		return 1;
 	}
+	delete certStatusData;
+	certStatusData = NULL;
 	return 0;
 }
 
 DLLEXPORT int CALLCONVENTION
 tqsl_getCertificateStatus(long serial) {
-	XMLElement top_el;
-	if (tqsl_load_cert_status_data(top_el))
+	if (tqsl_load_cert_status_data())
 		return TQSL_CERT_STATUS_UNK;
+
 	XMLElement sfile;
-	if (top_el.getFirstElement(sfile)) {
+	if (certStatusData->getFirstElement(sfile)) {
 		XMLElement cd;
 		bool ok = sfile.getFirstElement("Cert", cd);
 		while (ok && cd.getElementName() == "Cert") {
@@ -5586,14 +5636,13 @@ tqsl_setCertificateStatus(long serial, const char *status) {
 	char sstr[32];
 	snprintf(sstr, sizeof sstr, "%ld", serial);
 
-	XMLElement top_el;
-	int stat = tqsl_load_cert_status_data(top_el);
+	int stat = tqsl_load_cert_status_data();
 	if (stat == TQSL_FILE_SYSTEM_ERROR) {
 		tqslTrace("tqsl_setCertificateStatus", "error %d", tQSL_Error);
 		return 1;
 	}
 	XMLElement sfile;
-	if (!top_el.getFirstElement(sfile))
+	if (!certStatusData->getFirstElement(sfile))
 		sfile.setElementName("CertStatus");
 
 	XMLElementList& ellist = sfile.getElementList();
