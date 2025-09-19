@@ -228,7 +228,7 @@ QSLApp::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 			if (tQSL_Error != TQSL_CABRILLO_ERROR || tQSL_Cabrillo_Error != TQSL_CABRILLO_NO_START_RECORD)
 				check_tqsl_error(1);	// A bad error
 			lineno = 0;
-	   		check_tqsl_error(tqsl_beginADIFConverter(&conv, infile.ToUTF8(), certlist, ncerts, loc));
+	  		check_tqsl_error(tqsl_beginADIFConverter(&conv, infile.ToUTF8(), certlist, ncerts, loc));
 		}
 		bool range = true;
 		config->Read(wxT("DateRange"), &range);
@@ -254,7 +254,7 @@ QSLApp::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 		else
 			out << gabbi_ident << endl;
 		do {
-	   		while ((cp = tqsl_getConverterGABBI(conv)) != 0) {
+	 		while ((cp = tqsl_getConverterGABBI(conv)) != 0) {
 					// Only count QSO records
 					if (strstr(cp, "tCONTACT")) {
 						++n;
@@ -272,7 +272,7 @@ QSLApp::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 				int rval;
 				check_tqsl_error(tqsl_getConverterCert(conv, &cert));
 				do {
-	   				if ((rval = tqsl_beginSigning(cert, const_cast<char *>(password), 0, cert)) == 0)
+	 				if ((rval = tqsl_beginSigning(cert, const_cast<char *>(password), 0, cert)) == 0)
 						break;
 					if (tQSL_Error == TQSL_PASSWORD_ERROR) {
 						if (password)
@@ -309,16 +309,16 @@ QSLApp::ConvertLogFile(tQSL_Location loc, wxString& infile, wxString& outfile,
 						cerr << msg << endl;
 					// Only ask if not in batch mode or ignoring errors - KD6PAG
 					switch (action) {
-                                                case TQSL_ACTION_ABORT:
+						case TQSL_ACTION_ABORT:
 							cancelled = true;
 							ignore_err = true;
 							goto abortSigning;
-                                                case TQSL_ACTION_NEW:
-                                                case TQSL_ACTION_ALL:
+						case TQSL_ACTION_NEW:
+						case TQSL_ACTION_ALL:
 							ignore_err = true;
 							break;
-                                                case TQSL_ACTION_ASK:
-                                                case TQSL_ACTION_UNSPEC:
+						case TQSL_ACTION_ASK:
+						case TQSL_ACTION_UNSPEC:
 							break;			// error message already displayed
 					}
 				}
@@ -377,7 +377,7 @@ abortSigning:
 	if (n == 0)
 		cerr << "No records output" << endl;
 	else
-	   	cout << wxString::Format(wxT("%s: wrote %d records to %s"), infile.c_str(), n,
+	 	cout << wxString::Format(wxT("%s: wrote %d records to %s"), infile.c_str(), n,
 			outfile.c_str()) << endl;
 	if (n > 0)
 		cout << outfile << " is ready to be emailed or uploaded" << endl;
@@ -411,16 +411,16 @@ QSLApp::OnInit() {
 	wxCmdLineParser parser;
 
 	static const wxCmdLineEntryDesc cmdLineDesc[] = {
-	        { wxCMD_LINE_OPTION, wxT("a"), wxT("action"),	wxT("Specify dialog action - abort, all, compliant or ask") },
-	        { wxCMD_LINE_SWITCH, wxT("d"), wxT("nodate"),	wxT("Suppress date range dialog") },
-	        { wxCMD_LINE_OPTION, wxT("l"), wxT("location"),	wxT("Selects Station Location") },
-	        { wxCMD_LINE_OPTION, wxT("o"), wxT("output"),	wxT("Output file name (defaults to input name minus extension plus .tq8") },
-	        { wxCMD_LINE_SWITCH, wxT("u"), wxT("upload"),	wxT("Upload after signing instead of saving") },
-	        { wxCMD_LINE_OPTION, wxT("p"), wxT("password"),	wxT("Passphrase for the signing key") },
-	        { wxCMD_LINE_SWITCH, wxT("v"), wxT("version"),  wxT("Display the version information and exit") },
-	        { wxCMD_LINE_SWITCH, wxT("h"), wxT("help"),	wxT("Display command line help"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
-	        { wxCMD_LINE_PARAM,  NULL,     NULL,		wxT("Input ADIF or Cabrillo log file to sign"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
-	        { wxCMD_LINE_NONE }
+		{ wxCMD_LINE_OPTION, wxT("a"), wxT("action"),	wxT("Specify dialog action - abort, all, compliant or ask") },
+		{ wxCMD_LINE_SWITCH, wxT("d"), wxT("nodate"),	wxT("Suppress date range dialog") },
+		{ wxCMD_LINE_OPTION, wxT("l"), wxT("location"),	wxT("Selects Station Location") },
+		{ wxCMD_LINE_OPTION, wxT("o"), wxT("output"),	wxT("Output file name (defaults to input name minus extension plus .tq8") },
+		{ wxCMD_LINE_SWITCH, wxT("u"), wxT("upload"),	wxT("Upload after signing instead of saving") },
+		{ wxCMD_LINE_OPTION, wxT("p"), wxT("password"),	wxT("Passphrase for the signing key") },
+		{ wxCMD_LINE_SWITCH, wxT("v"), wxT("version"),  wxT("Display the version information and exit") },
+		{ wxCMD_LINE_SWITCH, wxT("h"), wxT("help"),	wxT("Display command line help"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+		{ wxCMD_LINE_PARAM,  NULL,     NULL,		wxT("Input ADIF or Cabrillo log file to sign"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_NONE }
 	};
 
 	parser.SetCmdLine(argc, argv);

@@ -219,7 +219,7 @@ tqsl_adifGetField(tqsl_adifFieldResults *field, FILE *filehandle,
 	TQSL_ADIF_STATE adifState;
 	int currentCharacter;
 	unsigned int iIndex;
-	unsigned int dataLength;
+	unsigned int dataLength = 0;
 	unsigned int dataIndex = 0;
 	TQSL_ADIF_BOOLEAN recordData;
 

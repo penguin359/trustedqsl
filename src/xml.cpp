@@ -48,6 +48,10 @@ void
 XMLElement::xml_start(void *data, const XML_Char *name, const XML_Char **atts) {
 	XMLElement *el = reinterpret_cast<XMLElement *>(data);
 	XMLElement *new_el = new XMLElement(name);
+	if (!new_el) {
+		tqslTrace("XMLElement::xml_start", "Out of memory!");
+		return;
+	}
 //cout << "Element: " << name << endl;
 	for (int i = 0; atts[i]; i += 2) {
 		new_el->setAttribute(atts[i], atts[i+1]);

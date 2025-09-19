@@ -402,6 +402,39 @@ FilePrefs::FilePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm"))
 	oldcrypto->SetValue(old);
 	sizer->Add(oldcrypto, 0, wxLEFT|wxRIGHT|wxTOP, 10);
 
+	wxBoxSizer *vsizer = new wxBoxSizer(wxVERTICAL);
+	vsizer->Add(new wxStaticText(this, -1, _("Primary QSL Manager Callsign:")), 0, wxTOP|wxLEFT|wxRIGHT, 10);
+
+	wxString pQSLMgr;
+	config->Read(wxT("primaryQSLMgrCall"), &pQSLMgr);
+
+	wxArrayString calls;
+
+	tQSL_Cert *certlist = 0;
+	int ncerts = 0;
+	tqsl_selectCertificates(&certlist, &ncerts, NULL, 0, 0, 0, 0);
+	calls.Add(wxT(""));
+	for (int i = 0; i < ncerts; i++) {
+		char callsign[50];
+		const char *entity;
+		int dxcc;
+		tqsl_getCertificateCallSign(certlist[i], callsign, sizeof callsign);
+		tqsl_getCertificateDXCCEntity(certlist[i], &dxcc);
+		tqsl_getDXCCEntityName(dxcc, &entity);
+		calls.Add(wxString::Format(wxT("%s - %s"), callsign, entity));
+	}
+	tqsl_freeCertificateList(certlist, ncerts);
+	certlist = NULL;
+	ncerts = 0;
+
+	primaryQSLMgr = new wxChoice(this, ID_PREF_FILE_QSLMGR, wxPoint(0, 0),
+		wxSize(char_width, HEIGHT_ADJ(char_height)), calls, 0, wxDefaultValidator, _("QSLMgrCall"));
+	primaryQSLMgr->Enable(true);
+	primaryQSLMgr->SetStringSelection(pQSLMgr);
+	vsizer->Add(primaryQSLMgr, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
+
+	sizer->Add(vsizer);
+
 	SetSizer(sizer);
 	sizer->Fit(this);
 	sizer->SetSizeHints(this);
@@ -420,8 +453,7 @@ static wxString
 fix_ext_str(const wxString& oldexts) {
 	static const char *delims = ".,;: ";
 
-	char *str = new char[oldexts.Length() + 1];
-	strncpy(str, oldexts.ToUTF8(), oldexts.Length() + 1);
+	char *str = strdup(oldexts.ToUTF8());
 	wxString exts;
 	char *state = NULL;
 	char *tok = strtok_r(str, delims, &state);
@@ -431,6 +463,7 @@ fix_ext_str(const wxString& oldexts) {
 		exts += wxString::FromUTF8(tok);
 		tok = strtok_r(NULL, delims, &state);
 	}
+	free(str);
 	return exts;
 }
 
@@ -459,6 +492,11 @@ bool FilePrefs::TransferDataFromWindow() {
 	if (vers <= 0)
 		vers = DEFAULT_BACKUP_VERSIONS;
 	config->Write(wxT("BackupVersions"), vers);
+	wxString pq;
+	pq = primaryQSLMgr->GetStringSelection();
+	if (!pq.IsEmpty()) {
+		config->Write(wxT("primaryQSLMgrCall"), pq);
+	}
 	return true;
 }
 
@@ -509,9 +547,9 @@ LogPrefs::LogPrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm")) {
 	sizer->Add(ignorecall, 0, wxLEFT|wxRIGHT|wxTOP, 10);
 
 	int logverify;
-        config->Read(wxT("LogVerify"), &logverify, TQSL_LOC_REPORT);
+	config->Read(wxT("LogVerify"), &logverify, TQSL_LOC_REPORT);
 	if (logverify != TQSL_LOC_IGNORE && logverify != TQSL_LOC_REPORT && logverify != TQSL_LOC_UPDATE) {
-                        logverify = TQSL_LOC_REPORT;
+		logverify = TQSL_LOC_REPORT;
 	}
 
 	static wxString choices[] = { _("Ignore QTH details from your log"), _("Report on QTH differences") , _("Override Station Location with QTH details from your log") };

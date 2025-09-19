@@ -1,5 +1,44 @@
 TQSL changes
 ============
+2.8.2
+----------
+Restore handling of the command line "-o" (output file) argument. This has
+apparently been broken since TQSL 2.5.2.
+
+Convert the prefix and grid data files to XML format with version numbering
+to permit tracking of changes.
+
+Allow QSL managers to define a default signing callsign so they don't need
+to scroll through all of the stations they manage when requesting a
+Callsign Certificate for a new station.
+
+When reporting "Station Location could not be found", insert the name of the
+Station Location in the message (tnx AA6YQ).
+
+Fix VUCC grid data for Newfoundland and Labrador - the ADIF abbreviation of NL
+is encoded as NF for Logbook purposes.
+
+When signing a log, store the signed output to disk rather than in memory
+as large logs could consume excessive RAM.
+
+Add ability for a local prefix database to override the one installed
+with TQSL.
+
+Add VK2 as a valid prefix for Lord Howe Island (portable operations).
+
+After instrumentation of TQSL searching for memory "leaks", made several
+changes to decrease memory usage.
+
+Decrease possibility of out-of-memory errors for QSL managers with very large
+number of active callsign certificates when requesting a new callsign
+certificate by adding a default preference setting.
+
+Add callsign prefix mapping for VO for Canada, not just "Newfoundland
+Labrador (Deleted)".
+
+Detect missing vuccgrids.dat file and report. Disable grid square
+validation for this case.
+
 2.8.1
 ----------
 Correct the Russian translation - the wrong file was being used.

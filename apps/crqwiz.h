@@ -31,6 +31,7 @@
 #include <wx/combobox.h>
 
 #include <vector>
+#include <map>
 
 #include "extwizard.h"
 #include "certtree.h"
@@ -57,10 +58,13 @@ enum {
 	CRQ_SIGN_RENEWAL = 8		// Renewing
 };
 
+typedef std::map <int, wxString> prefixMap;
+
 class CRQWiz : public ExtWizard {
  public:
 	CRQWiz(TQSL_CERT_REQ *crq, 	tQSL_Cert cert, wxWindow* parent, wxHtmlHelpController *help = 0,
 		const wxString& title = _("Request a new Callsign Certificate"));
+	~CRQWiz();
 	CRQ_Page *GetCurrentPage() { return reinterpret_cast<CRQ_Page *>(wxWizard::GetCurrentPage()); }
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -72,6 +76,7 @@ class CRQWiz : public ExtWizard {
 #endif
 	bool ShouldBeSigned(void);	// Should this be signed?
 	bool MustBeSigned(void);	// Should this be signed?
+	void initPrefixes(void);// Load prefix map
 	bool validcerts;	// True if there are valid certificates
 	int nprov;		// Number of providers
 	int signIt;		// Should this be signed? Why?
@@ -98,6 +103,8 @@ class CRQWiz : public ExtWizard {
 	// EmailPage data
 	CRQ_Page *emailPage;
 	wxString email;
+	tQSL_Cert *qcertlist;
+	int nqcert;
 	// PasswordPage data
 	CRQ_Page *pwPage;
 	wxString password;
@@ -115,8 +122,20 @@ class CRQWiz : public ExtWizard {
 	bool goodULSData;	// Got ULS info and it's complete
 	bool expired;		// Set true if the request has an end-date in the past
 
+	prefixMap prefixRegex;
+	prefixMap entityNames;
+	void insertRegex(int ent, wxString& reg) { prefixRegex[ent] = reg;}
+	void insertName(int ent, wxString& name) { entityNames[ent] = name;}
+	wxString getEntityName(int ent) { return entityNames[ent]; }
+	wxString getEntityRegex(int ent) { return prefixRegex[ent]; }
+	int getNumRegex(void) { return prefixRegex.size(); }
+	int getNumNames(void) { return entityNames.size(); }
+	bool skipFile;
+
  private:
 	CRQ_Page *_first;
+	static void startElement(void *userData, const char *name, const char **atts);
+	long pmajor, pminor;
 };
 
 class CRQ_Page : public ExtWizard_Page {
@@ -147,8 +166,9 @@ class CRQ_CallsignPage : public CRQ_Page {
 	virtual const char *validate();
 	virtual CRQ_Page *GetPrev() const;
 	virtual CRQ_Page *GetNext() const;
-        void OnShowHide(wxCommandEvent&) { ShowHide(); }
-        void ShowHide();
+	void OnShowHide(wxCommandEvent&) { ShowHide(); }
+	void ShowHide();
+	bool validPrefix(const std::string& prefix);
 	wxCheckBox *tc_showall;
 	bool showAll;			// Set true to show all
  private:
@@ -227,7 +247,7 @@ class CRQ_TypePage : public CRQ_Page {
 	virtual bool TransferDataFromWindow();
 	virtual CRQ_Page *GetPrev() const;
 	virtual CRQ_Page *GetNext() const;
-        // TypePage data
+	// TypePage data
  private:
 	bool initialized;
 	wxRadioBox *certType;
@@ -250,7 +270,7 @@ class CRQ_SignPage : public CRQ_Page {
 	bool initialized;
 	int em_w;
 	int em_h;
-        void OnPageChanging(wxWizardEvent &);
+	void OnPageChanging(wxWizardEvent &);
 	CRQWiz *_parent;
 	wxStaticText* introText;
 	wxString introContent;

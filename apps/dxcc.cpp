@@ -43,7 +43,7 @@ DXCC::init() {
 				if (entity_list && entity_list[i].name) free(const_cast<char *>(entity_list[i].name));
 				if (entity_list && entity_list[i].zonemap) free(const_cast<char *>(entity_list[i].zonemap));
 			}
-			delete entity_list;
+			delete[] entity_list;
 		}
 		// TRANSLATORS: This is part of an deleted DXCC entity name
 		wxString del = wxGetTranslation(_("DELETED"));
@@ -54,6 +54,10 @@ DXCC::init() {
 			return false;
 		entity_list = new struct _dxcc_entity[num_entities];
 		deleted_entity_list = new struct _dxcc_entity[num_entities];
+		if (!entity_list || !deleted_entity_list) {
+			tqslTrace("DXCC:init", "Out of memory!");
+			return false;
+		}
 		int activeEntities = 0;
 		int deletedEntities = 0;
 		for (int i = 0; i < num_entities; i++) {
@@ -100,7 +104,7 @@ DXCC::init() {
 		for (int j = 0; activeEntities < num_entities; ) {
 			entity_list[activeEntities++] = deleted_entity_list[j++];
 		}
-		delete deleted_entity_list;
+		delete[] deleted_entity_list;
 		deleted_entity_list = NULL;
 	}
 	_init = true;

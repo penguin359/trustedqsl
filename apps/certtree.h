@@ -28,13 +28,14 @@
 
 #include <wx/treectrl.h>
 
+#include <vector>
+
 #include "tqsllib.h"
 #include "wxutil.h"
 
 class CertTreeItemData : public wxTreeItemData {
  public:
 	explicit CertTreeItemData(tQSL_Cert cert) : _cert(cert) {path = wxEmptyString; basename = wxEmptyString;}
-	~CertTreeItemData();
 	tQSL_Cert getCert() { return _cert; }
 	wxString path;
 	wxString basename;
@@ -66,10 +67,15 @@ class CertTree : public wxTreeCtrl {
 	void SelectCert(tQSL_Cert cert);
 
  private:
-        tQSL_Cert *_certs;
+	tQSL_Cert *_certs;
 	int _ncerts;
 	int _nissuers;
+	std::vector<int> pktype;
+	std::vector<bool> isExpired;
+	std::vector<bool> superceded;
+	std::vector<bool> keyonly;
 	wxWindow* tabTo;
+	wxImageList *il;
 	DECLARE_EVENT_TABLE()
 };
 

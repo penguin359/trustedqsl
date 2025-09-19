@@ -42,13 +42,13 @@ main(int argc, char *argv[]) {
 
 	while ((opt = getopt(argc, argv, "ca")) != -1) {
 		switch (opt) {
-                         case 'c':
+			case 'c':
 				type = CABRILLO;
 				break;
-                         case 'a':
+			case 'a':
 				type = ADIF;
 				break;
-                         default:
+			default:
 				usage();
 		}
 	}

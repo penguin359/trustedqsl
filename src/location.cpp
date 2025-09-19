@@ -269,6 +269,7 @@ static struct _dxcc_entity {
 	const char* name;
 	const char *zonemap;
 	tQSL_Date start, end;
+	bool deleted;
 } *entity_list = 0;
 
 template<typename T1, typename T2, typename T3>
@@ -498,6 +499,7 @@ tqsl_load_xml_config() {
 			tqsl_xml_config = default_config;
 			tqsl_xml_config_major = default_major;
 			tqsl_xml_config_minor = default_minor;
+			user_config.clear();
 			return 0;
 	}
 	if (user_major < 0) {
@@ -508,6 +510,7 @@ tqsl_load_xml_config() {
 	tqsl_xml_config	= user_config;
 	tqsl_xml_config_major = user_major;
 	tqsl_xml_config_minor = user_minor;
+	default_config.clear();
 	return 0;
 }
 
@@ -521,60 +524,65 @@ initVUCC(void) {
 	if (VUCC.size() != 0)
 		return failed;
 
-	FILE *in;
+	XMLElement vucc_config;
 
 #ifdef _WIN32
 	string path = string(tQSL_RsrcDir) + "\\vuccgrids.dat";
-        wchar_t* wfilename = utf8_to_wchar(path.c_str());
-        if ((in = _wfopen(wfilename, L"rb")) == NULL) {
-                free_wchar(wfilename);
 #else
 	string path = string(tQSL_RsrcDir) + "/vuccgrids.dat";
-        if ((in = fopen(path.c_str(), "rb")) == NULL) {
 #endif
+	tqslTrace("initVUCC", "path=%s", path.c_str());
+	int stat = vucc_config.parseFile(path.c_str());
+
+	if (stat != XML_PARSE_NO_ERROR) {
 		failed = true;
-		tqslTrace("initVUCC", "Unable to open vuccgrids.dat, %m");
 		return failed;
 	}
-	char buf[100];
-	char *cp;
-	while ((cp = fgets(buf, sizeof buf, in)) != 0) {
-		int l = strlen(buf);
-		for (l--; l > 0 && isspc(buf[l]); l--) {
-			buf[l] = '\0';
-		}
-		char *state = NULL;
-		char *dxcc = strtok_r(buf, ",", &state);
-		if (!dxcc) {					// parse error
-			fclose(in);
-			tqslTrace("initVUCC", "invalid input - no tokens");
+
+	XMLElement top;
+	XMLElement v;
+	int ent;
+	char thispas[20];
+	char thisgrid[20];
+	if (vucc_config.getFirstElement("vuccgrids", top)) {
+		if (top.getFirstElement("vucc", v)) {
+			bool ok;
+			do {
+				string dx = v.getAttribute("entity").first;
+				const char *dxcc = dx.c_str();
+				ent = strtol(dxcc, NULL, 10);
+				if (ent == 0 && errno == EINVAL) {		// Bad input
+					tqslTrace("initVUCC", "invalid input - not an entity number %s", dxcc);
+					failed = true;
+					return failed;
+				}
+				if (!v.getAttribute("pas").second) {
+					tqslTrace("initVUCC", "invalid input - no PAS");
+					failed = true;
+					return failed;
+				}
+				strncpy(thispas, v.getAttribute("pas").first.c_str(), sizeof thispas);
+				if (!v.getAttribute("grid").second) {
+					tqslTrace("initVUCC", "invalid input - no grid");
+					failed = true;
+					return failed;
+				}
+				strncpy(thisgrid, v.getAttribute("grid").first.c_str(), sizeof thisgrid);
+#ifdef DEBUG
+				std::cout << ent << " " << thispas << " " << thisgrid << endl;
+#endif
+				VUCC.push_back(VUCCgrid(ent, thispas, thisgrid));
+				ok = top.getNextElement(v);
+			} while (ok);
+		} else {
 			failed = true;
 			return failed;
 		}
-		int ent = strtol(dxcc, NULL, 10);
-		if (ent == 0 && errno == EINVAL) {		// Bad input
-			fclose(in);
-			tqslTrace("initVUCC", "invalid input - not an entity number %s", dxcc);
-			failed = true;
-			return failed;
-		}
-		char *thispas = strtok_r(NULL, ",", &state);
-		if (thispas == NULL) {
-			tqslTrace("initVUCC", "invalid input - no PAS");
-			failed = true;
-			fclose(in);
-			return failed;
-		}
-		char *thisgrid = strtok_r(NULL, ",", &state);
-		if (thisgrid == NULL) {				// No PAS
-			thisgrid = thispas;
-			thispas = NULL;
-		}
-		if (ent != 9999) {	// Header
-			VUCC.push_back(VUCCgrid(ent, thispas, thisgrid));
-		}
+	} else {
+		failed = true;
+		return failed;
 	}
-	fclose(in);
+	vucc_config.clear();
 	return failed;
 }
 
@@ -626,6 +634,7 @@ tqsl_verifyGridFormat(const char *grid, int twelve, char* newGrid, int newlen) {
 	// Truncate to size limit
 	gtest = gtest.substr(0, twelve?  12 : 6);
 	switch (gtest.size()) {
+		case 2:
 		case 4:
 		case 6:
 			break;
@@ -646,12 +655,13 @@ tqsl_verifyGridFormat(const char *grid, int twelve, char* newGrid, int newlen) {
 	if (gtest[1] < 'A' || gtest[1] > 'R')
 		return GRID_ERROR_INVALID_FIELD;
 
-	if (gtest[2] < '0' || gtest[2] > '9')
-		return GRID_ERROR_INVALID_SQUARE;
+	if (gtest.size() > 2) {
+		if (gtest[2] < '0' || gtest[2] > '9')
+			return GRID_ERROR_INVALID_SQUARE;
 
-	if (gtest[3] < '0' || gtest[3] > '9')
-		return GRID_ERROR_INVALID_SUBSQUARE;
-
+		if (gtest[3] < '0' || gtest[3] > '9')
+			return GRID_ERROR_INVALID_SUBSQUARE;
+	}
 	if (gtest.size() > 4) {
 		if (gtest[4] < 'A' || gtest[4] > 'X')
 			return GRID_ERROR_INVALID_SUBSQUARE;
@@ -1705,7 +1715,30 @@ static bool inMap(int cqvalue, int ituvalue, bool cqz, bool ituz, const char *ma
 
 static int
 _ent_cmp(const void *a, const void *b) {
-	return strcasecmp(((struct _dxcc_entity *)a)->name, ((struct _dxcc_entity *)b)->name);
+	//was:
+	//return strcasecmp(((struct _dxcc_entity *)a)->name, ((struct _dxcc_entity *)b)->name);
+	char aname[128];
+	char bname[128];
+	struct _dxcc_entity* a1 = (struct _dxcc_entity *)a;
+	struct _dxcc_entity* b1 = (struct _dxcc_entity *)b;
+	/*
+ 	 * Terrible way to force the deleted entities to the
+ 	 * end of the list: add a 0x7f char to the front for
+ 	 * deleted and ^A for non-deleted.
+ 	 */
+	if (a1->deleted) {
+		aname[0] = 0x7f;
+	} else {
+		aname[0] = 1;
+	}
+	if (b1->deleted) {
+		bname[0] = 0x7f;
+	} else {
+		bname[0] = 1;
+	}
+	strncpy(aname + 1, a1->name, sizeof aname - 1);
+	strncpy(bname + 1, b1->name, sizeof bname - 1);
+	return strcasecmp(aname, bname);
 }
 
 static TQSL_LOCATION_FIELD *
@@ -1798,9 +1831,9 @@ update_page(int page, TQSL_LOCATION *loc) {
 					}
 					if (!found)
 						p.hash[callsign].push_back(ibuf);
-					tqsl_freeCertificate(certlist[i]);
 				}
-				free(certlist);
+				tqsl_freeCertificateList(certlist, ncerts);
+				ncerts = 0;
 				// Fill the call sign list
 				map<string, vector<string> >::iterator call_p;
 				field.idx = 0;
@@ -1856,6 +1889,10 @@ update_page(int page, TQSL_LOCATION *loc) {
 					if (!_ent_init) {
 						num_entities = DXCCMap.size();
 						entity_list = new struct _dxcc_entity[num_entities];
+						if (!entity_list) {
+							tqslTrace("update_page", "Out of Memory for entity list!");
+							return 1;
+						}
 						IntMap::const_iterator it;
 						for (it = DXCCMap.begin(), i = 0; it != DXCCMap.end(); it++, i++) {
 							entity_list[i].number = it->first;
@@ -1863,6 +1900,7 @@ update_page(int page, TQSL_LOCATION *loc) {
 							entity_list[i].zonemap = DXCCZoneMap[it->first].c_str();
 							entity_list[i].start = DXCCStartMap[it->first];
 							entity_list[i].end = DXCCEndMap[it->first];
+							entity_list[i].deleted = DeletedMap[it->first];
 						}
 						qsort(entity_list, num_entities, sizeof(struct _dxcc_entity), &_ent_cmp);
 						_ent_init = true;
@@ -1882,14 +1920,10 @@ update_page(int page, TQSL_LOCATION *loc) {
 					}
 					field.idx = 0;
 				} else {
-					vector<string>::iterator ip;
-					// Always have the "-NONE-" entity.
-					TQSL_LOCATION_ITEM item;
-					item.label = "-NONE-";
-					item.zonemap = "";
 					// This iterator walks the list of DXCC entities associated
 					// with this callsign
-					field.items.push_back(item);
+					vector<string>::iterator ip;
+					TQSL_LOCATION_ITEM item;
 					bool setIndex = false;
 
 					for (ip = p.hash[call].begin(); ip != p.hash[call].end(); ip++) {
@@ -2179,6 +2213,10 @@ tqsl_initStationLocationCapture(tQSL_Location *locp) {
 		return 1;
 	}
 	TQSL_LOCATION *loc = new TQSL_LOCATION;
+	if (!loc) {
+		tqslTrace("tqsl_initStataionLocationCapture", "Out of memory!");
+		return 1;
+	}
 	*locp = loc;
 	if (init_loc_maps()) {
 		tqslTrace("tqsl_initStationLocationCapture", "init_loc_maps error %d", tQSL_Error);
@@ -3064,6 +3102,10 @@ tqsl_mergeStationLocations(const char *locdata) {
 		if (!found) {
 			// Add this one to the station data file
 			XMLElement *newtop = new XMLElement("StationData");
+			if (!newtop) {
+				tqslTrace("tqsl_mergeStationLocations", "Out of memory!");
+				return 1;
+			}
 			newtop->setPretext("\n  ");
 			newtop->setAttribute("name", rval.first);
 			newtop->setText("\n  ");
@@ -3071,6 +3113,10 @@ tqsl_mergeStationLocations(const char *locdata) {
 			bool elok = ep->second->getFirstElement(el);
 			while (elok) {
 				XMLElement *sub = new XMLElement;
+				if (!sub) {
+					tqslTrace("tqsl_mergeStationLocations", "Out of memory!!");
+					return 1;
+				}
 				sub->setPretext(newtop->getPretext() + "  ");
 				sub->setElementName(el.getElementName());
 				sub->setText(el.getText());
@@ -3131,6 +3177,10 @@ tqsl_move_station_location(const char *name, bool fromtrash) {
 			}
 			// Now add it to the target
 			XMLElement *newtop = new XMLElement("StationData");
+			if (!newtop) {
+				tqslTrace("tqsl_moveStationLocation", "Out of memory!");
+				return 1;
+			}
 			newtop->setPretext("\n  ");
 			newtop->setAttribute("name", from_rval.first);
 			newtop->setText("\n  ");
@@ -3138,6 +3188,10 @@ tqsl_move_station_location(const char *name, bool fromtrash) {
 			bool elok = from_ep->second->getFirstElement(el);
 			while (elok) {
 				XMLElement *sub = new XMLElement;
+				if (!sub) {
+					tqslTrace("tqsl_moveStationLocation", "Out of memory!!");
+					return 1;
+				}
 				sub->setPretext(newtop->getPretext() + "  ");
 				sub->setElementName(el.getElementName());
 				sub->setText(el.getText());
@@ -3153,6 +3207,7 @@ tqsl_move_station_location(const char *name, bool fromtrash) {
 	}
 	tqslTrace("tqsl_move_station_location", "location not found");
 	tQSL_Error = TQSL_LOCATION_NOT_FOUND;
+	tQSL_CustomError[0] = '\0';
 	return 1;
 }
 
@@ -3206,10 +3261,13 @@ tqsl_getStationLocation(tQSL_Location *locp, const char *name) {
 	}
 	if (!exists) {
 		tQSL_Error = TQSL_LOCATION_NOT_FOUND;
+		strncpy(tQSL_CustomError, name, sizeof tQSL_CustomError);
 		tqslTrace("tqsl_getStationLocation", "location %s does not exist", name);
 		return 1;
 	}
-	return tqsl_load_loc(loc, ep, false);
+	int rval = tqsl_load_loc(loc, ep, false);
+	top_el.clear();
+	return rval;
 }
 
 DLLEXPORT int CALLCONVENTION
@@ -3398,6 +3456,10 @@ tqsl_location_to_xml(TQSL_LOCATION *loc, XMLElement& sd) {
 		for (int i = 0; i < numf; i++) {
 			TQSL_LOCATION_FIELD& field = loc->pagelist[loc->page-1].fieldlist[i];
 			XMLElement *fd = new XMLElement;
+			if (!fd) {
+				tqslTrace("tqsl_location_to_xml", "Out of memory!");
+				return 1;
+			}
 			fd->setPretext(sd.getPretext() + "  ");
 			fd->setElementName(field.gabbi_name);
 			switch (field.input_type) {
@@ -3509,6 +3571,10 @@ tqsl_saveStationLocationCapture(tQSL_Location locp, int overwrite) {
 		return 1;
 	}
 	XMLElement *sd = new XMLElement("StationData");
+	if (!sd) {
+		tqslTrace("tqsl_saveStationLocationCapture", "Out of memory!");
+		return 1;
+	}
 	sd->setPretext("\n  ");
 	if (tqsl_location_to_xml(loc, *sd)) {
 		tqslTrace("tqsl_saveStationLocationCaptureName", "error in loc_to_xml %d", tQSL_Error);
@@ -3755,12 +3821,17 @@ tqsl_getGABBItCONTACTData(tQSL_Cert cert, tQSL_Location locp, TQSL_QSO_RECORD *q
 	}
 	unsigned char sig[129];
 	int siglen = sizeof sig;
+	strncpy(reinterpret_cast<char *>(sig), "DUMMY", sizeof sig);
 	rec_sign_data = string_toupper(rec_sign_data);
-	if (tqsl_signDataBlock(cert, (const unsigned char *)rec_sign_data.c_str(), rec_sign_data.size(), sig, &siglen))
-		return 0;
+	if (!qso->do_not_sign) {
+		if (tqsl_signDataBlock(cert, (const unsigned char *)rec_sign_data.c_str(), rec_sign_data.size(), sig, &siglen))
+			return 0;
+	}
+
 	char b64[512];
 	if (tqsl_encodeBase64(sig, siglen, b64, sizeof b64))
 		return 0;
+
 	loc->tCONTACT = "<Rec_Type:8>tCONTACT\n";
 	char sbuf[10], lbuf[40];
 	snprintf(sbuf, sizeof sbuf, "%d", stationuid);
@@ -3993,8 +4064,8 @@ static void replaceAll(string& str, const string& from, const string& to) {
 	}
 	size_t start_pos = 0;
 	while((start_pos = str.find(from, start_pos)) != std::string::npos) {
-        	str.replace(start_pos, from.length(), to);
-        	start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+		str.replace(start_pos, from.length(), to);
+		start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
 	}
 }
 
@@ -4262,6 +4333,7 @@ tqsl_importTQSLFile(const char *file, int(*cb)(int type, const char *, void *), 
 	}
 	// If any of the user certificates failed import, return the error status.
 	if (rval) {
+		topel.clear();
 		return rval;
 	}
 
@@ -4278,6 +4350,7 @@ tqsl_importTQSLFile(const char *file, int(*cb)(int type, const char *, void *), 
 		if (major < curmajor) {
 			if (foundcerts) {
 				tqslTrace("tqsl_importTQSLFile", "Suppressing update from V%d.%d to V%d.%d", curmajor, curminor, major, minor);
+				topel.clear();
 				return rval;
 			}
 			tQSL_Error = TQSL_CUSTOM_ERROR;
@@ -4285,16 +4358,19 @@ tqsl_importTQSLFile(const char *file, int(*cb)(int type, const char *, void *), 
 				"This configuration file (V%d.%d) is older than the currently installed one (V%d.%d). It will not be installed.",
 						major, minor, curmajor, curminor);
 			tqslTrace("tqsl_importTQSLFile", "Config update error: %s", tQSL_CustomError);
+			topel.clear();
 			return 1;
 		}
 		if (major == curmajor) {
 			if (minor == curminor) {		// Same rev as already installed
 				tqslTrace("tqsl_importTQSLFile", "Suppressing update from V%d.%d to V%d.%d", curmajor, curminor, major, minor);
+				topel.clear();
 				return rval;
 			}
 			if (minor < curminor) {
 				if (foundcerts) {
 					tqslTrace("tqsl_importTQSLFile", "Suppressing update from V%d.%d to V%d.%d", curmajor, curminor, major, minor);
+					topel.clear();
 					return rval;
 				}
 				tQSL_Error = TQSL_CUSTOM_ERROR;
@@ -4302,6 +4378,7 @@ tqsl_importTQSLFile(const char *file, int(*cb)(int type, const char *, void *), 
 					"This configuration file (V%d.%d) is older than the currently installed one (V%d.%d). It will not be installed.",
 							major, minor, curmajor, curminor);
 				tqslTrace("tqsl_importTQSLFile", "Config update error: %s", tQSL_CustomError);
+				topel.clear();
 				return rval;
 		 	}
 		}
@@ -4357,6 +4434,7 @@ tqsl_importTQSLFile(const char *file, int(*cb)(int type, const char *, void *), 
 		tqsl_cabrillo_map.clear();
 		tqsl_cabrillo_user_map.clear();
 		tqsl_xml_config.clear();
+		topel.clear();
 		// Now reload it all
 		tqsl_load_xml_config();
 		string version = "Configuration V" + section.getAttribute("majorversion").first + "."
@@ -4400,6 +4478,7 @@ tqsl_getSerialFromTQSLFile(const char *file, long *serial) {
 			tQSL_Error = TQSL_FILE_SYNTAX_ERROR;
 			tqslTrace("tqsl_getSerialFromTQSLFile", "parse syntax error %d", tQSL_Error);
 		}
+		topel.clear();
 		return 1;
 	}
 	XMLElement tqsldata;
@@ -4407,6 +4486,7 @@ tqsl_getSerialFromTQSLFile(const char *file, long *serial) {
 		strncpy(tQSL_ErrorFile, file, sizeof tQSL_ErrorFile);
 		tqslTrace("tqsl_getSerialFromTQSLFile", "parse syntax error %d", tQSL_Error);
 		tQSL_Error = TQSL_FILE_SYNTAX_ERROR;
+		topel.clear();
 		return 1;
 	}
 	XMLElement section;
@@ -4421,10 +4501,12 @@ tqsl_getSerialFromTQSLFile(const char *file, long *serial) {
 				tQSL_Error = TQSL_FILE_SYNTAX_ERROR;
 				return 1;
 			}
+			topel.clear();
 			return 0;
 		}
 	}
 	tqslTrace("tqsl_getSerialFromTQSLFile", "no usercert in file %s", file);
+	topel.clear();
 	return 1;
 }
 

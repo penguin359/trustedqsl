@@ -191,13 +191,13 @@ static const char *error_strings[] = {
 	__("Certificate provider not found"),			/* TQSL_PROVIDER_NOT_FOUND */
 	__("No callsign certificate for key"),			/* TQSL_CERT_KEY_ONLY */
 	__("Configuration file cannot be opened"),		/* TQSL_CONFIG_ERROR */
-	__("The private key for this Callsign Certificate is not present on this computer; you can obtain it by loading a .tbk or .p12 file"),				      /* TQSL_CERT_NOT_FOUND */
+	__("The private key for this Callsign Certificate is not present on this computer; you can obtain it by loading a .tbk or .p12 file"),				 /* TQSL_CERT_NOT_FOUND */
 	__("PKCS#12 file not TQSL compatible"),			/* TQSL_PKCS12_ERROR */
 	__("Callsign Certificate not TQSL compatible"),		/* TQSL_CERT_TYPE_ERROR */
 	__("Date out of range"),				/* TQSL_DATE_OUT_OF_RANGE */
 	__("Previously Signed QSO detected"),			/* TQSL_DUPLICATE_QSO */
 	__("Database error"),					/* TQSL_DB_ERROR */
-	__("The selected station location could not be found"),	/* TQSL_LOCATION_NOT_FOUND */
+	__("The selected Station Location (%hs) could not be found"),	/* TQSL_LOCATION_NOT_FOUND */
 	__("The selected callsign could not be found"),		/* TQSL_CALL_NOT_FOUND */
 	__("The TQSL configuration file cannot be parsed"),	/* TQSL_CONFIG_SYNTAX_ERROR */
 	__("This file can not be processed due to a system error"),	/* TQSL_FILE_SYSTEM_ERROR */
@@ -209,7 +209,7 @@ static const char *error_strings[] = {
 	__("Gridsquare is inconsistent with Station Location"),	/* TQSL_INCONSISTENT_GRID */
 	__("ADIF field has invalid contents"),			/* TQSL_INVALID_ADIF */
 	__("This Callsign Certificate cannot be installed as the first date where it is valid is in the future. Check if your computer is set to the proper date.\n\n"),
-        __("This Callsign Certificate cannot be installed as it has expired. Check if your computer is set to the proper date and that this is the latest Callsign Certificate.\n\n")
+	__("This Callsign Certificate cannot be installed as it has expired. Check if your computer is set to the proper date and that this is the latest Callsign Certificate.\n\n")
 };
 
 #ifdef _WIN32
@@ -347,6 +347,9 @@ getLocalizedErrorString_v(int err) {
 		contents = strtok_r(NULL, "|", &state);
 		wxString composed = wxString::Format(_("ADIF content is not valid. '%hs' is not valid for %hs"), contents, fname);
 		return composed;
+	}
+	if (err == TQSL_LOCATION_NOT_FOUND) {
+		return wxString::Format(wxGetTranslation(wxString::FromUTF8(error_strings[adjusted_err])), tQSL_CustomError);
 	}
 	return wxGetTranslation(wxString::FromUTF8(error_strings[adjusted_err]));
 }
@@ -610,7 +613,7 @@ wxAccStatus TreeCtrlAx::GetLocation(wxRect& rect, int elementId) {
 		rect = ctrl->GetRect();
 	} else {
 		wxTreeItemId item = FindItem(ctrl, elementId);
-      		if (!(item && ctrl->GetBoundingRect(item, rect))) {
+		if (!(item && ctrl->GetBoundingRect(item, rect))) {
 #ifdef wxACC_INVALID_ARG
 			return wxACC_INVALID_ARG;
 #else
@@ -683,7 +686,7 @@ wxAccStatus TreeCtrlAx::GetState(int childId, long* state) {
 				*state |= wxACC_STATE_SYSTEM_FOCUSED;
 
 			if (item == ctrl->GetSelection())
-	         		*state |= wxACC_STATE_SYSTEM_SELECTED;
+				*state |= wxACC_STATE_SYSTEM_SELECTED;
 		}
 	}
 	return wxACC_OK;
@@ -721,7 +724,7 @@ wxAccStatus TreeCtrlAx::Select(int childId, wxAccSelectionFlags selectFlags) {
 				ctrl->SetFocusedItem(item);
 			else if (selectFlags == wxACC_SEL_TAKESELECTION)
 				ctrl->SelectItem(item);
-	      		else
+			else
 				return wxACC_NOT_IMPLEMENTED;
 			return wxACC_OK;
 		}
@@ -813,7 +816,7 @@ wxAccStatus ComboBoxAx::Select(int childId, wxAccSelectionFlags selectFlags) {
 			ctrl->SetFocus();
 		else if (selectFlags == wxACC_SEL_TAKESELECTION)
 			ctrl->SetSelection(childId);
-      		else
+		else
 			return wxACC_NOT_IMPLEMENTED;
 		return wxACC_OK;
 	}

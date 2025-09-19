@@ -50,19 +50,19 @@ main(int argc, char *argv[]) {
 		int c;
 		while ((c = getopt(argc, argv, "c:x:e:d:")) != -1) {
 			switch (c) {
-                                 case 'c':
+				case 'c':
 					sign_call = optarg;
 					break;
-                                 case 'x':
+				case 'x':
 					sign_dxcc = strtol(optarg, NULL, 10);
 					break;
-                                 case 'd':
+				case 'd':
 					dxcc = strtol(optarg, NULL, 10);
 					break;
-                                 case 'e':
+				case 'e':
 					email_addr = optarg;
 					break;
-                                 default:
+				default:
 					usage();
 			}
 		}

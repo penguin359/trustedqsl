@@ -334,9 +334,9 @@ freq_to_mhz(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp) {
 
 static char *
 tqsl_strtoupper(char *str) {
-        for (char *cp = str; *cp != '\0'; cp++)
-                *cp = toupper(*cp);
-        return str;
+	for (char *cp = str; *cp != '\0'; cp++)
+		*cp = toupper(*cp);
+	return str;
 }
 
 
@@ -388,11 +388,11 @@ mode_xlat(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp) {
 		FILE *cfile;
 		char modebuf[80];
 #ifdef _WIN32
-        	string default_path = string(tQSL_RsrcDir) + "\\cab_modes.dat";
-        	string user_path = string(tQSL_BaseDir) + "\\cab_modes.dat";
+		string default_path = string(tQSL_RsrcDir) + "\\cab_modes.dat";
+		string user_path = string(tQSL_BaseDir) + "\\cab_modes.dat";
 #else
-        	string default_path = string(tQSL_RsrcDir) + "/cab_modes.dat";
-        	string user_path = string(tQSL_BaseDir) + "/cab_modes.dat";
+		string default_path = string(tQSL_RsrcDir) + "/cab_modes.dat";
+		string user_path = string(tQSL_BaseDir) + "/cab_modes.dat";
 #endif
 
 #ifdef _WIN32
@@ -401,7 +401,7 @@ mode_xlat(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp) {
 #else
 		if ((cfile = fopen(default_path.c_str(), "r")) == NULL) {
 #endif
-			tqslTrace("mode_xlat", "Can't open def mode file %s: %m", default_path.c_str());
+			tqslTrace("mode_xlat", "Can't open def mode file %s: %s", default_path.c_str(), strerror(errno));
 		} else {
 			while(fgets(modebuf, sizeof modebuf, cfile)) {
 				for (char *p = modebuf + (strlen(modebuf) - 1); p >= modebuf; p--) {
@@ -419,7 +419,7 @@ mode_xlat(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp) {
 			}
 		}
 #ifdef _WIN32
-		free(wfilename);
+		free_wchar(wfilename);
 #endif
 #ifdef _WIN32
 		wfilename = utf8_to_wchar(user_path.c_str());
@@ -427,7 +427,7 @@ mode_xlat(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp) {
 #else
 		if ((cfile = fopen(user_path.c_str(), "r")) == NULL) {
 #endif
-			tqslTrace("mode_xlat", "Can't open user mode file %s: %m", user_path.c_str());
+			tqslTrace("mode_xlat", "Can't open user mode file %s: %s", user_path.c_str(), strerror(errno));
 		} else {
 			while(fgets(modebuf, sizeof modebuf, cfile)) {
 				for (char *p = modebuf + (strlen(modebuf) - 1); p >= modebuf; p--) {
@@ -444,6 +444,9 @@ mode_xlat(TQSL_CABRILLO *cab, tqsl_cabrilloField *fp) {
 					modes[tqsl_strtoupper(mode)] = tqsl_strtoupper(map);
 			}
 		}
+#ifdef _WIN32
+		free_wchar(wfilename);
+#endif
 	}
 
 	map<string, string>::iterator it;
@@ -541,7 +544,7 @@ tqsl_beginCabrillo(tQSL_Cabrillo *cabp, const char *filename) {
 		goto err;
 	}
 #ifdef _WIN32
-	free(wfilename);
+	free_wchar(wfilename);
 #endif
 	char *cp;
 	terrno = TQSL_CABRILLO_NO_START_RECORD;

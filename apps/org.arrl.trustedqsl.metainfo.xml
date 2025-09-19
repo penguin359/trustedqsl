@@ -68,6 +68,9 @@
      See https://www.freedesktop.org/software/appstream/docs/chap-AppStream-Misc.html#sect-AppStream-Misc-VerCmp
     -->
     <releases>
+	<release version="2.8.2" date="2025-09-14">
+	    <description><p>Memory leak fixes, prefix updates, vucc grid handling corrections.</p></description>
+	</release>
 	<release version="2.8.1" date="2025-04-27">
 	    <description><p>Correct handling of gridsquares when location has short grid. Ignore MY_COUNTRY spelling.</p></description>
 	</release>

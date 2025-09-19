@@ -23,8 +23,11 @@ void
 ExtWizard::OnPageChanged(wxWizardEvent& ev) {
 	tqslTrace("ExtWizard::OnPageChanged", "Direction=%d", ev.GetDirection());
 	GetCurrentPage()->refresh();
+	tqslTrace("ExtWizard::OnPageChanged", "Setting Focus");
 	GetCurrentPage()->SetFocus();
+	tqslTrace("ExtWizard::OnPageChanged", "Validating");
 	GetCurrentPage()->validate();
+	tqslTrace("ExtWizard::OnPageChanged", "Done");
 }
 
 void

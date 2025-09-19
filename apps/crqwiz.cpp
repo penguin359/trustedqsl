@@ -9,6 +9,7 @@
  ***************************************************************************/
 
 #include "crqwiz.h"
+#include <expat.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <wx/validate.h>
@@ -42,13 +43,13 @@ using std::make_pair;
 extern int get_address_field(const char *callsign, const char *field, string& result);
 
 static wxString callTypeChoices[] = {
-         _("This callsign replaces my existing callsign"),
-	 _("This is my former callsign"),
-         _("I am the QSL manager for this callsign"),
-	 _("This is a club callsign"),
-	 _("This is a DXpedition callsign"),
-	 _("This is a special event callsign"),
-         _("None of these apply")
+	_("This callsign replaces my existing callsign"),
+	_("This is my former callsign"),
+	_("I am the QSL manager for this callsign"),
+	_("This is a club callsign"),
+	_("This is a DXpedition callsign"),
+	_("This is a special event callsign"),
+	_("None of these apply")
 };
 
 // List of DXCC entities in the US.
@@ -72,52 +73,104 @@ static int USEntities[] = { 6,  // Alaska
 			  515,  // Swains Island
 			   -1 };
 
-typedef map <int, wxString> prefixMap;
-static prefixMap prefixRegex;
-static prefixMap entityNames;
+void
+CRQWiz::startElement(void *userData, const char *name, const char **atts) {
+	CRQWiz* wiz = reinterpret_cast<CRQWiz *> (userData);
+	if (wiz->skipFile)	// Newer one already loaded
+		return;
+	int entnum = 0;
+	long maj = 0;
+	long min = 0;
+	if (strcmp(name, "prefixes") == 0) {
+		for (int i = 0; atts[i]; i+=2) {
+			if (strcmp(atts[i], "majorversion") == 0) {
+				maj = strtol(atts[i+1], NULL, 10);
+			} else if (strcmp(atts[i], "minorversion") == 0) {
+				min = strtol(atts[i+1], NULL, 10);
+			}
+		}
+		if (maj > wiz->pmajor || (maj == wiz->pmajor && min > wiz->pminor)) {
+			wiz->prefixRegex.clear();			// This is newer. Clear then reload.
+			wiz->entityNames.clear();
+			wiz->pmajor = maj;
+			wiz->pminor = min;
+			return;
+		}
+		wiz->skipFile = true;				// Newer one already loaded
+		return;
+	}
+	if (strcmp(name, "prefix"))				// Not a prefix entry
+		return;
+	for (int i = 0; atts[i]; i+=2) {
+		if (strcmp(atts[i], "entity") == 0) {
+			entnum = strtol(atts[i+1], NULL, 10);
+			if (entnum == 0)
+				return;
+		} else if (strcmp(atts[i], "regex") == 0) {
+			wxString r = wxString::FromUTF8(atts[i+1]);
+			wiz->insertRegex(entnum, r);
+		} else if (strcmp(atts[i], "name") == 0) {
+			wxString eName = wxString::FromUTF8(atts[i+1]);
+			eName = eName.Trim();			// Last is entity name
+			// Translate "(Deleted)" to local language
+			wxString del = wxGetTranslation(wxT("DELETED"));
+			if (del != wxT("DELETED"))
+				eName.Replace(wxT("Deleted"), wxGetTranslation(wxT("DELETED")));
+
+			wiz->insertName(entnum, eName);
+		}
+	}
+}
 
 static void
-initPrefixes() {
-	if (prefixRegex.size() > 0)
-		return;
+processPfxFile(const char* baseDir, void* ud, XML_StartElementHandler hnd) {
 	char prefixfile[TQSL_MAX_PATH_LEN];
 	FILE *lfp;
+
 #ifdef _WIN32
-	snprintf(prefixfile, sizeof prefixfile, "%s\\prefixes.dat", tQSL_RsrcDir);
+	snprintf(prefixfile, sizeof prefixfile, "%s\\prefixes.dat", baseDir);
 	wchar_t *wfilename = utf8_to_wchar(prefixfile);
 	if ((lfp = _wfopen(wfilename, L"rb, ccs=UTF-8")) == NULL) {
 		free_wchar(wfilename);
 		return;
 	}
 #else
-	snprintf(prefixfile, sizeof prefixfile, "%s/prefixes.dat", tQSL_RsrcDir);
+	snprintf(prefixfile, sizeof prefixfile, "%s/prefixes.dat", baseDir);
 	if ((lfp = fopen(prefixfile, "rb")) == NULL) {
 		return;
 	}
 #endif
-	char pBuf[1024];
-	while (fgets(pBuf, sizeof pBuf, lfp)) {
-		if (pBuf[0] == '/' && pBuf[1] == '/')			// Comments
-			continue;
-		wxStringTokenizer pData(wxString::FromUTF8(pBuf), wxT(","));
-		int entnum = strtol(pData.GetNextToken().ToUTF8(), NULL, 10);
-		if (entnum == 0)					// Entity is first char
-			continue;
-		prefixRegex[entnum] = pData.GetNextToken();		// Then regex
-		wxString eName = pData.GetNextToken();
-		while (pData.CountTokens() > 0) {
-			eName = eName + pData.GetLastDelimiter();
-			eName = eName + pData.GetNextToken();
-		}
-		eName = eName.Trim();			// Last is entity name
 
-		// Translate "(Deleted)" to local language
-		wxString del = wxGetTranslation(wxT("DELETED"));
-		if (del != wxT("DELETED"))
-			eName.Replace(wxT("Deleted"), wxGetTranslation(wxT("DELETED")));
-		entityNames[entnum] = eName;
-	}
+	CRQWiz* wiz = reinterpret_cast<CRQWiz *> (ud);
+	XML_Parser p = XML_ParserCreate(NULL);
+	XML_SetUserData(p, ud);
+	XML_SetStartElementHandler(p, hnd);
+
+	char pBuf[2048];
+
+	bool done = false;
+	do {
+		unsigned int len = fread(pBuf, 1, sizeof pBuf, lfp);
+		done = (len < sizeof(pBuf));
+		if (XML_Parse(p, pBuf, len, done) == XML_STATUS_ERROR) {
+			XML_ParserFree(p);
+			fclose(lfp);
+			return;
+		}
+	} while (!done && !wiz->skipFile);
+
+	XML_ParserFree(p);
 	fclose(lfp);
+}
+
+void
+CRQWiz::initPrefixes() {
+	if (getNumNames()> 0)			// Already initialized
+		return;
+
+	processPfxFile(tQSL_BaseDir, reinterpret_cast<void *>(this), &CRQWiz::startElement);
+	processPfxFile(tQSL_RsrcDir, reinterpret_cast<void *>(this), &CRQWiz::startElement);
+	return;
 }
 
 static bool
@@ -162,6 +215,12 @@ CRQWiz::CRQWiz(TQSL_CERT_REQ *crq, tQSL_Cert xcert, wxWindow *parent, wxHtmlHelp
 	renewal = (_crq != NULL);	// It's a renewal if there's a CRQ provided
 	usa = validusa = false;		// Not usa
 	expired = false;
+	nqcert = 0;
+	qcertlist = NULL;
+	qsonotbefore.year = qsonotbefore.month = qsonotbefore.day = 0;
+	qsonotafter.year = qsonotafter.month = qsonotafter.day = 0;
+	skipFile = false;
+	pmajor = pminor = -1;
 
 	initPrefixes();			// Initialize prefix regex list
 
@@ -197,6 +256,14 @@ CRQWiz::CRQWiz(TQSL_CERT_REQ *crq, tQSL_Cert xcert, wxWindow *parent, wxHtmlHelp
 		_first = providerPage;
 	AdjustSize();
 	CenterOnParent();
+}
+
+CRQWiz::~CRQWiz() {
+	if (qcertlist != NULL) {
+		tqsl_freeCertificateList(qcertlist, nqcert);
+	}
+	qcertlist = NULL;
+	nqcert = 0;
 }
 
 bool
@@ -397,7 +464,7 @@ CRQ_CallsignPage::CRQ_CallsignPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Pa
 	ACCESSIBLE(tc_dxcc, ComboBoxAx);
 	tc_dxcc->SetName(wxT("DXCC Entity"));
 
-        tc_showall = new wxCheckBox(this, ID_CRQ_SHOWALL, wxT("Show All Entities"));
+	tc_showall = new wxCheckBox(this, ID_CRQ_SHOWALL, wxT("Show All Entities"));
 
 	hsizer->Add(tc_showall);
 
@@ -406,20 +473,24 @@ CRQ_CallsignPage::CRQ_CallsignPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Pa
 	DXCC dx;
 	bool ok = dx.getFirst();
 	while (ok) {
-		wxString ename = entityNames[dx.number()];
+		wxString ename = parent->getEntityName(dx.number());
 		if (ename.IsEmpty())
 			ename = wxString::FromUTF8(dx.name());
 		tc_dxcc->Append(ename, reinterpret_cast<void *>(dx.number()));
 		ok = dx.getNext();
 	}
 
-	const char *ent = "NONE";
+	char ent[TQSL_COUNTRY_MAX];
+	strncpy(ent, "-NONE-", sizeof ent);
+
 	if (crq) {
+		if (crq->dxccEntity >= 0)
+			_parent->dxcc = crq->dxccEntity;
 		if (dx.getByEntity(crq->dxccEntity)) {
-			if (entityNames[crq->dxccEntity].IsEmpty())
-				ent = dx.name();
+			if (_parent->getEntityName(crq->dxccEntity).IsEmpty())
+				strncpy(ent, dx.name(), sizeof ent);
 			else
-				ent = entityNames[crq->dxccEntity].ToUTF8();
+				strncpy(ent, _parent->getEntityName(crq->dxccEntity).ToUTF8(), sizeof ent);
 			tc_dxcc->Enable(false);
 		}
 	}
@@ -562,7 +633,7 @@ CRQ_CallsignPage::GetPrev() const {
 
 void
 CRQ_CallsignPage::ShowHide() {
-        showAll = tc_showall->GetValue();
+	showAll = tc_showall->GetValue();
 	validate();
 }
 
@@ -806,6 +877,22 @@ CRQ_EmailPage::CRQ_EmailPage(CRQWiz *parent, TQSL_CERT_REQ *crq) :  CRQ_Page(par
 	initialized = true;
 }
 
+int
+getEntityNum(wxString& name) {
+	int nument;
+	int entnum;
+	const char *entname;
+	const char *probe = name.ToUTF8();
+	tqsl_getNumDXCCEntity(&nument);
+	for (int i = 0; i < nument; i++) {
+		tqsl_getDXCCEntity(i, &entnum, &entname);
+		if (strcmp(entname, probe) == 0) {
+			return entnum;
+		}
+	}
+	return -1;
+}
+
 CRQ_Page *
 CRQ_EmailPage::GetNext() const {
 	tqslTrace("CRQ_EmailPage::GetNext", NULL);
@@ -813,6 +900,33 @@ CRQ_EmailPage::GetNext() const {
 		return _parent->pwPage;
 	} else {
 		if (_parent->ShouldBeSigned()) {
+			if (_parent->signIt ==  CRQ_SIGN_QSL_MGR) {
+				wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
+				wxString defQMGR;
+				config->Read(wxT("primaryQSLMgrCall"), &defQMGR);
+				tqslTrace("CRQ_EmailPage::GetNet", "QSL Mgr, pref %s", S(defQMGR));
+				if (!defQMGR.IsEmpty()) {
+					wxStringTokenizer t(defQMGR, wxT("-"));
+					wxString call = t.GetNextToken().Trim(true).Trim(false);
+					wxString ename = t.GetNextToken().Trim(true).Trim(false);
+					int entity = getEntityNum(ename);
+					// is there a cert for this call?
+					tqslTrace("CRQ_EmailPage::GetNet", "QSL Mgr, call %s ent %s/%d", S(call), S(ename), entity);
+					if (_parent->qcertlist && _parent->nqcert) {
+						tqsl_freeCertificateList(_parent->qcertlist, _parent->nqcert);
+						_parent->qcertlist = NULL;
+						_parent->nqcert = 0;
+					}
+					if (!tqsl_selectCertificates(&_parent->qcertlist, &_parent->nqcert, call.ToUTF8(), entity, 0,
+							&(_parent->provider), 0)) {
+						tqslTrace("CRQ_EmailPage::GetNet", "%d certs found", _parent->nqcert);
+						if (_parent->nqcert > 0) {
+							_parent->cert = _parent->qcertlist[0];
+						}
+						return NULL;
+					}
+				}
+			}
 			return _parent->signPage;
 		} else {
 			return NULL;
@@ -880,6 +994,33 @@ CRQ_PasswordPage::GetNext() const {
 		fwdPrompt->SetLabel(_("Leave the passphrase blank and click 'Next' unless you want to use a passphrase."));
 		fwdPrompt->SetSize(_parent->maxWidth, em_h * 5);
 		fwdPrompt->Wrap(_parent->maxWidth);
+		if (_parent->signIt ==  CRQ_SIGN_QSL_MGR && !_parent->renewal) {		// Renewals are self-signed
+			wxConfig *config = reinterpret_cast<wxConfig *>(wxConfig::Get());
+			wxString defQMGR;
+			config->Read(wxT("primaryQSLMgrCall"), &defQMGR);
+			tqslTrace("CRQ_EmailPage::GetNet", "QSL Mgr, pref %s", S(defQMGR));
+			if (!defQMGR.IsEmpty()) {
+				wxStringTokenizer t(defQMGR, wxT("-"));
+				wxString call = t.GetNextToken().Trim(true).Trim(false);
+				wxString ename = t.GetNextToken().Trim(true).Trim(false);
+				int entity = getEntityNum(ename);
+				// is there a cert for this call?
+				tqslTrace("CRQ_EmailPage::GetNet", "QSL Mgr, call %s ent %s/%d", S(call), S(ename), entity);
+				if (_parent->qcertlist && _parent->nqcert) {
+					tqsl_freeCertificateList(_parent->qcertlist, _parent->nqcert);
+					_parent->qcertlist = NULL;
+					_parent->nqcert = 0;
+				}
+				if (!tqsl_selectCertificates(&_parent->qcertlist, &_parent->nqcert, call.ToUTF8(), entity, 0,
+						&(_parent->provider), 0)) {
+					tqslTrace("CRQ_EmailPage::GetNet", "%d certs found", _parent->nqcert);
+					if (_parent->nqcert > 0) {
+						_parent->cert = _parent->qcertlist[0];
+					}
+					return NULL;
+				}
+			}
+		}
 		return _parent->signPage;
 	} else {
 		fwdPrompt->SetLabel(_("Leave the passphrase blank and click 'Finish' unless you want to use a passphrase."));
@@ -1025,7 +1166,7 @@ CRQ_SignPage::refresh() {
 			introText->SetLabel(it);
 		} else {
 			wxString introContent = wxString(_("Is this new certificate for a callsign where you already have a LoTW account, and you want the QSOs for this call to be added to an existing LoTW account? "));
-        		introContent += wxT("\n\n");
+			introContent += wxT("\n\n");
 			introContent += _("If so, choose a callsign below for the primary LoTW account. If not, click 'Finish', and a new LoTW account will be set up for these QSOs.");
 
 			introContent += wxT("\n\n");
@@ -1077,11 +1218,11 @@ validCallSign(const string& call) {
 	return true;
 }
 
-static bool
-validPrefix(const string& prefix) {
+bool
+CRQ_CallsignPage::validPrefix(const string& prefix) {
 	wxRegEx r;
 	prefixMap::iterator it;
-	for (it = prefixRegex.begin(); it != prefixRegex.end(); it++) {
+	for (it = _parent->prefixRegex.begin(); it != _parent->prefixRegex.end(); it++) {
 		if (it->second.IsEmpty())
 			continue;
 		wxString p = it->second + wxT("\\d*$");
@@ -1106,6 +1247,10 @@ CRQ_CallsignPage::validate() {
 	wxString callsign;
 	const char *dxccname = NULL;
 	bool ok = true;
+	tQSL_Date oldStartDate = {-1, -1, -1};
+	tQSL_Date oldEndDate = {-1, -1, -1};
+	tQSL_Date startDate = {-1, -1, -1};
+	tQSL_Date endDate = {-1, -1, -1};
 
 	if (!initialized)
 		return 0;
@@ -1225,8 +1370,9 @@ CRQ_CallsignPage::validate() {
 
 #ifndef DEBUG
 	sel = tc_dxcc->GetSelection();
-	if (sel >= 0)
+	if (tc_dxcc->IsEnabled() && sel >= 0) {
 		_parent->dxcc = (long)(tc_dxcc->GetClientData(sel));
+	}
 	tc_dxcc->Clear();
 #endif
 	int found;
@@ -1242,7 +1388,7 @@ CRQ_CallsignPage::validate() {
 #endif
 	if (!showAll) {
 		prefixMap::iterator it;
-		for (it = prefixRegex.begin(); it != prefixRegex.end(); it++) {
+		for (it = _parent->prefixRegex.begin(); it != _parent->prefixRegex.end(); it++) {
 #ifndef DEBUG
 			if (_parent->usa && isUSEntity(it->first)) {
 					allowedDXCC.push_back(it->first);
@@ -1255,7 +1401,7 @@ CRQ_CallsignPage::validate() {
 				if (r.Compile(it->second, wxRE_EXTENDED) && r.Matches(prefix)) {
 #ifdef DEBUG
 					dx.getByEntity(it->first);
-					std::cout << " " << it->first << ":" << entityNames[it->first];
+					std::cout << " " << it->first << ":" << _parent->entityNames[it->first];
 #endif
 					allowedDXCC.push_back(it->first);
 				}
@@ -1272,7 +1418,7 @@ CRQ_CallsignPage::validate() {
 	dxok = dx.getFirst();
 	while (dxok) {
 		if (showAll || allowedDXCC.size() == 0 || dx.number() == 0) {
-			wxString ename = entityNames[dx.number()];
+			wxString ename = _parent->entityNames[dx.number()];
 			if (ename.IsEmpty())
 				ename = wxString::FromUTF8(dx.name());
 			tc_dxcc->Append(ename, reinterpret_cast<void *>(dx.number()));
@@ -1284,7 +1430,7 @@ CRQ_CallsignPage::validate() {
 		}
 		for (size_t i = 0; i < allowedDXCC.size(); i++) {
 			if (allowedDXCC[i] == dx.number()) {
-				wxString ename = entityNames[dx.number()];
+				wxString ename = _parent->entityNames[dx.number()];
 				if (ename.IsEmpty())
 					ename = wxString::FromUTF8(dx.name());
 				tc_dxcc->Append(ename, reinterpret_cast<void *>(dx.number()));
@@ -1306,10 +1452,6 @@ CRQ_CallsignPage::validate() {
 	long old_dxcc;
 	old_dxcc = _parent->dxcc;
 
-	tQSL_Date oldStartDate;
-	tQSL_Date oldEndDate;
-	tQSL_Date startDate;
-	tQSL_Date endDate;
 	tqsl_getDXCCStartDate(old_dxcc, &oldStartDate);
 	tqsl_getDXCCEndDate(old_dxcc, &oldEndDate);
 	sel = tc_dxcc->GetSelection();
@@ -1326,12 +1468,14 @@ CRQ_CallsignPage::validate() {
 
 	if (_parent->dxcc != old_dxcc) {
 		if (tqsl_isDateValid(&startDate) && !tqsl_isDateNull(&startDate) &&
+		    tqsl_isDateValid(&oldStartDate) && !tqsl_isDateNull(&oldStartDate) &&
 		    tqsl_compareDates(&_parent->qsonotbefore, &oldStartDate) == 0) {
 			tc_qsobeginy->SetSelection(startDate.year - 1945);
 			tc_qsobeginm->SetSelection(startDate.month - 1);
 			tc_qsobegind->SetSelection(startDate.day - 1);
 		}
 		if ((tqsl_isDateValid(&endDate) || tqsl_isDateNull(&endDate)) &&
+		    tqsl_isDateValid(&oldEndDate) && !tqsl_isDateNull(&oldEndDate) &&
 		     tqsl_compareDates(&_parent->qsonotafter, &oldEndDate) == 0) {
 			if (tqsl_isDateNull(&endDate)) {
 				tc_qsoendy->SetSelection(0);
@@ -1481,7 +1625,6 @@ CRQ_CallsignPage::validate() {
 				tqsl_convertDateToText(&cert_not_after, cert_after_buf, sizeof cert_after_buf);
 			}
 		}
-		tqsl_freeCertificateList(certlist, ncert);
 		if (ok == false) {
 			DXCC dxcc;
 			dxcc.getByEntity(_parent->dxcc);
@@ -1491,6 +1634,9 @@ CRQ_CallsignPage::validate() {
 			valMsg += wxString::FromUTF8(cert_before_buf) + _(" to ") + wxString::FromUTF8(cert_after_buf);
 		}
 	}
+	tqsl_freeCertificateList(certlist, ncert);
+	certlist = NULL;
+	ncert = 0;
 	{
 		wxString pending = wxConfig::Get()->Read(wxT("RequestPending"));
 		wxStringTokenizer tkz(pending, wxT(","));
@@ -1507,7 +1653,7 @@ CRQ_CallsignPage::validate() {
 			}
 		}
 	}
-        {
+	 {
 		wxString requestRecord = wxConfig::Get()->Read(wxT("RequestRecord"));
 		wxString requestList;
 		wxStringTokenizer rectkz(requestRecord, wxT(","));

@@ -3160,7 +3160,7 @@ wxJSONValue::ArrayToMemoryBuff(const wxJSONValue& value) {
     if (value.IsArray())  {
         int len = value.Size();
         for (int i = 0; i < len; i++)  {
-            short int byte; unsigned char c;
+            short int byte = 0; unsigned char c;
             // we do not use opertaor [] because it is not const
             // bool r = value[i].AsShort(byte);
             bool r = value.ItemAt(i).AsShort(byte);

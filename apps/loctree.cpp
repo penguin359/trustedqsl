@@ -54,7 +54,9 @@ LocTree::LocTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos,
 	useContextMenu = true;
 	wxBitmap homebm(home_xpm);
 	wxBitmap folderbm(folder_xpm);
-	wxImageList *il = new wxImageList(16, 16, false, 2);
+	il = new wxImageList(16, 16, false, 2);
+	if (!il)
+		return;
 	il->Add(folderbm);
 	il->Add(homebm);
 	SetImageList(il);
@@ -62,6 +64,7 @@ LocTree::LocTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos,
 
 
 LocTree::~LocTree() {
+	delete il;
 }
 
 void
@@ -112,6 +115,10 @@ LocTree::Build(int flags, const TQSL_PROVIDER *provider) {
 		sort(list.begin(), list.end(), cl_cmp);
 		for (int i = 0; i < static_cast<int>(list.size()); i++) {
 			LocTreeItemData *loc = new LocTreeItemData(list[i].first, loc_it->first);
+			if (!loc) {
+				tqslTrace("LocTree::Build", "Out of memory!");
+				return 0;
+			}
 			AppendItem(id, list[i].first, HOME_ICON, -1, loc);
 		}
 		Expand(id);

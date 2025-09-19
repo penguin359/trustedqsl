@@ -54,6 +54,8 @@ class XMLElement {
 	/// Set an attribute.
     /** Attributes are treated as unique key/value pairs. */
 	void setAttribute(const string& key, const string& value);
+	void setAttribute(const char* key, const char* value);
+	void setAttribute(const char* key, const string& value);
 	/// Get an attribute by its key.
 	/** Returns a pair where:
       *
@@ -131,6 +133,19 @@ inline void XMLElement::clear() {
 inline void
 XMLElement::setAttribute(const string& key, const string& value) {
 	_attributes[key] = value;
+}
+
+inline void
+XMLElement::setAttribute(const char* key, const char* value) {
+	string k = key;
+	string v = value;
+	_attributes[k] = v;
+}
+
+inline void
+XMLElement::setAttribute(const char* key, const string& value) {
+	string k = key;
+	_attributes[k] = value;
 }
 
 inline XMLElementList::iterator

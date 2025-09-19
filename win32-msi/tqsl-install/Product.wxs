@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?define UpgradeCode = "BA40FA93-F9D6-44E2-BB81-82B0A676E731" ?>
 <?define BadUpgradeCode = "BA40FA94-F9D6-44E2-BB81-82B0A676E741" ?>
-<?define tqslVersion = "2.8.1" ?>
+<?define tqslVersion = "2.8.2" ?>
 <?define beta = "" ?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">

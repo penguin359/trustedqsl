@@ -138,7 +138,7 @@ valid_list::GetChoices() const {
 }
 static bool
 sat_cmp(const choice& p1, const choice& p2) {
-        return p1.value < p2.value;
+	return p1.value < p2.value;
 }
 
 static valid_list valid_modes;
@@ -764,7 +764,7 @@ QSODataDialog::SetRecno(int new_recno) {
 	if (_reclist == NULL || new_recno < 1)
 		return;
 	if (Validate() && TransferDataFromWindow()) {
-//   		(*_reclist)[_recno-1] = rec;
+//		(*_reclist)[_recno-1] = rec;
 		if (_reclist && new_recno > static_cast<int>(_reclist->size())) {
 			_newrec = _reclist->size() + 1;
 			QSORecord newrec;

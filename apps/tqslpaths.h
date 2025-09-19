@@ -68,18 +68,18 @@ class DocPaths : public wxPathList {
 				CFStringGetCString(bundleString, npath, lenB + 1, kCFStringEncodingASCII);
 				CFRelease(bundleString);
 
-                		// if last char is not a /, append one
-                		if ((strlen(npath) > 0) && (npath[strlen(npath)-1] != '/')) {
-                        		strncat(npath, "/", 2);
-                		}
+				// if last char is not a /, append one
+				if ((strlen(npath) > 0) && (npath[strlen(npath)-1] != '/')) {
+					strncat(npath, "/", 2);
+				}
 
 				CFStringGetCString(resString, npath + strlen(npath), lenR + 1, kCFStringEncodingUTF8);
 
-                		if ((strlen(npath) > 0) && (npath[strlen(npath)-1] != '/')) {
-                        		strncat(npath, "/", 2);
-                		}
-                		Add(wxString::FromUTF8(npath));
-                		Add(wxString::FromUTF8(npath) + wxT("Help/"));
+				if ((strlen(npath) > 0) && (npath[strlen(npath)-1] != '/')) {
+					strncat(npath, "/", 2);
+				}
+				Add(wxString::FromUTF8(npath));
+				Add(wxString::FromUTF8(npath) + wxT("Help/"));
 				Add(wxT("/Applications/") + subdir + wxT(".app/Contents/Resources/"));
 				Add(wxT("/Applications/") + subdir + wxT(".app/Contents/Resources/Help/"));
 				free(npath);

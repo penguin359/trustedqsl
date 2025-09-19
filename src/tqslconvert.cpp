@@ -293,7 +293,7 @@ tqsl_db_get_errstr(TQSL_CONVERTER *conv) {
 	if (sqlite3_errcode(conv->seendb) == SQLITE_BUSY) {
 		strncpy(tQSL_CustomError, "The uploads database is busy. You must exit any running copies of TQSL to be able to sign a log", sizeof tQSL_CustomError);
 	} else {
-              		strncpy(tQSL_CustomError, sqlite3_errmsg(conv->seendb), sizeof tQSL_CustomError);
+		strncpy(tQSL_CustomError, sqlite3_errmsg(conv->seendb), sizeof tQSL_CustomError);
 	}
 }
 
@@ -303,19 +303,19 @@ close_db(TQSL_CONVERTER *conv) {
 
 	if (conv->txn) {
 		if (SQLITE_OK != sqlite3_exec(conv->seendb, "END;", NULL, NULL, NULL)) {
-                	tQSL_Error = TQSL_DB_ERROR;
-                	tQSL_Errno = errno;
+			tQSL_Error = TQSL_DB_ERROR;
+			tQSL_Errno = errno;
 			tqsl_db_get_errstr(conv);
-                	tqslTrace("close_db", "Error ending transaction: %s", tQSL_CustomError);
+			tqslTrace("close_db", "Error ending transaction: %s", tQSL_CustomError);
 		}
 		conv->txn = false;
 	}
 	if (conv->db_open) {
 		if (SQLITE_OK != sqlite3_close(conv->seendb)) {
-                	tQSL_Error = TQSL_DB_ERROR;
-                	tQSL_Errno = errno;
+			tQSL_Error = TQSL_DB_ERROR;
+			tQSL_Errno = errno;
 			tqsl_db_get_errstr(conv);
-                	tqslTrace("close_db", "Error closing database: %s", tQSL_CustomError);
+			tqslTrace("close_db", "Error closing database: %s", tQSL_CustomError);
 		}
 		// close files and clean up converters, if any
 		if (conv->adif) tqsl_endADIF(&conv->adif);
@@ -338,6 +338,10 @@ tqsl_beginConverter(tQSL_Converter *convp) {
 		return 1;
 	}
 	TQSL_CONVERTER *conv = new TQSL_CONVERTER();
+	if (!conv) {
+		tqslTrace("tqs;_beginConverter", "Out of memory!");
+		return 1;
+	}
 	*convp = conv;
 	return 0;
 }
@@ -359,6 +363,10 @@ tqsl_beginADIFConverter(tQSL_Converter *convp, const char *filename, tQSL_Cert *
 		return 1;
 	}
 	TQSL_CONVERTER *conv = new TQSL_CONVERTER();
+	if (!conv) {
+		tqslTrace("tqsl_beginADIFConverter", "Out of memory!");
+		return 1;
+	}
 	conv->adif = adif;
 	conv->certs = certs;
 	conv->ncerts = ncerts;
@@ -395,6 +403,10 @@ tqsl_beginCabrilloConverter(tQSL_Converter *convp, const char *filename, tQSL_Ce
 		return 1;
 	}
 	TQSL_CONVERTER *conv = new TQSL_CONVERTER();
+	if (!conv) {
+		tqslTrace("tqsl_beginCabrilloConverter", "Out of memory!");
+		return 1;
+	}
 	conv->cab = cab;
 	conv->certs = certs;
 	conv->ncerts = ncerts;
@@ -434,16 +446,16 @@ get_dbrec(sqlite3 *db, const char *key, char **result) {
 		sqlite3_finalize(pstmt);
 		return -1;
 	}
-    	rc = sqlite3_step(pstmt);
+	rc = sqlite3_step(pstmt);
 	if (SQLITE_DONE == rc) {			// No record matches
 		sqlite3_finalize(pstmt);
 		return 1;
 	}
-    	if (SQLITE_ROW != rc) {
+	if (SQLITE_ROW != rc) {
 		sqlite3_finalize(pstmt);
 		return -1;
 	}
-    	*result = strdup(reinterpret_cast<const char *>(sqlite3_column_text(pstmt, 1)));
+	*result = strdup(reinterpret_cast<const char *>(sqlite3_column_text(pstmt, 1)));
 	sqlite3_finalize(pstmt);
 	pstmt = NULL;
 	return 0;
@@ -469,7 +481,7 @@ put_dbrec(sqlite3 *db, const char *key, const char *data) {
 		return -1;
 	}
 
-    	rc = sqlite3_step(pstmt);
+	rc = sqlite3_step(pstmt);
 	if (SQLITE_DONE == rc) {
 		sqlite3_finalize(pstmt);
 		return 0;
@@ -493,7 +505,7 @@ del_dbrec(sqlite3 *db, const char *key) {
 		sqlite3_finalize(pstmt);
 		return -1;
 	}
-    	rc = sqlite3_step(pstmt);
+	rc = sqlite3_step(pstmt);
 	if (SQLITE_DONE == rc) {
 		sqlite3_finalize(pstmt);
 		return 0;
@@ -756,10 +768,10 @@ reopen:
 					char *err_msg;
 					dbret = sqlite3_exec(conv->seendb, sql, 0, 0, &err_msg);
 					if (SQLITE_OK != dbret) {
-                				tQSL_Error = TQSL_DB_ERROR;
-                				tQSL_Errno = errno;
+						tQSL_Error = TQSL_DB_ERROR;
+						tQSL_Errno = errno;
 						tqsl_db_get_errstr(conv);
-                				tqslTrace("open_db", "Error creating table: %s", tQSL_CustomError);
+						tqslTrace("open_db", "Error creating table: %s", tQSL_CustomError);
 						break;
 					} else {
 						close_db(conv);
@@ -910,7 +922,6 @@ static void parse_adif_qso(TQSL_CONVERTER *conv, int *saveErr, TQSL_ADIF_GET_FIE
 	while (1) {
 		tqsl_adifFieldResults result;
 		conv->taglines[result.name] = result.line_no;
-
 		if (tqsl_getADIFField(conv->adif, &result, stat, adif_qso_record_fields, notypes, adif_allocate))
 			break;
 		if (*stat != TQSL_ADIF_GET_FIELD_SUCCESS && *stat != TQSL_ADIF_GET_FIELD_NO_NAME_MATCH)
@@ -1170,13 +1181,9 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 				conv->rec_done = true;
 				return 0;
 			}
-			if (stat == TQSL_ADIF_GET_FIELD_EOF) {
-				tqslTrace("tqsl_getConverterGABBI", "eof");
+			if (stat == TQSL_ADIF_GET_FIELD_EOF)
 				return 0;
-			}
-
 			if (stat != TQSL_ADIF_GET_FIELD_SUCCESS) {
-				tqslTrace("tqsl_getConverterGABBI", "adif error %d", stat);
 				tQSL_ADIF_Error = stat;
 				tQSL_Error = TQSL_ADIF_ERROR;
 				return 0;
@@ -1210,7 +1217,6 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 								tqsl_getDXCCEntityName(conv->rec.my_dxcc, &d1);
 
 								snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "DXCC Entity|%s (%d)|%s (%d)", d1, conv->rec.my_dxcc, conv->rec.my_country, i);
-								tqslTrace("tqsl_getConverterGABBI", "cert error: %s", tQSL_CustomError);
 								tQSL_Error = TQSL_CERT_MISMATCH;
 								return 0;
 							}
@@ -1298,35 +1304,30 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 	if (!conv->rec.callsign_set) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid contact - QSO does not specify a Callsign");
-		tqslTrace("tqsl_getConverterGABBI", "No callsign in QSO");
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
 	if (!conv->rec.band_set) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid contact - QSO does not specify a band or frequency");
-		tqslTrace("tqsl_getConverterGABBI", "No band in QSO");
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
 	if (!conv->rec.mode_set) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid contact - QSO does not specify a mode");
-		tqslTrace("tqsl_getConverterGABBI", "No mode in QSO");
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
 	if (!conv->rec.date_set) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid contact - QSO does not specify a date");
-		tqslTrace("tqsl_getConverterGABBI", "No date in QSO");
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
 	if (!conv->rec.time_set) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid contact - QSO does not specify a time");
-		tqslTrace("tqsl_getConverterGABBI", "No time in QSO");
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
@@ -1337,13 +1338,11 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 			conv->rec_done = true;
 			tQSL_Error = TQSL_DATE_OUT_OF_RANGE;
 			set_tagline(conv, "QSO_DATE");
-			tqslTrace("tqsl_getConverterGABBI", "QSO date out of range");
 			return 0;
 		}
 		if (tqsl_isDateValid(&(conv->end)) && tqsl_compareDates(&(conv->rec.date), &(conv->end)) > 0) {
 			conv->rec_done = true;
 			tQSL_Error = TQSL_DATE_OUT_OF_RANGE;
-			tqslTrace("tqsl_getConverterGABBI", "QSO date out of range");
 			set_tagline(conv, "QSO_DATE");
 			return 0;
 		}
@@ -1356,7 +1355,6 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 			conv->rec_done = true;
 			snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid amateur CALL (%s)", conv->rec.callsign);
 			set_tagline(conv, "CALL");
-			tqslTrace("tqsl_getConverterGABBI", "QSO call %s invalid", conv->rec.callsign);
 			tQSL_Error = TQSL_CUSTOM_ERROR;
 			return 0;
 		}
@@ -1395,7 +1393,6 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid MODE (%s)", conv->rec.mode);
 		set_tagline(conv, "MODE");
-		tqslTrace("tqsl_getConverterGABBI", "QSO mode %s invalid", conv->rec.mode);
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
@@ -1403,7 +1400,6 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid BAND (%s)", conv->rec.band);
 		set_tagline(conv, "BAND");
-		tqslTrace("tqsl_getConverterGABBI", "QSO band %s invalid", conv->rec.band);
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
@@ -1411,7 +1407,6 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid RX BAND (%s)", conv->rec.rxband);
 		set_tagline(conv, "BAND_RX");
-		tqslTrace("tqsl_getConverterGABBI", "QSO rxband %s invalid", conv->rec.rxband);
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
@@ -1429,7 +1424,6 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid PROP_MODE (%s)", conv->rec.propmode);
 		set_tagline(conv, "PROP_MODE");
-		tqslTrace("tqsl_getConverterGABBI", "QSO propmode %s invalid", conv->rec.propmode);
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
@@ -1438,7 +1432,6 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Invalid SAT_NAME (%s)", conv->rec.satname);
 		set_tagline(conv, "SAT_NAME");
-		tqslTrace("tqsl_getConverterGABBI", "QSO sat_name %s invalid", conv->rec.satname);
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
@@ -1446,7 +1439,6 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "PROP_MODE = 'SAT' but no SAT_NAME");
 		set_tagline(conv, "PROP_MODE");
-		tqslTrace("tqsl_getConverterGABBI", "QSO prop_mode sat but no sat_name");
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
@@ -1454,16 +1446,14 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		conv->rec_done = true;
 		snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "SAT_NAME set but PROP_MODE is not 'SAT'");
 		set_tagline(conv, "SAT_NAME");
-		tqslTrace("tqsl_getConverterGABBI", "QSO sat_name set but no prop_mode");
 		tQSL_Error = TQSL_CUSTOM_ERROR;
 		return 0;
 	}
 
 	// Check cert
-	if (conv->location_handling != TQSL_LOC_UPDATE && conv->ncerts <= 0) {
+	if (!conv->dupes_only && (conv->location_handling != TQSL_LOC_UPDATE && conv->ncerts <= 0)) {
 		conv->rec_done = true;
 		tQSL_Error = TQSL_CERT_NOT_FOUND;
-		tqslTrace("tqsl_getConverterGABBI", "Cert not found");
 		return 0;
 	}
 
@@ -1483,7 +1473,6 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 				snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Callsign|%s|%s", conv->callsign, conv->rec.my_call);
 				if (!set_tagline(conv, "STATION_CALLSIGN"))
 					set_tagline(conv, "OPERATOR");
-				tqslTrace("tqsl_getConverterGABBI", "my_call %s", tQSL_CustomError);
 				tQSL_Error = TQSL_CERT_MISMATCH;
 				return 0;
 			}
@@ -1503,7 +1492,11 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 
 	bool anyfound;
 	int cidx;
-	cidx = find_matching_cert(conv, targetdxcc, &anyfound);
+	if (conv->dupes_only) {
+		cidx = 0;
+	} else {
+		cidx = find_matching_cert(conv, targetdxcc, &anyfound);
+	}
 	if (cidx < 0) {
 		conv->rec_done = true;
 		const char *entName = NULL;
@@ -1511,7 +1504,6 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 			set_tagline(conv, "MY_DXCC");
 			snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "MY_DXCC|%d", conv->rec.my_dxcc);
 			conv->rec.my_dxcc = 0;
-			tqslTrace("tqsl_getConverterGABBI", "my_dxcc %s", tQSL_CustomError);
 			tQSL_Error = TQSL_INVALID_ADIF;
 			return 0;
 		}
@@ -1533,7 +1525,7 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		if (conv->dxcc != -1) {
 			conv->dxcc = targetdxcc;
 			tqsl_setLocationCallSign(conv->loc, conv->callsign, conv->dxcc);	// Set callsign and DXCC
-        		tqsl_setStationLocationCapturePage(conv->loc, 1);	// Update to relevant fields
+			tqsl_setStationLocationCapturePage(conv->loc, 1);	// Update to relevant fields
 			tqsl_updateStationLocationCapture(conv->loc);
 		}
 		conv->cert_idx = cidx;
@@ -1548,7 +1540,7 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		}
 	}
 
-	if (conv->location_handling != TQSL_LOC_IGNORE) { // Care about MY_* fields
+	if (!conv->dupes_only && conv->location_handling != TQSL_LOC_IGNORE) { // Care about MY_* fields
 		// At this point, conv->certs[conv->cert_idx] has the certificate
 		// conv->loc has the location.
 		// First, refresh the certificate data
@@ -1563,7 +1555,6 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 				snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Callsign|%s|%s", conv->callsign, conv->rec.my_call);
 				if (!set_tagline(conv, "STATION_CALLSIGN"))
 					set_tagline(conv, "OPERATOR");
-				tqslTrace("tqsl_getConverterGABBI", "operator error %s", tQSL_CustomError);
 				tQSL_Error = TQSL_CERT_MISMATCH;
 				return 0;
 			}
@@ -1583,7 +1574,6 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 
 					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "DXCC Entity|%s (%d)|%s (%d)", d1 ? d1 : "Invalid", conv->dxcc, d2 ? d2 : "Invalid", conv->rec.my_dxcc);
 					set_tagline(conv, "MY_DXCC");
-					tqslTrace("tqsl_getConverterGABBI", "my_dxcc error %s", tQSL_CustomError);
 					tQSL_Error = TQSL_CERT_MISMATCH;
 					return 0;
 				}
@@ -1599,14 +1589,26 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		 * a six-character grid and the log has 8, then just compare 6 for report mode.
 		 */
 
-		tqsl_getLocationField(conv->loc, "GRIDSQUARE", val, sizeof val);
-		if (conv->rec.my_gridsquare[0] && !tqsl_getLocationField(conv->loc, "GRIDSQUARE", val, sizeof val)) {
+		int rc = tqsl_getLocationField(conv->loc, "GRIDSQUARE", val, sizeof val);
+		// Have both my_gridsquare and a grid in the stn loc
+		if (conv->rec.my_gridsquare[0] && (rc == 0)) {
 			bool okgrid = true;
 			unsigned int stnLen = strlen(val);
 			unsigned int logLen = strlen(conv->rec.my_gridsquare);
-			unsigned int compareLen = (stnLen < logLen ? stnLen : logLen);
+			unsigned int compareLen = 99;
+			if (stnLen > 4 && logLen == 4) { 	// Fix the FT8 case
+				compareLen = 4;
+			}
+			char locstate[50];
+			locstate[0] = '\0';
+			tqsl_getLocationField(conv->loc, "US_STATE", locstate, sizeof locstate);
+			int ent;
+			tqsl_getLocationDXCCEntity(conv->loc, &ent);
+			int consistentGrid;
+			char grid4[5];
 
 			if (strstr(val, ",") || strstr(conv->rec.my_gridsquare, ",")) {	// If it's a corner/edge
+				bool matches = false;
 				vector<string>stngrids;
 				vector<string>qsogrids;
 				splitStr(val, stngrids, ',');
@@ -1614,67 +1616,72 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 				size_t nstn = stngrids.size();
 				size_t nqso = qsogrids.size();
 				if (nstn != nqso) {
-				    okgrid = false;
+					matches = false;
 				} else {
 					sort(stngrids.begin(), stngrids.end());
 					sort(qsogrids.begin(), qsogrids.end());
 					for (size_t i = 0; i < nstn; i++) {
-						if (stngrids[i] != qsogrids[i]) {
+						char reformatted[TQSL_GRID_MAX + 1];
+						if (tqsl_verifyGridFormat(qsogrids[i].c_str(), false, reformatted, sizeof reformatted)) {
+							conv->rec_done = true;
+							snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Gridsquare|%s", conv->rec.my_gridsquare);
+							set_tagline(conv, "GRIDSQUARE");
+							tQSL_Error = TQSL_INVALID_ADIF;
+							return 0;
+						} else {
+							qsogrids[i] = string(reformatted);
+						}
+						strncpy(grid4, qsogrids[i].c_str(), 4);
+						grid4[4] = '\0';	// truncate to four
+						if (!tqsl_validateVUCCGrid(ent, locstate, grid4, &consistentGrid)) {
+							if (consistentGrid == 0) { // Not valid for Entity and PAS
+								set_tagline(conv, "MY_VUCC_GRIDS");
+								tQSL_Error = TQSL_INCONSISTENT_GRID | consistentGrid;
+								conv->rec_done = true;
+								return 0;
+							}
+						}
+						if (strcasecmp(stngrids[i].c_str(), qsogrids[i].c_str())) {
 							compareLen = 99; // Doesn't match, so error out if appropriate
 							break;
 						}
-                                        	compareLen = 0;                 // Matches.
 					}
+					matches = true;
 				}
-                        }
-			if (conv->location_handling == TQSL_LOC_UPDATE) {
-				okgrid = (strcasecmp(conv->rec.my_gridsquare, val) == 0);
+				if (!matches && check_station(conv, "GRIDSQUARE", "MY_GRIDSQUARE", conv->rec.my_gridsquare, sizeof conv->rec.my_gridsquare, "Gridsquare|%s|%s", false)) return 0;
 			} else {
-				okgrid = (compareLen == 0 || strncasecmp(conv->rec.my_gridsquare, val, compareLen) == 0);
-			}
-
-			/*
- 			 * FT8 four-char grid handling.
-			 * For station location set to AA01aa and FT8 saying AA01
-			 * Treat that as a match
-			 */
-			okgrid = (compareLen == 0 || strncasecmp(conv->rec.my_gridsquare, val, compareLen) == 0);
-			if (!okgrid) {
-				if (conv->location_handling == TQSL_LOC_UPDATE) {
-					tqsl_setLocationField(conv->loc, "GRIDSQUARE", conv->rec.my_gridsquare);
-					conv->newstation = true;
-				} else {
-					if (val[0] == '\0') {		// If station location has an empty grid
+				/* Single gridsquare */
+				if (tqsl_verifyGridFormat(conv->rec.my_gridsquare, true, conv->rec.my_gridsquare, sizeof conv->rec.my_gridsquare)) {
+					conv->rec_done = true;
+					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Gridsquare|%s", conv->rec.my_gridsquare);
+					set_tagline(conv, "GRIDSQUARE");
+					tQSL_Error = TQSL_INVALID_ADIF;
+					return 0;
+				}
+				/*
+ 			 	* FT8 four-char grid handling.
+			 	* For station location set to AA01aa and FT8 saying AA01
+			 	* Treat that as a match
+			 	*/
+				okgrid = (strncasecmp(conv->rec.my_gridsquare, val, compareLen) == 0);
+				if (!okgrid) {
+					if (conv->location_handling == TQSL_LOC_UPDATE) {
 						tqsl_setLocationField(conv->loc, "GRIDSQUARE", conv->rec.my_gridsquare);
 						conv->newstation = true;
 					} else {
-						conv->rec_done = true;
-						snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Gridsquare|%s|%s", val, conv->rec.my_gridsquare);
-						set_tagline(conv, "GRIDSQUARE");
-						tqslTrace("tqsl_getConverterGABBI", "incorrect gridsquare error %s", tQSL_CustomError);
-						tQSL_Error = TQSL_LOCATION_MISMATCH;
-						return 0;
+						if (val[0] == '\0') {		// If station location has an empty grid
+							tqsl_setLocationField(conv->loc, "GRIDSQUARE", conv->rec.my_gridsquare);
+							conv->newstation = true;
+						} else {
+							conv->rec_done = true;
+							snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Gridsquare|%s|%s", val, conv->rec.my_gridsquare);
+							set_tagline(conv, "GRIDSQUARE");
+							tQSL_Error = TQSL_LOCATION_MISMATCH;
+							return 0;
+						}
 					}
 				}
 			}
-			if (!okgrid) {
-				if (conv->location_handling == TQSL_LOC_UPDATE) {
-					tqsl_setLocationField(conv->loc, "GRIDSQUARE", conv->rec.my_gridsquare);
-					conv->newstation = true;
-				} else {
-					if (val[0] == '\0') {           // If station location has an empty grid
-						tqsl_setLocationField(conv->loc, "GRIDSQUARE", conv->rec.my_gridsquare);
-						conv->newstation = true;
-					} else {
-						conv->rec_done = true;
-						snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "Gridsquare|%s|%s", val, conv->rec.my_gridsquare);
-						set_tagline(conv, "GRIDSQUARE");
-						tQSL_Error = TQSL_LOCATION_MISMATCH;
-						return 0;
-					}
-				}
-			}
-
 		}
 
 		switch (conv->dxcc) {
@@ -1727,7 +1734,6 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 				snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "MY_IOTA|%s", conv->rec.my_iota);
 				tQSL_Error = TQSL_INVALID_ADIF;
 				set_tagline(conv, "MY_IOTA");
-				tqslTrace("tqsl_getConverterGABBI", "my_iota error %s", tQSL_CustomError);
 				return 0;
 			}
 			if (check_station(conv, "IOTA", "MY_IOTA", conv->rec.my_iota, sizeof conv->rec.my_iota, "IOTA|%s|%s", false)) return 0;
@@ -1740,7 +1746,6 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 				conv->rec_done = true;
 				snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "US County State|%s|%s", conv->rec.my_cnty_state, locstate);
 				set_tagline(conv, "US_STATE");
-				tqslTrace("tqsl_getConverterGABBI", "us_state error %s", tQSL_CustomError);
 				tQSL_Error = TQSL_LOCATION_MISMATCH | TQSL_MSG_FLAGGED;
 				return 0;
 			}
@@ -1758,6 +1763,8 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 		return get_station_rec(conv);
 	}
 
+	if (conv->dupes_only)
+		conv->rec.do_not_sign = true;
 	const char *grec = tqsl_getGABBItCONTACTData(conv->certs[conv->cert_idx], conv->loc, &(conv->rec),
 		conv->loc_uid, signdata, sizeof(signdata));
 	if (conv->dupes_only || grec) {
@@ -1830,7 +1837,7 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 				// Station loc details like "CQZ: 5, GRIDSQUARE: FM18ju, ITUZ: 8, US_COUNTY: Fairfax, US_STATE: VA"
 
 				// If the same, it's just a dupe.
-				if (!strcmp(dupedata, stnloc)) {
+				if (!strcasecmp(dupedata, stnloc)) {
 					snprintf(tQSL_CustomError, sizeof tQSL_CustomError, "%s|%s", dupedata, stnloc);
 					free(dupedata);
 					return 0;
@@ -2080,8 +2087,8 @@ tqsl_getDuplicateRecords(tQSL_Converter convp, char *key, char *data, int keylen
 		fprintf(stderr, "SQL error in step: %s\n", sqlite3_errmsg(conv->seendb));
 		sqlite3_finalize(conv->bulk_read);
 		conv->bulk_read = NULL;
-       		return 1;
-    	}
+		return 1;
+	}
 	const unsigned char* result = sqlite3_column_text(conv->bulk_read, 1);
 	if (!result) {
 		tqsl_db_get_errstr(conv);
@@ -2123,7 +2130,7 @@ tqsl_getDuplicateRecordsV2(tQSL_Converter convp, char *key, char *data, int keyl
 		tQSL_Error = TQSL_DB_ERROR;
 		tQSL_Errno = errno;
 		return 1;
-    	}
+	}
 	const unsigned char* rkey = sqlite3_column_text(conv->bulk_read, 0);
 	if (!rkey) {
 		tqsl_db_get_errstr(conv);
