@@ -1,0 +1,35 @@
+--- a/src/openssl_cert.cpp
++++ b/src/openssl_cert.cpp
+@@ -1203,8 +1203,7 @@
+ 				tqslTrace("tqsl_selectCertificates", "error making new cert - %s", tqsl_openssl_error());
+ 				goto end;
+ 			}
+-			X509_up_ref(x);
+-			cp->cert = x;
++			cp->cert = X509_dup(x);
+ 			(*certlist)[i] = TQSL_OBJ_TO_API(cp);
+ 		}
+ 	} else {
+@@ -1321,8 +1320,7 @@
+ 				goto end;
+ 			}
+ 			if (cp->cert) X509_free(cp->cert);
+-			X509_up_ref(x);
+-			cp->cert = x;
++			cp->cert = X509_dup(x);
+ 			(*certlist)[i] = TQSL_OBJ_TO_API(cp);
+ 		}
+ 	}
+@@ -3908,10 +3906,8 @@
+ 				ok = 0;
+ 		}
+ 		/* If no check failed, copy this cert onto the new stack */
+-		if (ok) {
+-			X509_up_ref(x);
+-			sk_X509_push(newsk, x);
+-		}
++		if (ok)
++			sk_X509_push(newsk, X509_dup(x));
+ 	}
+ 	tqsl_free(cp);
+ 	return newsk;
