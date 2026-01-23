@@ -3,6 +3,11 @@ TQSLLIB changes
 
 2.6
 ---
+Accept ADX files (XML variant of ADIF).
+
+Correct handling of Finnish Kuntas - TQSL was looking at MY_STATE for
+only DXCC entity 5 (Aland) and not Finland (224) - Thanks DF2ET for reporting.
+
 Fix defect that was keeping MY_GRIDSQUARE from propagating to station
 locations that had empty gridsquare values.
 

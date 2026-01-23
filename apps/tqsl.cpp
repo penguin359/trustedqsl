@@ -216,6 +216,7 @@ static void exitNow(int status, bool quiet) {
 		wxLogMessage(msg);
 	} else {
 		fprintf(origStderr, "Final Status: %s(%d)\n", errors[stat], status);
+		fflush(origStderr);
 		tqslTrace(NULL, "Final Status: %s", errors[stat]);
 	}
 	exit(status);
@@ -794,6 +795,7 @@ void LogList::DoLogString(const wxChar *szString, time_t) {
 #else
 		fprintf(origStderr, "%ls\n", szString);
 #endif
+		fflush(origStderr);
 		return;
 	}
 	_logwin->AppendText(msg);
@@ -830,6 +832,7 @@ void LogStderr::DoLogString(const wxChar *szString, time_t) {
 #else
 	fprintf(origStderr, "%ls\n", szString);
 #endif
+	fflush(origStderr);
 	return;
 }
 
@@ -1167,7 +1170,7 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 	file_menu->Append(tm_f_edit, _("&Edit existing ADIF file..."));
 	file_menu->AppendSeparator();
 #ifdef __WXMAC__	// On Mac, Preferences not on File menu
-	file_menu->Append(tm_f_preferences, _("&Preferences..."));
+	file_menu->Append(tm_f_preferences, _("&Settings..."));
 #else
 	file_menu->Append(tm_f_preferences, _("Display or Modify &Preferences..."));
 #endif
@@ -1215,7 +1218,7 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h, bool checkUp
 
 	help_menu->Append(tm_h_update, _("Check for &Updates..."));
 	help_menu->AppendSeparator();
-	help_menu->Append(tm_h_sync, _("Synchronize upload data with LoTW..."));
+	help_menu->Append(tm_h_sync, _("Synchronize uploaded data with LoTW..."));
 	help_menu->AppendSeparator();
 
 	help_menu->Append(tm_h_about, _("&About"));
@@ -1661,7 +1664,7 @@ static wxString getAbout() {
 	msg+=wxT("\n\n\nTranslators:\n");
 	msg+=wxT("Catalan: Xavi, EA3W (SK) and Salva, EB3MA\n");
 	msg+=wxT("Chinese (Simplified): Caros, BH4TXN\n");
-	msg+=wxT("Chinese (Traditional): SZE-TO Wing, VR2UPU\n");
+	msg+=wxT("Chinese (Traditional): Lancer Koo, VR2VLP and SZE-TO Wing, VR2UPU\n");
 	msg+=wxT("Finnish: Juhani Tapaninen, OH8MXL\n");
 	msg+=wxT("French: Laurent Beugnet, F6GOX\n");
 	msg+=wxT("German: Andreas Rehberg, DF4WC\n");
@@ -2243,7 +2246,7 @@ restart:
 		bool allow = false;
 		config->Read(wxT("BadCalls"), &allow);
 		tqsl_setConverterAllowBadCall(logConv, allow);
-		tqsl_setConverterAllowDuplicates(logConv, allow_dupes || (signtype == TQSL_TEST_LOG));
+		tqsl_setConverterAllowDuplicates(logConv, allow_dupes);
 		config->Read(wxT("IgnoreSeconds"), &allow, DEFAULT_IGNORE_SECONDS);
 		tqsl_setConverterIgnoreSeconds(logConv, allow);
 		config->Read(wxT("IgnoreADIFCallsign"), &allow, DEFAULT_IGNORE_CALLSIGN);
@@ -2671,7 +2674,11 @@ MyFrame::ConvertLogFile(tQSL_Location loc, const wxString& infile, const wxStrin
 			}
 		}
 
-		tqsl_converterCommit(logConv);
+		if (compressed == TQSL_TEST_SIGNING) {
+			tqsl_converterRollBack(logConv);
+		} else {
+			tqsl_converterCommit(logConv);
+		}
 		tqsl_endConverter(&logConv);
 		unlock_db();
 
@@ -2714,10 +2721,17 @@ int MyFrame::UploadLogFile(tQSL_Location loc, const wxString& infile, bool compr
 
 	wxString tempname;
 	gzFile gout = 0;
+	wxString name, ext;
+	wxFileName::SplitPath(infile, 0, &name, &ext);
+
 #ifdef _WIN32
 	int fd = -1;
 	tempname = wxString::FromUTF8(tQSL_BaseDir);
-	tempname += wxT("\\TQSLupl.tmp");
+	if (compressed) {
+		tempname += wxT("\\") + name + wxT(".tq8");
+	} else {
+		tempname += wxT("\\") + name + wxT(".tq7");
+	}
 	wchar_t* lfn = utf8_to_wchar(tempname.ToUTF8());
 	fd = _wopen(lfn, _O_WRONLY |_O_CREAT|_O_BINARY, _S_IREAD|_S_IWRITE);
 	free_wchar(lfn);
@@ -2725,7 +2739,11 @@ int MyFrame::UploadLogFile(tQSL_Location loc, const wxString& infile, bool compr
 		gout = gzdopen(fd, "wb9");
 #else
 	tempname = wxString::FromUTF8(tQSL_BaseDir);
-	tempname += wxT("/TQSLupl.tmp");
+	if (compressed) {
+		tempname += wxT("/") + name + wxT(".tq8");
+	} else {
+		tempname += wxT("/") + name + wxT(".tq7");
+	}
 	gout = gzopen(tempname.ToUTF8(), "wb9");
 #endif
 	if (gout == NULL) {
@@ -2793,9 +2811,11 @@ int MyFrame::UploadLogFile(tQSL_Location loc, const wxString& infile, bool compr
 		tqslTrace("MyFrame::UploadLogFile", "Creating filename");
 		wxDateTime now = wxDateTime::Now().ToUTC();
 
-		wxString name, ext;
-		wxFileName::SplitPath(infile, 0, &name, &ext);
-		name += wxT(".tq8");
+		if (compressed)
+			name += wxT(".tq8");
+		else
+			name += wxT(".tq7");
+
 		tqslTrace("MyFrame::UploadLogFile", "file=%s", S(name));
 		//unicode mess. can't just use mb_str directly because it's a temp ptr
 		// and the curl form expects it to still be there during perform() so
@@ -2812,13 +2832,15 @@ int MyFrame::UploadLogFile(tQSL_Location loc, const wxString& infile, bool compr
 		wxString fileType(wxT("Log"));
 		tqslTrace("MyFrame::UploadLogFile", "About to call UploadFile");
 		int retval = UploadFile(tempname, filename, numrecs, fileType);
+		if (retval == 0) {
 #ifdef _WIN32
-		lfn = utf8_to_wchar(tempname.ToUTF8());
-		_wunlink(lfn);
-		free_wchar(lfn);
+			lfn = utf8_to_wchar(tempname.ToUTF8());
+			_wunlink(lfn);
+			free_wchar(lfn);
 #else
-		unlink(tempname.ToUTF8());
+			unlink(tempname.ToUTF8());
 #endif
+		}
 
 		tqslTrace("MyFrame::UploadLogFile", "UploadFile returns %d", retval);
 		if (retval == 0) {
@@ -2836,6 +2858,25 @@ int MyFrame::UploadLogFile(tQSL_Location loc, const wxString& infile, bool compr
 	}
 }
 
+static size_t
+tqsl_read_callback(char *buffer, size_t size, size_t nitems, void *arg) {
+	FILE *file = reinterpret_cast<FILE*>(arg);
+	size_t bytes_read = fread(buffer, size, nitems, file);
+#ifdef DEBUG
+	fprintf(curlLogFile, "upload: Read %ld bytes\n", bytes_read);
+#endif
+	return bytes_read;
+}
+
+static int
+tqsl_seek_callback(void *arg, curl_off_t offset, int origin) {
+	FILE *file = reinterpret_cast<FILE*>(arg);
+#ifdef DEBUG
+	fprintf(curlLogFile, "upload: Seeking to %ld\n", offset);
+#endif
+	return fseek(file, offset, origin) ? -1 : 0;
+}
+
 static CURL*
 tqsl_curl_init(const char *logTitle, const char *url, FILE **curlLogFile, bool newFile) {
 	tqslTrace("tqsl_curl_init", "title=%s url=%s newFile=%d", logTitle, url, newFile);
@@ -2848,10 +2889,6 @@ tqsl_curl_init(const char *logTitle, const char *url, FILE **curlLogFile, bool n
 #if defined(_WIN32)
 retry:
 #endif
-
-	if (!verifyCA) {
-		uri.Replace(wxT("https:"), wxT("http:"));
-	}
 
 	wxString filename = wxString::FromUTF8(tQSL_BaseDir);
 #ifdef _WIN32
@@ -2874,6 +2911,9 @@ retry:
 	//set up options
 	curl_easy_setopt(curlReq, CURLOPT_URL, (const char *)uri.ToUTF8());
 	curl_easy_setopt(curlReq, CURLOPT_USERAGENT, "tqsl/" TQSL_VERSION);
+	curl_easy_setopt(curlReq, CURLOPT_FOLLOWLOCATION, 1);	// Follow 301 redirects
+	// Fake User Agent for picky firewalls
+	curl_easy_setopt(curlReq, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36");
 
 #ifdef __WXMAC__
 	DocPaths docpaths(wxT("tqsl.app"));
@@ -2918,7 +2958,9 @@ retry:
 	wxString pType = config->Read(wxT("proxyType"), wxT(""));
 	config->SetPath(wxT("/"));
 
-	if (!enabled) return curlReq;	// No proxy defined
+	if (!enabled) {	// Proxy notenabled
+		return curlReq;
+	}
 
 	long port = strtol(pPort.ToUTF8(), NULL, 10);
 	if (port == 0 || pHost.IsEmpty())
@@ -2936,6 +2978,19 @@ retry:
 	return curlReq;
 }
 
+static void
+remove_proxy_env() {
+#ifdef _WIN32
+	_putenv("http_proxy=");
+	_putenv("https_proxy=");
+	_putenv("NO_PROXY=");
+#else
+	unsetenv("http_proxy");
+	unsetenv("https_proxy");
+	unsetenv("NO_PROXY");
+#endif
+}
+
 int MyFrame::UploadFile(const wxString& infile, const char* filename, int numrecs, const wxString& fileType) {
 	tqslTrace("MyFrame::UploadFile", "infile=%s, filename=%s, numrecs=%d, fileType=%s",  S(infile), filename, numrecs, S(fileType));
 
@@ -2951,24 +3006,48 @@ int MyFrame::UploadFile(const wxString& infile, const char* filename, int numrec
 	wxString uplStatus = config->Read(wxT("StatusRegex"), DEFAULT_UPL_STATUSRE);
 	wxString uplStatusSuccess = config->Read(wxT("StatusSuccess"), DEFAULT_UPL_STATUSOK).Lower();
 	wxString uplMessage = config->Read(wxT("MessageRegex"), DEFAULT_UPL_MESSAGERE);
-	bool uplVerifyCA;
-	config->Read(wxT("VerifyCA"), &uplVerifyCA, DEFAULT_UPL_VERIFYCA);
-	config->SetPath(wxT("/"));
 
 	// Copy the strings so they remain around
 	char *urlstr = strdup(uploadURL.ToUTF8());
 	char *cpUF = strdup(uploadField.ToUTF8());
+	char *inf = strdup(infile.ToUTF8());
 
 retry_upload:
 
-	curlReq = tqsl_curl_init("Upload Log", urlstr, &curlLogFile, true);
+	char title[1024];
+	snprintf(title, sizeof title, "Upload Log for %s sending to %s field %s", inf, urlstr, cpUF);
+	curlReq = tqsl_curl_init(title, urlstr, &curlLogFile, true);
 
 	if (!curlReq) {
 		wxLogMessage(_("Error: Could not upload file (CURL Init error)"));
 		free(urlstr);
 		free(cpUF);
+		free(inf);
 		return TQSL_EXIT_TQSL_ERROR;
 	}
+
+	FILE *logFile = NULL;
+#ifdef _WIN32
+	wchar_t* lfn = utf8_to_wchar(inf);
+	logFile = _wfopen(lfn, L"rb");
+	free_wchar(lfn);
+#else
+	logFile = fopen(inf, "rb");
+#endif
+	if (!logFile) {
+		wxLogMessage(_("Error: Could not open file %s: %m (CURL Init error)"), inf);
+		free(urlstr);
+		free(cpUF);
+		free(inf);
+		return TQSL_EXIT_TQSL_ERROR;
+	}
+
+	long fileSize;
+	fseek(logFile, 0, SEEK_END);
+	fileSize = ftell(logFile);
+	fseek(logFile, 0, SEEK_SET);
+
+	fprintf(curlLogFile, "File is %ld bytes long\n", fileSize);
 
 	//the following allow us to write our log and read the result
 
@@ -2976,7 +3055,7 @@ retry_upload:
 
 	curl_easy_setopt(curlReq, CURLOPT_WRITEFUNCTION, &FileUploadHandler::recv);
 	curl_easy_setopt(curlReq, CURLOPT_WRITEDATA, &handler);
-	curl_easy_setopt(curlReq, CURLOPT_SSL_VERIFYPEER, uplVerifyCA);
+	curl_easy_setopt(curlReq, CURLOPT_SSL_VERIFYPEER, verifyCA);
 
 	char errorbuf[CURL_ERROR_SIZE];
 	errorbuf[0] = '\0';
@@ -2986,10 +3065,25 @@ retry_upload:
 	curl_mimepart *part;
 
 	mime = curl_mime_init(curlReq);
+	if (!mime) {
+		wxLogMessage(_("Error: out of memory (CURL Init error)"));
+		free(urlstr);
+		free(cpUF);
+		free(inf);
+		return TQSL_EXIT_TQSL_ERROR;
+	}
 	part = curl_mime_addpart(mime);
-	curl_mime_filedata(part, infile.ToUTF8());
+	if (!part) {
+		wxLogMessage(_("Error: out of memory (CURL Init error)"));
+		free(urlstr);
+		free(cpUF);
+		free(inf);
+		return TQSL_EXIT_TQSL_ERROR;
+	}
+	curl_mime_data_cb(part, fileSize, tqsl_read_callback, tqsl_seek_callback, NULL, logFile);
 	curl_mime_name(part, cpUF);
 	curl_mime_filename(part, filename);
+	curl_mime_type(part, "application/octet-stream");
 
 	curl_easy_setopt(curlReq, CURLOPT_MIMEPOST, mime);
 
@@ -3024,6 +3118,7 @@ retry_upload:
 			upload->Destroy();
 			free(urlstr);
 			free(cpUF);
+			free(inf);
 			if (curlLogFile) {
 				fclose(curlLogFile);
 				curlLogFile = NULL;
@@ -3107,6 +3202,11 @@ retry_upload:
 			verifyCA = false;
 			goto retry_upload;
 		}
+		if (retval == CURLE_COULDNT_RESOLVE_PROXY) {
+			tqslTrace("MyFrame::UploadFile", "cURL Proxy error - disabling proxy and retrying");
+			remove_proxy_env();
+			goto retry_upload;
+		}
 		if (retval == CURLE_COULDNT_RESOLVE_HOST || retval == CURLE_COULDNT_CONNECT) {
 			wxLogMessage(_("%s: Unable to upload - either your Internet connection is down or LoTW is unreachable."), infile.c_str());
 			wxLogMessage(_("Please try uploading the %s later."), fileType.c_str());
@@ -3134,6 +3234,7 @@ retry_upload:
 	curl_mime_free(mime);
 	curl_easy_cleanup(curlReq);
 	curlReq = NULL;
+	fclose(logFile);
 
 	// If there's a GUI and we didn't successfully upload and weren't cancelled,
 	// ask the user if we should retry the upload.
@@ -3144,6 +3245,7 @@ retry_upload:
 
 	if (urlstr) free(urlstr);
 	if (cpUF) free (cpUF);
+	if (inf) free(inf);
 	if (curlLogFile) {
 		fclose(curlLogFile);
 		curlLogFile = NULL;
@@ -3566,6 +3668,11 @@ retry:
 			verifyCA = false;
 			goto retry;
 		}
+		if (retval == CURLE_COULDNT_RESOLVE_PROXY) {
+			tqslTrace("MyFrame::UploadFile", "cURL Proxy error - disabling proxy and retrying");
+			remove_proxy_env();
+			goto retry;
+		}
 		if (curlLogFile) {
 			fprintf(curlLogFile, "cURL Error during config file download: %s (%s)\n", curl_easy_strerror((CURLcode)retval), errorbuf);
 		}
@@ -3646,6 +3753,11 @@ retry:
 			verifyCA = false;
 			goto retry;
 		}
+		if (retval == CURLE_COULDNT_RESOLVE_PROXY) {
+			tqslTrace("MyFrame::UploadFile", "cURL Proxy error - disabling proxy and retrying");
+			remove_proxy_env();
+			goto retry;
+		}
 		if (curlLogFile) {
 			fprintf(curlLogFile, "cURL Error during file download: %s (%s)\n", curl_easy_strerror((CURLcode)retval), errorbuf);
 		}
@@ -3682,9 +3794,7 @@ tqsl_checkCertStatus(long serial, wxString& result) {
 	certCheckURL = certCheckURL + wxString::Format(wxT("%ld"), serial);
 	bool needToCleanUp = false;
 
-	if (!verifyCA) {
-		certCheckURL.Replace(wxT("https:"), wxT("http:"));
-	}
+
 	if (curlReq == NULL) {
 		needToCleanUp = true;
 		curlReq = tqsl_curl_init("checkCert", certCheckURL.ToUTF8(), &curlLogFile, false);
@@ -3694,6 +3804,7 @@ tqsl_checkCertStatus(long serial, wxString& result) {
 
 	FileUploadHandler handler;
 
+	curl_easy_setopt(curlReq, CURLOPT_SSL_VERIFYPEER, verifyCA);
 	curl_easy_setopt(curlReq, CURLOPT_WRITEFUNCTION, &FileUploadHandler::recv);
 	curl_easy_setopt(curlReq, CURLOPT_WRITEDATA, &handler);
 
@@ -4050,15 +4161,11 @@ MyFrame::DoCheckForUpdates(bool silent, bool noGUI) {
 
 	bool needToCleanUp = false;
 retry:
-	if (!verifyCA) {
-		updateURL.Replace(wxT("https:"), wxT("http:"));
-	}
-
 	if (curlReq) {
 		curl_easy_setopt(curlReq, CURLOPT_URL, (const char *)updateURL.ToUTF8());
 	} else {
 		needToCleanUp = true;
-		curlReq = tqsl_curl_init("Version Check Log", (const char*)updateURL.ToUTF8(), &curlLogFile, false);
+		curlReq = tqsl_curl_init("Version Check Log", (const char*)updateURL.ToUTF8(), &curlLogFile, true);
 	}
 
 	//the following allow us to analyze our file
@@ -4080,6 +4187,7 @@ retry:
 
 	char errorbuf[CURL_ERROR_SIZE];
 	curl_easy_setopt(curlReq, CURLOPT_ERRORBUFFER, errorbuf);
+	curl_easy_setopt(curlReq, CURLOPT_SSL_VERIFYPEER, verifyCA);
 
 	tqslTrace("MyFrame::DoCheckForUpdates", "calling curl_easy_perform");
 	int retval = curl_easy_perform(curlReq);
@@ -4200,6 +4308,11 @@ retry:
 			verifyCA = false;
 			goto retry;
 		}
+		if (retval == CURLE_COULDNT_RESOLVE_PROXY) {
+			tqslTrace("MyFrame::UploadFile", "cURL Proxy error - disabling proxy and retrying");
+			remove_proxy_env();
+			goto retry;
+		}
 		if (curlLogFile) {
 			fprintf(curlLogFile, "cURL Error during program revision check: %s (%s)\n", curl_easy_strerror((CURLcode)retval), errorbuf);
 		}
@@ -4294,7 +4407,7 @@ void MyFrame::DoLoTWSync(wxCommandEvent&) {
 	passwordEncode(pw);
 	wxString url = wxString::Format(wxT("https://lotw.arrl.org/lotwuser/lotwreport.adi?qso_query=1&login=%s&password=%s&qso_qsl=no&qso_mydetail=yes&qso_withown=yes&qso_qslsince=1900-01-01&qso_qsorxsince=1900-01-01"), un.c_str(), pw.c_str());
 
-	curlReq = tqsl_curl_init("LoTW QSOs Download Log", (const char *)url.ToUTF8(), &curlLogFile, false);
+	curlReq = tqsl_curl_init("LoTW QSOs Download Log", (const char *)url.ToUTF8(), &curlLogFile, true);
 
 	frame->logwin->AppendText(_("Retrieving your QSO details from LoTW. Please be patient, this may take some time.\n"));
 	wxSafeYield(this);
@@ -5456,6 +5569,9 @@ TQSLConfig::xml_restore_end(void *data, const XML_Char *name) {
 		tqslTrace("TQSLConfig::xml_restore_end", "Completed merging station locations");
 	} else if (strcmp(name, "TQSLSettings") == 0) {
 		loader->config->Flush(false);
+	} else if (strcmp(name, "DupeDb") == 0) {
+		check_tqsl_error(tqsl_converterCommit(loader->conv));
+		check_tqsl_error(tqsl_endConverter(&loader->conv));
 	}
 	loader->elementBody = wxT("");
 }
@@ -6065,8 +6181,9 @@ QSLApp::OnInit() {
 		{ wxCMD_LINE_SWITCH, arg("v"), arg("version"),  i18narg("Display the version information and exit") },
 		{ wxCMD_LINE_SWITCH, arg("w"), arg("wipe"),	i18narg("Wipe the TQSL uploads database") },
 		{ wxCMD_LINE_SWITCH, arg("x"), arg("batch"),	i18narg("Exit after processing log (otherwise start normally)") },
-		// not used - "y", "z"
+		// not used - "y"
 
+		{ wxCMD_LINE_SWITCH, arg("z"), arg("test-sign"), i18narg("Test sign a log") },
 		{ wxCMD_LINE_PARAM,  NULL, NULL,		i18narg("Input ADIF or Cabrillo log file to sign"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_NONE }
 	};
@@ -6535,8 +6652,11 @@ QSLApp::OnInit() {
 				return true;
 		}
 	} else {
+		int signType = TQSL_COMPRESSED_FILE;
+		if (parser.Found(wxT("z")))
+			signType = TQSL_TEST_SIGNING;
 		try {
-			int val = frame->ConvertLogFile(loc, infile, path, TQSL_COMPRESSED_FILE, suppressdate, startdate, enddate, action, logverify, password, defcall);
+			int val = frame->ConvertLogFile(loc, infile, path, signType, suppressdate, startdate, enddate, action, logverify, password, defcall);
 			if (quiet)
 				exitNow(val, quiet);
 			else
@@ -6972,7 +7092,7 @@ void MyFrame::CRQWizard(wxCommandEvent& event) {
 #endif
 		} else {
 			// Where to put it?
-			wxString wildcard = _("tQSL Cert Request files (*.");
+			wxString wildcard = _("TQSL Cert Request files (*.");
 			wildcard += wxString::FromUTF8(TQSL_CRQ_FILE_EXT ")|*." TQSL_CRQ_FILE_EXT);
 			wildcard += _("|All files (") + wxString::FromUTF8(ALLFILESWILD ")|" ALLFILESWILD);
 			file = wxFileSelector(_("Save request"), wxT(""), file, wxT(TQSL_CRQ_FILE_EXT), wildcard,
@@ -7013,7 +7133,7 @@ void MyFrame::CRQWizard(wxCommandEvent& event) {
 					wxLogError(_("Your certificate request did not upload properly."));
 					if (wxMessageBox(_("Your upload appears to have failed.\nDo you want to save this request for uploading later?"), _("Retry?"), wxYES_NO | wxICON_QUESTION, this) == wxYES) {
 						// Where to put it?
-						wxString wildcard = _("tQSL Cert Request files (*.");
+						wxString wildcard = _("TQSL Cert Request files (*.");
 						wildcard += wxString::FromUTF8(TQSL_CRQ_FILE_EXT ")|*." TQSL_CRQ_FILE_EXT);
 						wildcard += _("|All files (") + wxString::FromUTF8(ALLFILESWILD ")|" ALLFILESWILD);
 						file = wxFileSelector(_("Save request"), wxT(""), file, wxT(TQSL_CRQ_FILE_EXT), wildcard,

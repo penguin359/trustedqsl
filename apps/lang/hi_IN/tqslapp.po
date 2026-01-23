@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TQSL V2.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-16 18:01-0500\n"
-"PO-Revision-Date: 2025-02-26 23:34+0530\n"
+"POT-Creation-Date: 2025-11-17 14:41-0500\n"
+"PO-Revision-Date: 2025-11-25 22:36+0530\n"
 "Last-Translator: Manmohan Bhagat\n"
 "Language-Team: \n"
 "Language: hi_IN\n"
@@ -16,114 +16,115 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.8\n"
 
-#: certtree.cpp:80 certtree.cpp:110 tqsl.cpp:1548 tqsl.cpp:7099
+#: certtree.cpp:84 certtree.cpp:117 tqsl.cpp:1561 tqsl.cpp:7398
 msgid "Callsign Certificates"
 msgstr "कॉल चिन्ह प्रमाणपत्र"
 
-#: certtree.cpp:113
+#: certtree.cpp:120
 msgid "Error while accessing certificate store"
 msgstr "प्रमाणपत्र भंडार तक पहुँचने में त्रुटि |"
 
-#: certtree.cpp:119
+#: certtree.cpp:131
 msgid "Error parsing certificate for issuer"
 msgstr "प्रदाता के प्रमाणपत्र जाँचने मे त्रुटि"
 
-#: certtree.cpp:124
+#: certtree.cpp:136
 msgid "Error parsing certificate for call sign"
 msgstr "कॉल चिन्ह के प्रमाणपत्र जाँचने में त्रुटि"
 
-#: certtree.cpp:131
+#: certtree.cpp:143
 msgid "Error parsing certificate for DXCC entity"
 msgstr "DXCC इकाई के प्रमाणपत्र जाँचने में त्रुटि"
 
-#: certtree.cpp:186 certtree.cpp:252
+#: certtree.cpp:203 certtree.cpp:268
 msgid "Active, usable certificates"
 msgstr "सक्रिय, उपयोग करने योग्य प्रमाण पत्र"
 
-#: certtree.cpp:202
+#: certtree.cpp:217
 msgid "Unusable: Missing Private Key"
 msgstr "अनुपयोगी: निजी कुंजी गुम है"
 
-#: certtree.cpp:218
+#: certtree.cpp:233
 msgid "Incomplete Certificates - requires a matching TQ6"
 msgstr "अपूर्ण प्रमाणपत्र - मिलान वाले TQ6 की आवश्यकता है"
 
-#: certtree.cpp:232
+#: certtree.cpp:247
 msgid "Certificates replaced with a newer one"
 msgstr "प्रमाणपत्र एक नए प्रमाणपत्र के साथ प्रतिस्थापित"
 
-#: certtree.cpp:240
+#: certtree.cpp:255
 msgid "Certificates that have expired"
 msgstr "वे प्रमाण पत्र जिनकी समय सीमा समाप्त हो चुकी है"
 
-#: crqwiz.cpp:45
+#: crqwiz.cpp:46
 msgid "This callsign replaces my existing callsign"
 msgstr "यह कॉलसाइन मेरे मौजूदा कॉलसाइन की जगह लेता है"
 
-#: crqwiz.cpp:46
+#: crqwiz.cpp:47
 msgid "This is my former callsign"
 msgstr "यह मेरा पुराना कॉलसाइन है"
 
-#: crqwiz.cpp:47
+#: crqwiz.cpp:48
 msgid "I am the QSL manager for this callsign"
 msgstr "मैं इस कॉलसाइन के लिए QSL प्रबंधक हूं"
 
-#: crqwiz.cpp:48
+#: crqwiz.cpp:49
 msgid "This is a club callsign"
 msgstr "यह एक क्लब कॉलसाइन है"
 
-#: crqwiz.cpp:49
+#: crqwiz.cpp:50
 msgid "This is a DXpedition callsign"
 msgstr "यह एक DXpedition कॉलसाइन है"
 
-#: crqwiz.cpp:50
+#: crqwiz.cpp:51
 msgid "This is a special event callsign"
 msgstr "यह एक विशेष इवेंट कॉलसाइन है"
 
-#: crqwiz.cpp:51
+#: crqwiz.cpp:52
 msgid "None of these apply"
 msgstr "इनमें से कोई भी लागू नहीं होता"
 
-#: crqwiz.cpp:263
+#: crqwiz.cpp:330
 msgid "This will create a new Callsign Certificate request file."
 msgstr "यह एक नया कॉल चिन्ह प्रमाणपत्र की अनुरोध फ़ाइल बनाएगा."
 
-#: crqwiz.cpp:265
+#: crqwiz.cpp:332
 msgid "Once you supply the requested information and the request file has been created, you must send the request file to the certificate issuer."
 msgstr "एक बार जब आप अनुरोधित जानकारी की आपूर्ति करते हैं और अनुरोध फ़ाइल बनती है, तो आपको प्रमाणपत्र जारीकर्ता को अनुरोध फाइल आवश्यक रूप से भेजना होगा."
 
-#: crqwiz.cpp:272
+#: crqwiz.cpp:339
 msgid "Certificate Issuer:"
 msgstr "प्रमाणपत्र प्रदाता:"
 
-#: crqwiz.cpp:283 crqwiz.cpp:1665 crqwiz.cpp:1787 crqwiz.cpp:1841 crqwiz.cpp:1876 loadcertwiz.cpp:130 loadcertwiz.cpp:305 loadcertwiz.cpp:380 loadcertwiz.cpp:382 tqsl.cpp:3009 tqsl.cpp:3472 tqsl.cpp:3488 tqsl.cpp:3552 tqsl.cpp:3568 tqsl.cpp:5714 tqsl.cpp:7504 tqsl.cpp:7722 tqsl_prefs.cpp:1046 tqsl_prefs.cpp:1053
-#: tqslwiz.cpp:1267 tqslwiz.cpp:1374
+#: crqwiz.cpp:350 crqwiz.cpp:1817 crqwiz.cpp:1939 crqwiz.cpp:1993 crqwiz.cpp:2028 loadcertwiz.cpp:130 loadcertwiz.cpp:305 loadcertwiz.cpp:380 loadcertwiz.cpp:382
+#: tqsl.cpp:3146 tqsl.cpp:3612 tqsl.cpp:3628 tqsl.cpp:3692 tqsl.cpp:3708 tqsl.cpp:4340 tqsl.cpp:4388 tqsl.cpp:4406 tqsl.cpp:4412 tqsl.cpp:4420 tqsl.cpp:4432
+#: tqsl.cpp:4438 tqsl.cpp:5996 tqsl.cpp:7801 tqsl.cpp:8019 tqsl_prefs.cpp:1084 tqsl_prefs.cpp:1091 tqslwiz.cpp:1273 tqslwiz.cpp:1380
 msgid "Error"
 msgstr "त्रुटि"
 
-#: crqwiz.cpp:318
+#: crqwiz.cpp:385
 msgid "Email: "
 msgstr "ईमेल "
 
-#: crqwiz.cpp:320
+#: crqwiz.cpp:387
 msgid "URL: "
 msgstr "URL "
 
-#: crqwiz.cpp:365
+#: crqwiz.cpp:432
 msgid "DXCC entity:"
 msgstr "DXCC इकाई :"
 
-#: crqwiz.cpp:369
+#: crqwiz.cpp:436
 msgid "Call sign:"
 msgstr "कॉल चिन्ह:"
 
-#: crqwiz.cpp:448
+#: crqwiz.cpp:519
 msgid "Date of the first QSO you made or will make using this callsign:"
 msgstr "इस कॉल चिन्ह के द्वारा वह दिनांक जब आपका पहला QSO हुआ है अथवा भविष्य में होगा :"
 
-#: crqwiz.cpp:502
+#: crqwiz.cpp:572
 msgid ""
 "Date of the last QSO you made or will make using this callsign:\n"
 "(Leave this date blank if this is still your valid callsign.)"
@@ -131,177 +132,189 @@ msgstr ""
 "वह दिनांक जब आपका पहला QSO हुआ है अथवा भविष्य में होगा \n"
 "("
 
-#: crqwiz.cpp:582
+#: crqwiz.cpp:652
 msgid "Zip/Postal"
 msgstr "पिन कोड"
 
-#: crqwiz.cpp:587 stationdial.cpp:70
+#: crqwiz.cpp:657 stationdial.cpp:70
 msgid "Name"
 msgstr "नाम"
 
-#: crqwiz.cpp:613
+#: crqwiz.cpp:683
 msgid "Address"
 msgstr "पता"
 
-#: crqwiz.cpp:643
+#: crqwiz.cpp:713
 msgid "City"
 msgstr "नगर अथवा शहर"
 
-#: crqwiz.cpp:658 stationdial.cpp:362 stationdial.cpp:373
+#: crqwiz.cpp:728 stationdial.cpp:362 stationdial.cpp:373
 msgid "State"
 msgstr "राज्य"
 
-#: crqwiz.cpp:684 crqwiz.cpp:687
+#: crqwiz.cpp:754 crqwiz.cpp:757
 msgid "Country"
 msgstr "देश"
 
-#: crqwiz.cpp:786
+#: crqwiz.cpp:856
 msgid "Your e-mail address"
 msgstr "आपका ईमेल"
 
-#: crqwiz.cpp:801
+#: crqwiz.cpp:871
 msgid "Note: The e-mail address you provide here is the address to which the issued Certificate will be sent. Make sure it's the correct address!"
 msgstr "टिप्पणी: यहाँ आपके द्वारा दिये गए ईमेल पर ही जारी किया हुआ प्रमाणपत्र प्रेषित किया जाएगा। ईमेल पता सही है यह कृपया सुनिश्चित करे!"
 
-#: crqwiz.cpp:847
-msgid "You may protect this Callsign Certificate using a passphrase. If you are using a computer system that is shared with others, you should specify a passphrase to protect this Callsign Certificate. However, if you are using a computer in a private residence, no passphrase need be specified."
-msgstr "आप पासफ्रेज़ का उपयोग करके इस कॉलसाइन प्रमाण पत्र की रक्षा कर सकते हैं। यदि यह कंप्यूटर सिस्टम उपयोग कर रहे हैं जिसे दूसरों के साथ साझा किया जाता है, तो आपको इस कॉलसाइन प्रमाण पत्र की रक्षा के लिए एक पासफ्रेज़ निर्दिष्ट करना चाहिए। हालांकि, यदि आप एक निजी निवास में कंप्यूटर का उपयोग कर रहे हैं, तो कोई पासफ्रेज़ की आवश्यकता नहीं है."
+#: crqwiz.cpp:960
+msgid ""
+"You may protect this Callsign Certificate using a passphrase. If you are using a computer system that is shared with others, you should specify a passphrase to "
+"protect this Callsign Certificate. However, if you are using a computer in a private residence, no passphrase need be specified."
+msgstr ""
+"आप पासफ्रेज़ का उपयोग करके इस कॉलसाइन प्रमाण पत्र की रक्षा कर सकते हैं। यदि यह कंप्यूटर सिस्टम उपयोग कर रहे हैं जिसे दूसरों के साथ साझा किया जाता है, तो आपको इस कॉलसाइन प्रमाण पत्र की रक्षा "
+"के लिए एक पासफ्रेज़ निर्दिष्ट करना चाहिए। हालांकि, यदि आप एक निजी निवास में कंप्यूटर का उपयोग कर रहे हैं, तो कोई पासफ्रेज़ की आवश्यकता नहीं है."
 
-#: crqwiz.cpp:852 crqwiz.cpp:881
+#: crqwiz.cpp:965 crqwiz.cpp:994
 msgid "Leave the passphrase blank and click 'Next' unless you want to use a passphrase."
 msgstr "पासफ्रेज़ खाली छोड़ दें और 'नेक्स्ट' पर क्लिक करें जब तक कि आप पासफ्रेज़ का उपयोग नहीं करना चाहते हैं."
 
-#: crqwiz.cpp:856
+#: crqwiz.cpp:969
 msgid "Passphrase:"
 msgstr "पासफ्रेज़:"
 
-#: crqwiz.cpp:862
+#: crqwiz.cpp:975
 msgid "Enter the passphrase again for verification:"
 msgstr "सत्यापन के लिए फिर से पासफ्रेज़ दर्ज करें:"
 
-#: crqwiz.cpp:868
+#: crqwiz.cpp:981
 msgid "DO NOT lose the passphrase you choose! You will be unable to use the Certificate without this passphrase!"
 msgstr "इस पासफ्रेज़ को भूले नहीं। अन्यथा आप इस प्रमाणपत्र का उपयोग नहीं कर सकेंगे !"
 
-#: crqwiz.cpp:886
+#: crqwiz.cpp:1026
 msgid "Leave the passphrase blank and click 'Finish' unless you want to use a passphrase."
 msgstr "पासफ्रेज़ को खाली छोड़ दें और 'फिनिश' पर क्लिक करें जब तक कि आप पासफ्रेज़ का उपयोग नहीं करना चाहते हैं."
 
-#: crqwiz.cpp:917
+#: crqwiz.cpp:1057
 msgid "What is this Callsign Certificate for?"
 msgstr "यह कॉलसाइन प्रमाणपत्र किस लिए है?"
 
-#: crqwiz.cpp:1007
-msgid "Since you have no Callsign Certificates, you must submit an 'Unsigned' certificate request. This will allow you to create your initial Callsign Certificate for LoTW use. Click 'Finish' to complete this Callsign Certificate request."
-msgstr "चूँकि आपके पास कोई कॉलसाइन प्रमाणपत्र नहीं है, इसलिए आपको 'अहस्ताक्षरित' प्रमाणपत्र अनुरोध सबमिट करना होगा। यह आपको LoTW उपयोग के लिए अपना प्रारंभिक कॉलसाइन प्रमाणपत्र बनाने की अनुमति देगा। इस कॉलसाइन प्रमाणपत्र अनुरोध को पूरा करने के लिए 'समाप्त करें' पर क्लिक करें।"
+#: crqwiz.cpp:1147
+msgid ""
+"Since you have no Callsign Certificates, you must submit an 'Unsigned' certificate request. This will allow you to create your initial Callsign Certificate for LoTW "
+"use. Click 'Finish' to complete this Callsign Certificate request."
+msgstr ""
+"चूँकि आपके पास कोई कॉलसाइन प्रमाणपत्र नहीं है, इसलिए आपको 'अहस्ताक्षरित' प्रमाणपत्र अनुरोध सबमिट करना होगा। यह आपको LoTW उपयोग के लिए अपना प्रारंभिक कॉलसाइन प्रमाणपत्र बनाने की अनुमति "
+"देगा। इस कॉलसाइन प्रमाणपत्र अनुरोध को पूरा करने के लिए 'समाप्त करें' पर क्लिक करें।"
 
-#: crqwiz.cpp:1025
+#: crqwiz.cpp:1165
 msgid "This Callsign Certificate request requires approval using an existing Callsign Certificate."
 msgstr "इस कॉलसाइन प्रमाणपत्र अनुरोध के लिए मौजूदा कॉलसाइन प्रमाणपत्र का उपयोग करके अनुमोदन की आवश्यकता है।"
 
-#: crqwiz.cpp:1028
+#: crqwiz.cpp:1168
 msgid "Is this new certificate for a callsign where you already have a LoTW account, and you want the QSOs for this call to be added to an existing LoTW account? "
 msgstr "क्या यह नया प्रमाणपत्र उस कॉलसाइन के लिए है जहां आपके पास पहले से ही एक LoTW खाता है, और आप चाहते हैं कि इस कॉल के लिए QSOs को मौजूदा LoTW खाते में जोड़ा जाए? "
 
-#: crqwiz.cpp:1030
+#: crqwiz.cpp:1170
 msgid "If so, choose a callsign below for the primary LoTW account. If not, click 'Finish', and a new LoTW account will be set up for these QSOs."
 msgstr "यदि ऐसा है, तो प्राथमिक LoTW खाते के लिए नीचे एक कॉलसाइन चुनें। यदि नहीं, तो 'समाप्त करें' पर क्लिक करें, और इन QSO के लिए एक नया LoTW खाता सेट अप किया जाएगा।"
 
-#: crqwiz.cpp:1033
+#: crqwiz.cpp:1173
 msgid "CAUTION: Mixing QSOs for unrelated callsigns into one LoTW account can cause issues with handling awards."
 msgstr "सावधानी: असंबंधित कॉलसाइन के लिए QSO को एक LoTW खाते में मिलाने से पुरस्कारों को संभालने में समस्याएँ पैदा हो सकती हैं।"
 
-#: crqwiz.cpp:1126
+#: crqwiz.cpp:1269
 #, c-format
 msgid "The callsign is too long. Only %d characters are allowed."
 msgstr "कॉलसाइन बहुत लंबा है। केवल %d अक्षरों की अनुमति है."
 
-#: crqwiz.cpp:1223
+#: crqwiz.cpp:1375
 msgid "You must enter a valid call sign."
 msgstr "आपको एक वैद्य कॉल चिन्ह को प्रविष्ट करना होगा."
 
-#: crqwiz.cpp:1326
+#: crqwiz.cpp:1474
 msgid "You must select a DXCC entity."
 msgstr "आपको एक DXCC इकाई का चयन करना आवश्यक है."
 
-#: crqwiz.cpp:1357
+#: crqwiz.cpp:1507
 msgid "QSO begin date: You must choose proper values for Year, Month and Day."
 msgstr "QSO की आरंभ तिथि: यहाँ आपको वर्ष, माह, दिन का उचित चयन करना होगा."
 
-#: crqwiz.cpp:1361
+#: crqwiz.cpp:1511
 msgid "QSO end date: You must either choose proper values for Year, Month and Day or leave all three blank."
 msgstr "QSO की समाप्ती तिथि: यहाँ आपको वर्ष, माह, दिन का उचित चयन करना होगा अथवा इन तीनों को रिक्त रखें."
 
-#: crqwiz.cpp:1366
+#: crqwiz.cpp:1516
 msgid "QSO end date cannot be before QSO begin date."
 msgstr "QSO की समाप्ती तिथि कभी भी QSO की आरंभ तिथि से पहले नहीं हो सकती."
 
-#: crqwiz.cpp:1398
+#: crqwiz.cpp:1548
 msgid "The date of your first QSO is before the first valid date (%hs) of the selected DXCC Entity %hs"
 msgstr "आपके पहले QSO की तारीख चयनित DXCC इकाई (%2$hs) की पहली वैध तारीख (%1$hs) से पहले की है"
 
-#: crqwiz.cpp:1402
+#: crqwiz.cpp:1552
 msgid "The date of your first QSO is after the last valid date (%hs) of the selected DXCC Entity %hs"
 msgstr "आपके पहले QSO की तारीख चयनित DXCC इकाई %2$hs की अंतिम वैध तारीख (%1$hs) से बाद की है"
 
-#: crqwiz.cpp:1406
+#: crqwiz.cpp:1556
 msgid "The date of your last QSO is before the first valid date (%hs) of the selected DXCC Entity %hs"
 msgstr "आपके अंतिम QSO की तारीख चयनित DXCC इकाई %2$hs की पहली वैध तारीख (%1$hs) से पहले की है"
 
-#: crqwiz.cpp:1410
+#: crqwiz.cpp:1560
 msgid "The date of your last QSO is after the last valid date (%hs) of the selected DXCC Entity %hs"
 msgstr "आपके अंतिम QSO की तारीख चयनित DXCC इकाई %2$hs की अंतिम वैध तारीख (%1$hs) से बाद की है"
 
-#: crqwiz.cpp:1433
+#: crqwiz.cpp:1583
 msgid "US 1x1 callsigns must start with W, K, or N"
 msgstr "अमेरिकी 1x1 कॉलसाइन W, K, या N से शुरू होने चाहिए"
 
-#: crqwiz.cpp:1437
+#: crqwiz.cpp:1587
 msgid "US 1x1 callsigns must have a number as the second character"
 msgstr "अमेरिकी 1x1 कॉलसाइन में दूसरे अक्षर के रूप में संख्या होनी चाहिए"
 
-#: crqwiz.cpp:1441
+#: crqwiz.cpp:1591
 msgid "US 1x1 callsigns must end in letters A-Z excluding 'X'"
 msgstr "अमेरिकी 1x1 कॉलसाइन का अंत 'X' को छोड़कर A-Z अक्षरों में होना चाहिए"
 
-#: crqwiz.cpp:1447
+#: crqwiz.cpp:1597
 msgid "US 1x1 callsign requests must provide an end date"
 msgstr "यूएस 1x1 कॉलसाइन अनुरोधों में अंतिम तिथि अवश्य दी जानी चाहिए"
 
 #. TRANSLATORS: first argument is callsign (%s), second is the related DXCC entity name (%hs)
-#: crqwiz.cpp:1492
+#: crqwiz.cpp:1641
 msgid "You have an overlapping Certificate for %s (DXCC=%hs) having QSO dates: "
 msgstr "आपके पास एक अतिव्यापी(overlapping) %s (DXCC=%hs) प्रमाणपत्र है जिसमे QSO तिथि है: "
 
 #. TRANSLATORS: here "to" separates two dates in a date range
-#: crqwiz.cpp:1494
+#: crqwiz.cpp:1643
 msgid " to "
-msgstr " से "
+msgstr " तक "
 
-#: crqwiz.cpp:1503
+#: crqwiz.cpp:1655
 #, c-format
 msgid "You have already requested a Callsign Certificate for %s and can not request another until that request has been processed by LoTW Staff."
 msgstr "आप पहले ही %s के लिए कॉल चिन्ह प्रमाणपत्र निवेदन कर चुके है एवं आप अगला निवेदन तब तक नहीं कर सकते जब तक आपके पहले निवेदन पर LoTW कार्यकर्ता द्वारा कार्यवाही नहीं हो जाती."
 
-#: crqwiz.cpp:1505 crqwiz.cpp:1545
+#: crqwiz.cpp:1657 crqwiz.cpp:1697
 msgid "Please wait until you receive an e-mail bearing your requested Callsign Certificate."
 msgstr "जब तक आपको एक ईमेल आपके द्वारा निवेदित किये हुए कॉल चिन्ह प्रमाणपत्र के साथ नहीं मिलता, कृपया प्रतीक्षा करें."
 
-#: crqwiz.cpp:1507
+#: crqwiz.cpp:1659
 #, c-format
 msgid "If you are sure that the earlier request is now invalid you should delete the pending Callsign Certificate for %s."
 msgstr "यदि आप सुनिश्चित है की आपकी पहला निवेदन अब अमान्य है तो आप को लंबित %s कॉल चिन्ह प्रमाणपत्र को हटा देना चाहिए."
 
-#: crqwiz.cpp:1543
+#: crqwiz.cpp:1695
 #, c-format
-msgid "You have already requested more than three Callsign Certificates for %s in the past 24 hours. You should submit a request only once, then wait for that request to be processed by LoTW Staff. This may take several business days."
-msgstr "आपने पिछले 24 घंटों में %s के लिए तीन से ज़्यादा कॉलसाइन प्रमाणपत्रों का अनुरोध किया है। आपको सिर्फ़ एक बार अनुरोध सबमिट करना चाहिए, फिर LoTW स्टाफ़ द्वारा उस अनुरोध के संसाधित होने का इंतज़ार करना चाहिए। इसमें कई व्यावसायिक दिन लग सकते हैं।"
+msgid ""
+"You have already requested more than three Callsign Certificates for %s in the past 24 hours. You should submit a request only once, then wait for that request to be "
+"processed by LoTW Staff. This may take several business days."
+msgstr ""
+"आपने पिछले 24 घंटों में %s के लिए तीन से ज़्यादा कॉलसाइन प्रमाणपत्रों का अनुरोध किया है। आपको सिर्फ़ एक बार अनुरोध सबमिट करना चाहिए, फिर LoTW स्टाफ़ द्वारा उस अनुरोध के संसाधित होने का इंतज़ार "
+"करना चाहिए। इसमें कई व्यावसायिक दिन लग सकते हैं।"
 
-#: crqwiz.cpp:1639
+#: crqwiz.cpp:1791
 msgid "You cannot request a Callsign Certificate for a former callsign unless you hold a valid Callsign Certificate to be used to verify that request."
 msgstr "आप किसी पूर्व कॉलसाइन के लिए कॉलसाइन प्रमाणपत्र का अनुरोध तब तक नहीं कर सकते, जब तक कि आपके पास उस अनुरोध को सत्यापित करने के लिए वैध कॉलसाइन प्रमाणपत्र न हो।"
 
-#: crqwiz.cpp:1644
+#: crqwiz.cpp:1796
 #, c-format
 msgid ""
 "The callsign %s is not currently registered in the FCC ULS database.\n"
@@ -310,73 +323,91 @@ msgstr ""
 "कॉलसाइन %s वर्तमान में FCC ULS डेटाबेस में पंजीकृत नहीं है।\n"
 "यदि यह एक नया पंजीकृत कॉल है, तो आपको इसके वैध होने के लिए कम से कम एक व्यावसायिक दिन प्रतीक्षा करनी होगी। कृपया वर्तमान में मान्य कॉलसाइन दर्ज करें।"
 
-#: crqwiz.cpp:1654
+#: crqwiz.cpp:1806
 msgid "If you are using a US callsign outside of the US persuant to CEPT, IARP or other Reciprocity arrangements, FCC rules require you to be a US Citizen."
 msgstr "यदि आप CEPT, IARP या अन्य पारस्परिक व्यवस्थाओं के तहत अमेरिका के बाहर अमेरिकी कॉलसाइन का उपयोग कर रहे हैं, तो FCC नियमों के अनुसार आपका अमेरिकी नागरिक होना आवश्यक है।"
 
-#: crqwiz.cpp:1654 crqwiz.cpp:1706 loadcertwiz.cpp:218 tqsl.cpp:6234 tqsl.cpp:7050 tqsl.cpp:7178 tqsl_prefs.cpp:448
+#: crqwiz.cpp:1806 crqwiz.cpp:1858 loadcertwiz.cpp:218 tqsl.cpp:2037 tqsl.cpp:6535 tqsl.cpp:7349 tqsl.cpp:7477 tqsl_prefs.cpp:481 tqslwiz.cpp:112
 msgid "Warning"
 msgstr "चेतावनी"
 
-#: crqwiz.cpp:1670
-msgid "You cannot select DXCC Entity NONE as you must sign any request for entity NONE and you have no valid Callsign Certificates that you can use to sign this request."
-msgstr "आप \"कोई नहीं\" DXCC इकाई का चयन नहीं कर सकते क्योंकि आपको इकाई \"कोई नहीं\" के लिए अनुरोध हस्ताक्षरित अनिवार्य है एवं आपके पास कोई भी वैद्य कॉल चिन्ह प्रमाणपत्र नहीं है जिससे आप इस अनुरोध को हस्ताक्षरित कर सकें."
+#: crqwiz.cpp:1822
+msgid ""
+"You cannot select DXCC Entity NONE as you must sign any request for entity NONE and you have no valid Callsign Certificates that you can use to sign this request."
+msgstr ""
+"आप \"कोई नहीं\" DXCC इकाई का चयन नहीं कर सकते क्योंकि आपको इकाई \"कोई नहीं\" के लिए अनुरोध हस्ताक्षरित अनिवार्य है एवं आपके पास कोई भी वैद्य कॉल चिन्ह प्रमाणपत्र नहीं है जिससे आप इस अनुरोध "
+"को हस्ताक्षरित कर सकें."
 
-#: crqwiz.cpp:1671 crqwiz.cpp:1684 crqwiz.cpp:1693 crqwiz.cpp:1890 tqsl.cpp:155 tqsl.cpp:193
+#: crqwiz.cpp:1823 crqwiz.cpp:1836 crqwiz.cpp:1845 crqwiz.cpp:2042 tqsl.cpp:154 tqsl.cpp:193
 msgid "TQSL Error"
 msgstr "विश्वस्त QSL (TQSL) में त्रुटि"
 
-#: crqwiz.cpp:1676
+#: crqwiz.cpp:1828
 msgid "You have selected DXCC Entity NONE"
 msgstr "आपने DXCC इकाई \"कोई नहीं\" का चयन किया है"
 
-#: crqwiz.cpp:1678
+#: crqwiz.cpp:1830
 msgid ""
-"QSO records signed using the Certificate will not be valid for DXCC award credit (but will be valid for other applicable awards). If the Certificate is to be used for signing QSOs from maritime/marine mobile, shipboard, or air mobile operations, that is the correct selection. Otherwise, you probably should use the "
-"\"Back\" button to return to the DXCC page after clicking \"OK\""
-msgstr "DXCC पुरस्कार श्रेय के लिए प्रमाणपत्र द्वारा हस्ताक्षरित QSO अभिलेख () मान्य नहीं होगा(किन्तु अन्य लागू पुरस्कार के लिए मान्य होगा)। यदि प्रमाणपत्र का उपयोग समुद्री/समुद्री मोबाइल, जहाज से या हवाई मोबाइल परिचालन QSO को हस्ताक्षरित करने के लिए किया जाता तो यह सही होगा। अन्यथा, आप \"अनुमोदित\" बटन दबाने से पहले संभवतया वापस जाना चाहेंगे \"पीछे\" बटन दबा के\""
+"QSO records signed using the Certificate will not be valid for DXCC award credit (but will be valid for other applicable awards). If the Certificate is to be used "
+"for signing QSOs from maritime/marine mobile, shipboard, or air mobile operations, that is the correct selection. Otherwise, you probably should use the \"Back\" "
+"button to return to the DXCC page after clicking \"OK\""
+msgstr ""
+"DXCC पुरस्कार श्रेय के लिए प्रमाणपत्र द्वारा हस्ताक्षरित QSO अभिलेख () मान्य नहीं होगा(किन्तु अन्य लागू पुरस्कार के लिए मान्य होगा)। यदि प्रमाणपत्र का उपयोग समुद्री/समुद्री मोबाइल, जहाज से या "
+"हवाई मोबाइल परिचालन QSO को हस्ताक्षरित करने के लिए किया जाता तो यह सही होगा। अन्यथा, आप \"अनुमोदित\" बटन दबाने से पहले संभवतया वापस जाना चाहेंगे \"पीछे\" बटन दबा के\""
 
-#: crqwiz.cpp:1679 stationdial.cpp:458
+#: crqwiz.cpp:1831 stationdial.cpp:458
 msgid "TQSL Warning"
 msgstr "विश्वस्त QSL TQSL) चेतावनी"
 
-#: crqwiz.cpp:1683
-msgid "You cannot request a certificate for a 1x1 callsign as you must sign those requests, but you have no valid Callsign Certificates that you can use to sign this request."
-msgstr "आप 1x1 कॉलसाइन के लिए प्रमाणपत्र का अनुरोध नहीं कर सकते हैं क्योंकि आपको उन अनुरोधों पर हस्ताक्षर करना चाहिए, लेकिन आपके पास कोई मान्य कॉलसाइन सर्टिफिकेट नहीं है जिसका उपयोग आप इस अनुरोध पर हस्ताक्षर करने के लिए कर सकते हैं."
+#: crqwiz.cpp:1835
+msgid ""
+"You cannot request a certificate for a 1x1 callsign as you must sign those requests, but you have no valid Callsign Certificates that you can use to sign this "
+"request."
+msgstr ""
+"आप 1x1 कॉलसाइन के लिए प्रमाणपत्र का अनुरोध नहीं कर सकते हैं क्योंकि आपको उन अनुरोधों पर हस्ताक्षर करना चाहिए, लेकिन आपके पास कोई मान्य कॉलसाइन सर्टिफिकेट नहीं है जिसका उपयोग आप इस अनुरोध "
+"पर हस्ताक्षर करने के लिए कर सकते हैं."
 
-#: crqwiz.cpp:1692
-msgid "You cannot request a certificate for a portable callsign as you must sign those requests, but you have no valid Callsign Certificates that you can use to sign this request."
-msgstr "आप पोर्टेबल कॉलसाइन के लिए प्रमाणपत्र का अनुरोध नहीं कर सकते क्योंकि आपको उन अनुरोधों पर हस्ताक्षर करना होगा, लेकिन आपके पास कोई वैध कॉलसाइन प्रमाणपत्र नहीं है जिसका उपयोग आप इस अनुरोध पर हस्ताक्षर करने के लिए कर सकते हैं।"
+#: crqwiz.cpp:1844
+msgid ""
+"You cannot request a certificate for a portable callsign as you must sign those requests, but you have no valid Callsign Certificates that you can use to sign this "
+"request."
+msgstr ""
+"आप पोर्टेबल कॉलसाइन के लिए प्रमाणपत्र का अनुरोध नहीं कर सकते क्योंकि आपको उन अनुरोधों पर हस्ताक्षर करना होगा, लेकिन आपके पास कोई वैध कॉलसाइन प्रमाणपत्र नहीं है जिसका उपयोग आप इस अनुरोध पर "
+"हस्ताक्षर करने के लिए कर सकते हैं।"
 
-#: crqwiz.cpp:1699
-msgid "You have chosen a QSO end date for this Callsign Certificate. The 'QSO end date' should ONLY be set if that date is the date when that callsign's license expired or the license was replaced by a new callsign."
-msgstr "इस कॉल चिन्ह प्रमाणपत्र के लिए आपने QSO समाप्ती तिथि चयन कर लिया है। 'QSO समाप्ती तिथि' केवल तभी स्थापित (SET) करें जब यह तिथि ही वह तिथि हो जब कॉल चिन्ह अनुज्ञापत्र (License) समाप्त हो गया हो या वह नए कॉल चिन्ह अनुज्ञापत्र से बादल दिया गया हो."
+#: crqwiz.cpp:1851
+msgid ""
+"You have chosen a QSO end date for this Callsign Certificate. The 'QSO end date' should ONLY be set if that date is the date when that callsign's license expired or "
+"the license was replaced by a new callsign."
+msgstr ""
+"इस कॉल चिन्ह प्रमाणपत्र के लिए आपने QSO समाप्ती तिथि चयन कर लिया है। 'QSO समाप्ती तिथि' केवल तभी स्थापित (SET) करें जब यह तिथि ही वह तिथि हो जब कॉल चिन्ह अनुज्ञापत्र (License) समाप्त "
+"हो गया हो या वह नए कॉल चिन्ह अनुज्ञापत्र से बादल दिया गया हो."
 
-#: crqwiz.cpp:1701
+#: crqwiz.cpp:1853
 msgid "If you set an end date, you will not be able to sign QSOs past that date, even if the Callsign Certificate itself is still valid."
 msgstr "यदि आप एक समाप्ती तिथि तय करते हैं, तो आप तय तिथि के बाद के QSO हस्ताक्षरित नहीं कर सकेंगे, तब भी जब आपका कॉल चिन्ह प्रमापत्र मान्य हो."
 
-#: crqwiz.cpp:1703
+#: crqwiz.cpp:1855
 msgid "If you still hold this callsign (or if you plan to renew the license for the callsign), you should not set a 'QSO end date'."
 msgstr "यदि यह कॉल चिन्ह अभी भी आपका है (या अगर आपके इस कॉल चिन्ह अनुज्ञापत्र (License) के नवीनीकरण की योजना है), तो आपको 'QSO समाप्ती तिथि' तय नहीं करना चाहिए."
 
-#: crqwiz.cpp:1705
+#: crqwiz.cpp:1857
 msgid "Do you really want to keep this 'QSO end date'?"
 msgstr "क्या आप वात्सव मे QSO की समाप्ती तिथि यही रखना चाहते हैं?"
 
-#: crqwiz.cpp:1737
+#: crqwiz.cpp:1889
 msgid "You must enter your name"
 msgstr "आपका नाम लिखना अनिवार्य है"
 
-#: crqwiz.cpp:1739
+#: crqwiz.cpp:1891
 msgid "You must enter your address"
 msgstr "आपका पता लिखना अनिवार्य है"
 
-#: crqwiz.cpp:1741
+#: crqwiz.cpp:1893
 msgid "You must enter your city"
 msgstr "आपके नगर का नाम लिखना अनिवार्य है"
 
-#: crqwiz.cpp:1759
+#: crqwiz.cpp:1911
 msgid ""
 "This address must match the FCC ULS database.\n"
 "If this address information is incorrect, please correct your FCC record."
@@ -384,31 +415,31 @@ msgstr ""
 "यह पता FCC ULS डेटाबेस से मेल खाना चाहिए।\n"
 "यदि यह पता जानकारी गलत है, तो कृपया अपना FCC रिकॉर्ड सही करें."
 
-#: crqwiz.cpp:1828
+#: crqwiz.cpp:1980
 msgid "You must enter a valid email address"
 msgstr "आपका ईमेल-पता लिखना अनिवार्य है"
 
-#: crqwiz.cpp:1863
+#: crqwiz.cpp:2015
 msgid "The two copies of the passphrase do not match."
 msgstr "आपके द्वारा दिये गए पासफ्रेज़ अलग है."
 
-#: crqwiz.cpp:1904
+#: crqwiz.cpp:2056
 msgid "Click 'Finish' to complete this Callsign Certificate request."
 msgstr "कॉल चिन्ह प्रमाणपत्र निवेदन को पूर्ण करने के लिए समाप्त पर क्लिक करें."
 
-#: crqwiz.cpp:1910
+#: crqwiz.cpp:2062
 msgid "Please select a Callsign Certificate for the account where you would like the QSOs to be stored"
 msgstr "कृपया उस खाते के लिए कॉलसाइन प्रमाणपत्र चुनें जहां आप QSO को संग्रहीत करना चाहते हैं"
 
-#: crqwiz.cpp:1913 crqwiz.cpp:1920
+#: crqwiz.cpp:2065 crqwiz.cpp:2072
 msgid "Please select the Callsign Certificate for your current personal callsign to validate your request."
 msgstr "अपने अनुरोध को सत्यापित करने के लिए कृपया अपने वर्तमान निजी कॉल चिन्ह के लिए कॉल चिन्ह प्रमाण पत्र का चयन करें."
 
-#: crqwiz.cpp:1915 crqwiz.cpp:1922
+#: crqwiz.cpp:2067 crqwiz.cpp:2074
 msgid "Please select a Callsign Certificate to validate this request"
 msgstr "कृपया इस अनुरोध को मान्य करने के लिए कॉलसाइन प्रमाणपत्र चुनें"
 
-#: crqwiz.cpp:1929
+#: crqwiz.cpp:2081
 msgid "QSOs for %hs will be stored in the LoTW account for %s."
 msgstr "%hs के लिए QSOs को %s के LoTW खाते में संग्रहीत किया जाएगा।"
 
@@ -417,33 +448,43 @@ msgstr "%hs के लिए QSOs को %s के LoTW खाते में �
 msgid "DELETED"
 msgstr "मिटा दिया"
 
-#: getpassword.cpp:48 getpassword.cpp:121 qsodatadialog.cpp:387 tqsl.cpp:452 tqsl_prefs.cpp:70 tqsl_prefs.cpp:289 tqsl_prefs.cpp:1019 stationdial.h:46 tqslapp.h:132
+#: getpassword.cpp:54 getpassword.cpp:127 getpassword.cpp:216 qsodatadialog.cpp:387 tqsl.cpp:453 tqsl_prefs.cpp:70 tqsl_prefs.cpp:289 tqsl_prefs.cpp:1057
+#: stationdial.h:46 tqslapp.h:142
 msgid "OK"
 msgstr "अनुमोदित (ओके)"
 
-#: getpassword.cpp:51 getpassword.cpp:124 qsodatadialog.cpp:386 stationdial.cpp:225 tqsl.cpp:309 tqsl.cpp:364 tqsl.cpp:453 tqsl.cpp:577 tqsl.cpp:637 tqsl.cpp:1987 tqsl_prefs.cpp:73 tqsl_prefs.cpp:292 tqsl_prefs.cpp:1022
+#: getpassword.cpp:57 getpassword.cpp:130 getpassword.cpp:219 qsodatadialog.cpp:386 stationdial.cpp:225 tqsl.cpp:310 tqsl.cpp:365 tqsl.cpp:454 tqsl.cpp:578 tqsl.cpp:638
+#: tqsl.cpp:2006 tqsl_prefs.cpp:73 tqsl_prefs.cpp:292 tqsl_prefs.cpp:1060
 msgid "Cancel"
 msgstr "रद्द"
 
-#: getpassword.cpp:53 getpassword.cpp:126 qsodatadialog.cpp:385 stationdial.cpp:223 tqsl_prefs.cpp:67
+#: getpassword.cpp:59 getpassword.cpp:132 getpassword.cpp:221 qsodatadialog.cpp:385 stationdial.cpp:223 tqsl_prefs.cpp:67
 msgid "Help"
 msgstr "सहायता"
 
-#: getpassword.cpp:111
+#: getpassword.cpp:117
 msgid "New passphrase:"
 msgstr "नया पासफ्रेज़ :"
 
-#: getpassword.cpp:114
+#: getpassword.cpp:120
 msgid "Enter again to confirm:"
 msgstr "पुष्टि करने के लिए दोबारा अंकित करें:"
 
-#: getpassword.cpp:146
+#: getpassword.cpp:152
 msgid "Passphrase entries do not match"
 msgstr "अंकित किए गए पासवर्ड भिन्न है"
 
-#: getpassword.cpp:157
+#: getpassword.cpp:163
 msgid "Passphrase confirmed"
 msgstr "पासफ्रेज़ पुष्टीकृत"
+
+#: getpassword.cpp:205
+msgid "LoTW Username:"
+msgstr "LoTW उपयोगकर्ता नाम:"
+
+#: getpassword.cpp:210
+msgid "LoTW Password:"
+msgstr "LoTW पासवर्ड:"
 
 #: loadcertwiz.cpp:41
 msgid "Import completed successfully"
@@ -473,7 +514,7 @@ msgstr "विश्वसनीय jजड़ प्रमाणपत्र"
 msgid "Certificate Authority certificate"
 msgstr "प्रमाण पत्र प्राधिकरण प्रमाण पत्र"
 
-#: loadcertwiz.cpp:124 wxutil.cpp:278
+#: loadcertwiz.cpp:124 wxutil.cpp:316
 msgid "Callsign Certificate"
 msgstr "कॉल चिन्ह प्रमाणपत्र"
 
@@ -482,14 +523,18 @@ msgid "Enter a passphrase for this callsign certificate."
 msgstr "इस कॉल चिन्ह प्रमाणपत्र के लिए पासफ्रेज़ अंकित करें."
 
 #: loadcertwiz.cpp:170
-msgid "If you are using a computer system that is shared with others, you should specify a passphrase to protect this certificate. However, if you are using a computer in a private residence no passphrase need be specified."
-msgstr "आप पासफ्रेज़ का उपयोग करके इस कॉलसाइन प्रमाण पत्र की रक्षा कर सकते हैं। यदि यह कंप्यूटर सिस्टम उपयोग कर रहे हैं जिसे दूसरों के साथ साझा किया जाता है, तो आपको इस कॉलसाइन प्रमाण पत्र की रक्षा के लिए एक पासफ्रेज़ निर्दिष्ट करना चाहिए। हालांकि, यदि आप एक निजी निवास में कंप्यूटर का उपयोग कर रहे हैं, तो कोई पासफ्रेज़ की आवश्यकता नहीं है."
+msgid ""
+"If you are using a computer system that is shared with others, you should specify a passphrase to protect this certificate. However, if you are using a computer in a "
+"private residence no passphrase need be specified."
+msgstr ""
+"आप पासफ्रेज़ का उपयोग करके इस कॉलसाइन प्रमाण पत्र की रक्षा कर सकते हैं। यदि यह कंप्यूटर सिस्टम उपयोग कर रहे हैं जिसे दूसरों के साथ साझा किया जाता है, तो आपको इस कॉलसाइन प्रमाण पत्र की रक्षा "
+"के लिए एक पासफ्रेज़ निर्दिष्ट करना चाहिए। हालांकि, यदि आप एक निजी निवास में कंप्यूटर का उपयोग कर रहे हैं, तो कोई पासफ्रेज़ की आवश्यकता नहीं है."
 
 #: loadcertwiz.cpp:172
 msgid "This passphrase will have to be entered each time you use this callsign certificate for signing or when saving the key."
 msgstr "आपको हर बार पासफ्रेज़ अंकित करना होगा जब भी आप इस कॉल चिन्ह प्रमाणपत्र से हस्ताक्षर के लिए या कुंजी सहेजने के लिए उपयोग करेंगे."
 
-#: loadcertwiz.cpp:174 tqsl.cpp:6983
+#: loadcertwiz.cpp:174 tqsl.cpp:7282
 msgid "Leave the passphrase blank and click 'OK' unless you want to use a passphrase."
 msgstr "पासफ्रेज़ खाली छोड़ दें और 'OK' पर क्लिक करें जब तक कि आप पासफ्रेज़ का उपयोग नहीं करना चाहते हैं."
 
@@ -498,8 +543,12 @@ msgid "New Passphrase"
 msgstr "नया पासफ्रेज़"
 
 #: loadcertwiz.cpp:215
-msgid "You will not be able to use this tq6 file to recover your callsign certificate if it gets lost. For security purposes, you should back up your certificate on removable media for safe-keeping."
-msgstr "यदि यह tq6 फ़ाइल गुम या खो जाती है तो इससे आप अपना कॉल चिन्ह प्रमाणपत्र को वापस नहीं पा सकेंगे। अतः आपको सुरक्षा प्रयोजन हेतु अपने प्रमाणपत्र की प्रतिलिपी (Backup) को किसी अन्य माध्यम (removable media) मे सुरक्षित रखना चाहिए."
+msgid ""
+"You will not be able to use this tq6 file to recover your callsign certificate if it gets lost. For security purposes, you should back up your certificate on "
+"removable media for safe-keeping."
+msgstr ""
+"यदि यह tq6 फ़ाइल गुम या खो जाती है तो इससे आप अपना कॉल चिन्ह प्रमाणपत्र को वापस नहीं पा सकेंगे। अतः आपको सुरक्षा प्रयोजन हेतु अपने प्रमाणपत्र की प्रतिलिपी (Backup) को किसी अन्य माध्यम "
+"(removable media) मे सुरक्षित रखना चाहिए."
 
 #: loadcertwiz.cpp:217
 msgid "Would you like to back up your callsign certificate now?"
@@ -513,7 +562,7 @@ msgstr "कॉल चिन्ह प्रमाणपत्र कंटेन
 msgid "Callsign Certificate container files (*.p12,*.tq6))|*.p12;*.tq6"
 msgstr "कॉल चिन्ह प्रमाणपत्र कंटेनर फ़ाइलें (*.p12,*.tq6))|*.p12;*.tq6"
 
-#: loadcertwiz.cpp:257 tqsl.cpp:4545
+#: loadcertwiz.cpp:257 tqsl.cpp:4822
 msgid "|All files (*.*)|*.*"
 msgstr "|सभी फ़ाइल (*.*)|*.*"
 
@@ -521,7 +570,7 @@ msgstr "|सभी फ़ाइल (*.*)|*.*"
 msgid "Select Certificate File"
 msgstr "प्रमाणपत्र फ़ाइल चुने"
 
-#: loadcertwiz.cpp:305 loadcertwiz.cpp:380 tqsl.cpp:6202
+#: loadcertwiz.cpp:305 loadcertwiz.cpp:380 tqsl.cpp:6500
 msgid "This file is not a valid P12 file"
 msgstr "यह फ़ाइल एक वैध P12 फ़ाइल नहीं है"
 
@@ -537,11 +586,11 @@ msgstr "वस्तु स्थिति की जानकारी उप�
 msgid "Enter the passphrase to unlock the .p12 file:"
 msgstr ".p12 फ़ाइल को अनलॉक करने के लिए पासफ्रेज़ दर्ज करें:"
 
-#: loadcertwiz.cpp:377 tqsl.cpp:2275
+#: loadcertwiz.cpp:377 tqsl.cpp:2341
 msgid "Passphrase error"
 msgstr "पासवारेज त्रुटि"
 
-#: loctree.cpp:93 tqsl.cpp:1441 tqsl.cpp:7209
+#: loctree.cpp:96 tqsl.cpp:1450 tqsl.cpp:7508
 msgid "Station Locations"
 msgstr "प्रेषण केंद्र के स्थान"
 
@@ -597,7 +646,7 @@ msgstr "उपग्रह:"
 msgid "Add QSO"
 msgstr "QSO जोड़ें"
 
-#: qsodatadialog.cpp:379 stationdial.cpp:218 tqsl_prefs.cpp:182 tqsl_prefs.cpp:837
+#: qsodatadialog.cpp:379 stationdial.cpp:218 tqsl_prefs.cpp:182 tqsl_prefs.cpp:875
 msgid "Delete"
 msgstr "मिटा दें"
 
@@ -605,7 +654,8 @@ msgstr "मिटा दें"
 msgid "QSO Frequency is invalid"
 msgstr "QSO आवृत्ती (frequency) अमान्य है"
 
-#: qsodatadialog.cpp:505 qsodatadialog.cpp:512 qsodatadialog.cpp:521 qsodatadialog.cpp:528 qsodatadialog.cpp:538 qsodatadialog.cpp:543 qsodatadialog.cpp:548 qsodatadialog.cpp:553 tqslvalidator.cpp:77
+#: qsodatadialog.cpp:505 qsodatadialog.cpp:512 qsodatadialog.cpp:521 qsodatadialog.cpp:528 qsodatadialog.cpp:538 qsodatadialog.cpp:543 qsodatadialog.cpp:548
+#: qsodatadialog.cpp:553 tqslvalidator.cpp:77
 msgid "QSO Data Error"
 msgstr "QSO विवरण मे त्रुटि"
 
@@ -650,11 +700,11 @@ msgstr "कोई भी QSO अभिलेख नहीं है"
 msgid "Save File"
 msgstr "फ़ाइल सहेजे"
 
-#: qsodatadialog.cpp:608 tqsl.cpp:1925
+#: qsodatadialog.cpp:608 tqsl.cpp:1944
 msgid "ADIF files (*.adi;*.adif;*.ADI;*.ADIF)|*.adi;*.adif;*.ADI;*.ADIF|All files (*.*)|*.*"
 msgstr "ADIF फ़ाइल (*.adi;*.adif;*.ADI;*.ADIF)|*.adi;*.adif;*.ADI;*.ADIF|सभी फ़ाइल (*.*)|*.*"
 
-#: qsodatadialog.cpp:610 tqsl.cpp:1927
+#: qsodatadialog.cpp:610 tqsl.cpp:1946
 msgid "ADIF files (*.adi;*.adif)|*.adi;*.adif|All files (*.*)|*.*"
 msgstr "ADIF फ़ाइल (*.adi;*.adif)|*.adi;*.adif|सभी फ़ाइल (*.*)|*.*"
 
@@ -680,7 +730,7 @@ msgstr "एक QSO अभिलेख"
 msgid "%d QSO Records"
 msgstr "%d QSO अभिलेख"
 
-#: stationdial.cpp:56 tqsl.cpp:6508
+#: stationdial.cpp:56 tqsl.cpp:6814
 msgid "&Properties"
 msgstr "&गुण"
 
@@ -712,7 +762,7 @@ msgstr "चुना हुआ प्रेषण केंद्र का स�
 msgid "New..."
 msgstr "नवीन..."
 
-#: stationdial.cpp:214 tqsl_prefs.cpp:835
+#: stationdial.cpp:214 tqsl_prefs.cpp:873
 msgid "Edit..."
 msgstr "सम्पादन.. ."
 
@@ -808,7 +858,7 @@ msgstr "निविष्ट (input) फ़ाइल खोलने मे त
 msgid "Error opening output file"
 msgstr "उत्पाद (output) फ़ाइल खोलने मे त्रुटि"
 
-#: tqsl.cpp:197 tqsl.cpp:2720
+#: tqsl.cpp:197 tqsl.cpp:2763
 msgid "No QSOs to upload"
 msgstr "अपलोड करने के लिए कोई QSO नहीं"
 
@@ -845,7 +895,7 @@ msgid "Final Status: %hs (%d)"
 msgstr "अंतिम स्थिति: %hs (%d)"
 
 #. TRANSLATORS: this is followed by the callsign and entity name
-#: tqsl.cpp:260
+#: tqsl.cpp:261
 msgid ""
 "Enter the passphrase to unlock the callsign certificate for %hs -- %hs\n"
 "(This is the passphrase you made up when you installed the callsign certificate.)"
@@ -854,444 +904,474 @@ msgstr ""
 " के लिए कॉलसाइन प्रमाण पत्र खोलने के लिए पासफ्रेज़ दर्ज करें \n"
 "(जब आपने कॉलसाइन प्रमाण पत्र स्थापित किया तो यह आपके द्वारा बनाया गया पासफ्रेज़ है।"
 
-#: tqsl.cpp:271 tqsl.cpp:7704 getpassword.h:32 getpassword.h:33
+#: tqsl.cpp:272 tqsl.cpp:8001 getpassword.h:32 getpassword.h:33
 msgid "Enter passphrase"
 msgstr "पासफ्रेज़ अंकित करें"
 
-#: tqsl.cpp:302
+#: tqsl.cpp:303
 msgid "Signing QSO Data"
 msgstr "QSO विवरण हस्ताक्षरित हो रहा है"
 
-#: tqsl.cpp:305
+#: tqsl.cpp:306
 msgid "Converting "
 msgstr "परिवर्तन हो रहा है - Converting "
 
-#: tqsl.cpp:305
+#: tqsl.cpp:306
 msgid "to TQSL format"
 msgstr "विश्वस्तQSL प्रारूप में"
 
-#: tqsl.cpp:327
+#: tqsl.cpp:328
 msgid "Uploading Signed Data"
 msgstr "हस्ताक्षरित विवरण अपलोड हो रहा है"
 
-#: tqsl.cpp:327
+#: tqsl.cpp:328
 msgid "Uploading signed log data..."
 msgstr "हस्ताक्षरित कार्यपंजी विवरण अपलोड हो रहा है."
 
-#: tqsl.cpp:421
+#: tqsl.cpp:422
 msgid "QSO Date Range"
 msgstr "QSO की तिथि सीमा"
 
-#: tqsl.cpp:424
+#: tqsl.cpp:425
 msgid "You may set the starting and/or ending QSO dates in order to select QSOs from the input file."
 msgstr "आप QSO की आरंभ और/या अंत तिथि को तय कर सकते है जिससे आप प्रविष्टि फ़ाइल मे QSO का चुनाव कर सकते हैं."
 
-#: tqsl.cpp:426
+#: tqsl.cpp:427
 msgid "QSOs prior to the starting date or after the ending date will not be signed or included in the output file."
 msgstr "जो भी QSO आरंभ तिथि से पहले या अंतिम तिथि के बाद के होंगे वह हस्ताक्षरित या उत्पाद (output) फ़ाइल मे सम्मिलित नहीं किए जाएंगे."
 
-#: tqsl.cpp:428
+#: tqsl.cpp:429
 msgid "You may leave either date (or both dates) blank."
 msgstr "आप कोई भी तिथि (या दोनों तिथि) रिक्त छोड़ सकते हैं."
 
-#: tqsl.cpp:436
+#: tqsl.cpp:437
 msgid "Start Date (YYYY-MM-DD)"
 msgstr "आरंभ तिथि (YYYY-MM-DD)"
 
-#: tqsl.cpp:443
+#: tqsl.cpp:444
 msgid "End Date (YYYY-MM-DD)"
 msgstr "अंत तिथि (YYYY-MM-DD)"
 
-#: tqsl.cpp:470
+#: tqsl.cpp:471
 msgid "Start date is invalid"
 msgstr "आरंभ तिथि अमान्य है"
 
-#: tqsl.cpp:478
+#: tqsl.cpp:479
 msgid "End date is invalid"
 msgstr "अंत तिथि अमान्य है"
 
-#: tqsl.cpp:518
+#: tqsl.cpp:519
 msgid "Previously Signed QSOs Detected"
 msgstr "पहले से हस्ताक्षरित QSOs का पता चला"
 
-#: tqsl.cpp:524
+#: tqsl.cpp:525
 #, c-format
 msgid "This log contains %d QSO(s) which appear to have been previously signed for upload to LoTW, and no new QSOs."
 msgstr "इस लॉग में %d QSO हैं, जो LoTW पर अपलोड करने के लिए पहले ही हस्ताक्षरित किए जा चुके हैं, तथा कोई नया QSO नहीं है।"
 
-#: tqsl.cpp:526
+#: tqsl.cpp:527
 msgid "Click 'Cancel' to abandon processing this log file (Recommended)."
 msgstr "इस अभिलेख फ़ाइल के प्रसंकरण (processing) को रोकने के लिए 'रद्द' क्लिक करें (प्राथमिक सुझाव)."
 
-#: tqsl.cpp:528 tqsl.cpp:538 tqsl.cpp:545
+#: tqsl.cpp:529 tqsl.cpp:539 tqsl.cpp:546
 msgid "Click 'Re-Upload QSOs' to re-process this log while allowing previously signed QSOs."
 msgstr "पहले से हस्ताक्षरित QSOs को अनुमति देते हुए इस लॉग को पुनः संसाधित करने के लिए 'QSOs पुनः अपलोड करें' पर क्लिक करें।"
 
-#: tqsl.cpp:532
+#: tqsl.cpp:533
 #, c-format
 msgid "This log contains %d QSO(s) which appear to have been previously signed for upload to LoTW, and %d QSOs which are new."
 msgstr "इस लॉग में %d QSO हैं, जो LoTW पर अपलोड करने के लिए पहले ही हस्ताक्षरित किए जा चुके हैं, तथा %d QSO हैं, जो नए हैं।"
 
-#: tqsl.cpp:534 tqsl.cpp:541
+#: tqsl.cpp:535 tqsl.cpp:542
 msgid "Click 'New QSOs Only' to sign normally, without the previously signed QSOs (Recommended)."
 msgstr "पहले से हस्ताक्षरित QSOs के बिना, सामान्य रूप से हस्ताक्षर करने के लिए 'केवल नए QSOs' पर क्लिक करें (अनुशंसित)।"
 
-#: tqsl.cpp:536 tqsl.cpp:543
+#: tqsl.cpp:537 tqsl.cpp:544
 msgid "Click 'Cancel' to abandon processing this log file."
 msgstr "इस अभिलेख फ़ाइल के प्रसंकरण (processing) को रोकने के लिए 'रद्द' क्लिक करें."
 
-#: tqsl.cpp:539
+#: tqsl.cpp:540
 #, c-format
 msgid "This log contains %d QSO(s) which appear to have been previously signed for upload to LoTW, and one QSO which is new."
 msgstr "इस लॉग में %d QSO हैं, जो LoTW पर अपलोड करने के लिए पहले ही हस्ताक्षरित किए जा चुके हैं, तथा एक QSO है जो नया है।"
 
-#: tqsl.cpp:556
-msgid "The log file you are uploading using your QSO Logging system consists entirely of previously uploaded QSOs that create unnecessary work for LoTW. There may be a more recent version of your QSO Logging system that would prevent this. Please check with your QSO Logging system's vendor for an updated version."
-msgstr "जो अभिलेख फ़ाइल आप QSO विवेचक के द्वारा अपलोड कर रहे हैं उसमे पूर्णतः पहले से अपलोड किए हुए QSO (प्रतिलिपियाँ) हैं जो की LoTW के लिए अनावश्यक कार्य बड़ा देगा। आपके अभिलेख सॉफ्टवेयर के नवीन संस्करण का उपयोग इसका निवारण कर सकता है। कृपया अपने कार्यपंजी या QSO निस्तारक प्रदाता से संपर्क कर नवीन संस्करण जांच ले."
-
-#: tqsl.cpp:558
+#: tqsl.cpp:557
 msgid ""
-"In the meantime, please note that some loggers may exhibit strange behavior if an option other than 'Re-Upload QSOs' is clicked. Choosing 'Cancel' is usually safe, but a defective logger not checking the status messages reported by TrustedQSL may produce strange (but harmless) behavior such as attempting to upload an "
-"empty file or marking all chosen QSOs as 'sent'"
+"The log file you are uploading using your QSO Logging system consists entirely of previously uploaded QSOs that create unnecessary work for LoTW. There may be a more "
+"recent version of your QSO Logging system that would prevent this. Please check with your QSO Logging system's vendor for an updated version."
 msgstr ""
-"इस बीच, कृपया ध्यान दें कि कुछ कार्यपंजी निस्तारक सोफ्टवेयर अजीब व्यवहार प्रदर्शित कर सकता है यदि 'री-अपलोड QSO' के अलावा कोई विकल्प क्लिक किया जाता है। 'रद्द' चुनना आमतौर पर सुरक्षित होता है, लेकिन एक दोषपूर्ण कार्यपंजी निस्तारक सोफ्टवेयर, TQSL द्वारा सूचित स्थिति संदेशों की जांच नहीं करता है, वह अजीब (लेकिन हानिरहित) व्यवहार पैदा कर सकता है जैसे कि खाली फाइल अपलोड "
-"करने का प्रयास करना या सभी चुने गए QSO को 'भेजा हुआ' के रूप में चिह्नित करना'"
+"जो अभिलेख फ़ाइल आप QSO विवेचक के द्वारा अपलोड कर रहे हैं उसमे पूर्णतः पहले से अपलोड किए हुए QSO (प्रतिलिपियाँ) हैं जो की LoTW के लिए अनावश्यक कार्य बड़ा देगा। आपके अभिलेख सॉफ्टवेयर के नवीन "
+"संस्करण का उपयोग इसका निवारण कर सकता है। कृपया अपने कार्यपंजी या QSO निस्तारक प्रदाता से संपर्क कर नवीन संस्करण जांच ले."
 
-#: tqsl.cpp:561
-msgid "The log file you are uploading using your QSO Logging system includes some previously uploaded QSOs that create unnecessary work for LoTW. There may be a more recent version of your QSO Logging system that would prevent this. Please check with your QSO Logging system's vendor for an updated version."
-msgstr "आपके QSO लॉगिंग सिस्टम का उपयोग करके आप जो लॉग फ़ाइल अपलोड कर रहे हैं, उसमें कुछ पहले से अपलोड किए गए QSO शामिल हैं जो LoTW के लिए अनावश्यक कार्य बनाते हैं। आपके QSO लॉगिंग सिस्टम का एक और नवीन संस्करण हो सकता है जो इसे रोक देगा। नवीन संस्करण के लिए कृपया अपने QSO लॉगिंग सिस्टम के विक्रेता से जाँच करें."
-
-#: tqsl.cpp:563
+#: tqsl.cpp:559
 msgid ""
-"In the meantime, please note that some loggers may exhibit strange behavior if an option other than 'Re-Upload QSOs' is clicked. 'New QSOs Only' is recommended, but a logger that does its own upload tracking may incorrectly set the status in this case. A logger that doesn't track uploads should be unaffected by choosing "
-"'New QSOs Only' and if it tracks 'QSO sent' status, will correctly mark all selected QSOs as sent - they are in your account even though they would not be in this specific batch"
+"In the meantime, please note that some loggers may exhibit strange behavior if an option other than 'Re-Upload QSOs' is clicked. Choosing 'Cancel' is usually safe, "
+"but a defective logger not checking the status messages reported by TrustedQSL may produce strange (but harmless) behavior such as attempting to upload an empty file "
+"or marking all chosen QSOs as 'sent'"
 msgstr ""
-"इस बीच, कृपया ध्यान दें कि कुछ कार्यपंजी निस्तारक सॉफ्टवेयर अजीब व्यवहार प्रदर्शित कर सकता है यदि 'री-अपलोड QSO' के अलावा कोई विकल्प क्लिक किया जाता है। 'केवल नवीन QSO' की सिफारिश की गई है, लेकिन एक कार्यपंजी निस्तारक सॉफ्टवेयर जो अपनी अपलोड ट्रैकिंग करता है, वह इस मामले में गलत तरीके से स्थिति सेट कर सकता है। एक कार्यपंजी निस्तारक सॉफ्टवेयर जो अपलोड को ट्रैक नहीं "
-"करता है, उसे 'केवल नवीन QSO' चुनकर अप्रभावित किया जाना चाहिए और यदि वह 'QSO भेजे गए' स्टेटस को ट्रैक करता है, तो सभी चयनित QSO को सही रूप में चिह्नित किया जाएगा - वे आपके खाते में हैं, भले ही वे इस विशिष्ट बैच में नहीं होंगे"
+"इस बीच, कृपया ध्यान दें कि कुछ कार्यपंजी निस्तारक सोफ्टवेयर अजीब व्यवहार प्रदर्शित कर सकता है यदि 'री-अपलोड QSO' के अलावा कोई विकल्प क्लिक किया जाता है। 'रद्द' चुनना आमतौर पर सुरक्षित "
+"होता है, लेकिन एक दोषपूर्ण कार्यपंजी निस्तारक सोफ्टवेयर, TQSL द्वारा सूचित स्थिति संदेशों की जांच नहीं करता है, वह अजीब (लेकिन हानिरहित) व्यवहार पैदा कर सकता है जैसे कि खाली फाइल अपलोड करने "
+"का प्रयास करना या सभी चुने गए QSO को 'भेजा हुआ' के रूप में चिह्नित करना'"
 
-#: tqsl.cpp:565
-msgid "Choosing 'Cancel' is usually safe, but a defective logger not checking the status messages reported by TrustedQSL may produce strange (but harmless) behavior such as attempting to upload an empty file or marking all chosen QSOs as 'sent'"
-msgstr "यहाँ पर 'रद्द करें' चुनना सामान्यता हानिकारक नहीं होता, पर त्रुटिपूर्ण लौगर का विश्वस्तQSL द्वारा प्रदत्त स्थिति संदेश का मूल्यांकन न करने पर संभवतया अवांछित (पर अहानिकारक) व्यवहार जैसे की खाली फ़ाइल को अपलोड करने का प्रयास या सभी चुने हुए QSOs को 'भेजा हुआ बताना'"
+#: tqsl.cpp:562
+msgid ""
+"The log file you are uploading using your QSO Logging system includes some previously uploaded QSOs that create unnecessary work for LoTW. There may be a more recent "
+"version of your QSO Logging system that would prevent this. Please check with your QSO Logging system's vendor for an updated version."
+msgstr ""
+"आपके QSO लॉगिंग सिस्टम का उपयोग करके आप जो लॉग फ़ाइल अपलोड कर रहे हैं, उसमें कुछ पहले से अपलोड किए गए QSO शामिल हैं जो LoTW के लिए अनावश्यक कार्य बनाते हैं। आपके QSO लॉगिंग सिस्टम का एक और "
+"नवीन संस्करण हो सकता है जो इसे रोक देगा। नवीन संस्करण के लिए कृपया अपने QSO लॉगिंग सिस्टम के विक्रेता से जाँच करें."
 
-#: tqsl.cpp:576
+#: tqsl.cpp:564
+msgid ""
+"In the meantime, please note that some loggers may exhibit strange behavior if an option other than 'Re-Upload QSOs' is clicked. 'New QSOs Only' is recommended, but "
+"a logger that does its own upload tracking may incorrectly set the status in this case. A logger that doesn't track uploads should be unaffected by choosing 'New "
+"QSOs Only' and if it tracks 'QSO sent' status, will correctly mark all selected QSOs as sent - they are in your account even though they would not be in this "
+"specific batch"
+msgstr ""
+"इस बीच, कृपया ध्यान दें कि कुछ कार्यपंजी निस्तारक सॉफ्टवेयर अजीब व्यवहार प्रदर्शित कर सकता है यदि 'री-अपलोड QSO' के अलावा कोई विकल्प क्लिक किया जाता है। 'केवल नवीन QSO' की सिफारिश की "
+"गई है, लेकिन एक कार्यपंजी निस्तारक सॉफ्टवेयर जो अपनी अपलोड ट्रैकिंग करता है, वह इस मामले में गलत तरीके से स्थिति सेट कर सकता है। एक कार्यपंजी निस्तारक सॉफ्टवेयर जो अपलोड को ट्रैक नहीं करता है, "
+"उसे 'केवल नवीन QSO' चुनकर अप्रभावित किया जाना चाहिए और यदि वह 'QSO भेजे गए' स्टेटस को ट्रैक करता है, तो सभी चयनित QSO को सही रूप में चिह्नित किया जाएगा - वे आपके खाते में हैं, भले ही वे इस "
+"विशिष्ट बैच में नहीं होंगे"
+
+#: tqsl.cpp:566
+msgid ""
+"Choosing 'Cancel' is usually safe, but a defective logger not checking the status messages reported by TrustedQSL may produce strange (but harmless) behavior such as "
+"attempting to upload an empty file or marking all chosen QSOs as 'sent'"
+msgstr ""
+"यहाँ पर 'रद्द करें' चुनना सामान्यता हानिकारक नहीं होता, पर त्रुटिपूर्ण लौगर का विश्वस्तQSL द्वारा प्रदत्त स्थिति संदेश का मूल्यांकन न करने पर संभवतया अवांछित (पर अहानिकारक) व्यवहार जैसे की खाली "
+"फ़ाइल को अपलोड करने का प्रयास या सभी चुने हुए QSOs को 'भेजा हुआ बताना'"
+
+#: tqsl.cpp:577
 msgid "New QSOs Only"
 msgstr "केवल नये QSO"
 
-#: tqsl.cpp:578
+#: tqsl.cpp:579
 msgid "Re-Upload QSOs"
 msgstr "पुनः अपलोड QSOs"
 
-#: tqsl.cpp:603
-msgid "The only reason to re-sign previously signed QSOs is if a previous upload was not processed by LoTW, either because it was never uploaded, or there was a server failure"
-msgstr "पहले से हस्ताक्षरित QSOs पर पुनः हस्ताक्षर करने का एकमात्र कारण यह है कि यदि पिछला अपलोड LoTW द्वारा संसाधित नहीं किया गया था, या तो इसलिए कि इसे कभी अपलोड नहीं किया गया था, या सर्वर विफलता थी"
+#: tqsl.cpp:604
+msgid ""
+"The only reason to re-sign previously signed QSOs is if a previous upload was not processed by LoTW, either because it was never uploaded, or there was a server "
+"failure"
+msgstr ""
+"पहले से हस्ताक्षरित QSOs पर पुनः हस्ताक्षर करने का एकमात्र कारण यह है कि यदि पिछला अपलोड LoTW द्वारा संसाधित नहीं किया गया था, या तो इसलिए कि इसे कभी अपलोड नहीं किया गया था, या "
+"सर्वर विफलता थी"
 
-#: tqsl.cpp:605
+#: tqsl.cpp:606
 msgid "Are you sure you want to proceed? Click 'No' to review the choices"
 msgstr "क्या आप निश्चित है अगली कार्यवाही के लिए? अन्यथा दोबारा सुनिश्चित करने के लिए 'नहीं' दबाये"
 
-#: tqsl.cpp:606
+#: tqsl.cpp:607
 msgid "Are you sure?"
 msgstr "क्या आप निश्चित है?"
 
-#: tqsl.cpp:629
+#: tqsl.cpp:630
 msgid "Errors Detected"
 msgstr "त्रुटियाँ पाई गयी"
 
-#: tqsl.cpp:636
+#: tqsl.cpp:637
 msgid "Ignore"
 msgstr "ध्यान न दें"
 
-#: tqsl.cpp:678
+#: tqsl.cpp:679
 msgid "Your custom mode map %s conflicts with the standard mode definition for %hs and was deleted."
 msgstr "आपका अनुकुलित मोड़ मानचित्र %s सामान्य मोड़ परिभाषा %hs के साथ विरोधाभाषी होने के कारण मिटा दिया गया है."
 
-#: tqsl.cpp:955
+#: tqsl.cpp:957
 msgid "Error renaming backup file %s: %hs"
 msgstr "बैकअप फ़ाइल %s: %hs का नाम बदलने में त्रुटि"
 
-#: tqsl.cpp:1091 tqsl.cpp:1110
+#: tqsl.cpp:1093 tqsl.cpp:1112
 msgid "Checking for TQSL updates..."
 msgstr "विश्वस्तQSL के अद्यतन की जांच हो रही है..."
 
-#: tqsl.cpp:1157
+#: tqsl.cpp:1159
 msgid "Sign and &upload ADIF or Cabrillo File..."
 msgstr "हस्ताक्षर करें एवं अपलोड करें 'ADIF' या Cabrillo फ़ाइल..."
 
-#: tqsl.cpp:1158
+#: tqsl.cpp:1160
 msgid "&Sign and save ADIF or Cabrillo file..."
 msgstr "हस्ताक्षर एवं सुरक्षित करें 'ADIF' या Cabrillo फ़ाइल..."
 
-#: tqsl.cpp:1159
+#: tqsl.cpp:1161
 msgid "&Test Signing an ADIF or Cabrillo file..."
 msgstr "&हस्ताक्षर करने का परीक्षण, ADIF या Cabrillo फ़ाइल पर..."
 
-#: tqsl.cpp:1161
+#: tqsl.cpp:1163
 msgid "&Backup Station Locations, Certificates, and Preferences..."
 msgstr "& बैकअप प्रेषणकेंद्र स्थान, प्रमाण पत्र, और प्राथमिकताएं..."
 
-#: tqsl.cpp:1162
+#: tqsl.cpp:1164
 msgid "&Restore Station Locations, Certificates, and Preferences..."
 msgstr "स्टेशन स्थानों, प्रमाण पत्र, और प्राथमिकताएं को &पुनःस्थापित करें..."
 
-#: tqsl.cpp:1164
+#: tqsl.cpp:1166
 msgid "Create &New ADIF file..."
 msgstr "नया ADIF फ़ाइल तैयार करें..."
 
-#: tqsl.cpp:1165
+#: tqsl.cpp:1167
 msgid "&Edit existing ADIF file..."
 msgstr "& सम्पादन करें मौजूदा ADIF फाइल..."
 
-#: tqsl.cpp:1168
+#: tqsl.cpp:1170
 msgid "&Preferences..."
 msgstr "प्राथमिकताएं..."
 
-#: tqsl.cpp:1170
+#: tqsl.cpp:1172
 msgid "Display or Modify &Preferences..."
 msgstr "देखें या प्राथमिकताएं बदले..."
 
-#: tqsl.cpp:1173 tqsl.cpp:7281 tqsl.cpp:7283
+#: tqsl.cpp:1175 tqsl.cpp:7580 tqsl.cpp:7582
 msgid "Language"
 msgstr "भाषा"
 
-#: tqsl.cpp:1175
+#: tqsl.cpp:1177
 msgid "Dia&gnostic Mode"
 msgstr "नैदा&निक प्रकार (Dia&gnostic Mode)"
 
-#: tqsl.cpp:1180 tqslupdater.cpp:111
+#: tqsl.cpp:1182 tqslupdater.cpp:111
 msgid "E&xit TQSL\tAlt-X"
 msgstr "विश्वस्त QSL से बाहर आयें\tAlt-X"
 
-#: tqsl.cpp:1185
+#: tqsl.cpp:1187
 msgid "&Display Station Location Properties"
 msgstr "प्रेषण केंद्र के स्थान के गुण &दिखाएँ"
 
-#: tqsl.cpp:1187
+#: tqsl.cpp:1189
 msgid "&Edit Station Location"
 msgstr "&सम्पादन करें प्रेषण केंद्र स्थान"
 
-#: tqsl.cpp:1188
+#: tqsl.cpp:1190
 msgid "&Add Station Location"
 msgstr "&जोड़ें प्रेषण केंद्र स्थान"
 
-#: tqsl.cpp:1194
+#: tqsl.cpp:1196
 msgid "&Restore a Deleted Station Location"
 msgstr "&बहाल करें, मिटाया हुआ प्रेषण केंद्र स्थान"
 
-#: tqsl.cpp:1207
+#: tqsl.cpp:1209
 msgid "&Contents"
 msgstr "&अंतर्वस्तु(contents)"
 
-#: tqsl.cpp:1209
+#: tqsl.cpp:1211
 msgid "Display &Documentation"
 msgstr "&दस्तावेज़ दिखाएँ"
 
-#: tqsl.cpp:1214
+#: tqsl.cpp:1216
 msgid "Check for &Updates..."
 msgstr "जाँचे नवीन &संस्करण के लिए..."
 
-#: tqsl.cpp:1216
+#: tqsl.cpp:1218
+msgid "Synchronize upload data with LoTW..."
+msgstr "LoTW के साथ अपलोड डेटा को सिंक्रनाइज़ करें..."
+
+#: tqsl.cpp:1221
 msgid "&About"
 msgstr "&के संबंध मे"
 
-#: tqsl.cpp:1219 tqsl_prefs.cpp:104
+#: tqsl.cpp:1224 tqsl_prefs.cpp:104
 msgid "&File"
 msgstr "&फ़ाइल"
 
-#: tqsl.cpp:1220
+#: tqsl.cpp:1225
 msgid "&Station Location"
 msgstr "&प्रेषण केंद्र स्थान"
 
-#: tqsl.cpp:1221
+#: tqsl.cpp:1226
 msgid "Callsign &Certificate"
 msgstr "कॉल चिन्ह &प्रमाणपत्र"
 
-#: tqsl.cpp:1222
+#: tqsl.cpp:1227
 msgid "&Help"
 msgstr "&सहायता"
 
-#: tqsl.cpp:1237 tqsl.cpp:1322
+#: tqsl.cpp:1242 tqsl.cpp:1327
 msgid "Log Operations"
 msgstr "संचालन पंजीबद्ध करें"
 
-#: tqsl.cpp:1244 tqsl.cpp:1560
+#: tqsl.cpp:1249 tqsl.cpp:1573
 msgid "Status Log"
 msgstr "कार्यपंजी की स्थिति"
 
-#: tqsl.cpp:1270
+#: tqsl.cpp:1275
 msgid "Sign a log and upload it automatically to LoTW"
 msgstr "कार्यपंजी हस्ताक्षरित करें एवं स्वतः LoTW पर अपलोड करें"
 
-#: tqsl.cpp:1285
+#: tqsl.cpp:1290
 msgid "Sign a log and save it for uploading later"
 msgstr "कार्यपंजी हस्ताक्षरित एवं सुरक्षित करें बाद मे अपलोड के लिए"
 
-#: tqsl.cpp:1301
+#: tqsl.cpp:1306
 msgid "Create an ADIF file for signing and uploading"
 msgstr "ADIF फ़ाइल बनाए, हस्ताक्षरण एवं अपलोड के लिए"
 
-#: tqsl.cpp:1316
+#: tqsl.cpp:1321
 msgid "Log in to the Logbook of the World Site"
 msgstr "LoTW वैबसाइट मे प्रवेश करें"
 
-#: tqsl.cpp:1354
+#: tqsl.cpp:1363
 msgid "Select a Station Location to process      "
 msgstr "प्रेषण केंद्र स्थान का चुनाव करें अगली कार्यवाही के लिए     "
 
-#: tqsl.cpp:1387
+#: tqsl.cpp:1396
 msgid "Create a new Station Location"
 msgstr "प्रेषण केंद्र के नये स्थान बनाएँ"
 
-#: tqsl.cpp:1402 tqsl.cpp:7121
+#: tqsl.cpp:1411 tqsl.cpp:7420
 msgid "Edit a Station Location"
 msgstr "प्रेषण केंद्र के स्थान का सम्पादन करें"
 
-#: tqsl.cpp:1419 tqsl.cpp:7123
+#: tqsl.cpp:1428 tqsl.cpp:7422
 msgid "Delete a Station Location"
 msgstr "प्रेषण केंद्र के स्थान को मिटा दें"
 
-#: tqsl.cpp:1436 tqsl.cpp:7125
+#: tqsl.cpp:1445 tqsl.cpp:7424
 msgid "Display Station Location Properties"
 msgstr "प्रेषण केंद्र के स्थान के गुण दिखाएँ"
 
-#: tqsl.cpp:1464 tqsl.cpp:6867
+#: tqsl.cpp:1477 tqsl.cpp:7166
 msgid "Select a Callsign Certificate to process"
 msgstr "प्रमाणपत्र फ़ाइल चुने, अगली कार्यवाही के लिए"
 
-#: tqsl.cpp:1492
+#: tqsl.cpp:1505
 msgid "Load a Callsign Certificate"
 msgstr "कॉल चिन्ह प्रमाणपत्र लोड करें"
 
-#: tqsl.cpp:1509 tqsl.cpp:6859
+#: tqsl.cpp:1522 tqsl.cpp:7158
 msgid "Save a Callsign Certificate"
 msgstr "कॉल चिन्ह प्रमाणपत्र सुरक्शित करें"
 
-#: tqsl.cpp:1526 tqsl.cpp:6652 tqsl.cpp:6861 tqsl.cpp:6928
+#: tqsl.cpp:1539 tqsl.cpp:6959 tqsl.cpp:7160 tqsl.cpp:7227
 msgid "Renew a Callsign Certificate"
 msgstr "कॉल चिन्ह प्रमाणपत्र का नवीनीकरण करें"
 
-#: tqsl.cpp:1543
+#: tqsl.cpp:1556
 msgid "Display a Callsign Certificate's Properties"
 msgstr "कॉल चिन्ह प्रमाणपत्र के गुण दिखाएँ"
 
-#: tqsl.cpp:1577 tqsl.cpp:1714 tqsl.cpp:1744
+#: tqsl.cpp:1596 tqsl.cpp:1733 tqsl.cpp:1763
 msgid "Add Station Location"
 msgstr "प्रेषण केंद्र स्थान जोड़े"
 
-#: tqsl.cpp:1663
+#: tqsl.cpp:1682
 msgid "About"
 msgstr "के संबंध मे"
 
-#: tqsl.cpp:1676
+#: tqsl.cpp:1695
 msgid "Log File"
 msgstr "कार्यपंजी फ़ाइल"
 
-#: tqsl.cpp:1677
+#: tqsl.cpp:1696
 msgid "Log files (*.log)|*.log|All files (*.*)|*.*"
 msgstr "कार्यपंजी फ़ाइल (*.log)|*.log|सभी फ़ाइल (*.*)|*.*"
 
-#: tqsl.cpp:1684
+#: tqsl.cpp:1703
 msgid "Error opening diagnostic log %s: %hs"
 msgstr "त्रुटि हुई निदानकारी पंजी खोलने में %s: %hs"
 
-#: tqsl.cpp:1685
+#: tqsl.cpp:1704
 msgid "Log File Error"
 msgstr "कार्यपंजी फ़ाइल त्रुटि"
 
 #. TRANSLATORS: uncommon error - error in a station location, followed by the ignore message that follows.
-#: tqsl.cpp:1772 tqsl.cpp:3186 tqsl.cpp:7242
+#: tqsl.cpp:1791 tqsl.cpp:3325 tqsl.cpp:7541
 msgid "The invalid data was ignored."
 msgstr "अवांछित डाटा नज़रअंदाज़ किया गया."
 
-#: tqsl.cpp:1773
+#: tqsl.cpp:1792
 msgid "Location data error"
 msgstr "स्थान डाटा में त्रुटि"
 
-#: tqsl.cpp:1777 tqsl.cpp:1804 tqsl.cpp:3191 tqsl.cpp:7247
+#: tqsl.cpp:1796 tqsl.cpp:1823 tqsl.cpp:3330 tqsl.cpp:7546
 msgid "Edit Station Location : %hs - %s"
 msgstr "प्रेषण केंद्र स्थान संपादित करें : %hs - %s"
 
-#: tqsl.cpp:1813 tqsl.cpp:6127
+#: tqsl.cpp:1832 tqsl.cpp:6418
 msgid "Edit Station Location"
 msgstr "प्रेषण केंद्र स्थान संपादित करें"
 
-#: tqsl.cpp:1813 tqsl.cpp:7552 tqsl.cpp:7654 tqsl_prefs.cpp:101
+#: tqsl.cpp:1832 tqsl.cpp:7849 tqsl.cpp:7951 tqsl_prefs.cpp:101
 msgid "Close"
 msgstr "बंद करें"
 
-#: tqsl.cpp:1923
+#: tqsl.cpp:1942
 msgid "Open File"
 msgstr "फ़ाइल खोले"
 
-#: tqsl.cpp:2078
+#: tqsl.cpp:2037 tqslwiz.cpp:112
+msgid "The vuccgrids.dat configuration file is missing or damaged. VUCC grid validation has been disabled."
+msgstr "Vuccgrids.dat कॉन्फ़िगरेशन फ़ाइल गुम या क्षतिग्रस्त है। VUCC ग्रिड सत्यापन अक्षम कर दिया गया है।"
+
+#: tqsl.cpp:2119
 msgid "Please choose a callsign for this Station Location"
 msgstr "कृपया इस प्रेषण केंद्र स्थान के लिए एक कॉल चिन्ह का चुनाव करें"
 
-#: tqsl.cpp:2079
+#: tqsl.cpp:2120
 msgid "Select Callsign"
 msgstr "कॉल चिन्ह चुनें"
 
-#: tqsl.cpp:2111
+#: tqsl.cpp:2152
 msgid "There are no valid callsign certificates for callsign"
 msgstr "निम्न कॉल चिन्ह के लिए 'कोई भी मान्य कॉल चिन्ह प्रमाणपत्र नहीं है"
 
-#: tqsl.cpp:2113
+#: tqsl.cpp:2154
 msgid "in entity"
 msgstr "इकाई में"
 
-#: tqsl.cpp:2115
+#: tqsl.cpp:2156
 msgid "Signing aborted."
 msgstr "हस्ताक्षरण निरस्त किया गया."
 
-#: tqsl.cpp:2126
+#: tqsl.cpp:2168
 msgid "Signing using Callsign %hs, DXCC Entity %hs"
 msgstr "कॉल चिन्ह %hs, DXCC %hs इकाई के उपयोग से हस्ताक्षरण"
 
-#: tqsl.cpp:2146
+#: tqsl.cpp:2189
 msgid "Another copy of TQSL is signing a log"
 msgstr "TQSL की एक और प्रति लॉग पर हस्ताक्षर कर रही है"
 
-#: tqsl.cpp:2147
+#: tqsl.cpp:2190
 msgid "TQSL must wait for other running copies of TQSL to exit before signing ..."
 msgstr "TQSL को हस्ताक्षर करने से पहले TQSL की अन्य चल रही प्रतियों के बंद होने की प्रतीक्षा करनी होगी ..."
 
-#: tqsl.cpp:2152
+#: tqsl.cpp:2195 tqsl.cpp:4354
 msgid "Aborting due to user cancelling"
 msgstr "उपयोगकर्ता के द्वारा रद्द करने के कारण निरस्त किया जा रहा है"
 
-#: tqsl.cpp:2180 tqsl.cpp:2436
+#: tqsl.cpp:2223 tqsl.cpp:2504
 msgid "Cancelled"
 msgstr "रद्द किया गया"
 
-#: tqsl.cpp:2234 tqsl.cpp:2244
+#: tqsl.cpp:2282 tqsl.cpp:2303
 #, c-format
 msgid "QSOs: %d"
 msgstr "QSOs: %d"
 
-#: tqsl.cpp:2236
+#: tqsl.cpp:2284
 #, c-format
 msgid "Previously Signed: %d"
 msgstr "पहले हस्ताक्षरित: %d"
 
-#: tqsl.cpp:2238 tqsl.cpp:2248
+#: tqsl.cpp:2286 tqsl.cpp:2307
 #, c-format
 msgid "Errors: %d"
 msgstr "त्रुटियाँ: %d"
 
-#: tqsl.cpp:2246
+#: tqsl.cpp:2305
 #, c-format
 msgid "Previously signed: %d"
 msgstr "पहले हस्ताक्षरित: %d"
 
-#: tqsl.cpp:2255
+#: tqsl.cpp:2315
 msgid "This log has too many previously uploaded QSOs. Please only upload new QSOs or break the log into smaller pieces (50,000 QSOs or less)."
 msgstr "इस लॉग में पहले से अपलोड किए गए बहुत सारे QSO हैं। कृपया केवल नए क्यूएसओ अपलोड करें या लॉग को छोटे टुकड़ों (50,000 क्यूएसओ या उससे कम) में तोड़ दें।"
 
-#: tqsl.cpp:2327 tqsl.cpp:2411
+#: tqsl.cpp:2393 tqsl.cpp:2478
 #, c-format
 msgid "on line %d"
 msgstr "%d पंक्ति पर"
 
-#: tqsl.cpp:2337
+#: tqsl.cpp:2403
 #, c-format
 msgid ""
 "Your QTH Details changed for this QSO.\n"
@@ -1308,101 +1388,101 @@ msgstr ""
 "\n"
 "कृपया जांच ले क्या आप इस QSO को बदलना चाहते थे!\n"
 
-#: tqsl.cpp:2359
+#: tqsl.cpp:2425
 msgid "Click 'Ignore' to continue signing this log while ignoring errors."
 msgstr "त्रुटियों को अनदेखा करते हुए इस लॉग को जारी रखने के लिए 'ध्यान न दें' पर क्लिक करें."
 
-#: tqsl.cpp:2361
+#: tqsl.cpp:2427
 msgid "Click 'Cancel' to abandon signing this log."
 msgstr "क्लिक करें 'रद्द' कार्यपंजी हस्ताक्षरण छोड़ देने के लिए."
 
-#: tqsl.cpp:2389
+#: tqsl.cpp:2456
 msgid "Signing cancelled"
 msgstr "हस्ताक्षरण रद्द किया गया"
 
-#: tqsl.cpp:2392
+#: tqsl.cpp:2459
 msgid "Duplicate QSO detected"
 msgstr "डुप्लिकेट QSO का पता चला"
 
-#: tqsl.cpp:2395
+#: tqsl.cpp:2462
 msgid "Signing aborted"
 msgstr "हस्ताक्षरण निरस्त किया गया"
 
-#: tqsl.cpp:2414
+#: tqsl.cpp:2481
 msgid "Signing aborted due to errors"
 msgstr "त्रुटियों की वजह से हस्ताक्षरण निरस्त किया गया"
 
-#: tqsl.cpp:2418
+#: tqsl.cpp:2485
 #, c-format
 msgid "%s: %d QSOs were outside the selected date range"
 msgstr "%s: %d QSO चयनित तिथि सीमा से बाहर थे"
 
-#: tqsl.cpp:2455
+#: tqsl.cpp:2523
 msgid "All QSOs are previously signed; aborted"
 msgstr "सभी QSOs पहले से हस्ताक्षरित हैं; निरस्त"
 
-#: tqsl.cpp:2462
+#: tqsl.cpp:2531
 #, c-format
 msgid "%d of %d QSOs are previously signed; aborted"
 msgstr "%d में से %d QSO पहले ही हस्ताक्षरित हैं; निरस्त"
 
-#: tqsl.cpp:2479
+#: tqsl.cpp:2549
 #, c-format
 msgid "%s: %d QSO records were previously signed"
 msgstr "%s: %d QSO रिकॉर्ड पहले से हस्ताक्षरित थे"
 
-#: tqsl.cpp:2507
+#: tqsl.cpp:2578
 msgid "Invalid contact - QSO does not specify a Callsign"
 msgstr "अमान्य संपर्क - QSO में कॉलचिन्ह उल्लेखितनहीं है"
 
-#: tqsl.cpp:2508
+#: tqsl.cpp:2579
 msgid "Invalid contact - QSO does not specify a band or frequency"
 msgstr "अमान्य संपर्क - QSO में बैंड या आवृत्ति उल्लेखित नहीं है"
 
-#: tqsl.cpp:2509
+#: tqsl.cpp:2580
 msgid "Invalid contact - QSO does not specify a mode"
 msgstr "अमान्य संपर्क - QSO में साधन उल्लेखित नहीं है"
 
-#: tqsl.cpp:2510
+#: tqsl.cpp:2581
 msgid "Invalid contact - QSO does not specify a date"
 msgstr "अमान्य संपर्क - QSO में तिथि उल्लेखित नहीं है"
 
-#: tqsl.cpp:2511
+#: tqsl.cpp:2582
 msgid "Invalid contact - QSO does not specify a time"
 msgstr "अमान्य संपर्क - QSO में समय उल्लेखित नहीं है"
 
-#: tqsl.cpp:2513
+#: tqsl.cpp:2584
 msgid "This callsign certificate is already active and cannot be restored."
 msgstr "यह कॉलचिन्ह पहले से ही कार्यरत है एवं दोबारा बहाल नहीं हो सकता."
 
-#: tqsl.cpp:2548
+#: tqsl.cpp:2619
 #, c-format
 msgid "Unable to open %s for output"
 msgstr "उत्पाद(आउटपुट) के लिए %s खोलने में असमर्थ"
 
-#: tqsl.cpp:2558
+#: tqsl.cpp:2630
 msgid "No records output"
 msgstr "कोई अभिलेख (रिकॉर्ड) नहीं"
 
-#: tqsl.cpp:2621
+#: tqsl.cpp:2682
 #, c-format
 msgid "%s: wrote %d records to %s"
 msgstr "%s: ने लिखा %d अभिलेख(रेकॉर्ड) %s के लिए"
 
-#: tqsl.cpp:2624
+#: tqsl.cpp:2685
 #, c-format
 msgid "%s is ready to be emailed or uploaded."
 msgstr "%s तैयार है ईमेल या अपलोड के लिए."
 
-#: tqsl.cpp:2625
+#: tqsl.cpp:2686
 msgid "Note: TQSL assumes that this file will be uploaded to LoTW."
 msgstr "नोट: विश्वस्तQSL मानता है कि यह फ़ाइल LoTW पर अपलोड कि जाएगी."
 
-#: tqsl.cpp:2626
+#: tqsl.cpp:2687
 msgid "Resubmitting these QSOs will cause them to be reported as already signed."
 msgstr "इन QSO को पुनः सबमिट करने से उन्हें पहले से हस्ताक्षरित माना जाएगा।"
 
-#: tqsl.cpp:2628
+#: tqsl.cpp:2689
 #, c-format
 msgid ""
 "To submit the signed log file to LoTW:\n"
@@ -1423,49 +1503,58 @@ msgstr ""
 "\n"
 "वैकल्पिक रूप से, आप हस्ताक्षरित लॉग फ़ाइल को ई-मेल संदेश में अनुलग्न कर के भेज हैं, और संदेश को lotw-logs@arrl.org"
 
-#: tqsl.cpp:2630
+#: tqsl.cpp:2691
 msgid "Note: TQSL has not recorded signing these QSOs. You can submit this log file to LoTW or discard it."
 msgstr "नोट: TQSL ने इन QSO पर हस्ताक्षर करने को रिकॉर्ड नहीं किया है। आप इस लॉग फ़ाइल को LoTW को सबमिट कर सकते हैं या इसे त्याग सकते हैं।"
 
-#: tqsl.cpp:2735
-msgid "Error compressing before upload"
-msgstr "अपलोड से पहले संकुचन में त्रुटि हुई"
+#: tqsl.cpp:2747
+msgid "Unable to open log file %hs: %hs"
+msgstr "लॉग फ़ाइल %hs खोलने में असमर्थ: %hs"
 
-#: tqsl.cpp:2842
+#: tqsl.cpp:2939
 msgid "Unable to open ca-bundle.crt. Your TQSL installation is incomplete"
 msgstr "Ca-bundle.crt खोलने में असमर्थ। आपकी TQSL स्थापना अधूरी है"
 
-#: tqsl.cpp:2907
+#: tqsl.cpp:3004
 msgid "Error: Could not upload file (CURL Init error)"
 msgstr "त्रुटि: फ़ाइल अपलोड नहीं कर सका (CURL Init त्रुटि)"
 
-#: tqsl.cpp:2942
+#: tqsl.cpp:3020
+#, c-format
+msgid "Error: Could not open file %s: %m (CURL Init error)"
+msgstr "त्रुटि: फ़ाइल %s नहीं खोली जा सकी: %m (CURL प्रारंभ त्रुटि)"
+
+#: tqsl.cpp:3051 tqsl.cpp:3059
+msgid "Error: out of memory (CURL Init error)"
+msgstr "त्रुटि: मेमोरी ख़त्म (CURL Init त्रुटि)"
+
+#: tqsl.cpp:3078
 msgid "Attempting to upload one QSO"
 msgstr "एक QSO अपलोड करने को प्रयासरत"
 
-#: tqsl.cpp:2944
+#: tqsl.cpp:3080
 #, c-format
 msgid "Attempting to upload %d QSOs"
 msgstr "%d QSOs अपलोड करने को प्रयासरत"
 
-#: tqsl.cpp:2947
+#: tqsl.cpp:3083
 #, c-format
 msgid "Attempting to upload %s"
 msgstr "%s अपलोड करने को प्रयासरत"
 
-#: tqsl.cpp:2954
+#: tqsl.cpp:3090
 msgid "Uploading Callsign Certificate"
 msgstr "कॉलचिन्ह प्रमाणपत्र अपलोड हो रहा है"
 
-#: tqsl.cpp:2954
+#: tqsl.cpp:3090
 msgid "Uploading Callsign Certificate Request..."
 msgstr "कॉलचिन्ह प्रमाणपत्र अनुरोध अपलोड हो रहा है..."
 
-#: tqsl.cpp:2963
+#: tqsl.cpp:3099
 msgid "Could not spawn upload thread!"
 msgstr "अपलोड सूत्र का कोई निष्कर्ष नहीं!"
 
-#: tqsl.cpp:2997
+#: tqsl.cpp:3134
 #, c-format
 msgid ""
 "%s: Log uploaded successfully with result:\n"
@@ -1476,11 +1565,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: tqsl.cpp:2999 tqsl.cpp:3020
+#: tqsl.cpp:3136 tqsl.cpp:3157
 msgid "After reading this message, you may close this program."
 msgstr "यह संदेश पढ़ने के बाद, आप इस प्रोग्राम को बंद कर सकते हैं."
 
-#: tqsl.cpp:3007 tqsl.cpp:3012
+#: tqsl.cpp:3144 tqsl.cpp:3149
 #, c-format
 msgid ""
 "%s uploaded with result:\n"
@@ -1491,7 +1580,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: tqsl.cpp:3009
+#: tqsl.cpp:3146
 #, c-format
 msgid ""
 "%s Uploaded with result:\n"
@@ -1502,106 +1591,116 @@ msgstr ""
 "\n"
 "%s"
 
-#: tqsl.cpp:3019
+#: tqsl.cpp:3156
 #, c-format
 msgid "%s: Log uploaded successfully"
 msgstr "%s: अभिलेख सफलतापूर्वक अपलोड किया गया"
 
-#: tqsl.cpp:3022
+#: tqsl.cpp:3159
 #, c-format
 msgid "%s uploaded successfully"
 msgstr "%s सफलतापूर्वक अपलोड किया गया"
 
-#: tqsl.cpp:3029
+#: tqsl.cpp:3166
 #, c-format
 msgid "%s: %s upload was rejected with result \"%s\""
 msgstr "%s: %s अपलोड अस्वीकृत किया गया एवं उसका परिणाम \"%s\""
 
-#: tqsl.cpp:3033
+#: tqsl.cpp:3170
 #, c-format
 msgid "%s: %s upload was rejected"
 msgstr "%s: %s अपलोड अस्वीकृत किया गया"
 
-#: tqsl.cpp:3039
+#: tqsl.cpp:3176
 #, c-format
-msgid "%s: Got an unexpected response on %s upload! Maybe the site is down?"
-msgstr "%s: अप्रत्याशित उत्तर मिला, %s अपलोड पर! शायद साइट काम नहीं कर रही है?"
+msgid ""
+"%s: Got an unexpected response on %s upload!\n"
+"%s\n"
+"Maybe the site is down?"
+msgstr ""
+"%s: %s अपलोड पर एक अप्रत्याशित प्रतिक्रिया मिली!\n"
+"%s\n"
+"शायद साइट डाउन है?"
 
-#: tqsl.cpp:3051
+#: tqsl.cpp:3188
 #, c-format
 msgid "%s: Unable to upload - either your Internet connection is down or LoTW is unreachable."
 msgstr "%s: अपलोड करने में असमर्थ-या तो आपका इंटरनेट कनेक्शन बंद है या LoTW तक पहुंच नहीं."
 
-#: tqsl.cpp:3052 tqsl.cpp:3056 tqsl.cpp:3060
+#: tqsl.cpp:3189 tqsl.cpp:3193 tqsl.cpp:3197
 #, c-format
 msgid "Please try uploading the %s later."
 msgstr "कृपया %s को बाद में अपलोड करने का प्रयास करें."
 
-#: tqsl.cpp:3055
+#: tqsl.cpp:3192
 #, c-format
 msgid "%s: Unable to upload. The network is down or the LoTW site is too busy."
 msgstr "%s: अपलोड करने में असमर्थ. नेटवर्क बंद है या LoTW साइट बहुत व्यस्त है."
 
-#: tqsl.cpp:3059
+#: tqsl.cpp:3196
 #, c-format
 msgid "%s: Unable to connect to the upload site."
 msgstr "%s: अपलोड साइट से कनेक्ट करने में असमर्थ."
 
-#: tqsl.cpp:3063
+#: tqsl.cpp:3200
 #, c-format
 msgid "%s: Upload cancelled"
 msgstr "%s: अपलोड रद्द किया गया"
 
-#: tqsl.cpp:3068
+#: tqsl.cpp:3205
 msgid "%s: Couldn't upload the file: CURL returned \"%hs\" (%hs)"
 msgstr "%s: फ़ाइल अपलोड नहीं कर सका: CURL प्रस्तावित \" %hs\" (%hs)"
 
-#: tqsl.cpp:3081
+#: tqsl.cpp:3219
 msgid "Your upload appears to have failed. Should TQSL try again?"
 msgstr "आपका अपलोड विफल प्रतीत हो रहा है । क्या विश्वस्तQSL फिर से प्रयास करे?"
 
-#: tqsl.cpp:3081 tqsl.cpp:6794
+#: tqsl.cpp:3219 tqsl.cpp:7093
 msgid "Retry?"
 msgstr "पुन: प्रयास करें?"
 
-#: tqsl.cpp:3110
+#: tqsl.cpp:3249
 msgid "There are no callsign certificates for callsign %hs. This station location cannot be edited."
 msgstr "कॉलचिन्ह %hs के लिए कोई कॉलचिन्ह प्रमाण पत्र नहीं हैं । इस प्रेषणकेंद्र स्थान को संपादित नहीं किया जा सकता."
 
-#: tqsl.cpp:3110 tqsl.cpp:3112 tqsl.cpp:3146
+#: tqsl.cpp:3249 tqsl.cpp:3251 tqsl.cpp:3285
 msgid "No Certificate"
 msgstr "कोई प्रमाणपत्र नहीं"
 
-#: tqsl.cpp:3112 tqsl.cpp:3132
+#: tqsl.cpp:3251 tqsl.cpp:3271
 msgid "There are no current callsign certificates for callsign %hs. This station location cannot be used to sign a log file."
 msgstr "कॉलचिन्ह %hs के लिए कोई वर्तमान कॉलचिन्ह प्रमाणपत्र नहीं हैं । इस प्रेषणकेंद्र स्थान को अभिलेख फ़ाइल को हस्ताक्षरित करने के लिए उपयोग नहीं किया जा सकता."
 
-#: tqsl.cpp:3134
+#: tqsl.cpp:3273
 msgid "There is a newer callsign certificate for callsign %hs. This station location cannot be used to sign a log file until the new certificate is installed."
-msgstr "कॉलसाइन %hs के लिए कोई नया कॉलसाइन प्रमाणपत्र है. इस स्टेशन स्थान का उपयोग किसी लॉग फ़ाइल पर हस्ताक्षर करने के लिए तब तक नहीं किया जा सकता जब तक कि नया कॉलसाइन प्रमाणपत्र स्थापित न हो जाए."
+msgstr ""
+"कॉलसाइन %hs के लिए कोई नया कॉलसाइन प्रमाणपत्र है. इस स्टेशन स्थान का उपयोग किसी लॉग फ़ाइल पर हस्ताक्षर करने के लिए तब तक नहीं किया जा सकता जब तक कि नया कॉलसाइन प्रमाणपत्र स्थापित न "
+"हो जाए."
 
-#: tqsl.cpp:3136
+#: tqsl.cpp:3275
 msgid "The callsign certificate for callsign %hs has expired. This station location cannot be used to sign a log file until a valid callsign certificate is installed."
-msgstr "कॉलसाइन %hs के लिए कॉलसाइन प्रमाण पत्र की समय सीमा समाप्त हो गई है. इस स्टेशन स्थान का उपयोग किसी मान्य कॉलसाइन प्रमाणपत्र स्थापित होने तक लॉग फ़ाइल पर हस्ताक्षर करने के लिए नहीं किया जा सकता."
+msgstr ""
+"कॉलसाइन %hs के लिए कॉलसाइन प्रमाण पत्र की समय सीमा समाप्त हो गई है. इस स्टेशन स्थान का उपयोग किसी मान्य कॉलसाइन प्रमाणपत्र स्थापित होने तक लॉग फ़ाइल पर हस्ताक्षर करने के लिए नहीं किया "
+"जा सकता."
 
-#: tqsl.cpp:3187 tqsl.cpp:3207 tqsl.cpp:7243
+#: tqsl.cpp:3326 tqsl.cpp:3346 tqsl.cpp:7542
 msgid "Station Location data error"
 msgstr "प्रेषणकेंद्र स्थान विवरण में त्रुटि"
 
-#: tqsl.cpp:3206
+#: tqsl.cpp:3345
 msgid "This should be corrected before signing a log file."
 msgstr "यह अभिलेख(लॉग) फ़ाइल पर हस्ताक्षर करने से पहले ठीक किया जाना चाहिए."
 
-#: tqsl.cpp:3376
+#: tqsl.cpp:3515
 msgid "TQSL Update Available"
 msgstr "विश्वस्तQSL अद्यतन (update) उपलब्ध है"
 
-#: tqsl.cpp:3388
+#: tqsl.cpp:3527
 #, c-format
 msgid "A new TQSL release (V%s) is available!"
 msgstr "विश्वस्तQSL का नवीन संस्करण(V%s) उपलब्ध है!"
 
-#: tqsl.cpp:3390
+#: tqsl.cpp:3529
 #, c-format
 msgid ""
 "An updated TrustedQSL configuration file (V%s) is available!\n"
@@ -1610,408 +1709,470 @@ msgstr ""
 "नवीनीकृत विश्वस्तQSL विन्यास फ़ाइल (V%s) उपलब्ध है!\n"
 "यह विन्यास फ़ाइल इकाई, प्रकार, साधन इत्यादि की परिभाषा स्थापित करेगा."
 
-#: tqsl.cpp:3398
+#: tqsl.cpp:3537
 msgid "Download from:"
 msgstr "डौन्लोड करें यहाँ से:"
 
-#: tqsl.cpp:3407
+#: tqsl.cpp:3546
 msgid "More details at:"
 msgstr "अधिक जानकारी यहाँ पर:"
 
-#: tqsl.cpp:3415
+#: tqsl.cpp:3554
 msgid "Click 'OK' to install the new version of TQSL, or Cancel to ignore it."
 msgstr "क्लिक करे 'अनुमोदित' नया विश्वस्तQSL स्थापित करने के लिए, अथवा रद्द करें अनदेखा करने के लिए."
 
-#: tqsl.cpp:3420
+#: tqsl.cpp:3559
 msgid "Click 'OK' to install the new configuration file, or Cancel to ignore it."
 msgstr "क्लिक करे 'अनुमोदित' नयी विन्यास फ़ाइल स्थापित करने के लिए, अथवा रद्द करें अनदेखा करने के लिए."
 
-#: tqsl.cpp:3472
+#: tqsl.cpp:3612 tqsl.cpp:4388
 msgid "Can't open new configuration file %s: %hs"
 msgstr "नयी विन्यास फ़ाइल %s: %hs नहीं खुल सकी"
 
-#: tqsl.cpp:3488 tqsl.cpp:3568
+#: tqsl.cpp:3628 tqsl.cpp:3708
 msgid "Error writing new configuration file %s: %hs"
 msgstr "नयी विन्यास फ़ाइल %s: %hs लिखने में त्रुटि"
 
-#: tqsl.cpp:3496
+#: tqsl.cpp:3636
 msgid "Configuration file successfully updated"
 msgstr "विन्यास फ़ाइल सफलतापूर्वक अद्यतन की गई"
 
-#: tqsl.cpp:3496
+#: tqsl.cpp:3636
 msgid "Update Completed"
 msgstr "अद्यतन (update) पूर्ण"
 
-#: tqsl.cpp:3512 tqsl.cpp:3592
+#: tqsl.cpp:3652 tqsl.cpp:3732
 msgid "Unable to update - either your Internet connection is down or LoTW is unreachable."
 msgstr "अद्यतन करने में असमर्थ-या तो आपका इंटरनेट कनेक्शन बंद है या LoTW पहुंच योग्य नहीं है."
 
-#: tqsl.cpp:3513 tqsl.cpp:3516 tqsl.cpp:3519 tqsl.cpp:3593 tqsl.cpp:3596 tqsl.cpp:3599 tqsl.cpp:4113 tqsl.cpp:4119 tqsl.cpp:4125 tqsl.cpp:4148 tqsl.cpp:4154 tqsl.cpp:4160
+#: tqsl.cpp:3653 tqsl.cpp:3656 tqsl.cpp:3659 tqsl.cpp:3733 tqsl.cpp:3736 tqsl.cpp:3739 tqsl.cpp:4251 tqsl.cpp:4257 tqsl.cpp:4263 tqsl.cpp:4286 tqsl.cpp:4292
+#: tqsl.cpp:4298
 msgid "Please try again later."
 msgstr "कृपया पुन: प्रयास करें."
 
-#: tqsl.cpp:3515 tqsl.cpp:3595
+#: tqsl.cpp:3655 tqsl.cpp:3735
 msgid "Unable to update. The network is down or the LoTW site is too busy."
 msgstr "अद्यतन करने में असमर्थ-या तो आपका इंटरनेट कनेक्शन बंद है या LoTW साइट बहुत व्यस्त है."
 
-#: tqsl.cpp:3518 tqsl.cpp:3598 tqsl.cpp:4123 tqsl.cpp:4158
+#: tqsl.cpp:3658 tqsl.cpp:3738 tqsl.cpp:4261 tqsl.cpp:4296
 msgid "Unable to connect to the update site."
 msgstr "अद्यतन साइट से कनेक्ट करने में असमर्थ."
 
-#: tqsl.cpp:3521
+#: tqsl.cpp:3661
 msgid "Error downloading new configuration file:"
 msgstr "नई विन्यास(configuration) फ़ाइल डाउनलोड करने में त्रुटि:"
 
-#: tqsl.cpp:3523 tqsl.cpp:3603 tqsl.cpp:3894
+#: tqsl.cpp:3663 tqsl.cpp:3743 tqsl.cpp:4035
 msgid "Update"
 msgstr "Adyatan(Update)"
 
-#: tqsl.cpp:3552
+#: tqsl.cpp:3692
 msgid "Can't open TQSL update file %s: %hs"
 msgstr "विश्वस्तQSL की अद्यतन फ़ाइल %s नहीं खोल सकता: %hs"
 
-#: tqsl.cpp:3601
+#: tqsl.cpp:3741
 msgid "Error downloading new file:"
 msgstr "नई फ़ाइल डाउनलोड करने में त्रुटि:"
 
-#: tqsl.cpp:3857
+#: tqsl.cpp:3998
 msgid "Error checking for expired callsign certificates:"
 msgstr "कॉलचिन्ह प्रमाणपत्र जिसकी अवधि समाप्त हो गयी है, जाँचने मे त्रुटि:"
 
-#: tqsl.cpp:3858
+#: tqsl.cpp:3999
 msgid "Check Error"
 msgstr "त्रुटि जाँचे"
 
-#: tqsl.cpp:3861
+#: tqsl.cpp:4002
 msgid "The certificate for %hs expires in %d days."
 msgstr "%hs के प्रमाणपत्र की वैद्यता %d दिनों में पूर्ण हो जाएगी."
 
-#: tqsl.cpp:3864
+#: tqsl.cpp:4005
 msgid "The certificate for %hs expires in %d days"
 msgstr "%hs के प्रमाणपत्र की वैद्यता %d दिनों में पूर्ण हो जाएगी"
 
-#: tqsl.cpp:3866
+#: tqsl.cpp:4007
 msgid "Do you want to renew it now?"
 msgstr "क्या आप इसका नवीनीकरण अभी करना चाहते हैं?"
 
-#: tqsl.cpp:3868
+#: tqsl.cpp:4009
 msgid "Certificate Expiring"
 msgstr "प्रमाणपत्र वैद्यता समाप्ती की ओर"
 
-#: tqsl.cpp:3912
+#: tqsl.cpp:4053
 #, c-format
 msgid "A new TQSL release (V%s) is available."
 msgstr "विश्वस्तQSL का नवीन संस्करण(V%s) उपलब्ध है."
 
-#: tqsl.cpp:3929
+#: tqsl.cpp:4070
 #, c-format
 msgid "A new TrustedQSL configuration file (V%s) is available."
 msgstr "एक नई विश्वस्तQSL विन्यास फ़ाइल (V%s) उपलब्ध है."
 
-#: tqsl.cpp:3942
+#: tqsl.cpp:4083
 msgid "Your system is up to date"
 msgstr "आपका सिस्टम पूर्णतः वैद्य है"
 
-#: tqsl.cpp:3944
+#: tqsl.cpp:4085
 msgid "TQSL Version %hs and Configuration Data Version %s"
 msgstr "विश्वस्तQSL संस्करण %hs और विन्यास विवरण संस्करण %s"
 
-#: tqsl.cpp:3946
+#: tqsl.cpp:4087
 msgid "are the newest available"
 msgstr "नवीनतम उपलब्ध हैं"
 
-#: tqsl.cpp:3947
+#: tqsl.cpp:4088
 msgid "No Updates"
 msgstr "कोई अद्यतन नहीं"
 
-#: tqsl.cpp:4111 tqsl.cpp:4146
+#: tqsl.cpp:4249 tqsl.cpp:4284
 msgid "Unable to check for updates - either your Internet connection is down or LoTW is unreachable."
 msgstr "अद्यतनों के लिए जांच करने में असमर्थ - या तो आपका इंटरनेट बंद है या LoTW पहुँच से बहार है."
 
-#: tqsl.cpp:4117 tqsl.cpp:4152
+#: tqsl.cpp:4255 tqsl.cpp:4290
 msgid "Unable to check for updates. The network is down or the LoTW site is too busy."
 msgstr "अद्यतनों के लिए जांच करने में असमर्थ. नेटवर्क बंद है या LoTW साइट बहुत व्यस्त है."
 
-#: tqsl.cpp:4128
+#: tqsl.cpp:4266
 msgid "Error downloading new version information:"
 msgstr "नवीन संस्करण की जानकारी डाऊनलोड करने में त्रुटि:"
 
-#: tqsl.cpp:4163
+#: tqsl.cpp:4301
 msgid "Error downloading update version information:"
 msgstr "अद्यतन जानकारी डाऊनलोड करने में त्रुटि:"
 
-#: tqsl.cpp:4482
+#: tqsl.cpp:4340
+msgid "You can not synchronize with LoTW more than once per day"
+msgstr "आप प्रति दिन एक से अधिक बार LoTW के साथ समन्वय नहीं कर सकते"
+
+#: tqsl.cpp:4348
+msgid "Another copy of TQSL is busy"
+msgstr "TQSL की एक और प्रति व्यस्त है"
+
+#: tqsl.cpp:4349
+msgid "TQSL must wait for other running copies of TQSL to exit before synchronizing ..."
+msgstr "TQSL को सिंक्रनाइज़ करने से पहले TQSL की अन्य चल रही प्रतियों के बाहर निकलने की प्रतीक्षा करनी चाहिए ..."
+
+#: tqsl.cpp:4359
+msgid "LoTW Login"
+msgstr "LoTW लॉगिन"
+
+#: tqsl.cpp:4359
+msgid ""
+"TQSL needs your Logbook of the World (LoTW) username and password to retrieve the data needed to perform this operation.\n"
+"Please note that retrieving all of your LoTW data can take several minutes, so please be patient while LoTW collects that information.\n"
+"\n"
+"TQSL will appear to be unresponsive until LoTW completes extraction of your QSO history.\n"
+msgstr ""
+"इस ऑपरेशन को करने के लिए आवश्यक डेटा प्राप्त करने हेतु TQSL को आपके लॉगबुक ऑफ़ द वर्ल्ड (LoTW) उपयोगकर्ता नाम और पासवर्ड की आवश्यकता होगी।\n"
+"कृपया ध्यान दें कि आपके सभी LoTW डेटा को प्राप्त करने में कई मिनट लग सकते हैं, इसलिए जब तक LoTW वह जानकारी एकत्र करता है, कृपया धैर्य रखें।\n"
+"\n"
+"जब तक LoTW आपके QSO इतिहास का निष्कर्षण पूरा नहीं कर लेता, तब तक TQSL अनुत्तरदायी प्रतीत होगा।\n"
+
+#: tqsl.cpp:4374
+msgid "Retrieving your QSO details from LoTW. Please be patient, this may take some time.\n"
+msgstr "LoTW से आपके QSO विवरण प्राप्त किए जा रहे हैं। कृपया धैर्य रखें, इसमें कुछ समय लग सकता है।\n"
+
+#: tqsl.cpp:4406 tqsl.cpp:4412
+msgid "Error writing log download file %s: %hs"
+msgstr "लॉग डाउनलोड फ़ाइल %s लिखते समय त्रुटि: %hs"
+
+#: tqsl.cpp:4420
+msgid "Error reading log download file %s: %hs"
+msgstr "लॉग डाउनलोड फ़ाइल %s पढ़ने में त्रुटि: %hs"
+
+#: tqsl.cpp:4432
+#, c-format
+msgid "Error logging in to LoTW: %s"
+msgstr "LoTW में लॉग इन करते समय त्रुटि: %s"
+
+#: tqsl.cpp:4438
+msgid "Response from LoTW is not recognized"
+msgstr "LoTW से प्रतिक्रिया मान्यता प्राप्त नहीं है"
+
+#: tqsl.cpp:4456
+msgid "Loading your LoTW QSO data into TQSL\n"
+msgstr "आपके LoTW QSO डेटा को TQSL में लोड करना\n"
+
+#: tqsl.cpp:4467
+msgid "Synchronizing completed.\n"
+msgstr "समन्वयन पूर्ण हो गया।\n"
+
+#: tqsl.cpp:4759
 msgid "You have no callsign certificates to use to sign a log file."
 msgstr "आपके पास कोई कॉलचिन्ह प्रमाणपत्र नहीं जिससे आप कार्यपंजी हस्ताक्षरित कर सकें."
 
-#: tqsl.cpp:4484
+#: tqsl.cpp:4761
 msgid "Please install a callsign certificate then try again."
 msgstr "कृपया पहले एक कॉलचिन्ह प्रमाणपत्र स्थापित करें एवं पुनः प्रयास करें."
 
-#: tqsl.cpp:4485
+#: tqsl.cpp:4762
 msgid "No Callsign Certificates"
 msgstr "कोई कॉलचिन्ह प्रमाणपत्र नहीं"
 
-#: tqsl.cpp:4510
+#: tqsl.cpp:4787
 msgid "|ADIF files ("
 msgstr "|ADIF फ़ाइलें ("
 
-#: tqsl.cpp:4522
+#: tqsl.cpp:4799
 msgid "|Cabrillo files ("
 msgstr "|Cabrillo फ़ाइलें ("
 
-#: tqsl.cpp:4525
+#: tqsl.cpp:4802
 msgid "Select file to Sign"
 msgstr "हस्ताक्षरण के लिए फ़ाइल को चुने"
 
-#: tqsl.cpp:4541
+#: tqsl.cpp:4818
 msgid "TQSL compressed data files (*.tq8)|*.tq8"
 msgstr "विश्वस्तQSL संकुचित विवरण फ़ाइलें (*.tq8)|*.tq8"
 
-#: tqsl.cpp:4542
+#: tqsl.cpp:4819
 msgid "TQSL data files (*.tq7)|*.tq7"
 msgstr "विश्वस्तQSL विवरण फ़ाइलें (*.tq7)|*.tq7"
 
-#: tqsl.cpp:4544
+#: tqsl.cpp:4821
 msgid "Select file to write to"
 msgstr "लिखने के लिए फ़ाइल चुने"
 
-#: tqsl.cpp:4560 tqsl.cpp:6263
+#: tqsl.cpp:4837 tqsl.cpp:6564
 msgid "Select Station Location for Signing"
 msgstr "हस्ताक्षरण के लिए प्रेषणकेंद्र चुने"
 
-#: tqsl.cpp:4593
+#: tqsl.cpp:4870
 msgid "Signing abandoned"
 msgstr "हस्ताक्षरण रद्द"
 
-#: tqsl.cpp:4811
+#: tqsl.cpp:5088
 msgid "TQSL must wait for other running copies of TQSL to exit before backing up..."
 msgstr "विश्वस्तQSL प्रतीक्षारत, बैकअप लेने से पहले विश्वस्तQSL की अन्य चलित प्रतियों के बंद होने का..."
 
-#: tqsl.cpp:4828 tqsl.cpp:5384
+#: tqsl.cpp:5105 tqsl.cpp:5654
 msgid "Error opening save file %s: %hs"
 msgstr "त्रुटि हुई संचित फ़ाइल %s खोलने में: %hs"
 
-#: tqsl.cpp:4844
+#: tqsl.cpp:5121
 msgid "Saving callsign certificates"
 msgstr "कॉलचिन्ह प्रमाणपत्र संचित हो रही है"
 
-#: tqsl.cpp:4888
+#: tqsl.cpp:5164
 msgid "Saving callsign certificate for %hs"
 msgstr "कॉलचिन्ह प्रमाणपत्र %hs के लिए संचित हो रही है"
 
-#: tqsl.cpp:4921
+#: tqsl.cpp:5197
 msgid "Saving Station Locations"
 msgstr "प्रेषण केंद्र के स्थान संचित हो रहा है"
 
-#: tqsl.cpp:4937
+#: tqsl.cpp:5213
 msgid "Saving TQSL Preferences"
 msgstr "विश्वस्तQSL प्राथमिकताएं संचित हो रही है"
 
-#: tqsl.cpp:4951
+#: tqsl.cpp:5228
 msgid "Saving QSOs"
 msgstr "QSOs सचित हो रहे हैं"
 
-#: tqsl.cpp:4997
+#: tqsl.cpp:5274
 msgid "Save operation complete."
 msgstr "संचित कार्यवाही पूर्ण."
 
-#: tqsl.cpp:5006
+#: tqsl.cpp:5283
 msgid "Error performing automatic backup: %hs"
 msgstr "स्वचालित बैकअप करने में त्रुटि: %hs"
 
-#: tqsl.cpp:5007
+#: tqsl.cpp:5284
 msgid "Backup Error"
 msgstr "बैकअप त्रुटि"
 
-#: tqsl.cpp:5009 tqsl.cpp:5028
+#: tqsl.cpp:5286 tqsl.cpp:5305
 msgid "Backup operation failed: %hs"
 msgstr "पुनःस्थापना कार्यवाही असफल: %hs"
 
-#: tqsl.cpp:5019
+#: tqsl.cpp:5296
 msgid "Enter file to save to"
 msgstr "संचित करने के लिए फ़ाइल दर्ज करें"
 
-#: tqsl.cpp:5020
+#: tqsl.cpp:5297
 msgid "Configuration files (*.tbk)|*.tbk|All files (*.*)|*.*"
 msgstr "विन्यास फ़ाइलें (*.tbk)|*.tbk|All files (*.*)|*.*"
 
-#: tqsl.cpp:5065
+#: tqsl.cpp:5342
 msgid "Restoring callsign certificate for %hs"
 msgstr "%hs के लिए कॉलचिन्ह प्रमाणपत्र पुनर्स्थापित हो रहा है"
 
-#: tqsl.cpp:5111
+#: tqsl.cpp:5388
 msgid "Restoring Preferences"
 msgstr "प्राथमिकताएं पुनर्स्थापित हो रहीं है"
 
-#: tqsl.cpp:5173
+#: tqsl.cpp:5450
 msgid "Restoring Station Locations"
 msgstr "प्रेषणकेंद्र स्थान पुनर्स्थापित हो रहीं है"
 
-#: tqsl.cpp:5194
+#: tqsl.cpp:5471
 msgid "Restoring QSO records"
 msgstr "QSO अभिलेख पुनःस्थापित हो रहा है"
 
-#: tqsl.cpp:5252
+#: tqsl.cpp:5529
 msgid "Error importing station locations: %hs"
 msgstr "प्रेषणकेंद्र स्थान आयात करने में त्रुटि: %hs"
 
-#: tqsl.cpp:5316
+#: tqsl.cpp:5593
 msgid "Restoring Callsign Certificates"
 msgstr "कॉलचिन्ह प्रमाणपत्र पुनःस्थापित हो रहा है"
 
-#: tqsl.cpp:5323 tqsl.cpp:5331 tqsl.cpp:5336
+#: tqsl.cpp:5600 tqsl.cpp:5608 tqsl.cpp:5613
 msgid "Error parsing saved configuration file: %hs"
 msgstr "संचित की गई विन्यास फ़ाइल पार्स करने में त्रुटि: %hs"
 
-#: tqsl.cpp:5340
+#: tqsl.cpp:5617
 msgid "Restore Complete."
 msgstr "(Restore Complete.)पुनःस्थापना पूर्ण."
 
-#: tqsl.cpp:5354
+#: tqsl.cpp:5631
 msgid "Error parsing station location file: %hs"
 msgstr "प्रेषणकेंद्र फ़ाइल पार्स करने में त्रुटि: %hs"
 
-#: tqsl.cpp:5366
-msgid "Select saved configuration file"
-msgstr "सहेजी गई विन्यास फ़ाइल का चयन करें"
-
-#: tqsl.cpp:5367
-msgid "Saved configuration files (*.tbk)|*.tbk"
-msgstr "सहेजी गई विन्यास फ़ाइलें (*.tbk)|*.tbk"
-
-#: tqsl.cpp:5397
+#: tqsl.cpp:5667
 msgid "Restore operation failed: %hs"
 msgstr "पुनःस्थापना कार्यवाही असफल: %hs"
 
-#: tqsl.cpp:5687
+#: tqsl.cpp:5675
+msgid "Select saved configuration file"
+msgstr "सहेजी गई विन्यास फ़ाइल का चयन करें"
+
+#: tqsl.cpp:5676
+msgid "Saved configuration files (*.tbk)|*.tbk"
+msgstr "सहेजी गई विन्यास फ़ाइलें (*.tbk)|*.tbk"
+
+#: tqsl.cpp:5969
 msgid "Exit TQSL so I can re-run as a normal user"
 msgstr "TQSL से बाहर निकलें ताकि मैं एक सामान्य उपयोगकर्ता के रूप में फिर से चला सकूं"
 
-#: tqsl.cpp:5688
+#: tqsl.cpp:5970
 msgid "Allow TQSL to continue this time."
 msgstr "TQSL को इस समय जारी रखने की अनुमति दें."
 
-#: tqsl.cpp:5689
+#: tqsl.cpp:5971
 msgid "Always allow running as Administrator."
 msgstr "हमेशा प्रशासक के रूप में चलने की इजाजत दें."
 
-#: tqsl.cpp:5690
+#: tqsl.cpp:5972
 msgid "TQSL must not be run 'As Administrator'"
 msgstr "TQSL को 'As Administrator' नहीं चलाया जाना चाहिए। अतः बंद किया जा रहा है'"
 
-#: tqsl.cpp:5690
+#: tqsl.cpp:5972
 msgid "Administrator Error"
 msgstr "प्रशासक त्रुटि"
 
-#: tqsl.cpp:5833
+#: tqsl.cpp:6119
 msgid "Specify dialog action - abort, all, compliant or ask"
 msgstr "संवाद क्रिया निर्दिष्ट करें - निरस्त, सभी, अनुरूप या पूछें"
 
-#: tqsl.cpp:5834
+#: tqsl.cpp:6120
 msgid "Specify start date for QSOs to sign"
 msgstr "हस्ताक्षर करने के लिए QSOs के लिए प्रारंभ दिनांक निर्दिष्ट करें"
 
-#: tqsl.cpp:5835
+#: tqsl.cpp:6121
 msgid "Specify default callsign for log signing"
 msgstr "कार्यपंजी हस्ताक्षर करने के लिए डिफ़ॉल्ट कॉलचिन्ह निर्दिष्ट करें"
 
-#: tqsl.cpp:5836
+#: tqsl.cpp:6122
 msgid "Suppress date range dialog"
 msgstr "दिनांक सीमा संवाद रोकें"
 
-#: tqsl.cpp:5837
+#: tqsl.cpp:6123
 msgid "Specify end date for QSOs to sign"
 msgstr "हस्ताक्षर करने के लिए QSOs के लिए अंत दिनांक निर्दिष्ट करें"
 
-#: tqsl.cpp:5838
+#: tqsl.cpp:6124
 msgid "Specify QSO verification action - ignore, report or update"
 msgstr "QSO सत्यापन कार्रवाई निर्दिष्ट करें - अनदेखा करें, रिपोर्ट करें या अपडेट करें"
 
-#: tqsl.cpp:5840
+#: tqsl.cpp:6126
 msgid "Display command line help"
 msgstr "Command line सहायता दिखाएँ"
 
-#: tqsl.cpp:5841
+#: tqsl.cpp:6127
 msgid "Import a certificate file (.p12 or .tq6)"
 msgstr "प्रमाणपत्र फ़ाइल (.p12 या. tq6) आयात करें"
 
-#: tqsl.cpp:5843
+#: tqsl.cpp:6129
 msgid "Selects Station Location"
 msgstr "प्रेषणकेंद्र स्थान चुनें"
 
-#: tqsl.cpp:5845
+#: tqsl.cpp:6131
 msgid "Check for updates to tqsl and the configuration file"
 msgstr "विश्वस्तQSL और विन्यास फ़ाइल के अद्यतन की जांच करें"
 
-#: tqsl.cpp:5846
+#: tqsl.cpp:6132
 msgid "Output file name (defaults to input name minus extension plus .tq8"
 msgstr "उत्पाद(output) फ़ाइल का नाम (सामान्यतः निविष्टि फ़ाइल नाम के आखिर मैं .tq8 से बादल दिया जाएगा"
 
-#: tqsl.cpp:5847
+#: tqsl.cpp:6133
 msgid "Passphrase for the signing key"
 msgstr "कुंजी हस्ताक्षरण के लिए पासफ्रेज़"
 
-#: tqsl.cpp:5848
+#: tqsl.cpp:6134
 msgid "Quiet Mode - same behavior as -x"
 msgstr "शांत अवस्था - वही व्यवहार जैसा -x"
 
-#: tqsl.cpp:5851
+#: tqsl.cpp:6137
 msgid "Edit (if used with -l) or create Station Location"
 msgstr "सम्पादन करें (यदि -l के साथ प्रयोग करें) या प्रेषणकेंद्र स्थान बनाए"
 
-#: tqsl.cpp:5852
+#: tqsl.cpp:6138
 msgid "File name for diagnostic tracking log"
 msgstr "नैदानिक विवरण के लिए फ़ाइल का नाम"
 
-#: tqsl.cpp:5853
+#: tqsl.cpp:6139
 msgid "Upload after signing instead of saving"
 msgstr "हस्ताक्षरण के बाद संचित न करें अपितु अपलोड करें"
 
-#: tqsl.cpp:5854
+#: tqsl.cpp:6140
 msgid "Display the version information and exit"
 msgstr "संस्करण जानकारी दिखाएँ एवं बाहर आयें"
 
-#: tqsl.cpp:5855
+#: tqsl.cpp:6141
 msgid "Wipe the TQSL uploads database"
 msgstr "TQSL अपलोड डेटाबेस को मिटाएँ"
 
-#: tqsl.cpp:5856
+#: tqsl.cpp:6142
 msgid "Exit after processing log (otherwise start normally)"
 msgstr "कार्य पंजी संसाधन के उपरांत बाहर आ जाए (अथवा समान्यतः शुरू करें)"
 
-#: tqsl.cpp:5859
+#: tqsl.cpp:6145
+msgid "Test sign a log"
+msgstr "लॉग पर हस्ताक्षर का परीक्षण करें"
+
+#: tqsl.cpp:6146
 msgid "Input ADIF or Cabrillo log file to sign"
 msgstr "हस्ताक्षरण के लिए ADIF या Cabrillo कार्यपंजी फ़ाइल भरें"
 
-#: tqsl.cpp:6049 tqsl.cpp:6052
+#: tqsl.cpp:6340 tqsl.cpp:6343
 #, c-format
 msgid "Start date of %s is invalid"
 msgstr "%s की आरंभ तिथि अमान्य है"
 
-#: tqsl.cpp:6063 tqsl.cpp:6066
+#: tqsl.cpp:6354 tqsl.cpp:6357
 #, c-format
 msgid "End date of %s is invalid"
 msgstr "%s की अंतिम तिथि अमान्य है"
 
-#: tqsl.cpp:6088
+#: tqsl.cpp:6379
 msgid "The -a parameter %hs is not recognized"
 msgstr "-a मापदंड %hs मान्यताप्राप्त नहीं है"
 
 #. TRANSLATORS: -f is the command line switch for log QTH handling
-#: tqsl.cpp:6109
+#: tqsl.cpp:6400
 msgid "The -f parameter %hs is not recognized"
 msgstr "-f पैरामीटर %hs को मान्यता नहीं मिली है"
 
-#: tqsl.cpp:6190 tqsl.cpp:6196
+#: tqsl.cpp:6488 tqsl.cpp:6494
 msgid "To import this passphrase protected P12 file, you must pass the passphrase on the command line"
 msgstr "इस पासफ़्रेज़ सुरक्षित P12 फ़ाइल को आयात करने के लिए, आपको आदेश पंक्ति पर पासफ़्रेज़ पास करना होगा"
 
-#: tqsl.cpp:6218
+#: tqsl.cpp:6519
 msgid "No logfile to sign!"
 msgstr "हस्ताक्षहरण के लिए कोई कार्यपंजी फ़ाइल नहीं!"
 
-#: tqsl.cpp:6234
+#: tqsl.cpp:6535
 msgid ""
 "Warning: The TQSL ADIF editor only processes a limited number of ADIF fields.\n"
 "\n"
@@ -2021,123 +2182,123 @@ msgstr ""
 "\n"
 "ADIF फ़ाइल पर इस संपादक का उपयोग करने से QSO विवरण नष्ट हो सकते हैं!"
 
-#: tqsl.cpp:6346
+#: tqsl.cpp:6650
 msgid "Please review the introductory documentation before using this program."
 msgstr "कृपया इस कार्यक्रम का उपयोग करने से पहले परिचयात्मक दस्तावेजों की समीक्षा करें."
 
-#: tqsl.cpp:6347
+#: tqsl.cpp:6651
 msgid "Notice"
 msgstr "सूचना"
 
-#: tqsl.cpp:6352
+#: tqsl.cpp:6656
 msgid "You have no callsign certificate installed on this computer with which to sign log submissions."
 msgstr "आपके पास इस कम्प्युटर पर कोई कॉलचिन्ह प्रमाणपत्र स्थापित नहीं जिससे आप इस कार्यपंजी प्रस्तुतीकरण को हस्ताक्षर कर सकें."
 
-#: tqsl.cpp:6354
+#: tqsl.cpp:6658
 msgid "Would you like to request a callsign certificate now?"
 msgstr "क्या आप अभी एक कॉलचिन्ह प्रमाणपत्र के अनुरोध करना चाहेंगे?"
 
-#: tqsl.cpp:6356
+#: tqsl.cpp:6660
 msgid "If you are planning to restore from a backup, please choose 'No'."
 msgstr "यदि आप बैकअप से पुनर्स्थापित करने की योजना बना रहे हैं, तो कृपया 'नहीं' चुनें."
 
-#: tqsl.cpp:6357
+#: tqsl.cpp:6661
 msgid "Alert"
 msgstr "सावधान"
 
-#: tqsl.cpp:6479
+#: tqsl.cpp:6785
 msgid "Display Callsign Certificate &Properties"
 msgstr "कॉल चिन्ह प्रमाणपत्र एवं उसके &गुण दिखाएँ"
 
-#: tqsl.cpp:6481
+#: tqsl.cpp:6787
 msgid "&Load Callsign Certificate from File"
 msgstr "फ़ाइल से कॉलचिन्ह प्रमाणपत्र &लोड करें"
 
-#: tqsl.cpp:6482
+#: tqsl.cpp:6788
 msgid "&Save Callsign Certificate to File..."
 msgstr "फ़ाइल में &संचित करें कॉलचिन्ह प्रमाणपत्र..."
 
-#: tqsl.cpp:6486
+#: tqsl.cpp:6792
 msgid "Request &New Callsign Certificate..."
 msgstr "अनुरोध करें &नवीन कॉलचिन्ह प्रमाणपत्र के लिए..."
 
-#: tqsl.cpp:6487
+#: tqsl.cpp:6793
 msgid "&Renew Callsign Certificate"
 msgstr "कॉलचिन्ह प्रमाणपत्र का &नवीनीकरण करें"
 
-#: tqsl.cpp:6492
+#: tqsl.cpp:6798
 msgid "&Delete Callsign Certificate"
 msgstr "कॉलचिन्ह प्रमाणपत्र का &मिटाएँ करें"
 
-#: tqsl.cpp:6498
+#: tqsl.cpp:6804
 msgid "Restore Deleted Callsign Certificate"
 msgstr "मिटाया हुआ कॉलचिन्ह प्रमाणपत्र पुनःस्थापित करें"
 
-#: tqsl.cpp:6511
+#: tqsl.cpp:6817
 msgid "&Edit"
 msgstr "&सम्पादन"
 
-#: tqsl.cpp:6513
+#: tqsl.cpp:6819
 msgid "&Delete"
 msgstr "&मिटाएँ"
 
-#: tqsl.cpp:6560
+#: tqsl.cpp:6866
 msgid "Load Certificate File"
 msgstr "कॉल चिन्ह प्रमाणपत्र लोड करें"
 
-#: tqsl.cpp:6652 crqwiz.h:63
+#: tqsl.cpp:6959 crqwiz.h:66
 msgid "Request a new Callsign Certificate"
 msgstr "एक नए कॉलचिन्ह प्रमाणपत्र के लिए अनुरोध करें"
 
-#: tqsl.cpp:6732
+#: tqsl.cpp:7039
 msgid "Do you want to upload this certificate request to LoTW now?"
 msgstr "क्या आप अभी इस प्रमाणपत्र अनुरोध को LoTW पर अपलोड करना चाहते हैं?"
 
-#: tqsl.cpp:6735
+#: tqsl.cpp:7042
 msgid "You do not need an account on LoTW to do this."
 msgstr "इस कार्य के लिए आपके पास LoTW पर होना आवश्यक नहीं है."
 
-#: tqsl.cpp:6737
+#: tqsl.cpp:7044
 msgid "Upload"
 msgstr "अपलोड करें"
 
-#: tqsl.cpp:6747 tqsl.cpp:6796
+#: tqsl.cpp:7054 tqsl.cpp:7095
 msgid "tQSL Cert Request files (*."
 msgstr "विश्वस्तQSL प्रमाणपत्र अनुरोध फ़ाइलें (*."
 
-#: tqsl.cpp:6749 tqsl.cpp:6798
+#: tqsl.cpp:7056 tqsl.cpp:7097
 msgid "|All files ("
 msgstr "|सभी फ़ाइलें ("
 
-#: tqsl.cpp:6750 tqsl.cpp:6799
+#: tqsl.cpp:7057 tqsl.cpp:7098
 msgid "Save request"
 msgstr "संचन अनुरोध"
 
-#: tqsl.cpp:6753 tqsl.cpp:6802
+#: tqsl.cpp:7060 tqsl.cpp:7101
 msgid "Request cancelled"
 msgstr "निवेदन रद्द किया गया"
 
-#: tqsl.cpp:6766
+#: tqsl.cpp:7073
 msgid "Error creating callsign certificate request: %hs"
 msgstr "कॉलचिन्ह प्रमाणपत्र अनुरोध बनाने में त्रुटि: %hs"
 
-#: tqsl.cpp:6766
+#: tqsl.cpp:7073
 msgid "Error creating Callsign Certificate Request"
 msgstr "कॉलचिन्ह प्रमाणपत्र अनुरोध बनाने में त्रुटि"
 
-#: tqsl.cpp:6779
+#: tqsl.cpp:7086
 msgid "Error opening certificate request file %s: %hs"
 msgstr "कॉलचिन्ह प्रमाणपत्र अनुरोध फ़ाइल खोलने में त्रुटि %s: %hs"
 
-#: tqsl.cpp:6789 tqsl.cpp:7376 tqsl.cpp:7520
+#: tqsl.cpp:7089 tqsl.cpp:7673 tqsl.cpp:7817
 msgid "Certificate Request"
 msgstr "प्रमाणपत्र अनुरोध"
 
-#: tqsl.cpp:6793
+#: tqsl.cpp:7092
 msgid "Your certificate request did not upload properly."
 msgstr "आपके प्रमाणपत्र का आवेदन सही से अपलोड नहीं हुआ."
 
-#: tqsl.cpp:6794
+#: tqsl.cpp:7093
 msgid ""
 "Your upload appears to have failed.\n"
 "Do you want to save this request for uploading later?"
@@ -2145,284 +2306,288 @@ msgstr ""
 "ऐसा लगता है कि आपका अपलोड विफल हो गया है.\n"
 "क्या आप इस अनुरोध को बाद में अपलोड करने के लिए सहेजना चाहते हैं?"
 
-#: tqsl.cpp:6812
+#: tqsl.cpp:7111
 msgid "You may now send your new certificate request ("
 msgstr "अब आप आपके नवीन प्रमाणपत्र निवेदन भेज सकते हैं ("
 
-#: tqsl.cpp:6817
+#: tqsl.cpp:7116
 msgid "to:"
 msgstr "को:"
 
-#: tqsl.cpp:6824
+#: tqsl.cpp:7123
 msgid "or "
 msgstr "या "
 
-#: tqsl.cpp:6825
+#: tqsl.cpp:7124
 msgid "see:"
 msgstr "देखे:"
 
-#: tqsl.cpp:6863
+#: tqsl.cpp:7162
 msgid "Display a Callsign Certificate"
 msgstr "कॉलचिन्ह प्रमाणपत्र दिखाये"
 
-#: tqsl.cpp:6911 tqsl.cpp:6913
+#: tqsl.cpp:7210 tqsl.cpp:7212
 msgid "Save the Callsign Certificate for"
 msgstr "निम्न का कॉलचिन्ह प्रमाणपत्र संचित करें"
 
-#: tqsl.cpp:6916 tqsl.cpp:6918
+#: tqsl.cpp:7215 tqsl.cpp:7217
 msgid "Display the Callsign Certificate properties for"
 msgstr "निम्न के लिए कॉलचिन्ह प्रमाणपत्र के गुण नामित के लिए दिखाएँ"
 
-#: tqsl.cpp:6922 tqsl.cpp:6924
+#: tqsl.cpp:7221 tqsl.cpp:7223
 msgid "Renew the Callsign Certificate for"
 msgstr "निम्न के लिए कॉलचिन्ह प्रमाणपत्र का नवीनीकरण करें"
 
-#: tqsl.cpp:6969
+#: tqsl.cpp:7268
 msgid "Enter the name for the new Certificate Container file"
 msgstr "नवीन प्रमाणपत्र फ़ाइल के लिए नाम अंकित करें"
 
-#: tqsl.cpp:6970
+#: tqsl.cpp:7269
 msgid "Certificate Container files (*.p12)|*.p12|All files (*.*)|*.*"
 msgstr "प्रमाणपत्र रखने की फ़ाइले (*.p12)|*.p12|All files (*.*)|*.*"
 
-#: tqsl.cpp:6977
+#: tqsl.cpp:7276
 msgid "Enter the passphrase for the certificate container file."
 msgstr "प्रमाण पत्र कंटेनर फ़ाइल के लिए पासफ्रेज़ दर्ज करें."
 
-#: tqsl.cpp:6979
-msgid "If you are using a computer system that is shared with others, you should specify a passphrase to protect this certificate. However, if you are using a computer in a private residence, no passphrase need be specified."
-msgstr "आप पासफ्रेज़ का उपयोग करके इस कॉलसाइन प्रमाण पत्र की रक्षा कर सकते हैं। यदि यह कंप्यूटर सिस्टम उपयोग कर रहे हैं जिसे दूसरों के साथ साझा किया जाता है, तो आपको इस कॉलसाइन प्रमाण पत्र की रक्षा के लिए एक पासफ्रेज़ निर्दिष्ट करना चाहिए। हालांकि, यदि आप एक निजी निवास में कंप्यूटर का उपयोग कर रहे हैं, तो कोई पासफ्रेज़ की आवश्यकता नहीं है."
+#: tqsl.cpp:7278
+msgid ""
+"If you are using a computer system that is shared with others, you should specify a passphrase to protect this certificate. However, if you are using a computer in a "
+"private residence, no passphrase need be specified."
+msgstr ""
+"आप पासफ्रेज़ का उपयोग करके इस कॉलसाइन प्रमाण पत्र की रक्षा कर सकते हैं। यदि यह कंप्यूटर सिस्टम उपयोग कर रहे हैं जिसे दूसरों के साथ साझा किया जाता है, तो आपको इस कॉलसाइन प्रमाण पत्र की रक्षा "
+"के लिए एक पासफ्रेज़ निर्दिष्ट करना चाहिए। हालांकि, यदि आप एक निजी निवास में कंप्यूटर का उपयोग कर रहे हैं, तो कोई पासफ्रेज़ की आवश्यकता नहीं है."
 
-#: tqsl.cpp:6981
+#: tqsl.cpp:7280
 msgid "You will have to enter the passphrase any time you load the file into TrustedQSL."
 msgstr "आपको पासफ्रेज़ अंकित करना होगा जब भी आप यह फ़ाइल विश्वस्तQSL पर लोड करेंगे."
 
-#: tqsl.cpp:6985
+#: tqsl.cpp:7284
 msgid "Certificate Container Passphrase"
 msgstr "प्रमाण पत्र कंटेनर पासफ्रेज़"
 
-#: tqsl.cpp:7026
+#: tqsl.cpp:7325
 msgid "Export to %s failed: %hs"
 msgstr "%s को निर्यात असफल: %hs"
 
-#: tqsl.cpp:7028
+#: tqsl.cpp:7327
 #, c-format
 msgid "Certificate saved in file %s"
 msgstr "प्रमाणपत्र %s फ़ाइल में संचित"
 
-#: tqsl.cpp:7039
+#: tqsl.cpp:7338
 msgid "This will remove the selected callsign certificate from your system."
 msgstr "यह चिन्हित कॉलचिन्ह प्रमाणपत्र को आपके सिस्टम से मिटा देगा."
 
-#: tqsl.cpp:7041
+#: tqsl.cpp:7340
 msgid "You will NOT be able to recover it by loading a .TQ6 file."
 msgstr "आप इसको वापस पा सकेंगे यदि आप .TQ6 फ़ाइल लोड करेंगे."
 
-#: tqsl.cpp:7043
+#: tqsl.cpp:7342
 msgid "You WILL be able to recover it from a container (.p12) file,"
 msgstr "आप इसको (.p12) फ़ाइल संग्रहक से वापस पा सकेंगे,"
 
-#: tqsl.cpp:7045
+#: tqsl.cpp:7344
 msgid "if you have created one via the Callsign Certificate menu's"
 msgstr "यदि आपने कॉलचिन्ह प्रमाणपत्र मेनू द्वारा एक बनाया है"
 
-#: tqsl.cpp:7047
+#: tqsl.cpp:7346
 msgid "'Save Callsign Certificate' command."
 msgstr "'कॉलचिन्ह प्रमाणपत्र संचित' निर्देश."
 
-#: tqsl.cpp:7049
+#: tqsl.cpp:7348
 msgid "Are you sure you want to delete the certificate?"
 msgstr "क्या आप निश्चयपूर्वक इस प्रमाणपत्र को हटाना चाहते हैं?"
 
-#: tqsl.cpp:7087
+#: tqsl.cpp:7386
 msgid "There are no deleted Callsign Certificates to restore"
 msgstr "बहाल करने के लिए कोई भी मिटाया हुआ कॉलचिन्ह प्रमाणपत्र नहीं"
 
-#: tqsl.cpp:7087 tqsl.cpp:7197
+#: tqsl.cpp:7386 tqsl.cpp:7496
 msgid "Undelete Error"
 msgstr "मिटाये हुए को पुनःस्थापित में त्रुटि हुई"
 
-#: tqsl.cpp:7098
+#: tqsl.cpp:7397
 msgid "Choose a Callsign Certificate to restore"
 msgstr "बहाल करने के लिए एक कॉलचिन्ह प्रमाणपत्र चुने"
 
-#: tqsl.cpp:7127
+#: tqsl.cpp:7426
 msgid "Select a Station Location to process"
 msgstr "प्रेषण केंद्र स्थान का चुनाव करें अगली कार्यवाही के लिए"
 
-#: tqsl.cpp:7147
+#: tqsl.cpp:7446
 msgid "Edit Station Location "
 msgstr "प्रेषण केंद्र स्थान सम्पादन करें "
 
-#: tqsl.cpp:7150
+#: tqsl.cpp:7449
 msgid "Delete Station Location "
 msgstr "प्रेषण केंद्र स्थान मिटा दें "
 
-#: tqsl.cpp:7153
+#: tqsl.cpp:7452
 msgid "Display Station Location Properties for "
 msgstr "प्रेषण केंद्र के स्थान के गुण नामित के लिए दिखाएँ "
 
-#: tqsl.cpp:7175
+#: tqsl.cpp:7474
 msgid "This will remove this station location from your system."
 msgstr "यह चिन्हित प्रेषणकेंद्र स्थान को आपके सिस्टम से मिटा देगा."
 
-#: tqsl.cpp:7177
+#: tqsl.cpp:7476
 msgid "Are you sure you want to delete this station location?"
 msgstr "क्या आप निश्चयपूर्वक इस प्रेषणकेंद्र स्थान को हटाना चाहते हैं?"
 
-#: tqsl.cpp:7197
+#: tqsl.cpp:7496
 msgid "There are no deleted Station Locations to restore"
 msgstr "बहाल करने के लिए कोई भी मिटाया हुआ प्रेषणकेंद्र स्थान नहीं"
 
-#: tqsl.cpp:7208
+#: tqsl.cpp:7507
 msgid "Choose a Station Location to restore"
 msgstr "बहाल करने के लिए एक प्रेषणकेंद्र स्थान चुने"
 
-#: tqsl.cpp:7280 tqsl.cpp:7283
+#: tqsl.cpp:7579 tqsl.cpp:7582
 msgid "Please choose language:"
 msgstr "कृपया भाषा चुने:"
 
-#: tqsl.cpp:7351
+#: tqsl.cpp:7648
 msgid "Certificate Properties"
 msgstr "प्रमाणपत्र गुण"
 
-#: tqsl.cpp:7354
+#: tqsl.cpp:7651
 msgid "Begins: "
 msgstr "शुरू: "
 
-#: tqsl.cpp:7355
+#: tqsl.cpp:7652
 msgid "Expires: "
 msgstr "समाप्ति: "
 
-#: tqsl.cpp:7356
+#: tqsl.cpp:7653
 msgid "Organization: "
 msgstr "संस्था: "
 
-#: tqsl.cpp:7358
+#: tqsl.cpp:7655
 msgid "Serial: "
 msgstr "क्रम संख्या: "
 
-#: tqsl.cpp:7359
+#: tqsl.cpp:7656
 msgid "Operator: "
 msgstr "ऑपरेटर: "
 
-#: tqsl.cpp:7360 tqsl.cpp:7579
+#: tqsl.cpp:7657 tqsl.cpp:7876
 msgid "Call sign: "
 msgstr "कॉलचिन्ह: "
 
-#: tqsl.cpp:7361 tqsl.cpp:7580
+#: tqsl.cpp:7658 tqsl.cpp:7877
 msgid "DXCC Entity: "
 msgstr "DXCC इकाई : "
 
-#: tqsl.cpp:7362
+#: tqsl.cpp:7659
 msgid "QSO Start Date: "
 msgstr "QSO प्रारंभिक तिथि: "
 
-#: tqsl.cpp:7363
+#: tqsl.cpp:7660
 msgid "QSO End Date: "
 msgstr "QSO समाप्ति तिथि: "
 
-#: tqsl.cpp:7364
+#: tqsl.cpp:7661
 msgid "Passphrase: "
 msgstr "पासफ्रेज़: "
 
-#: tqsl.cpp:7485
+#: tqsl.cpp:7782
 msgid "Missing from this computer"
 msgstr "इस कंप्यूटर से उपलब्ध नहीं है"
 
-#: tqsl.cpp:7489 tqsl.cpp:7514
+#: tqsl.cpp:7786 tqsl.cpp:7811
 msgid "Passphrase protected"
 msgstr "पासवर्ड द्वारा रक्षित"
 
-#: tqsl.cpp:7493
+#: tqsl.cpp:7790
 msgid "Private Key not found"
 msgstr "निजी कुंजी नहीं मिली"
 
-#: tqsl.cpp:7497
+#: tqsl.cpp:7794
 msgid "Unable to read - no permission"
 msgstr "पढ़ने में असमर्थ - कोई अनुमति नहीं"
 
-#: tqsl.cpp:7505
+#: tqsl.cpp:7802
 msgid "<ERROR>"
 msgstr "<त्रुटि>"
 
-#: tqsl.cpp:7508
+#: tqsl.cpp:7805
 msgid "No Private Key"
 msgstr "कोई भी निजी कुंजी नहीं है"
 
-#: tqsl.cpp:7511
+#: tqsl.cpp:7808
 msgid "None"
 msgstr "कोई नहीं"
 
-#: tqsl.cpp:7522
+#: tqsl.cpp:7819
 msgid "Awaiting response from ARRL"
 msgstr "ARRL के उत्तर में प्रतीक्षारत"
 
-#: tqsl.cpp:7536
+#: tqsl.cpp:7833
 msgid "Replaced"
 msgstr "बदला हुआ"
 
-#: tqsl.cpp:7541
+#: tqsl.cpp:7838
 msgid "Expired"
 msgstr "समाप्त"
 
-#: tqsl.cpp:7576
+#: tqsl.cpp:7873
 msgid "Station Location Properties"
 msgstr "प्रेषण केंद्र स्थान के गुण"
 
-#: tqsl.cpp:7581
+#: tqsl.cpp:7878
 msgid "Grid Square: "
 msgstr "4 या 6 अक्षर का वर्गीक्रत जाल (ग्रिड स्क्वायर): "
 
-#: tqsl.cpp:7582
+#: tqsl.cpp:7879
 msgid "ITU Zone: "
 msgstr "ITU क्षेत्र: "
 
-#: tqsl.cpp:7583
+#: tqsl.cpp:7880
 msgid "CQ Zone: "
 msgstr "CQ क्षेत्र (zone): "
 
-#: tqsl.cpp:7584
+#: tqsl.cpp:7881
 msgid "IOTA Locator: "
 msgstr "IOTA पहचान: "
 
-#: tqsl.cpp:7585 tqsl.cpp:7592
+#: tqsl.cpp:7882 tqsl.cpp:7889
 msgid "State: "
 msgstr "राज्य: "
 
-#: tqsl.cpp:7586
+#: tqsl.cpp:7883
 msgid "County: "
 msgstr "जिला या प्रांत: "
 
-#: tqsl.cpp:7587 tqsl.cpp:7589 tqsl.cpp:7593
+#: tqsl.cpp:7884 tqsl.cpp:7886 tqsl.cpp:7890
 msgid "Park: "
 msgstr "पार्क: "
 
-#: tqsl.cpp:7588 tqsl.cpp:7591
+#: tqsl.cpp:7885 tqsl.cpp:7888
 msgid "Province: "
 msgstr "प्रांत: "
 
-#: tqsl.cpp:7590
+#: tqsl.cpp:7887
 msgid "Oblast: "
 msgstr "ओब्लास्ट: "
 
-#: tqsl.cpp:7596
+#: tqsl.cpp:7893
 msgid "Verify QTH details: "
 msgstr "QTH विवरण सत्यापित करें: "
 
-#: tqsl.cpp:7657
+#: tqsl.cpp:7954
 msgid "Signing File: "
 msgstr "फ़ाइल हस्ताक्षर जारी: "
 
-#: tqsl.cpp:7663
+#: tqsl.cpp:7960
 msgid "Please verify that this is the correct Station Location for the QSOs being signed."
 msgstr "कृपया सत्यापित करें कि यह हस्ताक्षरित किए जा रहे QSOs के लिए सही स्टेशन स्थान है।"
 
-#: tqsl.cpp:7666
+#: tqsl.cpp:7963
 msgid "Click 'Cancel' if this is not the correct Station Location."
 msgstr "यदि यह सही स्टेशन स्थान नहीं है तो 'रद्द करें' पर क्लिक करें."
 
-#: tqsl.cpp:7694
+#: tqsl.cpp:7991
 msgid "Enter the Passphrase to unlock the callsign certificate"
 msgstr "कॉलसाइन प्रमाण पत्र अनलॉक करने के लिए पासफ्रेज़ दर्ज करें"
 
@@ -2454,7 +2619,7 @@ msgstr "नेटवर्क प्रॉक्सि"
 msgid "Custom ADIF mode mappings:"
 msgstr "अनुकूल ADIF मोड़ मानचित्रण:"
 
-#: tqsl_prefs.cpp:181 tqsl_prefs.cpp:834
+#: tqsl_prefs.cpp:181 tqsl_prefs.cpp:872
 msgid "Add..."
 msgstr "जोड़ें..."
 
@@ -2515,127 +2680,135 @@ msgstr "कॉलसाइन प्रमाण पत्र के लिए �
 msgid "Export P12 files compatible with Apple Keychain"
 msgstr "Apple Keychain के साथ अनुकूल P12 फ़ाइलें निर्यात करें"
 
-#: tqsl_prefs.cpp:448
+#: tqsl_prefs.cpp:406
+msgid "Primary QSL Manager Callsign:"
+msgstr "प्राथमिक QSL प्रबंधक कॉलसाइन:"
+
+#: tqsl_prefs.cpp:431
+msgid "QSLMgrCall"
+msgstr "QSLMgrCall"
+
+#: tqsl_prefs.cpp:481
 msgid "Changes to the status message configuration will take affect when TQSL is restarted"
 msgstr "स्थिति संदेश तभी बदलेगा जब आप TQSL को पुनः चालू करेंगे"
 
-#: tqsl_prefs.cpp:475
+#: tqsl_prefs.cpp:513
 msgid "Cabrillo file extensions:"
 msgstr "Cabrillo फ़ाइल का विस्तारण:"
 
-#: tqsl_prefs.cpp:480
+#: tqsl_prefs.cpp:518
 msgid "ADIF file extensions:"
 msgstr "ADIF फ़ाइल का विस्तारण:"
 
-#: tqsl_prefs.cpp:486
+#: tqsl_prefs.cpp:524
 msgid "Allow nonamateur call signs"
 msgstr "अतिरिक्त कॉलचिन्ह को भी अनुमति दें"
 
-#: tqsl_prefs.cpp:491
+#: tqsl_prefs.cpp:529
 msgid "Prompt for QSO Date range when signing"
 msgstr "हस्ताक्षरण के समय QSO तिथि सीमा के लिए पुंछे"
 
-#: tqsl_prefs.cpp:496
+#: tqsl_prefs.cpp:534
 msgid "Display details of previously signed QSOs when signing a log"
 msgstr "लॉग पर हस्ताक्षर करते समय पहले हस्ताक्षरित QSOs का विवरण प्रदर्शित करें"
 
-#: tqsl_prefs.cpp:501
+#: tqsl_prefs.cpp:539
 msgid "Ignore seconds in QSO times"
 msgstr "QSO समय में सेकंड पर ध्यान न दें"
 
-#: tqsl_prefs.cpp:506
+#: tqsl_prefs.cpp:544
 msgid "Ignore callsigns in ADIF files"
 msgstr "एडीआईएफ फाइलों में कॉलसाइन पर ध्यान न दें"
 
-#: tqsl_prefs.cpp:517
+#: tqsl_prefs.cpp:555
 msgid "Ignore QTH details from your log"
 msgstr "अपने लॉग से QTH विवरण पर ध्यान न दें"
 
-#: tqsl_prefs.cpp:517
+#: tqsl_prefs.cpp:555
 msgid "Report on QTH differences"
 msgstr "QTH मतभेदों पर रिपोर्ट"
 
-#: tqsl_prefs.cpp:517
+#: tqsl_prefs.cpp:555
 msgid "Override Station Location with QTH details from your log"
 msgstr "अपने लॉग से QTH विवरण के साथ स्टेशन स्थान ओवरराइड करें"
 
-#: tqsl_prefs.cpp:519
+#: tqsl_prefs.cpp:557
 msgid "Handle QTH information in ADIF logs with what action?"
 msgstr "ADIF कार्यपंजी में QTH जानकारी संभालें कि क्या कार्रवाई होनी है?"
 
-#: tqsl_prefs.cpp:706
+#: tqsl_prefs.cpp:744
 msgid "Use these settings to configure a network proxy for Internet uploads and downloads. You should only enable a proxy if directed by your network administrator."
 msgstr "इन प्रयुक्तियों को नेटवर्क प्रॉक्सि विन्यास के लिए इंटरनेट अपलोड या डाउनलोड के लिए उपयोग करें. आपको तभी प्रॉक्सि का उपयोग करना चाहिए जब आपके नेटवर्क संरक्षक द्वारा बताया गया हो."
 
-#: tqsl_prefs.cpp:708
+#: tqsl_prefs.cpp:746
 msgid "Incorrect settings can cause TQSL to be unable to upload logs or check for updates."
 msgstr "गलत प्रयुक्तिया अभिलेख अपलोड या अद्यतन की जांच में TQSL को असमर्थ कर देंगी."
 
-#: tqsl_prefs.cpp:714
+#: tqsl_prefs.cpp:752
 msgid "Enable a Network Proxy"
 msgstr "कोई नेटवर्क प्रॉक्सी सक्षम करें"
 
-#: tqsl_prefs.cpp:718
+#: tqsl_prefs.cpp:756
 msgid "Proxy Address:"
 msgstr "परोक्ष पता:"
 
-#: tqsl_prefs.cpp:726
+#: tqsl_prefs.cpp:764
 msgid "Port Number:"
 msgstr "पोर्ट संख्या:"
 
-#: tqsl_prefs.cpp:733
+#: tqsl_prefs.cpp:771
 msgid "Proxy Type:"
 msgstr "परोक्ष (Proxy) प्रकार:"
 
-#: tqsl_prefs.cpp:736
+#: tqsl_prefs.cpp:774
 msgid "ProxyType"
 msgstr "परोक्ष (Proxy) प्रकार"
 
-#: tqsl_prefs.cpp:797
+#: tqsl_prefs.cpp:835
 msgid "Cabrillo CONTEST definitions:"
 msgstr "Cabrillo प्रतियोगिता परिभाषा:"
 
-#: tqsl_prefs.cpp:809 tqsl_prefs.cpp:820
+#: tqsl_prefs.cpp:847 tqsl_prefs.cpp:858
 msgid "CONTEST"
 msgstr "प्रतियोगिता"
 
-#: tqsl_prefs.cpp:810 tqsl_prefs.cpp:821
+#: tqsl_prefs.cpp:848 tqsl_prefs.cpp:859
 msgid "Type"
 msgstr "प्रकार"
 
-#: tqsl_prefs.cpp:811 tqsl_prefs.cpp:822
+#: tqsl_prefs.cpp:849 tqsl_prefs.cpp:860
 msgid "Field"
 msgstr "रिक्ति (Field)"
 
-#: tqsl_prefs.cpp:966 tqsl_prefs.h:272
+#: tqsl_prefs.cpp:1004 tqsl_prefs.h:274
 msgid "Edit"
 msgstr "सम्पादन"
 
-#: tqsl_prefs.cpp:989
+#: tqsl_prefs.cpp:1027
 msgid "Contest"
 msgstr "प्रतियोगिता"
 
-#: tqsl_prefs.cpp:999
+#: tqsl_prefs.cpp:1037
 msgid "Cabrillo CONTEST"
 msgstr "Cabrillo प्रतियोगिता"
 
-#: tqsl_prefs.cpp:1001
+#: tqsl_prefs.cpp:1039
 msgid "CONTEST Name:"
 msgstr "प्रतियोगिता का नाम:"
 
-#: tqsl_prefs.cpp:1007
+#: tqsl_prefs.cpp:1045
 msgid "Contest type"
 msgstr "प्रतियोगिता प्रकार"
 
-#: tqsl_prefs.cpp:1012
+#: tqsl_prefs.cpp:1050
 msgid "Call-Worked Field Number:"
 msgstr "कॉल-किया हुआ रिक्ति संख्या:"
 
-#: tqsl_prefs.cpp:1046
+#: tqsl_prefs.cpp:1084
 msgid "Contest name cannot be blank"
 msgstr "प्रतियोगिता का नाम रिक्त नहीं हो सकता"
 
-#: tqsl_prefs.cpp:1052
+#: tqsl_prefs.cpp:1090
 #, c-format
 msgid "Call-worked field must be %d or greater"
 msgstr "कॉल-किया हुआ रिक्ति या तो %d हो या उससे बड़ा हो"
@@ -2645,7 +2818,7 @@ msgstr "कॉल-किया हुआ रिक्ति या तो %d ह
 msgid "Invalid %hs: \"%hs\""
 msgstr "अवैद्य %hs: \"%hs\""
 
-#: tqslwiz.cpp:168 tqslwiz.cpp:1286
+#: tqslwiz.cpp:174 tqslwiz.cpp:1292
 #, c-format
 msgid ""
 "You have changed the following fields in this Station Location: %s\n"
@@ -2654,262 +2827,262 @@ msgstr ""
 "आपने इस स्टेशन स्थान में निम्नलिखित प्रारूप बदल दिए हैं: %s\n"
 "क्या आप उन परिवर्तनों को त्यागना चाहते हैं?"
 
-#: tqslwiz.cpp:169 tqslwiz.cpp:1287
+#: tqslwiz.cpp:175 tqslwiz.cpp:1293
 msgid "Changes have not been saved"
 msgstr "परिवर्तन सहेजे नहीं गए हैं"
 
-#: tqslwiz.cpp:334 tqslwiz.cpp:531
+#: tqslwiz.cpp:340 tqslwiz.cpp:537
 msgid "[None]"
 msgstr "[कोई नहीं]"
 
-#: tqslwiz.cpp:1024 tqslwiz.cpp:1193
+#: tqslwiz.cpp:1030 tqslwiz.cpp:1199
 msgid "You must select a %hs"
 msgstr "आप अवश्य चुने एक %hs"
 
-#: tqslwiz.cpp:1055
+#: tqslwiz.cpp:1061
 #, c-format
 msgid "%s: Invalid Grid Field"
 msgstr "%s: अमान्य ग्रिड फ़ील्ड"
 
-#: tqslwiz.cpp:1059
+#: tqslwiz.cpp:1065
 #, c-format
 msgid "%s: Invalid Grid Square"
 msgstr "%s: अवैद्य Grid Square"
 
-#: tqslwiz.cpp:1063
+#: tqslwiz.cpp:1069
 #, c-format
 msgid "%s: Invalid Grid Subsquare"
 msgstr "%s: अमान्य ग्रिड सबस्क्वेयर"
 
-#: tqslwiz.cpp:1067
+#: tqslwiz.cpp:1073
 #, c-format
 msgid "%s: Invalid Grid Sub-subsquare"
 msgstr "%s: अमान्य ग्रिड उप-उपवर्ग"
 
-#: tqslwiz.cpp:1071
+#: tqslwiz.cpp:1077
 #, c-format
 msgid "%s: Invalid Gridsquare Format"
 msgstr "%s: अमान्य ग्रिडस्क्वेयर प्रारूप"
 
-#: tqslwiz.cpp:1078
+#: tqslwiz.cpp:1084
 #, c-format
 msgid "Grid %s is not correct for your QTH. Click 'Next' again to use it anyway."
 msgstr "आपके QTH के लिए ग्रिड %s सही नहीं है. फिर भी इसका इस्तेमाल करने के लिए फिर से 'अगला' पर क्लिक करें."
 
-#: tqslwiz.cpp:1112
+#: tqslwiz.cpp:1118
 #, c-format
 msgid "Grid %s is not correct for your DXCC Entity. Click 'Next' again to use it anyway."
 msgstr "ग्रिड %s आपके DXCC एंटिटी के लिए सही नहीं है। इसे फिर भी उपयोग करने के लिए 'अगला' पर फिर से क्लिक करें।"
 
-#: tqslwiz.cpp:1115
+#: tqslwiz.cpp:1121
 #, c-format
 msgid "Grid %s is not correct for your %s. Click 'Next' again to use it anyway."
 msgstr "ग्रिड %s आपके %s के लिए सही नहीं है। इसे फिर भी उपयोग करने के लिए 'अगला' पर फिर से क्लिक करें।"
 
-#: tqslwiz.cpp:1141
+#: tqslwiz.cpp:1147
 #, c-format
 msgid "IOTA value %s is not valid."
 msgstr "%s IOTA मान मान्य नहीं है."
 
-#: tqslwiz.cpp:1149
+#: tqslwiz.cpp:1155
 #, c-format
 msgid "IOTA reference %s is not correct. Must start with AF-, AN-, AS-, EU-, NA-, OC- or SA-"
 msgstr "IOTA %s सही नहीं है। AF-, AN-, AS-, EU-, NA-, OC- या SA के साथ शुरू होना चाहिए-"
 
-#: tqslwiz.cpp:1156
+#: tqslwiz.cpp:1162
 #, c-format
 msgid "IOTA reference %s is not correct. Must have a number after the '-'"
 msgstr "IOTA %s सही नहीं है। '-' के बाद एक संख्या होनी चाहिए"
 
-#: tqslwiz.cpp:1163
+#: tqslwiz.cpp:1169
 msgid "Invalid zone selections for state"
 msgstr "राज्य के लिए अवैद्य क्षेत्र चुनाव"
 
-#: tqslwiz.cpp:1164
+#: tqslwiz.cpp:1170
 msgid "Invalid zone selections for province"
 msgstr "प्रांत के लिए अवैद्य क्षेत्र चुनाव"
 
-#: tqslwiz.cpp:1165
+#: tqslwiz.cpp:1171
 msgid "Invalid zone selections for oblast"
 msgstr "Oblast के लिए अवैद्य क्षेत्र चुनाव"
 
-#: tqslwiz.cpp:1166
+#: tqslwiz.cpp:1172
 msgid "Invalid zone selections for DXCC entity"
 msgstr "DXCC इकाई के लिए अवैद्य क्षेत्र चुनाव"
 
-#: tqslwiz.cpp:1315
+#: tqslwiz.cpp:1321
 msgid "Station Data input complete"
 msgstr "प्रेषणकेंद्र विवरण निविष्टि(input) पूर्ण"
 
-#: tqslwiz.cpp:1319
+#: tqslwiz.cpp:1325
 msgid "Select or enter name of this station location"
 msgstr "इस प्रेषणकेंद्र का नाम चुने या अंकित करें"
 
-#: tqslwiz.cpp:1342 tqslwiz.cpp:1348
+#: tqslwiz.cpp:1348 tqslwiz.cpp:1354
 msgid "Station Location Name"
 msgstr "प्रेषणकेंद्र स्थान का नाम"
 
-#: tqslwiz.cpp:1386
+#: tqslwiz.cpp:1392
 msgid "Station name must be provided"
 msgstr "प्रेषणकेंद्र नाम प्रदान करना अनिवार्य"
 
-#: wxutil.cpp:139
+#: wxutil.cpp:177
 msgid "Memory allocation failure"
 msgstr "मेमोरी आवंटन मे विफल"
 
-#: wxutil.cpp:140
+#: wxutil.cpp:178
 msgid "Unable to initialize random number generator"
 msgstr "क्रमरहित संख्या जनरेटर को प्रारंभ करने में असमर्थ"
 
-#: wxutil.cpp:141
+#: wxutil.cpp:179
 msgid "Invalid argument"
 msgstr "अवैद्य तर्क"
 
-#: wxutil.cpp:142
+#: wxutil.cpp:180
 msgid "Operator aborted operation"
 msgstr "संचालन उपयोगकर्ता द्वारा निरस्त"
 
-#: wxutil.cpp:143
+#: wxutil.cpp:181
 msgid "No Certificate Request matches the selected Callsign Certificate"
 msgstr "कोई भी प्रमाणपत्र अनुरोध चयनित कॉलचिन्ह प्रमाणपत्र से मेल नहीं खाता"
 
-#: wxutil.cpp:144
+#: wxutil.cpp:182
 msgid "Buffer too small"
 msgstr "बफर बहुत कम है"
 
-#: wxutil.cpp:145
+#: wxutil.cpp:183
 msgid "Invalid date format"
 msgstr "तिथि प्रारूप अवैद्य"
 
-#: wxutil.cpp:146
+#: wxutil.cpp:184
 msgid "Certificate not initialized for signing"
 msgstr "हस्ताक्षरण के लिए प्रमाणपत्र प्रारंभ नहीं किया गया"
 
-#: wxutil.cpp:147
+#: wxutil.cpp:185
 msgid "Passphrase not correct"
 msgstr "पासफ्रेज़ सही नहीं"
 
-#: wxutil.cpp:148
+#: wxutil.cpp:186
 msgid "Expected name"
 msgstr "चाहा गया नाम"
 
-#: wxutil.cpp:149
+#: wxutil.cpp:187
 msgid "Name exists"
 msgstr "नाम पहले से है"
 
-#: wxutil.cpp:150
+#: wxutil.cpp:188
 msgid "Data for this DXCC entity could not be found"
 msgstr "इस DXCC इकाई का विवरण नहीं मिला"
 
-#: wxutil.cpp:151
+#: wxutil.cpp:189
 msgid "Invalid time format"
 msgstr "समय प्रारूप अवैद्य"
 
-#: wxutil.cpp:152
+#: wxutil.cpp:190
 msgid "QSO date is not within the date range specified on your Callsign Certificate"
 msgstr "QSO तिथि आपके कॉलचिन्ह प्रमाणपत्र पर अंकित तिथियों के अंतराल के अंतर्गत नहीं है"
 
-#: wxutil.cpp:153
+#: wxutil.cpp:191
 msgid "Certificate provider not found"
 msgstr "प्रमाणपत्र प्रदाता नहीं मिला"
 
-#: wxutil.cpp:154
+#: wxutil.cpp:192
 msgid "No callsign certificate for key"
 msgstr "कोई भी कॉलचिन्ह प्रमाणपत्र नहीं इस कुंजी के लिए"
 
-#: wxutil.cpp:155
+#: wxutil.cpp:193
 msgid "Configuration file cannot be opened"
 msgstr "विन्यास(configuration) फ़ाइल खोली नहीं जा सकी"
 
-#: wxutil.cpp:156
+#: wxutil.cpp:194
 msgid "The private key for this Callsign Certificate is not present on this computer; you can obtain it by loading a .tbk or .p12 file"
 msgstr "इस कॉलसाइन के लिए निजी कुंजी इस कम्प्युटर पर उपलब्ध नहीं है; आप .tbk या .p12 फ़ाइल से प्राप्त कर सकते हैं"
 
-#: wxutil.cpp:157
+#: wxutil.cpp:195
 msgid "PKCS#12 file not TQSL compatible"
 msgstr "PKCS#12 फ़ाइल विश्वस्तQSL के अनुकूल नहीं है"
 
-#: wxutil.cpp:158
+#: wxutil.cpp:196
 msgid "Callsign Certificate not TQSL compatible"
 msgstr "कॉल चिन्ह प्रमाणपत्र विश्वस्तQSL के अनुकूल नहीं है"
 
-#: wxutil.cpp:159
+#: wxutil.cpp:197
 msgid "Date out of range"
 msgstr "चाही गयी तिथि सीमा से बाहर"
 
-#: wxutil.cpp:160
+#: wxutil.cpp:198
 msgid "Previously Signed QSO detected"
 msgstr "पहले से हस्ताक्षरित QSO का पता चला"
 
-#: wxutil.cpp:161
+#: wxutil.cpp:199
 msgid "Database error"
 msgstr "सूचना तंत्र में त्रुटि"
 
-#: wxutil.cpp:162
-msgid "The selected station location could not be found"
-msgstr "चुने गए प्रेषण केंद्र का स्थान नहीं मिल पाया"
+#: wxutil.cpp:200
+msgid "The selected Station Location (%hs) could not be found"
+msgstr "चयनित स्टेशन स्थान (%hs) नहीं मिल सका"
 
-#: wxutil.cpp:163
+#: wxutil.cpp:201
 msgid "The selected callsign could not be found"
 msgstr "चुना गया कॉल चिन्ह नहीं मिल पाया"
 
-#: wxutil.cpp:164
+#: wxutil.cpp:202
 msgid "The TQSL configuration file cannot be parsed"
 msgstr "इस विश्वस्त QSL विन्यास फ़ाइल की पदव्याख्या (parsed) नहीं की जा सकती"
 
-#: wxutil.cpp:165
+#: wxutil.cpp:203
 msgid "This file can not be processed due to a system error"
 msgstr "यह फ़ाइल तंत्र त्रुटि (system error) के कारण संसाधित (processed) नहीं की जा सकती"
 
-#: wxutil.cpp:166
+#: wxutil.cpp:204
 msgid "The format of this file is incorrect."
 msgstr "इस फ़ाइल का प्रारूप ठीक नहीं है."
 
-#: wxutil.cpp:167
+#: wxutil.cpp:205
 msgid "Callsign certificate could not be installed"
 msgstr "कॉल चिन्ह प्रमाणपत्र इन्स्टाल नहीं किया जा सकता"
 
-#: wxutil.cpp:168
+#: wxutil.cpp:206
 msgid "Callsign Certificate does not match QSO details"
 msgstr "कॉलसाइन सर्टिफिकेट QSO विवरण से मेल नहीं खाता है"
 
-#: wxutil.cpp:169
+#: wxutil.cpp:207
 msgid "Station Location does not match QSO details"
 msgstr "परेशान स्थान QSO विवरण से मेल नहीं खाता है"
 
-#: wxutil.cpp:170
+#: wxutil.cpp:208
 msgid "New DB"
 msgstr "नया DB"
 
-#: wxutil.cpp:171
+#: wxutil.cpp:209
 msgid "Gridsquare is inconsistent with Station Location"
 msgstr "ग्रिडस्क्वेयर स्टेशन स्थान के साथ अनुकूल नहीं है"
 
-#: wxutil.cpp:172
+#: wxutil.cpp:210
 msgid "ADIF field has invalid contents"
 msgstr "ADIF फ़ील्ड में अमान्य सामग्री है"
 
-#: wxutil.cpp:173
+#: wxutil.cpp:211
 msgid ""
 "This Callsign Certificate cannot be installed as the first date where it is valid is in the future. Check if your computer is set to the proper date.\n"
 "\n"
 msgstr "यह कॉलसाइन प्रमाणपत्र स्थापित नहीं किया जा सकता क्योंकि जिस पहली तारीख से यह वैध है वह भविष्य में है। जाँच करें कि आपका कंप्यूटर उचित तारीख पर सेट है या नहीं।\n"
 
-#: wxutil.cpp:174
+#: wxutil.cpp:212
 msgid ""
 "This Callsign Certificate cannot be installed as it has expired. Check if your computer is set to the proper date and that this is the latest Callsign Certificate.\n"
 "\n"
 msgstr "यह कॉलसाइन प्रमाणपत्र स्थापित नहीं किया जा सकता क्योंकि इसकी समय-सीमा समाप्त हो चुकी है। जाँच करें कि क्या आपका कंप्यूटर उचित तिथि पर सेट है और यह नवीनतम कॉलसाइन प्रमाणपत्र है।\n"
 
-#: wxutil.cpp:187
+#: wxutil.cpp:225
 msgid "NO ERROR"
 msgstr "कोई त्रुटि नहीं"
 
-#: wxutil.cpp:190
+#: wxutil.cpp:228
 msgid "Unknown custom error"
 msgstr "अज्ञात त्रुटि"
 
-#: wxutil.cpp:197
+#: wxutil.cpp:235
 msgid ""
 "TQSL is unable to sign QSOs because another instance of TQSL is busy.\n"
 "Terminate any other copies of TQSL and try again."
@@ -2917,62 +3090,62 @@ msgstr ""
 "TQSL QSO पर हस्ताक्षर करने में असमर्थ है क्योंकि TQSL का दूसरी प्रति व्यस्त है।\n"
 "TQSL की किसी भी अन्य प्रति को समाप्त करें और पुनः प्रयास करें।"
 
-#: wxutil.cpp:199
+#: wxutil.cpp:237
 msgid "Database Error: %hs"
 msgstr "जानकारी तंत्र मे त्रुटि: %hs"
 
-#: wxutil.cpp:201
+#: wxutil.cpp:239
 msgid "Uploads database error"
 msgstr "अपलोड डेटाबेस त्रुटि"
 
-#: wxutil.cpp:207
+#: wxutil.cpp:245
 msgid "System error: %hs : %hs"
 msgstr "प्रणाली मे त्रुटि: %hs : %hs"
 
-#: wxutil.cpp:211
+#: wxutil.cpp:249
 msgid "System error: %hs"
 msgstr "प्रणाली मे त्रुटि: %hs"
 
-#: wxutil.cpp:219
+#: wxutil.cpp:257
 msgid "File syntax error: %hs"
 msgstr "फ़ाइल वाक्यविन्यास त्रुटि: %hs"
 
-#: wxutil.cpp:223
+#: wxutil.cpp:261
 msgid "File syntax error"
 msgstr "फ़ाइल वाक्यविन्यास त्रुटि"
 
-#: wxutil.cpp:259
+#: wxutil.cpp:297
 msgid "The private key for callsign %hs serial %ld is not present on this computer; you can obtain it by loading a .tbk or .p12 file"
 msgstr "कॉलसाइन %hs क्रमांक %ld की निजी कुंजी इस कंप्यूटर पर मौजूद नहीं है; आप इसे .tbk या .p12 फ़ाइल लोड करके प्राप्त कर सकते हैं"
 
-#: wxutil.cpp:266
+#: wxutil.cpp:304
 #, c-format
 msgid "Invalid error code: %d"
 msgstr "अमान्य टत्रुटि कूट: %d"
 
-#: wxutil.cpp:280
+#: wxutil.cpp:318
 msgid "Station Location"
 msgstr "प्रेषण केंद्र"
 
 #. TRANSLATORS: This message is for QSO details. For example, 'The Station Location GRIDSQUARE has value FM18ju while QSO has FM18jt'
-#: wxutil.cpp:283
+#: wxutil.cpp:321
 msgid "The %s '%hs' has value '%hs' while QSO has '%hs'"
 msgstr "%s '%hs' में मान '%hs' है जबकि QSO में '%hs'"
 
-#: wxutil.cpp:291
+#: wxutil.cpp:329
 msgid "This log has invalid QSO information"
 msgstr "इस लॉग में अमान्य QSO जानकारी है"
 
 #. TRANSLATORS: This message is for QSO details. For example, 'The log being signed has 'US County' set to Foobar which is not valid'
-#: wxutil.cpp:293
+#: wxutil.cpp:331
 msgid "The log being signed has '%hs' set to value '%hs' which is not valid"
 msgstr "हस्ताक्षरित किए जा रहे लॉग में '%hs' को '%hs' मूल्य के लिए सेट किया गया है जो मान्य नहीं है"
 
-#: wxutil.cpp:302
+#: wxutil.cpp:340
 msgid "There is no valid callsign certificate for %hs in entity %hs available. This QSO cannot be signed"
 msgstr "इकाई %hs में %hs के लिए कोई वैध कॉलसाइन प्रमाणपत्र उपलब्ध नहीं है। इस QSO पर हस्ताक्षर नहीं किया जा सकता"
 
-#: wxutil.cpp:310
+#: wxutil.cpp:348
 msgid "ADIF content is not valid. '%hs' is not valid for %hs"
 msgstr "ADIF सामग्री मान्य नहीं है. '%hs' %hs के लिए मान्य नहीं है"
 
@@ -2983,6 +3156,14 @@ msgstr "नया पासफ्रेज़"
 #: getpassword.h:52
 msgid "Enter new passphrase"
 msgstr "नया पासफ्रेज़ दाखिल करें"
+
+#: getpassword.h:73
+msgid "Enter your Logbook of the World user and password"
+msgstr "अपना लॉगबुक ऑफ द वर्ल्ड उपयोगकर्ता और पासवर्ड दर्ज करें"
+
+#: getpassword.h:74
+msgid "Enter password"
+msgstr "पासवर्ड अंकित करें"
 
 #: qsodatadialog.h:86
 msgid "QSO Data"
@@ -2996,6 +3177,15 @@ msgstr "तिथि"
 msgid "Time"
 msgstr "समय"
 
+#~ msgid "Error compressing before upload"
+#~ msgstr "अपलोड से पहले संकुचन में त्रुटि हुई"
+
+#~ msgid "%s: Got an unexpected response on %s upload! Maybe the site is down?"
+#~ msgstr "%s: अप्रत्याशित उत्तर मिला, %s अपलोड पर! शायद साइट काम नहीं कर रही है?"
+
+#~ msgid "The selected station location could not be found"
+#~ msgstr "चुने गए प्रेषण केंद्र का स्थान नहीं मिल पाया"
+
 #~ msgid "TQSL must wait for other running copies of TQSL to exit before signing..."
 #~ msgstr "विश्वस्तQSL प्रतीक्षा करेगा जब तक विश्वस्तQSL की अन्य प्रतियों के बंद होने का..."
 
@@ -3005,43 +3195,40 @@ msgstr "समय"
 #~ msgid "Already Uploaded QSOs Detected"
 #~ msgstr "पहले से अपलोड किए गए QSO का पता लगा"
 
-#, c-format
 #~ msgid "This log contains %d QSO(s) which appear to have already been signed for upload to LoTW, and no new QSOs."
 #~ msgstr "इस अभिलेख में %d QSO(s) है जो की LoTW में अपलोड के लिए पहले से हस्ताक्षरित प्रतीत हो रहा है, एवं कोई भी नया QSO नहीं hai."
 
 #~ msgid "Click 'Re-Upload QSOs' to re-process this log while allowing already uploaded QSOs."
 #~ msgstr "पहले से अपलोड किए गए QSO की अनुमति देते हुए इस अभिलेख को पुन: संसाधित करने के लिए 'पुन: अपलोड QSOs' पर क्लिक करें."
 
-#, c-format
 #~ msgid "This log contains %d QSO(s) which appear to have already been signed for upload to LoTW, and %d QSOs which are new."
 #~ msgstr "इस कार्यपंजी में %d QSO(s) भी हैं जो की पहले से हस्ताक्षरित प्रतीत होता है LoTW पर अपलोड के लिए, एवं %d QSOs जो की नए है."
 
 #~ msgid "Click 'New QSOs Only' to sign normally, without the already uploaded QSOs (Recommended)."
 #~ msgstr "पहले से अपलोड किए गए QSO के बिना, सामान्य रूप से हस्ताक्षरित करने के लिए 'केवल नये QSOs' पर क्लिक करें (प्राथमिक सुझाव)."
 
-#, c-format
 #~ msgid "This log contains %d QSO(s) which appear to have already been signed for upload to LoTW, and one QSO which is new."
 #~ msgstr "इस कार्यपंजी मे %d QSO(s) है जो पहले से ही LoTW पर अपलोड के लिए हस्ताक्षरित हैं, एवं एक QSO है जो की नया है."
 
-#~ msgid "The only reason to re-sign already uploaded QSOs is if a previous upload was not processed by LoTW, either because it was never uploaded, or there was a server failure"
-#~ msgstr "इस प्रतिलिपि QSOs को पुनः हस्ताक्षरित करने का कारण यह है की पिछला अपलोड LoTW द्वारा क्रियान्वित नहीं किया गया, क्योंकि या तो वह कभी अपलोड ही नहीं किया गया, या सर्वर पर कोई त्रुटि हुई"
+#~ msgid ""
+#~ "The only reason to re-sign already uploaded QSOs is if a previous upload was not processed by LoTW, either because it was never uploaded, or there was a server "
+#~ "failure"
+#~ msgstr ""
+#~ "इस प्रतिलिपि QSOs को पुनः हस्ताक्षरित करने का कारण यह है की पिछला अपलोड LoTW द्वारा क्रियान्वित नहीं किया गया, क्योंकि या तो वह कभी अपलोड ही नहीं किया गया, या सर्वर पर कोई त्रुटि "
+#~ "हुई"
 
-#, c-format
 #~ msgid "Already Uploaded: %d"
 #~ msgstr "पहले से अपलोड किया गया: %d"
 
-#, c-format
 #~ msgid "Already uploaded: %d"
 #~ msgstr "पहले से अपलोड किया गया: %d"
 
 #~ msgid "All QSOs are already uploaded; aborted"
 #~ msgstr "सभी QSOs पहले से अपलोड हुए; निरस्त"
 
-#, c-format
 #~ msgid "%d of %d QSOs are already uploaded; aborted"
 #~ msgstr "%d मे से %d QSOs पहले से उपलोडेड; निरस्त"
 
-#, c-format
 #~ msgid "%s: %d QSO records were already uploaded"
 #~ msgstr "%s: %d QSO अभिलेख पहले से अपलोडेड है"
 
@@ -3093,8 +3280,12 @@ msgstr "समय"
 #~ msgid "Please select your club's primary Callsign Certificate to validate your request."
 #~ msgstr "अपने अनुरोध को सत्यापित करने के लिए कृपया अपने प्राथमिक क्लब कॉल चिन्ह प्रमाण पत्र का चयन करें."
 
-#~ msgid "You have already requested more than three Callsign Certificates for %s in the past 24 hours. You should submit a request only once, then wait for that request to processed by LoTW Staff. This may take several business days."
-#~ msgstr "आपने पिछले 24 घंटों में%s के लिए तीन से अधिक कॉलसाइन सर्टिफिकेट का अनुरोध किया है। आपको केवल एक बार अनुरोध प्रस्तुत करना चाहिए, फिर LoTW स्टाफ द्वारा संसाधित किए जाने वाले उस अनुरोध की प्रतीक्षा करें। इसमें कई दिन लग सकते हैं."
+#~ msgid ""
+#~ "You have already requested more than three Callsign Certificates for %s in the past 24 hours. You should submit a request only once, then wait for that request to "
+#~ "processed by LoTW Staff. This may take several business days."
+#~ msgstr ""
+#~ "आपने पिछले 24 घंटों में%s के लिए तीन से अधिक कॉलसाइन सर्टिफिकेट का अनुरोध किया है। आपको केवल एक बार अनुरोध प्रस्तुत करना चाहिए, फिर LoTW स्टाफ द्वारा संसाधित किए जाने वाले उस अनुरोध की "
+#~ "प्रतीक्षा करें। इसमें कई दिन लग सकते हैं."
 
 #~ msgid "You are saying that the requested Certificate for %s belongs to the same person as %hs and are using the selected Certificate to prove %hs's identity."
 #~ msgstr "आप कह रहे हैं कि %s के लिए अनुरोध किया गया प्रमाणपत्र उसी व्यक्ति के रूप में %hs है और वह चयनित प्रमाणपत्र का उपयोग %hs की पहचान को साबित करने के लिए कर रहा है."
@@ -3214,8 +3405,11 @@ msgstr "समय"
 #~ msgid "My former personal callsign or a portable modifier for my current callsign"
 #~ msgstr "मेरा व्यक्तिगत भूतपूर्व कॉल चिन्ह अथवा मेरे वर्तमान कॉल चिन्ह के लिए ले जाने योग्य संशोधक(portable modifier)"
 
-#~ msgid "You may protect this Callsign Certificate using a password. If you are using a computer system that is shared with others, you should specify a password to protect this Callsign Certificate. However, if you are using a computer in a private residence, no password need be specified."
-#~ msgstr "आप इस कॉल चिन्ह प्रमाणपत्र को पासवर्ड द्वारा सुरक्षित कर सकते हैं। आपको आवश्यक रूप से इस कॉल चिन्ह प्रमाणपत्र को रक्षित करना चाहिए यदि इस संगणड्क (कम्प्युटर) को अन्य लोगों भी उपयोग करते हैं."
+#~ msgid ""
+#~ "You may protect this Callsign Certificate using a password. If you are using a computer system that is shared with others, you should specify a password to "
+#~ "protect this Callsign Certificate. However, if you are using a computer in a private residence, no password need be specified."
+#~ msgstr ""
+#~ "आप इस कॉल चिन्ह प्रमाणपत्र को पासवर्ड द्वारा सुरक्षित कर सकते हैं। आपको आवश्यक रूप से इस कॉल चिन्ह प्रमाणपत्र को रक्षित करना चाहिए यदि इस संगणड्क (कम्प्युटर) को अन्य लोगों भी उपयोग करते हैं."
 
 #~ msgid "Leave the password blank and click 'Next' unless you want to use a password."
 #~ msgstr "पासवर्ड रिक्त छोड़ दे और क्लिक करे 'अगला' जब तक आप पासवर्ड का उपयोग न करना चाहें."
@@ -3247,8 +3441,12 @@ msgstr "समय"
 #~ msgid "Enter a password for this callsign certificate."
 #~ msgstr "इस कॉल चिन्ह प्रमाणपत्र के लिए पासवर्ड अंकित करें."
 
-#~ msgid "If you are using a computer system that is shared with others, you should specify a password to protect this certificate. However, if you are using a computer in a private residence no password need be specified."
-#~ msgstr "आपको आवश्यक रूप से इस कॉल चिन्ह प्रमाणपत्र को रक्षित करना चाहिए यदि इस संगणड्क (कम्प्युटर) को अन्य लोगों भी उपयोग करते हैं। हालांकि, अगर आप किसी निजी निवास में संगणड्क (कम्प्युटर) का उपयोग कर रहे हैं तो पासवर्ड की आवश्यकता नहीं होगी."
+#~ msgid ""
+#~ "If you are using a computer system that is shared with others, you should specify a password to protect this certificate. However, if you are using a computer in "
+#~ "a private residence no password need be specified."
+#~ msgstr ""
+#~ "आपको आवश्यक रूप से इस कॉल चिन्ह प्रमाणपत्र को रक्षित करना चाहिए यदि इस संगणड्क (कम्प्युटर) को अन्य लोगों भी उपयोग करते हैं। हालांकि, अगर आप किसी निजी निवास में संगणड्क (कम्प्युटर) का "
+#~ "उपयोग कर रहे हैं तो पासवर्ड की आवश्यकता नहीं होगी."
 
 #~ msgid "This password will have to be entered each time you use this callsign certificate for signing or when saving the key."
 #~ msgstr "आपको हर बार पासवर्ड अंकित करना होगा जब भी आप इस कॉल चिन्ह प्रमाणपत्र से हस्ताक्षर के लिए या कुंजी सहेजने के लिए उपयोग करेंगे."
@@ -3272,17 +3470,18 @@ msgstr "समय"
 #~ "कॉल चिन्ह प्रमाणपत्र को खोलने के लिए पासवर्ड अंकित करें %hs -- %hs\n"
 #~ "(यह वही पासवर्ड है जो आपने कॉल चिन्ह प्रमाणपत्र को स्थापित (installed) करने के समय बनाया था)"
 
-#~ msgid "Enter password"
-#~ msgstr "पासवर्ड अंकित करें"
-
 #~ msgid "Password for the signing key"
 #~ msgstr "हस्ताक्षरण कुंजी के लिए पासवर्ड"
 
 #~ msgid "Enter the password for the certificate container file."
 #~ msgstr "प्रमाणपत्र संग्राहक फ़ाइल के लिए पासवर्ड दर्ज करें."
 
-#~ msgid "If you are using a computer system that is shared with others, you should specify a password to protect this certificate. However, if you are using a computer in a private residence, no password need be specified."
-#~ msgstr "यदि आप यह कम्प्युटर अन्य व्यक्तियों के साथ उपयोग करते हैं, तो आपको यह प्रमाणपत्र पासवर्ड द्वारा सुरक्षित करना चाहिए। अथवा यह कम्प्युटर अपने निजी आवास में उपयोग करते हैं तो पासवर्ड आवश्यक नहीं है."
+#~ msgid ""
+#~ "If you are using a computer system that is shared with others, you should specify a password to protect this certificate. However, if you are using a computer in "
+#~ "a private residence, no password need be specified."
+#~ msgstr ""
+#~ "यदि आप यह कम्प्युटर अन्य व्यक्तियों के साथ उपयोग करते हैं, तो आपको यह प्रमाणपत्र पासवर्ड द्वारा सुरक्षित करना चाहिए। अथवा यह कम्प्युटर अपने निजी आवास में उपयोग करते हैं तो पासवर्ड आवश्यक नहीं "
+#~ "है."
 
 #~ msgid "You will have to enter the password any time you load the file into TrustedQSL."
 #~ msgstr "आपको पासवर्ड अंकित करना होगा जब भी आप यह फ़ाइल विश्वस्तQSL पर लोड करेंगे."
@@ -3324,24 +3523,36 @@ msgstr "समय"
 #~ msgstr "इस कार्य पंजी को पुनःक्रियान्वित करें, साथ साथ प्रतिलिपि QSOs को अनुमति देने के लिए, क्लिक करें 'प्रतिलिपियों को अनुमति दें'."
 
 #~ msgid ""
-#~ "The log file you are uploading using your QSO Logging system consists entirely of previously uploaded QSOs (duplicates) that create unnecessary work for LoTW. There may be a more recent version of your QSO Logging system that would prevent this. Please check with your QSO Logging system's vendor for an updated version."
-#~ msgstr "जो कार्यपंजी फ़ाइल आप QSO विवेचक के द्वारा अपलोड कर रहे हैं उसमे पूर्णतः पहले अपलोड किए हुए QSO (प्रतिलिपियाँ) हैं जो की LoTW के लिए अनावश्यक कार्य बड़ा देगा। आपके कार्यपंजी निस्तारक के नवीन वर्शन का उपयोग इसका निवारण कर सकता है। कृपया अपने कार्यपंजी या QSO निस्तारक प्रदाता से संपर्क कर जांच ले."
+#~ "The log file you are uploading using your QSO Logging system consists entirely of previously uploaded QSOs (duplicates) that create unnecessary work for LoTW. "
+#~ "There may be a more recent version of your QSO Logging system that would prevent this. Please check with your QSO Logging system's vendor for an updated version."
+#~ msgstr ""
+#~ "जो कार्यपंजी फ़ाइल आप QSO विवेचक के द्वारा अपलोड कर रहे हैं उसमे पूर्णतः पहले अपलोड किए हुए QSO (प्रतिलिपियाँ) हैं जो की LoTW के लिए अनावश्यक कार्य बड़ा देगा। आपके कार्यपंजी निस्तारक के नवीन "
+#~ "वर्शन का उपयोग इसका निवारण कर सकता है। कृपया अपने कार्यपंजी या QSO निस्तारक प्रदाता से संपर्क कर जांच ले."
 
 #~ msgid ""
-#~ "In the meantime, please note that some loggers may exhibit strange behavior if an option other than 'Allow duplicates' is clicked. Choosing 'Cancel' is usually safe, but a defective logger not checking the status messages reported by TrustedQSL may produce strange (but harmless) behavior such as attempting to upload an "
+#~ "In the meantime, please note that some loggers may exhibit strange behavior if an option other than 'Allow duplicates' is clicked. Choosing 'Cancel' is usually "
+#~ "safe, but a defective logger not checking the status messages reported by TrustedQSL may produce strange (but harmless) behavior such as attempting to upload an "
 #~ "empty file or marking all chosen QSOs as 'sent'"
 #~ msgstr ""
-#~ "इस बीच कृपया ध्यान दें की कुछ कार्यपंजी निस्तारक अवांछित व्यवहार दर्शा सकते हैं यदि आप 'प्रतिलिपयों को अनुमति दें' के अलावा किसी अन्य विकल्प पर क्लिक करेंगे। यहाँ 'निरस्त करें' विकल्प सामान्यतः सुरक्षित होगा, पर खराब कार्यपंजी निस्तारक विश्वस्तQSL के स्थिति को नहीं जाँचते हैं वह अवांछित (पर सुरक्षित) व्यवहार दर्शा सकते हैं जैसे की रिक्त फ़ाइल को अपलोड करने का प्रयास या सभी QSO "
-#~ "को 'भेजा हुआ' दर्शाना'"
-
-#~ msgid "The log file you are uploading using your QSO Logging system includes some previously uploaded QSOs (duplicates) that create unnecessary work for LoTW. There may be a more recent version of your QSO Logging system that would prevent this. Please check with your QSO Logging system's vendor for an updated version."
-#~ msgstr "जो कार्यपंजी फ़ाइल आप QSO विवेचक के द्वारा अपलोड कर रहे हैं उसमे पहले अपलोड किए हुए QSO (प्रतिलिपियाँ) भी हैं जो की LoTW के लिए अनावश्यक कार्य बड़ा देगा। आपके कार्यपंजी निस्तारक के नवीन वर्शन का उपयोग इसका निवारण कर सकता है। कृपया अपने कार्यपंजी या QSO निस्तारक प्रदाता से संपर्क कर जांच ले."
+#~ "इस बीच कृपया ध्यान दें की कुछ कार्यपंजी निस्तारक अवांछित व्यवहार दर्शा सकते हैं यदि आप 'प्रतिलिपयों को अनुमति दें' के अलावा किसी अन्य विकल्प पर क्लिक करेंगे। यहाँ 'निरस्त करें' विकल्प सामान्यतः "
+#~ "सुरक्षित होगा, पर खराब कार्यपंजी निस्तारक विश्वस्तQSL के स्थिति को नहीं जाँचते हैं वह अवांछित (पर सुरक्षित) व्यवहार दर्शा सकते हैं जैसे की रिक्त फ़ाइल को अपलोड करने का प्रयास या सभी QSO को "
+#~ "'भेजा हुआ' दर्शाना'"
 
 #~ msgid ""
-#~ "In the meantime, please note that some loggers may exhibit strange behavior if an option other than 'Allow duplicates' is clicked. 'Exclude duplicates' is recommended, but a logger that does its own duplicate tracking may incorrectly set the status in this case. A logger that doesn't track duplicates should be "
-#~ "unaffected by choosing 'Exclude duplicates' and if it tracks 'QSO sent' status, will correctly mark all selected QSOs as sent - they are in your account even though they would not be in this specific batch"
+#~ "The log file you are uploading using your QSO Logging system includes some previously uploaded QSOs (duplicates) that create unnecessary work for LoTW. There may "
+#~ "be a more recent version of your QSO Logging system that would prevent this. Please check with your QSO Logging system's vendor for an updated version."
 #~ msgstr ""
-#~ "इस बीच कृपया ध्यान दें की कुछ कार्यपंजी निस्तारक अवांछित व्यवहार दर्शा सकते हैं यदि आप 'प्रतिलिपयों को अनुमति दें' के अलावा किसी अन्य विकल्प पर क्लिक करेंगे। यहाँ 'प्रतिलिपियों को छोड़ के' विकल्प सुझाया जाता है पर जो कार्यपंजी निस्तारक स्वयं प्रतिलिपि को जाँचते हैं गलत स्थिति दर्शा सकते हैं। जो कार्यपंजी निस्तारक प्रतिलिपि की जांच नहीं करते वो 'प्रतिलिपियों को छोड़ के' का चुनाव "
+#~ "जो कार्यपंजी फ़ाइल आप QSO विवेचक के द्वारा अपलोड कर रहे हैं उसमे पहले अपलोड किए हुए QSO (प्रतिलिपियाँ) भी हैं जो की LoTW के लिए अनावश्यक कार्य बड़ा देगा। आपके कार्यपंजी निस्तारक के नवीन "
+#~ "वर्शन का उपयोग इसका निवारण कर सकता है। कृपया अपने कार्यपंजी या QSO निस्तारक प्रदाता से संपर्क कर जांच ले."
+
+#~ msgid ""
+#~ "In the meantime, please note that some loggers may exhibit strange behavior if an option other than 'Allow duplicates' is clicked. 'Exclude duplicates' is "
+#~ "recommended, but a logger that does its own duplicate tracking may incorrectly set the status in this case. A logger that doesn't track duplicates should be "
+#~ "unaffected by choosing 'Exclude duplicates' and if it tracks 'QSO sent' status, will correctly mark all selected QSOs as sent - they are in your account even "
+#~ "though they would not be in this specific batch"
+#~ msgstr ""
+#~ "इस बीच कृपया ध्यान दें की कुछ कार्यपंजी निस्तारक अवांछित व्यवहार दर्शा सकते हैं यदि आप 'प्रतिलिपयों को अनुमति दें' के अलावा किसी अन्य विकल्प पर क्लिक करेंगे। यहाँ 'प्रतिलिपियों को छोड़ के' "
+#~ "विकल्प सुझाया जाता है पर जो कार्यपंजी निस्तारक स्वयं प्रतिलिपि को जाँचते हैं गलत स्थिति दर्शा सकते हैं। जो कार्यपंजी निस्तारक प्रतिलिपि की जांच नहीं करते वो 'प्रतिलिपियों को छोड़ के' का चुनाव "
 #~ "करने पर भी सही कार्य करेंगे और यदि वह 'QSO भेजा गया' स्थिति को जाँचता है तो वह सही तरह से सभी चिन्हित QSO को भेजा हुआ दिखाएगा - आपका खाते में ही जबकि वो इस घटक का न भी हो"
 
 #~ msgid "Exclude duplicates"
@@ -3350,8 +3561,11 @@ msgstr "समय"
 #~ msgid "Allow duplicates"
 #~ msgstr "प्रतिलिपियों को अनुमति दें"
 
-#~ msgid "The only reason to re-sign duplicate QSOs is if a previous upload was not processed by LoTW, either because it was never uploaded, or there was a server failure"
-#~ msgstr "इस प्रतिलिपि QSOs को पुनः हस्ताक्षरित करने का कारण यह है की पिछला अपलोड LoTW द्वारा क्रियान्वित नहीं किया गया, क्योंकि या तो वह कभी अपलोड ही नहीं किया गया, या सर्वर पर कोई त्रुटि हुई"
+#~ msgid ""
+#~ "The only reason to re-sign duplicate QSOs is if a previous upload was not processed by LoTW, either because it was never uploaded, or there was a server failure"
+#~ msgstr ""
+#~ "इस प्रतिलिपि QSOs को पुनः हस्ताक्षरित करने का कारण यह है की पिछला अपलोड LoTW द्वारा क्रियान्वित नहीं किया गया, क्योंकि या तो वह कभी अपलोड ही नहीं किया गया, या सर्वर पर कोई त्रुटि "
+#~ "हुई"
 
 #~ msgid "Duplicates: %d"
 #~ msgstr "प्रतिलिपियाँ: %d"

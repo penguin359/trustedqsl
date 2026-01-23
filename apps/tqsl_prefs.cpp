@@ -428,7 +428,7 @@ FilePrefs::FilePrefs(wxWindow *parent) : PrefsPanel(parent, wxT("pref-opt.htm"))
 	ncerts = 0;
 
 	primaryQSLMgr = new wxChoice(this, ID_PREF_FILE_QSLMGR, wxPoint(0, 0),
-		wxSize(char_width, HEIGHT_ADJ(char_height)), calls, 0, wxDefaultValidator, _("QSLMgrCall"));
+		wxSize(char_width, HEIGHT_ADJ(char_height)), calls, 0, wxDefaultValidator, wxT("QSLMgrCall"));
 	primaryQSLMgr->Enable(true);
 	primaryQSLMgr->SetStringSelection(pQSLMgr);
 	vsizer->Add(primaryQSLMgr, 0, wxLEFT|wxRIGHT|wxBOTTOM, 10);
