@@ -52,6 +52,7 @@ XMLElement::xml_start(void *data, const XML_Char *name, const XML_Char **atts) {
 		tqslTrace("XMLElement::xml_start", "Out of memory!");
 		return;
 	}
+	new_el->_lineNum = XML_GetCurrentLineNumber(el->getParser());
 //cout << "Element: " << name << endl;
 	for (int i = 0; atts[i]; i += 2) {
 		new_el->setAttribute(atts[i], atts[i+1]);
@@ -80,21 +81,21 @@ XMLElement::xml_text(void *data, const XML_Char *text, int len) {
 
 int
 XMLElement::parseString(const char *xmlstring) {
-	XML_Parser xp = XML_ParserCreate(0);
-	XML_SetUserData(xp, reinterpret_cast<void *>(this));
-	XML_SetStartElementHandler(xp, &XMLElement::xml_start);
-	XML_SetEndElementHandler(xp, &XMLElement::xml_end);
-	XML_SetCharacterDataHandler(xp, &XMLElement::xml_text);
+	_xp = XML_ParserCreate(0);
+	XML_SetUserData(_xp, reinterpret_cast<void *>(this));
+	XML_SetStartElementHandler(_xp, &XMLElement::xml_start);
+	XML_SetEndElementHandler(_xp, &XMLElement::xml_end);
+	XML_SetCharacterDataHandler(_xp, &XMLElement::xml_text);
 
 	_parsingStack.clear();
 	// Process the XML
-	if (XML_Parse(xp, xmlstring, strlen(xmlstring), 1) == 0) {
-		XML_ParserFree(xp);
+	if (XML_Parse(_xp, xmlstring, strlen(xmlstring), 1) == 0) {
+		XML_ParserFree(_xp);
 		strncpy(tQSL_CustomError, xmlstring, 80);
 		tQSL_CustomError[79] = '\0';
 		return XML_PARSE_SYNTAX_ERROR;
 	}
-	XML_ParserFree(xp);
+	XML_ParserFree(_xp);
 	return XML_PARSE_NO_ERROR;
 }
 
@@ -114,29 +115,29 @@ XMLElement::parseFile(const char *filename) {
 	if (!in)
 		return XML_PARSE_SYSTEM_ERROR;	// Failed to open file
 	char buf[256];
-	XML_Parser xp = XML_ParserCreate(0);
-	XML_SetUserData(xp, reinterpret_cast<void *>(this));
-	XML_SetStartElementHandler(xp, &XMLElement::xml_start);
-	XML_SetEndElementHandler(xp, &XMLElement::xml_end);
-	XML_SetCharacterDataHandler(xp, &XMLElement::xml_text);
+	_xp = XML_ParserCreate(0);
+	XML_SetUserData(_xp, reinterpret_cast<void *>(this));
+	XML_SetStartElementHandler(_xp, &XMLElement::xml_start);
+	XML_SetEndElementHandler(_xp, &XMLElement::xml_end);
+	XML_SetCharacterDataHandler(_xp, &XMLElement::xml_text);
 
 	_parsingStack.clear();
 	int rcount;
 	while ((rcount = gzread(in, buf, sizeof buf)) > 0) {
 		// Process the XML
-		if (XML_Parse(xp, buf, rcount, 0) == 0) {
+		if (XML_Parse(_xp, buf, rcount, 0) == 0) {
 			gzclose(in);
 			strncpy(tQSL_CustomError, buf, 80);
 			tQSL_CustomError[79] = '\0';
-			XML_ParserFree(xp);
+			XML_ParserFree(_xp);
 			return XML_PARSE_SYNTAX_ERROR;
 		}
 	}
 	gzclose(in);
 	bool rval = (rcount == 0);
 	if (rval)
-		rval = (XML_Parse(xp, "", 0, 1) != 0);
-	XML_ParserFree(xp);
+		rval = (XML_Parse(_xp, "", 0, 1) != 0);
+	XML_ParserFree(_xp);
 	return (rval ? XML_PARSE_NO_ERROR : XML_PARSE_SYNTAX_ERROR);
 }
 

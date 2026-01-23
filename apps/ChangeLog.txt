@@ -1,5 +1,36 @@
 TQSL changes
 ============
+2.8.3
+----------
+When emitting status or error messages, flush the output to ensure it's
+available to logging programs.
+
+Correct a defect where the TQSL uploads database was kept locked after using
+the restore function to restore configuration data. This would cause a
+spurious error when performing multiple restores without restarting TQSL, or
+trying to sign a log after a restore. (Again, while not restarting TQSL.)
+
+Use the name of the ADIF file submitted for signing as the base name of the
+file uploaded, not a fixed TQSLUpl.*. This reverts to the prior behavior where
+the uploaded file can be tracked in the response from Logbook.
+
+Fix problem with log uploads on Windows when the user's home directory has
+non-ASCII characters. This could lead to Logbook rejecting logs with errors
+like "Not a TrustedQSL file".
+
+Add a user-agent, mime type, and better filename to uploaded log files.
+
+When the Logbook TLS certificate fails, assume it's caused by TLS "inspection"
+and allow traffic without TLS verification.
+
+Add new root certificate for lotw.arrl.org to the ca bundle.
+
+When uploads fail, don't delete the temporary upload file so the file can be
+inspected.
+
+Correct the ignored prefix/suffix list - ensure that things like /M, /MM, /QRP
+are ignored only when used as a suffix.
+
 2.8.2
 ----------
 Restore handling of the command line "-o" (output file) argument. This has

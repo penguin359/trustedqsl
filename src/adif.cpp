@@ -23,6 +23,10 @@
 #include "tqsllib.h"
 #include "tqslerrno.h"
 #include "winstrdefs.h"
+#include "xml.h"
+
+using tqsllib::XMLElement;
+using tqsllib::XMLElementList;
 
 typedef enum {
 	TQSL_ADIF_STATE_BEGIN,
@@ -33,11 +37,26 @@ typedef enum {
 	TQSL_ADIF_STATE_DONE
 }  TQSL_ADIF_STATE;
 
+typedef enum {
+	TQSL_ADIX_STATE_NEW_RECORD,
+	TQSL_ADIX_STATE_NEW_QSO,
+	TQSL_ADIX_STATE_QSO_DETAILS,
+	TQSL_ADIX_STATE_EOR,
+	TQSL_ADIX_STATE_EOF
+} TQSL_ADIX_STATE;
+
 struct TQSL_ADIF {
 	int sentinel;
 	FILE *fp;
 	char *filename;
 	int line_no;
+	bool adx;
+	TQSL_ADIX_STATE adixState;
+	XMLElement* adix;
+	XMLElement* top;
+	XMLElement* qsos;
+	XMLElement* recs;
+	XMLElement* qdetails;
 };
 
 #define CAST_TQSL_ADIF(p) ((struct TQSL_ADIF *)p)
@@ -83,8 +102,32 @@ tqsl_beginADIF(tQSL_ADIF *adifp, const char *filename) {
 		tQSL_Error = TQSL_ALLOC_ERROR;
 		goto err;
 	}
+	adif->fp = NULL;
 	adif->sentinel = 0x3345;
+	adif->adx = false;
 	ADIF_ErrorField[0] = '\0';
+	tqslTrace("tqsl_beginADIF", "Testing if ADIX");
+	adif->adix = new XMLElement;
+	if (!adif->adix->parseFile(filename)) {
+		adif->top = new XMLElement;
+		adif->qsos = new XMLElement;
+		adif->recs = new XMLElement;
+		adif->qdetails = new XMLElement;
+		if (adif->adix->getFirstElement("ADX", *adif->top)) {		// Probably an ADIX file
+			tqslTrace("tqsl_beginADIF", "File is ADIX");
+			if (adif->top->getFirstElement("RECORDS", *adif->recs)) {
+				adif->adx = true;
+				adif->adixState = TQSL_ADIX_STATE_NEW_QSO;
+				if (!adif->recs->getFirstElement("RECORD", *adif->qsos)) {
+					adif->adixState = TQSL_ADIX_STATE_EOF;
+				}
+			}
+		}
+		*((struct TQSL_ADIF **)adifp) = adif;
+		return 0;
+	} else {
+		delete adif->adix;
+	}
 	tqslTrace("tqsl_beginADIF", "Preparing to open file");
 #ifdef _WIN32
 	wchar_t *wfilename = utf8_to_wchar(filename);
@@ -211,7 +254,7 @@ tqsl_adifGetError(TQSL_ADIF_GET_FIELD_ERROR status) {
 }
 
 static TQSL_ADIF_GET_FIELD_ERROR
-tqsl_adifGetField(tqsl_adifFieldResults *field, FILE *filehandle,
+tqsl_adifGetField(TQSL_ADIF *adif, tqsl_adifFieldResults *field, FILE *filehandle,
 		  const tqsl_adifFieldDefinitions *adifFields,
 		  const char * const *typesDefined,
 		  unsigned char *(*allocator)(size_t), int *line_no) {
@@ -240,177 +283,254 @@ tqsl_adifGetField(tqsl_adifFieldResults *field, FILE *filehandle,
 	field->userPointer = NULL;
 	field->line_no = -1;
 
-	while(adifState != TQSL_ADIF_STATE_DONE) {
-		if (EOF != (currentCharacter = fgetc(filehandle))) {
-			if (*line_no == 0)
-				*line_no = 1;
-			if (currentCharacter == '\n')
-				(*line_no)++;
-			switch(adifState) {
-				case TQSL_ADIF_STATE_BEGIN:
-					/* GET STARTED */
-					/* find the field opening "<", ignoring everything else */
-					if ('<' == currentCharacter) {
-						adifState = TQSL_ADIF_STATE_GET_NAME;
-					}
-					break;
-
-				case TQSL_ADIF_STATE_GET_NAME:
-					/* GET FIELD NAME */
-					/* add field name characters to buffer, until '>' or ':' found */
-					if (('>' == currentCharacter) || (':' == currentCharacter)) {
-						/* find if the name is a match to a LoTW supported field name */
-						field->line_no = *line_no;
-						status = TQSL_ADIF_GET_FIELD_NO_NAME_MATCH;
-						adifState = TQSL_ADIF_STATE_GET_SIZE;
-
-						for(iIndex = 0;
-							(TQSL_ADIF_GET_FIELD_NO_NAME_MATCH == status) &&
-							(0 != adifFields[iIndex].name[0]);
-							iIndex++) {
-							/* case insensitive compare */
-							if (0 == strcasecmp(field->name, adifFields[iIndex].name) ||
-							    0 == strcasecmp(adifFields[iIndex].name, "*")) {
-								/* set name index */
-								field->adifNameIndex = iIndex;
-
-								/* copy user pointer */
-								field->userPointer = adifFields[iIndex].userPointer;
-
-								/* since we know the name, record the data */
-								recordData = TQSL_TRUE;
-								status = TQSL_ADIF_GET_FIELD_SUCCESS;
-							}
-							if ('>' == currentCharacter) {
-								adifState = TQSL_ADIF_STATE_DONE;
-							}
-						}
-					} else if (strlen(field->name) < TQSL_ADIF_FIELD_NAME_LENGTH_MAX) {
-						/* add to field match string */
-						strCatChar(field->name, currentCharacter);
-					} else {
-						status = TQSL_ADIF_GET_FIELD_NAME_LENGTH_OVERFLOW;
-						adifState = TQSL_ADIF_STATE_DONE;
-					}
-					break;
-
-				case TQSL_ADIF_STATE_GET_SIZE:
-					/* GET FIELD SIZE */
-					/* adding field size characters to buffer, until ':' or '>' found */
-					if ((':' == currentCharacter) || ('>' == currentCharacter)) {
-						/* reset data copy offset */
-						dataIndex = 0;
-
-						/* see if any size was read in */
-						if (0 != field->size[0]) {
-							/* convert data size to integer */
-							dataLength = strtol(field->size, NULL, 10);
-						} else {
-							dataLength = 0;
-						}
-
-						if (':' == currentCharacter) {
-							/* get the type */
-							adifState = TQSL_ADIF_STATE_GET_TYPE;
-						} else {
-							/* no explicit type, set to LoTW default */
-							strncpy(field->type, adifFields[(field->adifNameIndex)].type, sizeof field->type);
-							/* get the data */
-							adifState = dataLength == 0 ? TQSL_ADIF_STATE_DONE : TQSL_ADIF_STATE_GET_DATA;
-						}
-
-						/* only allocate if we care about the data */
-						if (recordData) {
-							if (dataLength <= adifFields[(field->adifNameIndex)].max_length) {
-								/* allocate space for data results, and ASCIIZ */
-								if (NULL != (field->data = (*allocator)(dataLength + 1))) {
-									/* ASCIIZ terminator */
-									field->data[dataIndex] = 0;
-								} else {
-									status = TQSL_ADIF_GET_FIELD_NO_RESULT_ALLOCATION;
-									adifState = TQSL_ADIF_STATE_DONE;
-								}
-							} else {
-								strncpy(ADIF_ErrorField, field->name, sizeof(ADIF_ErrorField));
-								status = TQSL_ADIF_GET_FIELD_DATA_LENGTH_OVERFLOW;
-								adifState = TQSL_ADIF_STATE_DONE;
-							}
-						}
-					} else if (strlen(field->size) < TQSL_ADIF_FIELD_SIZE_LENGTH_MAX) {
-						/* add to field size string */
-						strCatChar(field->size, currentCharacter);
-					} else {
-						strncpy(ADIF_ErrorField, field->name, sizeof(ADIF_ErrorField));
-						status = TQSL_ADIF_GET_FIELD_SIZE_OVERFLOW;
-						adifState = TQSL_ADIF_STATE_DONE;
-					}
-					break;
-
-				case TQSL_ADIF_STATE_GET_TYPE:
-					/* GET FIELD TYPE */
-					/* get the number of characters in the value data */
-					if ('>' == currentCharacter) {
-						/* check what type of field this is */
-						/* place default type in, if necessary */
-						if (0 == field->type[0]) {
-							strncpy(field->type, adifFields[(field->adifNameIndex)].type, sizeof field->type);
-							adifState = dataLength == 0 ? TQSL_ADIF_STATE_DONE : TQSL_ADIF_STATE_GET_DATA;
-						} else {
-							/* find if the type is a match to a LoTW supported data type */
-							strncpy(ADIF_ErrorField, field->name, sizeof(ADIF_ErrorField));
-							status = TQSL_ADIF_GET_FIELD_NO_TYPE_MATCH;
-							adifState = TQSL_ADIF_STATE_DONE;
-							for( iIndex = 0;
-								(TQSL_ADIF_GET_FIELD_NO_TYPE_MATCH == status) &&
-								(0 != typesDefined[iIndex][0]);
-								iIndex++ ) {
-								/* case insensitive compare */
-								if (0 == strcasecmp(field->type, typesDefined[iIndex])) {
-									status = TQSL_ADIF_GET_FIELD_SUCCESS;
-									adifState = dataLength == 0 ? TQSL_ADIF_STATE_DONE : TQSL_ADIF_STATE_GET_DATA;
-								}
-							}
-						}
-					} else if (strlen(field->type) < TQSL_ADIF_FIELD_TYPE_LENGTH_MAX) {
-						/* add to field type string */
-						strCatChar(field->type, currentCharacter);
-					} else {
-						strncpy(ADIF_ErrorField, field->name, sizeof(ADIF_ErrorField));
-						status = TQSL_ADIF_GET_FIELD_TYPE_OVERFLOW;
-						adifState = TQSL_ADIF_STATE_DONE;
-					}
-					break;
-
-				case TQSL_ADIF_STATE_GET_DATA:
-					/* GET DATA */
-					/* read in the prescribed number of characters to form the value */
-					if (0 != dataLength--) {
-						/* only record if we care about the data */
-						if (recordData) {
-							/* ASCIIZ copy that is tolerant of binary data too */
-							field->data[dataIndex++] = (unsigned char)currentCharacter;
-							field->data[dataIndex] = 0;
-						}
-						if (0 == dataLength)
-							adifState = TQSL_ADIF_STATE_DONE;
-						} else {
-							adifState = TQSL_ADIF_STATE_DONE;
-						}
-					break;
-
-				case TQSL_ADIF_STATE_DONE:
-					/* DONE, should never get here */
-				default:
-					strncpy(ADIF_ErrorField, field->name, sizeof(ADIF_ErrorField));
-					status = TQSL_ADIF_GET_FIELD_ERRONEOUS_STATE;
-					adifState = TQSL_ADIF_STATE_DONE;
-					break;
+	if (adif->adx) {
+		if (adif->adixState == TQSL_ADIX_STATE_NEW_RECORD) {
+			if (!adif->recs->getNextElement(*adif->qsos)) {
+				adif->adixState = TQSL_ADIX_STATE_EOF;
+			} else {
+				adif->adixState = TQSL_ADIX_STATE_NEW_QSO;
 			}
-		} else {
+		}
+
+		if (adif->adixState == TQSL_ADIX_STATE_EOF) {
 			status = TQSL_ADIF_GET_FIELD_EOF;
 			adifState = TQSL_ADIF_STATE_DONE;
+			goto err;
+		}
+
+eor:
+
+		if (adif->adixState == TQSL_ADIX_STATE_EOR) {
+			strncpy(field->name, "EOR", sizeof field->name);
+			status = TQSL_ADIF_GET_FIELD_SUCCESS;
+			adifState = TQSL_ADIF_STATE_DONE;
+			adif->adixState = TQSL_ADIX_STATE_NEW_RECORD;
+			goto err;
+		}
+
+		if (adif->adixState == TQSL_ADIX_STATE_NEW_QSO) {
+			if (!adif->qsos->getFirstElement(*adif->qdetails)) {
+				adif->adixState = TQSL_ADIX_STATE_EOR;
+				goto eor;
+			} else {
+				adif->adixState = TQSL_ADIX_STATE_QSO_DETAILS;
+			}
+		} else {
+			if (!adif->qsos->getNextElement(*adif->qdetails)) {
+				adif->adixState = TQSL_ADIX_STATE_EOR;
+				goto eor;
+			}
+		}
+		const string ename =  adif->qdetails->getElementName();
+		const char *name = ename.c_str();
+		if (strlen(name) >= TQSL_ADIF_FIELD_NAME_LENGTH_MAX) {
+			status = TQSL_ADIF_GET_FIELD_NAME_LENGTH_OVERFLOW;
+			adifState = TQSL_ADIF_STATE_DONE;
+			goto err;
+		}
+		strncpy(field->name, name, sizeof field->name);
+		field->line_no = adif->qdetails->getLineNum();
+		status = TQSL_ADIF_GET_FIELD_NO_NAME_MATCH;
+
+		for(iIndex = 0;
+			(TQSL_ADIF_GET_FIELD_NO_NAME_MATCH == status) &&
+				(0 != adifFields[iIndex].name[0]);
+			iIndex++) {
+			/* case insensitive compare */
+			if (0 == strcasecmp(field->name, adifFields[iIndex].name) ||
+			    0 == strcasecmp(adifFields[iIndex].name, "*")) {
+				/* set name index */
+				field->adifNameIndex = iIndex;
+
+				/* copy user pointer */
+				field->userPointer = adifFields[iIndex].userPointer;
+				status = TQSL_ADIF_GET_FIELD_SUCCESS;
+				const string qd = adif->qdetails->getText();
+				const char *data = qd.c_str();
+				dataLength = strlen(data);
+				if (NULL != (field->data = (*allocator)(dataLength + 1))) {
+					/* ASCIIZ terminator */
+					field->data[dataIndex] = 0;
+					strncpy(reinterpret_cast<char *>(field->data), data, dataLength+1);
+				}
+				snprintf(field->size, sizeof field->size, "%ld", adif->qdetails->getText().size());
+				strncpy(field->type, adifFields[(field->adifNameIndex)].type, sizeof field->type);
+			}
+		}
+	} else {
+		while(adifState != TQSL_ADIF_STATE_DONE) {
+			if (EOF != (currentCharacter = fgetc(filehandle))) {
+				if (*line_no == 0)
+					*line_no = 1;
+				if (currentCharacter == '\n')
+					(*line_no)++;
+				switch(adifState) {
+					case TQSL_ADIF_STATE_BEGIN:
+						/* GET STARTED */
+						/* find the field opening "<", ignoring everything else */
+						if ('<' == currentCharacter) {
+							adifState = TQSL_ADIF_STATE_GET_NAME;
+						}
+						break;
+
+					case TQSL_ADIF_STATE_GET_NAME:
+						/* GET FIELD NAME */
+						/* add field name characters to buffer, until '>' or ':' found */
+						if (('>' == currentCharacter) || (':' == currentCharacter)) {
+							/* find if the name is a match to a LoTW supported field name */
+							field->line_no = *line_no;
+							status = TQSL_ADIF_GET_FIELD_NO_NAME_MATCH;
+							adifState = TQSL_ADIF_STATE_GET_SIZE;
+
+							for(iIndex = 0;
+								(TQSL_ADIF_GET_FIELD_NO_NAME_MATCH == status) &&
+								(0 != adifFields[iIndex].name[0]);
+								iIndex++) {
+								/* case insensitive compare */
+								if (0 == strcasecmp(field->name, adifFields[iIndex].name) ||
+							    	    0 == strcasecmp(adifFields[iIndex].name, "*")) {
+									/* set name index */
+									field->adifNameIndex = iIndex;
+
+									/* copy user pointer */
+									field->userPointer = adifFields[iIndex].userPointer;
+
+									/* since we know the name, record the data */
+									recordData = TQSL_TRUE;
+									status = TQSL_ADIF_GET_FIELD_SUCCESS;
+								}
+								if ('>' == currentCharacter) {
+									adifState = TQSL_ADIF_STATE_DONE;
+								}
+							}
+						} else if (strlen(field->name) < TQSL_ADIF_FIELD_NAME_LENGTH_MAX) {
+							/* add to field match string */
+							strCatChar(field->name, currentCharacter);
+						} else {
+							status = TQSL_ADIF_GET_FIELD_NAME_LENGTH_OVERFLOW;
+							adifState = TQSL_ADIF_STATE_DONE;
+						}
+						break;
+
+					case TQSL_ADIF_STATE_GET_SIZE:
+						/* GET FIELD SIZE */
+						/* adding field size characters to buffer, until ':' or '>' found */
+						if ((':' == currentCharacter) || ('>' == currentCharacter)) {
+							/* reset data copy offset */
+							dataIndex = 0;
+
+							/* see if any size was read in */
+							if (0 != field->size[0]) {
+								/* convert data size to integer */
+								dataLength = strtol(field->size, NULL, 10);
+							} else {
+								dataLength = 0;
+							}
+
+							if (':' == currentCharacter) {
+								/* get the type */
+								adifState = TQSL_ADIF_STATE_GET_TYPE;
+							} else {
+								/* no explicit type, set to LoTW default */
+								strncpy(field->type, adifFields[(field->adifNameIndex)].type, sizeof field->type);
+								/* get the data */
+								adifState = dataLength == 0 ? TQSL_ADIF_STATE_DONE : TQSL_ADIF_STATE_GET_DATA;
+							}
+
+							/* only allocate if we care about the data */
+							if (recordData) {
+								if (dataLength <= adifFields[(field->adifNameIndex)].max_length) {
+									/* allocate space for data results, and ASCIIZ */
+									if (NULL != (field->data = (*allocator)(dataLength + 1))) {
+										/* ASCIIZ terminator */
+										field->data[dataIndex] = 0;
+									} else {
+										status = TQSL_ADIF_GET_FIELD_NO_RESULT_ALLOCATION;
+										adifState = TQSL_ADIF_STATE_DONE;
+									}
+								} else {
+									strncpy(ADIF_ErrorField, field->name, sizeof(ADIF_ErrorField));
+									status = TQSL_ADIF_GET_FIELD_DATA_LENGTH_OVERFLOW;
+									adifState = TQSL_ADIF_STATE_DONE;
+								}
+							}
+						} else if (strlen(field->size) < TQSL_ADIF_FIELD_SIZE_LENGTH_MAX) {
+							/* add to field size string */
+							strCatChar(field->size, currentCharacter);
+						} else {
+							strncpy(ADIF_ErrorField, field->name, sizeof(ADIF_ErrorField));
+							status = TQSL_ADIF_GET_FIELD_SIZE_OVERFLOW;
+							adifState = TQSL_ADIF_STATE_DONE;
+						}
+						break;
+
+					case TQSL_ADIF_STATE_GET_TYPE:
+						/* GET FIELD TYPE */
+						/* get the number of characters in the value data */
+						if ('>' == currentCharacter) {
+							/* check what type of field this is */
+							/* place default type in, if necessary */
+							if (0 == field->type[0]) {
+								strncpy(field->type, adifFields[(field->adifNameIndex)].type, sizeof field->type);
+								adifState = dataLength == 0 ? TQSL_ADIF_STATE_DONE : TQSL_ADIF_STATE_GET_DATA;
+							} else {
+								/* find if the type is a match to a LoTW supported data type */
+								strncpy(ADIF_ErrorField, field->name, sizeof(ADIF_ErrorField));
+								status = TQSL_ADIF_GET_FIELD_NO_TYPE_MATCH;
+								adifState = TQSL_ADIF_STATE_DONE;
+								for( iIndex = 0;
+									(TQSL_ADIF_GET_FIELD_NO_TYPE_MATCH == status) &&
+									(0 != typesDefined[iIndex][0]);
+									iIndex++ ) {
+									/* case insensitive compare */
+									if (0 == strcasecmp(field->type, typesDefined[iIndex])) {
+										status = TQSL_ADIF_GET_FIELD_SUCCESS;
+										adifState = dataLength == 0 ? TQSL_ADIF_STATE_DONE : TQSL_ADIF_STATE_GET_DATA;
+									}
+								}
+							}
+						} else if (strlen(field->type) < TQSL_ADIF_FIELD_TYPE_LENGTH_MAX) {
+							/* add to field type string */
+							strCatChar(field->type, currentCharacter);
+						} else {
+							strncpy(ADIF_ErrorField, field->name, sizeof(ADIF_ErrorField));
+							status = TQSL_ADIF_GET_FIELD_TYPE_OVERFLOW;
+							adifState = TQSL_ADIF_STATE_DONE;
+						}
+						break;
+
+					case TQSL_ADIF_STATE_GET_DATA:
+						/* GET DATA */
+						/* read in the prescribed number of characters to form the value */
+						if (0 != dataLength--) {
+							/* only record if we care about the data */
+							if (recordData) {
+								/* ASCIIZ copy that is tolerant of binary data too */
+								field->data[dataIndex++] = (unsigned char)currentCharacter;
+								field->data[dataIndex] = 0;
+							}
+							if (0 == dataLength)
+								adifState = TQSL_ADIF_STATE_DONE;
+							} else {
+								adifState = TQSL_ADIF_STATE_DONE;
+							}
+						break;
+
+					case TQSL_ADIF_STATE_DONE:
+						/* DONE, should never get here */
+					default:
+						strncpy(ADIF_ErrorField, field->name, sizeof(ADIF_ErrorField));
+						status = TQSL_ADIF_GET_FIELD_ERRONEOUS_STATE;
+						adifState = TQSL_ADIF_STATE_DONE;
+						break;
+				}
+			} else {
+				status = TQSL_ADIF_GET_FIELD_EOF;
+				adifState = TQSL_ADIF_STATE_DONE;
+			}
 		}
 	}
+err:
 
 	if (TQSL_ADIF_GET_FIELD_SUCCESS == status) {
 		/* check data for enumeration match and range errors */
@@ -460,7 +580,7 @@ tqsl_getADIFField(tQSL_ADIF adifp, tqsl_adifFieldResults *field, TQSL_ADIF_GET_F
 		tQSL_Error = TQSL_ARGUMENT_ERROR;
 		return 1;
 	}
-	*status = tqsl_adifGetField(field, adif->fp, adifFields, typesDefined, allocator, &(adif->line_no));
+	*status = tqsl_adifGetField(adif, field, adif->fp, adifFields, typesDefined, allocator, &(adif->line_no));
 	return 0;
 }
 

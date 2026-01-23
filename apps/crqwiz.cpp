@@ -1283,11 +1283,20 @@ CRQ_CallsignPage::validate() {
 		wxStringTokenizer callsplitter(_parent->callsign, wxT("/"));
 		while (callsplitter.CountTokens() > 0) {
 			wxString temp = callsplitter.GetNextToken();
-			if ((temp == wxT("F") || temp == wxT("I") || temp == wxT("M") ||
-			    temp.size() >= 2) &&
-			   (temp != wxT("MM") && temp != wxT("QRP"))) {
-				bits.Add(temp);
+			// numbers alone aren't interesting
+			long n;
+			if (temp.ToLong(&n)) {
+				continue;
 			}
+			// modifiers that don't need to be considered
+			// but only for cases when used as suffixes
+			if (bits.GetCount() > 0) {
+				if (temp == wxT("M") || temp == wxT("P") ||
+				    temp == wxT("R") || temp == wxT("MM") || temp == wxT("QRP")) {
+					continue;
+				}
+			}
+			bits.Add(temp);
 		}
 
 		switch (bits.GetCount()) {

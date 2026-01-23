@@ -924,6 +924,12 @@ static void parse_adif_qso(TQSL_CONVERTER *conv, int *saveErr, TQSL_ADIF_GET_FIE
 		conv->taglines[result.name] = result.line_no;
 		if (tqsl_getADIFField(conv->adif, &result, stat, adif_qso_record_fields, notypes, adif_allocate))
 			break;
+		if (*stat == TQSL_ADIF_GET_FIELD_NO_NAME_MATCH) {
+			if (result.data) {
+				delete[] result.data;
+			}
+			continue;
+		}
 		if (*stat != TQSL_ADIF_GET_FIELD_SUCCESS && *stat != TQSL_ADIF_GET_FIELD_NO_NAME_MATCH)
 			break;
 		if (!strcasecmp(result.name, "eor"))
@@ -1711,7 +1717,8 @@ tqsl_getConverterGABBI(tQSL_Converter convp) {
 				if (check_station(conv, "JA_PREFECTURE", "MY_STATE", conv->rec.my_state, sizeof conv->rec.my_state, "JA Prefecture|%s|%s", true)) return 0;
 				if (check_station(conv, "JA_CITY_GUN_KU", "MY_CNTY", conv->rec.my_county, sizeof conv->rec.my_county, "JA City/Gun/Ku|%s|%s", false)) return 0;
 				break;
-			case 5:		// Finland
+			case 5:		// Aland Island
+			case 224:	// Finland
 				if (check_station(conv, "FI_KUNTA", "MY_STATE", conv->rec.my_state, sizeof conv->rec.my_state, "FI Kunta|%s|%s", true)) return 0;
 				break;
 		}

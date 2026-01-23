@@ -108,12 +108,16 @@ class XMLElement {
 	string getText() const { return _text; }
 	void setPretext(const string& s) { _pretext = s; }
 	string getPretext() const { return _pretext; }
+	XML_Parser getParser() const { return _xp; }
+	long getLineNum() const { return _lineNum; }
 
  private:
 	static void xml_start(void *data, const XML_Char *name, const XML_Char **atts);
 	static void xml_end(void *data, const XML_Char *name);
 	static void xml_text(void *data, const XML_Char *text, int len);
 	string _name, _text, _pretext;
+	XML_Parser _xp;
+	long _lineNum;
 	XMLElementAttributeList _attributes;
 	XMLElementList _elements;
 	vector<XMLElementList::iterator> _parsingStack;

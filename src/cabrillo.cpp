@@ -688,6 +688,8 @@ tqsl_getCabrilloField(tQSL_Cabrillo cabp, tqsl_cabrilloField *field, TQSL_CABRIL
 				} else if (!strcasecmp(cab->rec, "END-OF-LOG")) {
 					*error = TQSL_CABRILLO_EOF;
 					return 0;
+				} else {
+					continue;	// Not a QSO record
 				}
 			}
 		}
